@@ -4,17 +4,41 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Quiz</title>
-  <link rel="stylesheet" href="/themes/standard.css">
-  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="../themes/standard.css">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#e94560">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/js/config.js"></script>
-  <script src="/js/api.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
   <style>
     #status-bar {
       display: flex; justify-content: space-between;
       font-size: .85rem; color: var(--text-muted);
       margin-bottom: 1rem;
     }
+    #gps-indicator {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--text-muted); display: inline-block;
+      margin-right: .4rem; vertical-align: middle;
+    }
+    #gps-indicator.active { background: #4caf50; }
+
+    .stop-card {
+      border-left: 4px solid var(--accent);
+      padding-left: .75rem;
+      margin-bottom: .75rem;
+    }
+    .stop-card.locked { border-color: var(--text-muted); opacity: .5; }
+    .stop-card.done   { border-color: #4caf50; }
+
+    .distance-badge {
+      font-size: .8rem; background: var(--accent2);
+      padding: .2rem .5rem; border-radius: 99px;
+      margin-left: .5rem; vertical-align: middle;
+    }
+    .distance-badge.near { background: #4caf50; }
+
+    #loading { text-align:center; color:var(--text-muted); margin-top:2rem; }
   </style>
 </head>
 <body class="page-transition">
@@ -23,61 +47,314 @@
     <span id="point-display">0 point</span>
   </div>
 
+  <!-- Ugyldigt token -->
   <div id="screen-token" class="card" style="display:none; text-align:center;">
     <h2 style="margin-bottom:.5rem;">Ugyldigt link</h2>
     <p style="color:var(--text-muted);">Scan QR-koden igen eller kontakt quizmasters.</p>
   </div>
 
+  <!-- GPS-status (vises altid øverst) -->
   <div id="screen-gps" class="card" style="display:none; text-align:center;">
-    <p style="color:var(--text-muted);" id="gps-dist">Finder din placering…</p>
+    <span id="gps-indicator"></span>
+    <span id="gps-dist">Finder din placering…</span>
   </div>
 
-  <div id="screen-activity" style="display:none;">
-    <!-- Aktivitets-UI indsættes dynamisk af activities/*.js -->
+  <!-- Stop-liste -->
+  <div id="screen-stops" style="display:none;">
+    <h3 style="margin-bottom:.75rem;">Stationer</h3>
+    <div id="stop-list"></div>
   </div>
+
+  <!-- Aktivitet (én ad gangen) -->
+  <div id="screen-activity" class="card" style="display:none;">
+    <button onclick="closeActivity()"
+      style="background:none;border:none;color:var(--text-muted);font-size:.85rem;cursor:pointer;margin-bottom:.75rem;">
+      ← Tilbage til stop-liste
+    </button>
+    <div id="activity-content"></div>
+  </div>
+
+  <div id="loading">Indlæser…</div>
 
   <script>
-    // Placeholder – fuld spilmotor bygges i næste iteration
     const token = getTeamToken();
+    let teamData = null;
+    let stops = [];
+    let submissions = {};
+    let userLat = null, userLng = null;
 
+    // ── Init ──────────────────────────────────────────────────
     async function init() {
       if (!token) {
-        document.getElementById('screen-token').style.display = 'block';
+        show('screen-token');
+        hide('loading');
         return;
       }
-      // Aktiver wake lock så skærmen ikke slukker
       try { await navigator.wakeLock.request('screen'); } catch (_) {}
 
-      // Hent hold-data
-      const { data, error } = await getTeamByToken(token);
-      if (error || !data) {
-        document.getElementById('screen-token').style.display = 'block';
+      // Hent hold-data via RPC
+      const { data: teamRows, error: teamErr } = await sb
+        .schema('quiz').rpc('get_team_by_token', { p_token: token });
+
+      if (teamErr || !teamRows || teamRows.length === 0) {
+        show('screen-token');
+        hide('loading');
         return;
       }
-      document.getElementById('team-name').textContent = data.name;
-      // GPS-lokalisering starter her
-      document.getElementById('screen-gps').style.display = 'block';
-      startGPS(data);
+
+      teamData = teamRows[0];
+      document.getElementById('team-name').textContent   = teamData.team_name;
+      document.getElementById('point-display').textContent = teamData.points + ' point';
+
+      // Hent stop og aktiviteter
+      const { data: stopRows, error: stopsErr } = await sb
+        .schema('quiz').rpc('get_quiz_stops', { p_token: token });
+
+      if (!stopsErr && stopRows) {
+        stops = buildStops(stopRows);
+      }
+
+      // Hent allerede besvaret
+      const { data: subRows } = await sb
+        .schema('quiz').rpc('get_team_submissions', { p_token: token });
+      if (subRows) {
+        subRows.forEach(s => { submissions[s.activity_id] = s; });
+      }
+
+      hide('loading');
+      renderStops();
+      show('screen-stops');
+      show('screen-gps');
+      startGPS();
     }
 
-    function startGPS(team) {
+    // ── Byg stop-struktur fra flad RPC-retur ─────────────────
+    function buildStops(rows) {
+      const map = {};
+      rows.forEach(r => {
+        if (!map[r.stop_id]) {
+          map[r.stop_id] = {
+            id: r.stop_id, name: r.stop_name, sort: r.sort,
+            lat: r.lat, lng: r.lng, radius_m: r.radius_m || 50,
+            activities: []
+          };
+        }
+        if (r.activity_id) {
+          map[r.stop_id].activities.push({
+            id: r.activity_id,
+            type: r.activity_type,
+            question: r.activity_question,
+            media_url: r.activity_media_url,
+            options: r.activity_options,
+            points: r.activity_points
+          });
+        }
+      });
+      return Object.values(map).sort((a, b) => a.sort - b.sort);
+    }
+
+    // ── Render stop-liste ─────────────────────────────────────
+    function renderStops() {
+      const el = document.getElementById('stop-list');
+      if (!stops.length) {
+        el.innerHTML = '<p style="color:var(--text-muted);">Ingen stop endnu.</p>';
+        return;
+      }
+      el.innerHTML = stops.map(s => {
+        const allDone = s.activities.length > 0 &&
+          s.activities.every(a => submissions[a.id]?.is_correct);
+        const dist = distanceTo(s.lat, s.lng);
+        const near = dist !== null && dist <= s.radius_m;
+        const distLabel = dist !== null
+          ? `<span class="distance-badge ${near ? 'near' : ''}">${dist < 1000
+              ? Math.round(dist) + ' m'
+              : (dist/1000).toFixed(1) + ' km'}</span>`
+          : '';
+
+        return `
+          <div class="card stop-card ${allDone ? 'done' : ''}"
+               onclick="openStop('${s.id}')">
+            <strong>${s.sort + 1}. ${s.name}</strong>
+            ${distLabel}
+            <div style="font-size:.8rem;color:var(--text-muted);margin-top:.25rem;">
+              ${s.activities.length} opgave${s.activities.length !== 1 ? 'r' : ''}
+              ${allDone ? '✅' : ''}
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // ── Åbn et stop → vis aktiviteter ─────────────────────────
+    function openStop(stopId) {
+      const stop = stops.find(s => s.id === stopId);
+      if (!stop) return;
+
+      if (!stop.activities.length) {
+        document.getElementById('activity-content').innerHTML =
+          '<p style="color:var(--text-muted);">Ingen opgaver på dette stop endnu.</p>';
+        show('screen-activity');
+        hide('screen-stops');
+        hide('screen-gps');
+        return;
+      }
+
+      // Vis første ubesvaret aktivitet, ellers første
+      const next = stop.activities.find(a => !submissions[a.id]) || stop.activities[0];
+      showActivity(stop, next);
+    }
+
+    function closeActivity() {
+      hide('screen-activity');
+      show('screen-stops');
+      show('screen-gps');
+      renderStops();
+    }
+
+    // ── Vis én aktivitet ──────────────────────────────────────
+    function showActivity(stop, act) {
+      const done = submissions[act.id];
+      const el = document.getElementById('activity-content');
+
+      let html = `<h3>${stop.name}</h3>`;
+      if (act.media_url) {
+        html += `<img src="${act.media_url}" style="width:100%;border-radius:var(--radius);margin-bottom:.75rem;">`;
+      }
+      html += `<p style="margin-bottom:1rem;">${act.question ?? ''}</p>`;
+
+      if (done) {
+        html += `<div class="card" style="text-align:center;color:${done.is_correct ? '#4caf50' : 'var(--accent)'}">
+          ${done.is_correct ? '✅ Korrekt – ' + done.points + ' point' : '❌ Forkert svar'}
+        </div>`;
+      } else if (act.type === 'multiple_choice' && act.options) {
+        const opts = Array.isArray(act.options) ? act.options : Object.values(act.options);
+        html += opts.map((o, i) => `
+          <button class="btn" style="margin-bottom:.5rem;width:100%;text-align:left;"
+            onclick="submitAnswer('${act.id}', '${escape(o)}', '${stop.id}')">
+            ${String.fromCharCode(65 + i)}. ${o}
+          </button>`).join('');
+      } else if (act.type === 'text') {
+        html += `
+          <input id="txt-answer" placeholder="Dit svar…" style="margin-bottom:.75rem;">
+          <button class="btn" style="width:100%;"
+            onclick="submitAnswer('${act.id}', document.getElementById('txt-answer').value, '${stop.id}')">
+            Send svar
+          </button>`;
+      } else if (act.type === 'photo') {
+        html += `
+          <input type="file" accept="image/*" capture="environment" id="photo-input"
+            style="margin-bottom:.75rem;">
+          <button class="btn" style="width:100%;"
+            onclick="submitPhoto('${act.id}', '${stop.id}')">
+            Send foto
+          </button>`;
+      } else {
+        html += `<p style="color:var(--text-muted);">Opgavetype: ${act.type}</p>`;
+      }
+
+      el.innerHTML = html;
+      show('screen-activity');
+      hide('screen-stops');
+      hide('screen-gps');
+    }
+
+    // ── Indsend svar (via Edge Function quiz-check-answer) ────
+    async function submitAnswer(activityId, answer, stopId) {
+      const { data, error } = await sb.functions.invoke('quiz-check-answer', {
+        body: { token, activity_id: activityId, answer }
+      });
+
+      if (error) {
+        alert('Fejl ved indsendelse: ' + error.message);
+        return;
+      }
+
+      submissions[activityId] = {
+        activity_id: activityId,
+        is_correct: data.is_correct,
+        points: data.points ?? 0
+      };
+
+      if (data.is_correct) {
+        teamData.points = (teamData.points || 0) + (data.points ?? 0);
+        document.getElementById('point-display').textContent = teamData.points + ' point';
+      }
+
+      // Genfind stop og aktivitet for at genrendere
+      const stop = stops.find(s => s.id === stopId);
+      const act  = stop?.activities.find(a => a.id === activityId);
+      if (stop && act) showActivity(stop, act);
+    }
+
+    async function submitPhoto(activityId, stopId) {
+      const file = document.getElementById('photo-input')?.files?.[0];
+      if (!file) { alert('Vælg et foto først.'); return; }
+      // Foto-upload: fremtidigt – indsend filnavn som svar midlertidigt
+      await submitAnswer(activityId, file.name, stopId);
+    }
+
+    // ── GPS ───────────────────────────────────────────────────
+    function startGPS() {
+      const ind  = document.getElementById('gps-indicator');
+      const dist = document.getElementById('gps-dist');
       if (!navigator.geolocation) {
-        document.getElementById('gps-dist').textContent = 'GPS ikke tilgængelig.';
+        dist.textContent = 'GPS ikke tilgængelig.';
         return;
       }
       navigator.geolocation.watchPosition(pos => {
-        // Beregn afstand til næste stop og vis
-        document.getElementById('gps-dist').textContent =
-          `📍 GPS aktiv (${pos.coords.accuracy.toFixed(0)} m nøjagtighed)`;
+        userLat = pos.coords.latitude;
+        userLng = pos.coords.longitude;
+        ind.classList.add('active');
+        dist.textContent = `GPS aktiv · ${pos.coords.accuracy.toFixed(0)} m nøjagtighed`;
+        renderStops(); // opdater afstande
+
+        // Send position til Supabase
+        sb.schema('quiz').rpc('update_team_position', {
+          p_token: token, p_lat: userLat, p_lng: userLng,
+          p_accuracy_m: Math.round(pos.coords.accuracy)
+        });
       }, err => {
-        document.getElementById('gps-dist').textContent = 'GPS-fejl: ' + err.message;
+        dist.textContent = 'GPS-fejl: ' + err.message;
       }, { enableHighAccuracy: true });
     }
 
-    init();
+    function distanceTo(lat, lng) {
+      if (userLat === null || lat === null) return null;
+      const R = 6371000;
+      const dLat = (lat - userLat) * Math.PI / 180;
+      const dLng = (lng - userLng) * Math.PI / 180;
+      const a = Math.sin(dLat/2)**2 +
+        Math.cos(userLat * Math.PI/180) * Math.cos(lat * Math.PI/180) * Math.sin(dLng/2)**2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    // ── Hjælpere ──────────────────────────────────────────────
+    function show(id) { document.getElementById(id).style.display = 'block'; }
+    function hide(id) { document.getElementById(id).style.display = 'none'; }
+    function escape(s) { return String(s).replace(/'/g, "\\'"); }
+
+    // ── Realtime: opdater point hvis ny submission ─────────────
+    function subscribeRealtime() {
+      if (!teamData) return;
+      sb.channel('team-' + teamData.team_id)
+        .on('postgres_changes', {
+          event: 'INSERT', schema: 'quiz', table: 'submissions',
+          filter: 'team_id=eq.' + teamData.team_id
+        }, payload => {
+          const s = payload.new;
+          submissions[s.activity_id] = s;
+          if (s.is_correct) {
+            teamData.points += s.points ?? 0;
+            document.getElementById('point-display').textContent = teamData.points + ' point';
+          }
+          renderStops();
+        })
+        .subscribe();
+    }
+
+    init().then(subscribeRealtime);
 
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js');
+      navigator.serviceWorker.register('../sw.js');
     }
   </script>
 </body>

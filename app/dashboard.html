@@ -4,29 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard – Quiz Platform</title>
-  <link rel="stylesheet" href="/themes/standard.css">
+  <link rel="stylesheet" href="../themes/standard.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/js/config.js"></script>
-  <script src="/js/api.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
 </head>
 <body class="page-transition">
-  <h2 style="margin-bottom:1rem;">Mine quizzer</h2>
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+    <h2>Mine quizzer</h2>
+    <a href="../index.html" style="color:var(--text-muted); font-size:.85rem;">← Hjem</a>
+  </div>
 
   <div id="login-form" class="card" style="display:none;">
-    <label>Log ind med magic link</label>
-    <input type="email" id="email" placeholder="din@email.dk" style="margin:.5rem 0;">
+    <h3 style="margin-bottom:.75rem;">Log ind</h3>
+    <label>E-mail</label>
+    <input type="email" id="email" placeholder="din@email.dk" style="margin:.5rem 0 1rem;">
     <button class="btn" onclick="doLogin()">Send login-link</button>
-    <p id="login-msg" style="margin-top:.75rem; color:var(--text-muted);"></p>
+    <p id="login-msg" style="margin-top:.75rem; color:var(--text-muted); text-align:center;"></p>
   </div>
 
   <div id="quiz-list" style="display:none;">
-    <button class="btn btn-secondary" onclick="nyQuiz()" style="margin-bottom:1rem;">
-      + Ny quiz
-    </button>
+    <button class="btn" onclick="nyQuiz()" style="margin-bottom:1rem;">+ Ny quiz</button>
     <div id="quiz-items"></div>
-    <button class="btn" onclick="signOut()" style="margin-top:1rem; background:var(--text-muted);">
-      Log ud
-    </button>
+    <button class="btn" onclick="signOut()"
+      style="margin-top:1rem; background:var(--text-muted);">Log ud</button>
   </div>
 
   <script>
@@ -36,7 +37,7 @@
         document.getElementById('login-form').style.display = 'block';
       } else {
         document.getElementById('quiz-list').style.display = 'block';
-        loadQuizzes(session.user.id);
+        loadQuizzes();
       }
     }
 
@@ -48,7 +49,7 @@
         : '✅ Tjek din mail for login-link';
     }
 
-    async function loadQuizzes(userId) {
+    async function loadQuizzes() {
       const { data, error } = await sb
         .schema('quiz')
         .from('quizzes')
@@ -57,11 +58,13 @@
 
       const el = document.getElementById('quiz-items');
       if (error) { el.textContent = 'Fejl: ' + error.message; return; }
-      if (!data.length) { el.textContent = 'Ingen quizzer endnu.'; return; }
-
+      if (!data.length) {
+        el.innerHTML = '<p style="color:var(--text-muted);">Ingen quizzer endnu.</p>';
+        return;
+      }
       el.innerHTML = data.map(q => `
         <div class="card" style="cursor:pointer;"
-             onclick="location.href='/app/editor.html?q=${q.id}'">
+             onclick="location.href='editor.html?q=${q.id}'">
           <strong>${q.title}</strong>
           <span class="badge" style="float:right;">${q.status}</span>
           <div style="color:var(--text-muted); font-size:.85rem; margin-top:.25rem;">
@@ -70,9 +73,7 @@
         </div>`).join('');
     }
 
-    function nyQuiz() {
-      location.href = '/app/editor.html';
-    }
+    function nyQuiz() { location.href = 'editor.html'; }
 
     init();
   </script>

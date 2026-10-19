@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Editor – Quiz Platform</title>
-  <link rel="stylesheet" href="/themes/standard.css">
+  <link rel="stylesheet" href="../themes/standard.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/js/config.js"></script>
-  <script src="/js/api.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
   <style>
     #map { height: 300px; border-radius: var(--radius); margin-bottom: 1rem; }
     .stop-item { border-left: 3px solid var(--accent); padding-left: .75rem; }
@@ -17,14 +17,15 @@
 </head>
 <body class="page-transition">
   <div style="display:flex; align-items:center; gap:.5rem; margin-bottom:1rem;">
-    <button onclick="history.back()" style="background:none; border:none; color:var(--text); font-size:1.5rem; cursor:pointer;">←</button>
+    <button onclick="history.back()"
+      style="background:none; border:none; color:var(--text); font-size:1.5rem; cursor:pointer;">←</button>
     <h2 id="quiz-title-display">Ny quiz</h2>
   </div>
 
-  <!-- Grundoplysninger -->
   <div class="card">
     <label>Titel</label>
     <input id="title" placeholder="Fx: Auning Historiske Byvandring">
+
     <label style="margin-top:.75rem;">Tema</label>
     <select id="theme">
       <option value="standard">Standard</option>
@@ -33,46 +34,43 @@
       <option value="fremtid">Fremtid</option>
       <option value="lokal">Lokal quiz</option>
     </select>
+
     <label style="margin-top:.75rem;">Type</label>
     <select id="mode">
       <option value="gps">GPS-løb</option>
       <option value="rum">Opgaverum</option>
       <option value="hybrid">Hybrid</option>
     </select>
+
     <label style="margin-top:.75rem;">Dato for arrangement</label>
     <input type="date" id="event_date">
-    <button class="btn" onclick="saveQuiz()" style="margin-top:1rem;">Gem</button>
+
+    <button class="btn" onclick="saveQuiz()" style="margin-top:1rem;">Gem quiz</button>
+    <p id="save-msg" style="margin-top:.5rem; color:var(--text-muted); text-align:center;"></p>
   </div>
 
-  <!-- Kort til stop -->
   <div class="card">
-    <h3 style="margin-bottom:.75rem;">Stop</h3>
+    <h3 style="margin-bottom:.75rem;">Stop <span id="stop-count" class="badge">0</span></h3>
     <div id="map"></div>
     <p style="color:var(--text-muted); font-size:.85rem; margin-bottom:.75rem;">
-      Klik på kortet for at tilføje et stop
+      Klik på kortet for at tilføje et GPS-stop
     </p>
     <div id="stop-list"></div>
   </div>
 
   <script>
-    // -- Placeholder-editor --
-    // Fuld funktionalitet bygges i næste iteration.
-    // Kortet viser og tilføjer stops; stop-detaljer og aktiviteter
-    // redigeres i en modal (bygges i Fase 1 fortsat).
-
-    const params  = new URLSearchParams(location.search);
-    const quizId  = params.get('q');
-    let   map, markers = [], stops = [];
+    const params = new URLSearchParams(location.search);
+    const quizId = params.get('q');
+    let map, markers = [], stops = [];
 
     async function init() {
       const session = await getSession();
-      if (!session) { location.href = '/app/dashboard.html'; return; }
+      if (!session) { location.href = 'dashboard.html'; return; }
 
       map = L.map('map').setView([56.3, 10.0], 7);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap'
       }).addTo(map);
-
       map.on('click', onMapClick);
 
       if (quizId) await loadQuiz();
@@ -87,7 +85,7 @@
       document.getElementById('mode').value       = data.mode;
       document.getElementById('event_date').value = data.event_date ?? '';
       document.getElementById('quiz-title-display').textContent = data.title;
-      stops = data.stops ?? [];
+      stops = (data.stops ?? []).sort((a, b) => a.sort - b.sort);
       renderStops();
     }
 
@@ -100,22 +98,24 @@
         mode:       document.getElementById('mode').value,
         event_date: document.getElementById('event_date').value || null,
       };
+      const msg = document.getElementById('save-msg');
       const { error } = quizId
         ? await sb.schema('quiz').from('quizzes').update(payload).eq('id', quizId)
         : await sb.schema('quiz').from('quizzes').insert(payload);
-      if (error) alert('Fejl: ' + error.message);
-      else { alert('Gemt!'); if (!quizId) history.back(); }
+      if (error) { msg.textContent = '❌ ' + error.message; }
+      else { msg.textContent = '✅ Gemt!'; if (!quizId) history.back(); }
     }
 
     async function onMapClick(e) {
-      if (!quizId) { alert('Gem quizzen først, så du kan tilføje stops.'); return; }
+      if (!quizId) {
+        document.getElementById('save-msg').textContent = '⚠️ Gem quizzen først for at tilføje stops.';
+        return;
+      }
       const name = prompt('Stop-navn:');
       if (!name) return;
       const { data, error } = await sb.schema('quiz').from('stops').insert({
-        quiz_id: quizId,
-        name,
-        lat: e.latlng.lat,
-        lng: e.latlng.lng,
+        quiz_id: quizId, name,
+        lat: e.latlng.lat, lng: e.latlng.lng,
         sort: stops.length,
       }).select().single();
       if (error) { alert('Fejl: ' + error.message); return; }
@@ -129,11 +129,11 @@
       stops.forEach((s, i) => {
         if (s.lat && s.lng) {
           const m = L.marker([s.lat, s.lng])
-            .addTo(map)
-            .bindPopup(`<b>${i+1}. ${s.name}</b>`);
+            .addTo(map).bindPopup(`<b>${i+1}. ${s.name}</b>`);
           markers.push(m);
         }
       });
+      document.getElementById('stop-count').textContent = stops.length;
       document.getElementById('stop-list').innerHTML = stops.map((s, i) => `
         <div class="card stop-item" style="margin-bottom:.5rem;">
           <strong>${i+1}. ${s.name}</strong>
