@@ -1,0 +1,22 @@
+{
+  "name": "Quiz Platform",
+  "short_name": "Quiz",
+  "description": "GPS-quiz og opgaverum – dansk eventplatform",
+  "start_url": "/play/quiz.html",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#e94560",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

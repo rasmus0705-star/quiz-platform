@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz</title>
+  <link rel="stylesheet" href="/themes/standard.css">
+  <link rel="manifest" href="/manifest.json">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/config.js"></script>
+  <script src="/js/api.js"></script>
+  <style>
+    #status-bar {
+      display: flex; justify-content: space-between;
+      font-size: .85rem; color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body class="page-transition">
+  <div id="status-bar">
+    <span id="team-name">–</span>
+    <span id="point-display">0 point</span>
+  </div>
+
+  <div id="screen-token" class="card" style="display:none; text-align:center;">
+    <h2 style="margin-bottom:.5rem;">Ugyldigt link</h2>
+    <p style="color:var(--text-muted);">Scan QR-koden igen eller kontakt quizmasters.</p>
+  </div>
+
+  <div id="screen-gps" class="card" style="display:none; text-align:center;">
+    <p style="color:var(--text-muted);" id="gps-dist">Finder din placering…</p>
+  </div>
+
+  <div id="screen-activity" style="display:none;">
+    <!-- Aktivitets-UI indsættes dynamisk af activities/*.js -->
+  </div>
+
+  <script>
+    // Placeholder – fuld spilmotor bygges i næste iteration
+    const token = getTeamToken();
+
+    async function init() {
+      if (!token) {
+        document.getElementById('screen-token').style.display = 'block';
+        return;
+      }
+      // Aktiver wake lock så skærmen ikke slukker
+      try { await navigator.wakeLock.request('screen'); } catch (_) {}
+
+      // Hent hold-data
+      const { data, error } = await getTeamByToken(token);
+      if (error || !data) {
+        document.getElementById('screen-token').style.display = 'block';
+        return;
+      }
+      document.getElementById('team-name').textContent = data.name;
+      // GPS-lokalisering starter her
+      document.getElementById('screen-gps').style.display = 'block';
+      startGPS(data);
+    }
+
+    function startGPS(team) {
+      if (!navigator.geolocation) {
+        document.getElementById('gps-dist').textContent = 'GPS ikke tilgængelig.';
+        return;
+      }
+      navigator.geolocation.watchPosition(pos => {
+        // Beregn afstand til næste stop og vis
+        document.getElementById('gps-dist').textContent =
+          `📍 GPS aktiv (${pos.coords.accuracy.toFixed(0)} m nøjagtighed)`;
+      }, err => {
+        document.getElementById('gps-dist').textContent = 'GPS-fejl: ' + err.message;
+      }, { enableHighAccuracy: true });
+    }
+
+    init();
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
+  </script>
+</body>
+</html>

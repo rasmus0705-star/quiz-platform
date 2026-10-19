@@ -1,0 +1,12 @@
+# Supabase
+.env
+supabase/.temp/
+supabase/functions/*/node_modules/
+
+# Editor
+.DS_Store
+Thumbs.db
+*.bak
+
+# Lokale testfiler
+local-test/

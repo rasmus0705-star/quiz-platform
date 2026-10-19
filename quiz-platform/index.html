@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz Platform</title>
+  <link rel="stylesheet" href="/themes/standard.css">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#e94560">
+</head>
+<body class="page-transition">
+  <div class="card" style="margin-top:2rem; text-align:center;">
+    <h1 style="margin-bottom:.5rem;">🗺️ Quiz Platform</h1>
+    <p style="color:var(--text-muted); margin-bottom:1.5rem;">
+      GPS-quiz og opgaverum til events og arrangementer
+    </p>
+    <a href="/app/dashboard.html"><button class="btn">Quizmaster-login</button></a>
+  </div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
+  </script>
+</body>
+</html>

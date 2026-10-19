@@ -1,0 +1,85 @@
+/* =============================================================
+   standard.css – Standardtema
+   Alle temaer arver denne struktur; overskrivninger sker i
+   tema-specifikke CSS-filer (fx historisk.css, escape.css)
+   ============================================================= */
+
+:root {
+    --bg:         #1a1a2e;
+    --surface:    #16213e;
+    --accent:     #e94560;
+    --accent2:    #0f3460;
+    --text:       #eaeaea;
+    --text-muted: #8892a4;
+    --radius:     12px;
+    --font:       'Segoe UI', system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    min-height: 100dvh;
+    padding: 1rem;
+}
+
+h1, h2, h3 { line-height: 1.2; }
+
+.card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    padding: .75rem 1.5rem;
+    border: none;
+    border-radius: var(--radius);
+    background: var(--accent);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-secondary { background: var(--accent2); }
+
+input, textarea, select {
+    width: 100%;
+    padding: .75rem;
+    border: 1px solid var(--accent2);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 1rem;
+    margin-top: .25rem;
+}
+
+label { font-size: .875rem; color: var(--text-muted); }
+
+.badge {
+    display: inline-block;
+    padding: .2rem .6rem;
+    border-radius: 99px;
+    font-size: .75rem;
+    font-weight: 700;
+    background: var(--accent2);
+}
+
+/* Transition ved sideskift (Auning-stil) */
+.page-transition {
+    animation: fadeIn .4s ease;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}

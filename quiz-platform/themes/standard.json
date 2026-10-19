@@ -1,0 +1,13 @@
+{
+  "id": "standard",
+  "navn": "Standard",
+  "tekster": {
+    "velkommen": "Velkommen til quizzen!",
+    "ankomst": "Du er fremme ved et stop.",
+    "korrekt": "Rigtigt svar! 🎉",
+    "forkert": "Ikke helt rigtigt – prøv igen.",
+    "faerdig": "Godt gået! Du er i mål.",
+    "point_label": "point",
+    "afstand_label": "m væk"
+  }
+}

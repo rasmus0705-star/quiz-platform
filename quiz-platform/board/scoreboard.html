@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scoreboard</title>
+  <link rel="stylesheet" href="/themes/standard.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/config.js"></script>
+  <script src="/js/api.js"></script>
+  <style>
+    .team-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: .75rem 1rem;
+      border-radius: var(--radius);
+      background: var(--surface);
+      margin-bottom: .5rem;
+    }
+    .rank { font-size: 1.25rem; width: 2rem; }
+    .pts  { font-weight: 700; color: var(--accent); }
+  </style>
+</head>
+<body class="page-transition">
+  <h2 style="margin-bottom:1rem; text-align:center;">🏆 Scoreboard</h2>
+  <div id="board"></div>
+
+  <script>
+    const quizId = new URLSearchParams(location.search).get('q');
+
+    async function load() {
+      if (!quizId) { document.getElementById('board').textContent = 'Mangler ?q='; return; }
+
+      const { data, error } = await sb
+        .schema('quiz')
+        .from('submissions')
+        .select('team_id, points, teams(name)')
+        .eq('is_correct', true);
+
+      if (error) { document.getElementById('board').textContent = error.message; return; }
+
+      // Aggregér point pr. hold
+      const totals = {};
+      data.forEach(r => {
+        const id = r.team_id;
+        totals[id] = totals[id] ?? { name: r.teams?.name ?? '?', pts: 0 };
+        totals[id].pts += r.points;
+      });
+
+      const sorted = Object.values(totals).sort((a, b) => b.pts - a.pts);
+      const medals = ['🥇','🥈','🥉'];
+
+      document.getElementById('board').innerHTML = sorted.length
+        ? sorted.map((t, i) => `
+            <div class="team-row">
+              <span class="rank">${medals[i] ?? i+1}</span>
+              <span>${t.name}</span>
+              <span class="pts">${t.pts} pt</span>
+            </div>`).join('')
+        : '<p style="text-align:center; color:var(--text-muted);">Ingen besvarelser endnu.</p>';
+    }
+
+    // Realtime-abonnement
+    sb.channel('score-updates')
+      .on('postgres_changes', {
+          event: '*', schema: 'quiz', table: 'submissions'
+      }, () => load())
+      .subscribe();
+
+    load();
+  </script>
+</body>
+</html>

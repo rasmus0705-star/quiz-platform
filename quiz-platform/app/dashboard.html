@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard – Quiz Platform</title>
+  <link rel="stylesheet" href="/themes/standard.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/config.js"></script>
+  <script src="/js/api.js"></script>
+</head>
+<body class="page-transition">
+  <h2 style="margin-bottom:1rem;">Mine quizzer</h2>
+
+  <div id="login-form" class="card" style="display:none;">
+    <label>Log ind med magic link</label>
+    <input type="email" id="email" placeholder="din@email.dk" style="margin:.5rem 0;">
+    <button class="btn" onclick="doLogin()">Send login-link</button>
+    <p id="login-msg" style="margin-top:.75rem; color:var(--text-muted);"></p>
+  </div>
+
+  <div id="quiz-list" style="display:none;">
+    <button class="btn btn-secondary" onclick="nyQuiz()" style="margin-bottom:1rem;">
+      + Ny quiz
+    </button>
+    <div id="quiz-items"></div>
+    <button class="btn" onclick="signOut()" style="margin-top:1rem; background:var(--text-muted);">
+      Log ud
+    </button>
+  </div>
+
+  <script>
+    async function init() {
+      const session = await getSession();
+      if (!session) {
+        document.getElementById('login-form').style.display = 'block';
+      } else {
+        document.getElementById('quiz-list').style.display = 'block';
+        loadQuizzes(session.user.id);
+      }
+    }
+
+    async function doLogin() {
+      const email = document.getElementById('email').value;
+      const error = await signInWithMagicLink(email);
+      document.getElementById('login-msg').textContent = error
+        ? 'Fejl: ' + error.message
+        : '✅ Tjek din mail for login-link';
+    }
+
+    async function loadQuizzes(userId) {
+      const { data, error } = await sb
+        .schema('quiz')
+        .from('quizzes')
+        .select('id, title, status, event_date')
+        .order('created_at', { ascending: false });
+
+      const el = document.getElementById('quiz-items');
+      if (error) { el.textContent = 'Fejl: ' + error.message; return; }
+      if (!data.length) { el.textContent = 'Ingen quizzer endnu.'; return; }
+
+      el.innerHTML = data.map(q => `
+        <div class="card" style="cursor:pointer;"
+             onclick="location.href='/app/editor.html?q=${q.id}'">
+          <strong>${q.title}</strong>
+          <span class="badge" style="float:right;">${q.status}</span>
+          <div style="color:var(--text-muted); font-size:.85rem; margin-top:.25rem;">
+            ${q.event_date ?? 'Ingen dato'}
+          </div>
+        </div>`).join('');
+    }
+
+    function nyQuiz() {
+      location.href = '/app/editor.html';
+    }
+
+    init();
+  </script>
+</body>
+</html>
