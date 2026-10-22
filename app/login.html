@@ -73,7 +73,8 @@
     } catch { return null }
   })()
 
-  if (stored) {
+  // Kun auto-redirect hvis der IKKE er et quiz-id i URL'en (dvs. admin-login)
+  if (stored && !quizId) {
     if (stored.is_admin) location.replace('dashboard.html')
     else                 location.replace('editor.html?q=' + stored.quiz_id)
   }
