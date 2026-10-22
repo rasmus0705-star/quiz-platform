@@ -115,6 +115,8 @@
 </main>
 
 <script>
+let isAdmin = false;
+
 (async () => {
   // Auth-tjek – understøtter både PIN-session og Supabase-session
   const session = await getSession();
@@ -131,8 +133,10 @@
       return;
     }
     activatePinClient();
+    isAdmin = true;
     document.getElementById('user-email').textContent = 'Admin';
   } else {
+    isAdmin = true; // Supabase-login = altid admin
     document.getElementById('user-email').textContent = session.user?.email ?? '';
   }
 
@@ -160,13 +164,15 @@ async function loadQuizzes() {
     grid.innerHTML = `<div class="empty">Du har ingen quizzer endnu.<br>Klik "+ Ny quiz" for at starte.</div>`;
   } else {
     data.forEach(q => {
-      const card = document.createElement('a');
+      const card = document.createElement('div');
       card.className = 'quiz-card';
-      card.href = `editor.html?q=${q.id}`;
       card.innerHTML = `
-        <h2>${q.title || '(uden titel)'}</h2>
-        <span class="badge badge-${q.status}">${labelStatus(q.status)}</span>
-        <p>Oprettet ${formatDate(q.created_at)}</p>
+        <a href="editor.html?q=${q.id}" style="text-decoration:none;color:inherit;">
+          <h2>${q.title || '(uden titel)'}</h2>
+          <span class="badge badge-${q.status}">${labelStatus(q.status)}</span>
+          <p>Oprettet ${formatDate(q.created_at)}</p>
+        </a>
+        ${isAdmin ? `<button class="btn btn-sm" style="margin-top:.5rem;width:100%;" onclick="openPin('${q.id}','${(q.title||'').replace(/'/g,"\\'")}')">🔑 Kunde-PIN</button>` : ''}
       `;
       grid.appendChild(card);
     });
@@ -198,6 +204,68 @@ function formatDate(iso) {
   if (!iso) return '';
   return new Date(iso).toLocaleDateString('da-DK', { day: 'numeric', month: 'short', year: 'numeric' });
 }
+
+// ── Kunde-PIN modal ───────────────────────────────────────────
+let pinQuizId = null;
+
+function openPin(quizId, title) {
+  pinQuizId = quizId;
+  document.getElementById('pin-modal-title').textContent = title;
+  document.getElementById('pin-new').value = '';
+  document.getElementById('pin-expires').value = '';
+  document.getElementById('pin-msg').textContent = '';
+  document.getElementById('pin-modal').style.display = 'flex';
+}
+
+function closePin() {
+  document.getElementById('pin-modal').style.display = 'none';
+  pinQuizId = null;
+}
+
+async function savePin() {
+  if (!pinQuizId) return;
+  const pin     = document.getElementById('pin-new').value.trim();
+  const expires = document.getElementById('pin-expires').value;
+  const msgEl   = document.getElementById('pin-msg');
+
+  if (!pin || pin.length < 4) { msgEl.textContent = '⚠️ PIN skal være mindst 4 cifre'; return; }
+  if (!/^\d+$/.test(pin))     { msgEl.textContent = '⚠️ PIN må kun indeholde tal'; return; }
+
+  const buf     = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pin));
+  const pinHash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+
+  const update = { pin_hash: pinHash };
+  if (expires) update.pin_expires_at = new Date(expires).toISOString();
+
+  const { error } = await sb.schema('quiz').from('quizzes').update(update).eq('id', pinQuizId);
+  if (error) {
+    msgEl.textContent = '❌ ' + error.message;
+  } else {
+    const loginUrl = `${location.origin}${location.pathname.replace('dashboard.html','login.html')}?q=${pinQuizId}`;
+    msgEl.innerHTML = `✅ PIN gemt!<br><b>Kode: ${pin}</b><br><small style="word-break:break-all">${loginUrl}</small>
+      <br><button onclick="navigator.clipboard.writeText('Link: ${loginUrl}\\nPIN: ${pin}')" style="margin-top:.4rem;font-size:.8rem;cursor:pointer;">📋 Kopiér link + PIN</button>`;
+  }
+}
 </script>
+<!-- Kunde-PIN modal -->
+<div id="pin-modal" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.5);align-items:center;justify-content:center;" onclick="if(event.target===this)closePin()">
+  <div style="background:#fff;border-radius:10px;padding:1.5rem;width:90%;max-width:380px;display:flex;flex-direction:column;gap:.75rem;">
+    <h3 style="margin:0;">🔑 Kunde-PIN – <span id="pin-modal-title"></span></h3>
+    <div>
+      <label style="font-size:.82rem;color:#666;display:block;margin-bottom:.25rem;">Ny PIN (4–8 cifre)</label>
+      <input id="pin-new" type="text" inputmode="numeric" maxlength="8" placeholder="••••"
+        style="width:100%;padding:.5rem;border:1px solid #ddd;border-radius:6px;font-size:1.1rem;letter-spacing:.3rem;font-weight:700;">
+    </div>
+    <div>
+      <label style="font-size:.82rem;color:#666;display:block;margin-bottom:.25rem;">Udløber (valgfrit)</label>
+      <input id="pin-expires" type="datetime-local" style="width:100%;padding:.5rem;border:1px solid #ddd;border-radius:6px;">
+    </div>
+    <div style="display:flex;gap:.5rem;">
+      <button class="btn btn-primary" style="flex:1;" onclick="savePin()">Gem PIN</button>
+      <button class="btn" style="background:#eee;color:#333;" onclick="closePin()">Luk</button>
+    </div>
+    <p id="pin-msg" style="font-size:.82rem;color:#555;margin:0;min-height:1rem;"></p>
+  </div>
+</div>
 </body>
 </html>

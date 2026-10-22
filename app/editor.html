@@ -136,25 +136,6 @@
       </div>
     </div>
 
-    <!-- Kunde-PIN (kun admin) -->
-    <div class="card" id="pin-card" style="display:none;">
-      <h3 style="margin-bottom:.25rem;">🔑 Kunde-PIN</h3>
-      <p class="muted" style="margin-bottom:.75rem;">Del denne PIN med quizmasteren, så de kan logge ind på editoren.</p>
-      <div style="display:flex;flex-direction:column;gap:.5rem;">
-        <div>
-          <label>Ny PIN (4–8 cifre)</label>
-          <input id="pin-new" type="text" inputmode="numeric" maxlength="8" placeholder="••••"
-            style="letter-spacing:.3rem;font-weight:700;font-size:1.1rem;width:100%;">
-        </div>
-        <div>
-          <label>Udløber</label>
-          <input id="pin-expires" type="datetime-local" style="width:100%;">
-        </div>
-        <button class="btn" onclick="savePin()">Gem PIN</button>
-      </div>
-      <p id="pin-msg" style="font-size:.82rem;color:var(--text-muted);margin-top:.5rem;min-height:1.2rem;"></p>
-      <p id="pin-current" class="muted" style="margin-top:.1rem;"></p>
-    </div>
   </div>
 
   <!-- TAB: Stop & Kort -->
@@ -208,10 +189,6 @@ async function init() {
   // Aktiver PIN-klient så alle sb-kald bruger x-session header
   if (session.type === 'pin') {
     activatePinClient();
-    // Vis PIN-kort kun for admin (kunder behøver ikke se det)
-    if (session.is_admin) {
-      document.getElementById('pin-card').style.display = '';
-    }
   }
 
   map = L.map('map').setView([56.3, 10.0], 7);
