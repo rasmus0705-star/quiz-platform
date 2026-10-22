@@ -111,6 +111,28 @@
     </div>
   </div>
 
+  <!-- Kunde-PIN adgang -->
+  <div class="card" id="pin-card" style="display:none;">
+    <h3 style="margin-bottom:.5rem;">🔑 Kunde-PIN</h3>
+    <p class="muted" style="margin-bottom:.75rem;">
+      Del denne PIN med quizmasteren, så de kan logge ind på editoren.
+    </p>
+    <div class="row2" style="align-items:flex-end;gap:.5rem;">
+      <div style="flex:1;">
+        <label>Ny PIN (4–8 cifre)</label>
+        <input id="pin-new" type="text" inputmode="numeric" maxlength="8" placeholder="••••"
+          style="letter-spacing:.3rem;font-weight:700;font-size:1.1rem;">
+      </div>
+      <div style="flex:1;">
+        <label>Udløber</label>
+        <input id="pin-expires" type="datetime-local">
+      </div>
+      <button class="btn btn-sm" onclick="savePin()" style="margin-bottom:.05rem;">Gem PIN</button>
+    </div>
+    <p id="pin-msg" style="font-size:.82rem;color:var(--text-muted);margin-top:.4rem;min-height:1.2rem;"></p>
+    <p id="pin-current" class="muted" style="margin-top:.25rem;"></p>
+  </div>
+
   <!-- Stops -->
   <div class="card">
     <h3 style="margin-bottom:.5rem;">
@@ -157,7 +179,16 @@ let openStopId = null;
 // ── Init ─────────────────────────────────────────────────────
 async function init() {
   const session = await getSession();
-  if (!session) { location.href = 'dashboard.html'; return; }
+  if (!session) { location.href = 'login.html'; return; }
+
+  // Aktiver PIN-klient så alle sb-kald bruger x-session header
+  if (session.type === 'pin') {
+    activatePinClient();
+    // Vis PIN-kort kun for admin (kunder behøver ikke se det)
+    if (session.is_admin) {
+      document.getElementById('pin-card').style.display = '';
+    }
+  }
 
   map = L.map('map').setView([56.3, 10.0], 7);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -177,6 +208,13 @@ async function loadAll() {
   document.getElementById('title').value = q.title;
   document.getElementById('quiz-title-display').textContent = q.title;
   setStatusPill(q.status);
+
+  // Vis eksisterende PIN-udløb (kun relevant for admin)
+  if (q.pin_expires_at) {
+    const exp = new Date(q.pin_expires_at).toLocaleString('da-DK');
+    const pinCurrent = document.getElementById('pin-current');
+    if (pinCurrent) pinCurrent.textContent = 'Nuværende udløb: ' + exp;
+  }
 
   // Stops + activities
   const { data: stopRows } = await sb.schema('quiz').from('stops')
@@ -213,7 +251,9 @@ async function saveQuiz() {
   const title   = document.getElementById('title').value.trim();
   if (!title) { flash('⚠️ Titel mangler'); return; }
 
-  const payload = { owner_id: session.user.id, title, status: quizStatus };
+  // PIN-admin har ingen user.id – owner_id er nullable
+  const payload = { title, status: quizStatus };
+  if (session?.user?.id) payload.owner_id = session.user.id;
   let error;
 
   if (quizId) {
@@ -255,6 +295,36 @@ function flash(txt, ms=3000) {
   el.textContent = txt;
   clearTimeout(flash._t);
   flash._t = setTimeout(() => { el.textContent=''; }, ms);
+}
+
+// ── PIN-håndtering (kun admin) ────────────────────────────────
+async function savePin() {
+  if (!quizId) { flash('⚠️ Gem quizzen først'); return; }
+  const pin     = document.getElementById('pin-new').value.trim();
+  const expires = document.getElementById('pin-expires').value;
+  const msgEl   = document.getElementById('pin-msg');
+
+  if (!pin || pin.length < 4) { msgEl.textContent = '⚠️ PIN skal være mindst 4 cifre'; return; }
+  if (!/^\d+$/.test(pin))     { msgEl.textContent = '⚠️ PIN må kun indeholde tal'; return; }
+
+  // Hash PIN i browseren (samme metode som Edge Function)
+  const buf     = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pin))
+  const pinHash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('')
+
+  const update = { pin_hash: pinHash }
+  if (expires) update.pin_expires_at = new Date(expires).toISOString()
+
+  const { error } = await sb.schema('quiz').from('quizzes').update(update).eq('id', quizId)
+  if (error) {
+    msgEl.textContent = '❌ ' + error.message
+  } else {
+    msgEl.textContent = '✅ PIN gemt! Del koden: ' + pin
+    document.getElementById('pin-new').value = ''
+    if (expires) {
+      const exp = new Date(expires).toLocaleString('da-DK')
+      document.getElementById('pin-current').textContent = 'Nuværende udløb: ' + exp
+    }
+  }
 }
 
 // ── Stops ─────────────────────────────────────────────────────

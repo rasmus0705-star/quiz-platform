@@ -116,13 +116,25 @@
 
 <script>
 (async () => {
-  // Auth-tjek
+  // Auth-tjek – understøtter både PIN-session og Supabase-session
   const session = await getSession();
   if (!session) {
-    location.href = '../index.html';
+    location.href = 'login.html';
     return;
   }
-  document.getElementById('user-email').textContent = session.user.email;
+
+  // Aktiver PIN-klient hvis det er en PIN-session
+  if (session.type === 'pin') {
+    if (!session.is_admin) {
+      // Kunde-PIN hører til editor, ikke dashboard
+      location.href = `editor.html?q=${session.quiz_id}`;
+      return;
+    }
+    activatePinClient();
+    document.getElementById('user-email').textContent = 'Admin';
+  } else {
+    document.getElementById('user-email').textContent = session.user?.email ?? '';
+  }
 
   await loadQuizzes();
 })();
@@ -163,10 +175,14 @@ async function loadQuizzes() {
 
 async function createQuiz() {
   const session = await getSession();
+  // PIN-admin har ingen user.id – owner_id er nullable for PIN-oprettede quizzer
+  const insertRow = { title: 'Ny quiz', status: 'kladde' };
+  if (session?.user?.id) insertRow.owner_id = session.user.id;
+
   const { data, error } = await sb
     .schema('quiz')
     .from('quizzes')
-    .insert({ title: 'Ny quiz', status: 'kladde', owner_id: session.user.id })
+    .insert(insertRow)
     .select('id')
     .single();
 
