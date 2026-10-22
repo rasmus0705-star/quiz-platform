@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="../js/config.js"></script>
   <script src="../js/api.js"></script>
   <style>
@@ -56,6 +57,28 @@
     #save-msg { font-size:.82rem; color:var(--text-muted); }
     .muted { color:var(--text-muted); font-size:.82rem; }
     textarea { width:100%; resize:vertical; }
+
+    /* QR modal */
+    #qr-modal {
+      display:none; position:fixed; inset:0; z-index:9999;
+      background:rgba(0,0,0,.75); align-items:center; justify-content:center;
+    }
+    #qr-modal.open { display:flex; }
+    #qr-box {
+      background:var(--surface); border-radius:var(--radius);
+      padding:1.5rem; text-align:center; max-width:320px; width:90%;
+    }
+    #qr-box h3 { margin-bottom:.5rem; }
+    #qr-canvas { margin:.75rem auto; }
+    #qr-url { font-size:.7rem; color:var(--text-muted); word-break:break-all;
+      margin-bottom:.75rem; }
+
+    @media print {
+      body > *:not(#qr-modal) { display:none !important; }
+      #qr-modal { display:flex !important; position:static; background:none; }
+      #qr-box { box-shadow:none; padding:0; }
+      #qr-print-btn, #qr-close-btn { display:none; }
+    }
   </style>
 </head>
 <body class="page-transition">
@@ -96,6 +119,19 @@
     <div id="map"></div>
     <p class="muted" style="margin-bottom:.75rem;">Klik på kortet for at tilføje et stop.</p>
     <div id="stop-list"></div>
+  </div>
+
+  <!-- QR modal -->
+  <div id="qr-modal" onclick="if(event.target===this)closeQR()">
+    <div id="qr-box">
+      <h3 id="qr-team-name"></h3>
+      <div id="qr-canvas"></div>
+      <div id="qr-url"></div>
+      <div style="display:flex;gap:.5rem;justify-content:center;">
+        <button id="qr-print-btn" class="btn btn-sm" onclick="window.print()">🖨️ Print</button>
+        <button id="qr-close-btn" class="btn btn-sm btn-ghost" onclick="closeQR()">Luk</button>
+      </div>
+    </div>
   </div>
 
   <!-- Hold -->
@@ -533,6 +569,7 @@ function renderTeams() {
         </div>
         <div style="display:flex;gap:.4rem;align-items:center;margin-left:.5rem;">
           <button class="btn btn-sm btn-ghost" onclick="copyLink('${url}')">Kopiér</button>
+          <button class="btn btn-sm btn-ghost" onclick="showQR('${escHtml(url)}','${escHtml(t.name)}')">QR</button>
           <button class="icon-btn" onclick="deleteTeam('${t.id}')">🗑</button>
         </div>
       </div>`;
@@ -541,6 +578,24 @@ function renderTeams() {
 
 function copyLink(url) {
   navigator.clipboard.writeText(url).then(()=>flash('✅ Link kopieret'));
+}
+
+// ── QR ────────────────────────────────────────────────────────
+let _qrObj = null;
+function showQR(url, teamName) {
+  document.getElementById('qr-team-name').textContent = teamName;
+  document.getElementById('qr-url').textContent = url;
+  const canvas = document.getElementById('qr-canvas');
+  canvas.innerHTML = '';
+  _qrObj = new QRCode(canvas, {
+    text: url, width: 220, height: 220,
+    colorDark: '#000000', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+  document.getElementById('qr-modal').classList.add('open');
+}
+function closeQR() {
+  document.getElementById('qr-modal').classList.remove('open');
 }
 
 // ── Helpers ───────────────────────────────────────────────────
