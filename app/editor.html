@@ -11,139 +11,546 @@
   <script src="../js/config.js"></script>
   <script src="../js/api.js"></script>
   <style>
-    #map { height: 300px; border-radius: var(--radius); margin-bottom: 1rem; }
-    .stop-item { border-left: 3px solid var(--accent); padding-left: .75rem; }
+    #map { height:260px; border-radius:var(--radius); margin-bottom:.75rem; }
+
+    .stop-card { border-left:4px solid var(--accent); padding:.75rem; margin-bottom:.75rem; }
+    .stop-card.open { border-color:#4caf50; }
+
+    .act-row {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:.4rem 0; border-bottom:1px solid rgba(255,255,255,.07);
+      font-size:.85rem;
+    }
+    .act-row:last-child { border-bottom:none; }
+
+    .act-form {
+      background:rgba(255,255,255,.05); border-radius:var(--radius);
+      padding:.75rem; margin-top:.75rem;
+    }
+
+    .team-row {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:.5rem 0; border-bottom:1px solid rgba(255,255,255,.07);
+    }
+    .team-row:last-child { border-bottom:none; }
+
+    label { font-size:.82rem; color:var(--text-muted); display:block; margin-top:.5rem; margin-bottom:.2rem; }
+    .row2 { display:flex; gap:.5rem; }
+    .btn-sm { padding:.3rem .65rem; font-size:.8rem; }
+    .btn-ghost { background:rgba(255,255,255,.08); }
+    .btn-danger { background:var(--accent); }
+    .icon-btn { background:none; border:none; cursor:pointer; color:var(--text-muted);
+      font-size:.95rem; padding:.15rem .35rem; border-radius:4px; }
+    .icon-btn:hover { color:var(--text); background:rgba(255,255,255,.1); }
+
+    .status-pill {
+      display:inline-block; padding:.2rem .6rem; border-radius:99px;
+      font-size:.75rem; font-weight:600; vertical-align:middle;
+    }
+    .s-kladde   { background:#555; color:#fff; }
+    .s-testing  { background:#f59e0b; color:#000; }
+    .s-aktiv    { background:#4caf50; color:#fff; }
+    .s-betalt   { background:#3b82f6; color:#fff; }
+    .s-arkiveret{ background:#374151; color:#aaa; }
+
+    #save-msg { font-size:.82rem; color:var(--text-muted); }
+    .muted { color:var(--text-muted); font-size:.82rem; }
+    textarea { width:100%; resize:vertical; }
   </style>
 </head>
 <body class="page-transition">
-  <div style="display:flex; align-items:center; gap:.5rem; margin-bottom:1rem;">
+
+  <!-- Topbar -->
+  <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;">
     <button onclick="history.back()"
-      style="background:none; border:none; color:var(--text); font-size:1.5rem; cursor:pointer;">←</button>
-    <h2 id="quiz-title-display">Ny quiz</h2>
+      style="background:none;border:none;color:var(--text);font-size:1.4rem;cursor:pointer;">←</button>
+    <h2 id="quiz-title-display" style="flex:1;margin:0;font-size:1.1rem;">Ny quiz</h2>
+    <span id="status-pill" class="status-pill s-kladde">kladde</span>
   </div>
 
+  <!-- Quiz metadata -->
   <div class="card">
     <label>Titel</label>
     <input id="title" placeholder="Fx: Auning Historiske Byvandring">
 
-    <label style="margin-top:.75rem;">Tema</label>
-    <select id="theme">
-      <option value="standard">Standard</option>
-      <option value="historisk">Historisk tidsrejse</option>
-      <option value="escape">Escape room</option>
-      <option value="fremtid">Fremtid</option>
-      <option value="lokal">Lokal quiz</option>
-    </select>
+    <label style="margin-top:.75rem;">Status</label>
+    <div class="row2" style="flex-wrap:wrap;margin-top:.25rem;">
+      <button class="btn btn-sm btn-ghost" onclick="setStatus('kladde')">Kladde</button>
+      <button class="btn btn-sm btn-ghost" onclick="setStatus('testing')">Testing</button>
+      <button class="btn btn-sm" onclick="setStatus('aktiv')"
+        style="background:#4caf50;">▶ Aktiv</button>
+      <button class="btn btn-sm btn-ghost" onclick="setStatus('arkiveret')">Arkivér</button>
+    </div>
 
-    <label style="margin-top:.75rem;">Type</label>
-    <select id="mode">
-      <option value="gps">GPS-løb</option>
-      <option value="rum">Opgaverum</option>
-      <option value="hybrid">Hybrid</option>
-    </select>
-
-    <label style="margin-top:.75rem;">Dato for arrangement</label>
-    <input type="date" id="event_date">
-
-    <button class="btn" onclick="saveQuiz()" style="margin-top:1rem;">Gem quiz</button>
-    <p id="save-msg" style="margin-top:.5rem; color:var(--text-muted); text-align:center;"></p>
+    <div class="row2" style="margin-top:.75rem;align-items:center;">
+      <button class="btn" onclick="saveQuiz()" style="flex:1;">💾 Gem quiz</button>
+      <span id="save-msg"></span>
+    </div>
   </div>
 
+  <!-- Stops -->
   <div class="card">
-    <h3 style="margin-bottom:.75rem;">Stop <span id="stop-count" class="badge">0</span></h3>
+    <h3 style="margin-bottom:.5rem;">
+      Stationer <span id="stop-count" class="badge">0</span>
+    </h3>
     <div id="map"></div>
-    <p style="color:var(--text-muted); font-size:.85rem; margin-bottom:.75rem;">
-      Klik på kortet for at tilføje et GPS-stop
-    </p>
+    <p class="muted" style="margin-bottom:.75rem;">Klik på kortet for at tilføje et stop.</p>
     <div id="stop-list"></div>
   </div>
 
-  <script>
-    const params = new URLSearchParams(location.search);
-    const quizId = params.get('q');
-    let map, markers = [], stops = [];
+  <!-- Hold -->
+  <div class="card">
+    <h3 style="margin-bottom:.75rem;">Hold</h3>
+    <div id="team-list"><p class="muted">Ingen hold endnu.</p></div>
+    <div class="row2" style="margin-top:.75rem;">
+      <input id="new-team-name" placeholder="Holdnavn…" style="flex:1;">
+      <button class="btn btn-sm" onclick="addTeam()">+ Tilføj</button>
+    </div>
+  </div>
 
-    async function init() {
-      const session = await getSession();
-      if (!session) { location.href = 'dashboard.html'; return; }
+<script>
+// ── State ────────────────────────────────────────────────────
+const params   = new URLSearchParams(location.search);
+let quizId     = params.get('q');
+let quizStatus = 'kladde';
+let stops      = [];   // [{...stop, activities:[{...act, answerKey:{correct,tolerance}|null}]}]
+let teams      = [];
+let map, markers = [];
+let openStopId = null;
 
-      map = L.map('map').setView([56.3, 10.0], 7);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
-      }).addTo(map);
-      map.on('click', onMapClick);
+// ── Init ─────────────────────────────────────────────────────
+async function init() {
+  const session = await getSession();
+  if (!session) { location.href = 'dashboard.html'; return; }
 
-      if (quizId) await loadQuiz();
+  map = L.map('map').setView([56.3, 10.0], 7);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    { attribution: '© OpenStreetMap' }).addTo(map);
+  map.on('click', onMapClick);
+
+  if (quizId) await loadAll();
+}
+
+// ── Load ─────────────────────────────────────────────────────
+async function loadAll() {
+  // Quiz
+  const { data: q } = await sb.schema('quiz').from('quizzes')
+    .select('*').eq('id', quizId).single();
+  if (!q) return;
+  quizStatus = q.status;
+  document.getElementById('title').value = q.title;
+  document.getElementById('quiz-title-display').textContent = q.title;
+  setStatusPill(q.status);
+
+  // Stops + activities
+  const { data: stopRows } = await sb.schema('quiz').from('stops')
+    .select('*, activities(*)')
+    .eq('quiz_id', quizId).order('sort');
+
+  // Load answer_keys separately
+  const actIds = (stopRows ?? []).flatMap(s => (s.activities ?? []).map(a => a.id));
+  let keyMap = {};
+  if (actIds.length) {
+    const { data: keys } = await sb.schema('quiz').from('answer_keys')
+      .select('*').in('activity_id', actIds);
+    (keys ?? []).forEach(k => { keyMap[k.activity_id] = k; });
+  }
+
+  stops = (stopRows ?? []).map(s => ({
+    ...s,
+    activities: (s.activities ?? [])
+      .sort((a,b) => (a.sort??0)-(b.sort??0))
+      .map(a => ({ ...a, answerKey: keyMap[a.id] ?? null }))
+  }));
+  renderStops();
+
+  // Teams
+  const { data: teamRows } = await sb.schema('quiz').from('teams')
+    .select('*').eq('quiz_id', quizId).order('created_at');
+  teams = teamRows ?? [];
+  renderTeams();
+}
+
+// ── Quiz gem / status ─────────────────────────────────────────
+async function saveQuiz() {
+  const session = await getSession();
+  const title   = document.getElementById('title').value.trim();
+  if (!title) { flash('⚠️ Titel mangler'); return; }
+
+  const payload = { owner_id: session.user.id, title, status: quizStatus };
+  let error;
+
+  if (quizId) {
+    ({ error } = await sb.schema('quiz').from('quizzes').update(payload).eq('id', quizId));
+  } else {
+    const { data, error: e } = await sb.schema('quiz').from('quizzes')
+      .insert(payload).select().single();
+    error = e;
+    if (data) {
+      quizId = data.id;
+      history.replaceState(null, '', '?q=' + quizId);
     }
+  }
+  if (error) flash('❌ ' + error.message);
+  else {
+    document.getElementById('quiz-title-display').textContent = title;
+    flash('✅ Gemt');
+  }
+}
 
-    async function loadQuiz() {
-      const { data } = await sb.schema('quiz').from('quizzes')
-        .select('*, stops(*)').eq('id', quizId).single();
-      if (!data) return;
-      document.getElementById('title').value      = data.title;
-      document.getElementById('theme').value      = data.theme;
-      document.getElementById('mode').value       = data.mode;
-      document.getElementById('event_date').value = data.event_date ?? '';
-      document.getElementById('quiz-title-display').textContent = data.title;
-      stops = (data.stops ?? []).sort((a, b) => a.sort - b.sort);
-      renderStops();
+async function setStatus(status) {
+  if (!quizId) { await saveQuiz(); if (!quizId) return; }
+  const { error } = await sb.schema('quiz').from('quizzes')
+    .update({ status }).eq('id', quizId);
+  if (error) { flash('❌ ' + error.message); return; }
+  quizStatus = status;
+  setStatusPill(status);
+  flash('Status: ' + status);
+}
+
+function setStatusPill(status) {
+  const el = document.getElementById('status-pill');
+  el.textContent = status;
+  el.className   = 'status-pill s-' + status;
+}
+
+function flash(txt, ms=3000) {
+  const el = document.getElementById('save-msg');
+  el.textContent = txt;
+  clearTimeout(flash._t);
+  flash._t = setTimeout(() => { el.textContent=''; }, ms);
+}
+
+// ── Stops ─────────────────────────────────────────────────────
+async function onMapClick(e) {
+  if (!quizId) { flash('⚠️ Gem quizzen først'); return; }
+  const name = prompt('Stop-navn:');
+  if (!name) return;
+  const { data, error } = await sb.schema('quiz').from('stops').insert({
+    quiz_id: quizId, name,
+    lat: e.latlng.lat, lng: e.latlng.lng,
+    sort: stops.length, radius_m: 50
+  }).select().single();
+  if (error) { alert(error.message); return; }
+  stops.push({ ...data, activities: [] });
+  openStopId = data.id;
+  renderStops();
+}
+
+async function deleteStop(stopId) {
+  if (!confirm('Slet dette stop og alle dets opgaver?')) return;
+  const { error } = await sb.schema('quiz').from('stops').delete().eq('id', stopId);
+  if (error) { alert(error.message); return; }
+  stops = stops.filter(s => s.id !== stopId);
+  if (openStopId === stopId) openStopId = null;
+  renderStops();
+}
+
+function toggleStop(stopId) {
+  openStopId = openStopId === stopId ? null : stopId;
+  renderStops();
+}
+
+function renderStops() {
+  markers.forEach(m => m.remove()); markers = [];
+  const bounds = [];
+  stops.forEach((s, i) => {
+    if (s.lat && s.lng) {
+      const m = L.marker([s.lat, s.lng]).addTo(map)
+        .bindPopup(`<b>${i+1}. ${s.name}</b>`);
+      markers.push(m);
+      bounds.push([s.lat, s.lng]);
     }
+  });
+  if (bounds.length) map.fitBounds(bounds, { padding:[40,40] });
 
-    async function saveQuiz() {
-      const session = await getSession();
-      const payload = {
-        owner_id:   session.user.id,
-        title:      document.getElementById('title').value,
-        theme:      document.getElementById('theme').value,
-        mode:       document.getElementById('mode').value,
-        event_date: document.getElementById('event_date').value || null,
-      };
-      const msg = document.getElementById('save-msg');
-      const { error } = quizId
-        ? await sb.schema('quiz').from('quizzes').update(payload).eq('id', quizId)
-        : await sb.schema('quiz').from('quizzes').insert(payload);
-      if (error) { msg.textContent = '❌ ' + error.message; }
-      else { msg.textContent = '✅ Gemt!'; if (!quizId) history.back(); }
-    }
-
-    async function onMapClick(e) {
-      if (!quizId) {
-        document.getElementById('save-msg').textContent = '⚠️ Gem quizzen først for at tilføje stops.';
-        return;
-      }
-      const name = prompt('Stop-navn:');
-      if (!name) return;
-      const { data, error } = await sb.schema('quiz').from('stops').insert({
-        quiz_id: quizId, name,
-        lat: e.latlng.lat, lng: e.latlng.lng,
-        sort: stops.length,
-      }).select().single();
-      if (error) { alert('Fejl: ' + error.message); return; }
-      stops.push(data);
-      renderStops();
-    }
-
-    function renderStops() {
-      markers.forEach(m => m.remove());
-      markers = [];
-      stops.forEach((s, i) => {
-        if (s.lat && s.lng) {
-          const m = L.marker([s.lat, s.lng])
-            .addTo(map).bindPopup(`<b>${i+1}. ${s.name}</b>`);
-          markers.push(m);
-        }
-      });
-      document.getElementById('stop-count').textContent = stops.length;
-      document.getElementById('stop-list').innerHTML = stops.map((s, i) => `
-        <div class="card stop-item" style="margin-bottom:.5rem;">
-          <strong>${i+1}. ${s.name}</strong>
-          <span style="color:var(--text-muted); font-size:.8rem; display:block;">
-            ${s.lat ? `${s.lat.toFixed(5)}, ${s.lng.toFixed(5)}` : 'Ingen GPS'}
+  document.getElementById('stop-count').textContent = stops.length;
+  document.getElementById('stop-list').innerHTML = stops.map((s,i) => `
+    <div class="card stop-card ${openStopId===s.id?'open':''}">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="cursor:pointer;font-weight:600;" onclick="toggleStop('${s.id}')">
+          ${i+1}. ${s.name}
+          <span class="muted" style="font-weight:400;">
+            (${s.activities.length} opgave${s.activities.length!==1?'r':''})
           </span>
-        </div>`).join('');
-    }
+        </span>
+        <div>
+          <button class="icon-btn" onclick="toggleStop('${s.id}')">${openStopId===s.id?'▲':'▼'}</button>
+          <button class="icon-btn" onclick="deleteStop('${s.id}')" title="Slet stop">🗑</button>
+        </div>
+      </div>
+      ${openStopId===s.id ? stopDetail(s) : ''}
+    </div>`).join('');
+}
 
-    init();
-  </script>
+function stopDetail(stop) {
+  const rows = stop.activities.map(a => `
+    <div class="act-row">
+      <span>${typeLabel(a.type)} – ${shortQ(a.question)} · ${a.points??0}p
+        ${a.answerKey ? '' : '<span style="color:#f59e0b;" title="Ingen fasit">⚠️</span>'}
+      </span>
+      <div>
+        <button class="icon-btn" onclick="openActForm('${stop.id}','${a.id}')">✏️</button>
+        <button class="icon-btn" onclick="deleteActivity('${stop.id}','${a.id}')">🗑</button>
+      </div>
+    </div>`).join('');
+
+  return `
+    <div style="margin-top:.5rem;">
+      ${rows || '<p class="muted">Ingen opgaver endnu.</p>'}
+      <button class="btn btn-sm" style="margin-top:.5rem;width:100%;"
+        onclick="openActForm('${stop.id}','')">+ Tilføj opgave</button>
+      <div id="af-${stop.id}"></div>
+    </div>`;
+}
+
+function typeLabel(t) {
+  return {mc:'MC',tekst:'Tekst',tal:'Tal',foto:'Foto',info:'Info'}[t]??t;
+}
+function shortQ(q) {
+  if (!q) return '–';
+  return q.length>45 ? q.substring(0,45)+'…' : q;
+}
+
+// ── Activity form ─────────────────────────────────────────────
+function openActForm(stopId, actId) {
+  const stop = stops.find(s=>s.id===stopId);
+  const act  = actId ? stop.activities.find(a=>a.id===actId) : null;
+  const el   = document.getElementById('af-'+stopId);
+  el.innerHTML = buildForm(stopId, act);
+}
+
+function buildForm(stopId, act) {
+  const type = act?.type ?? 'mc';
+  const q    = act?.question ?? '';
+  const pts  = act?.points ?? 10;
+  const opts = act?.options
+    ? (Array.isArray(act.options) ? act.options : Object.values(act.options))
+    : ['','','',''];
+  const key  = act?.answerKey;
+  const correct = key?.correct;  // JS value (string/array/number) from jsonb
+  const tol  = key?.tolerance ?? 0;
+
+  // correctVal for text display
+  let correctVal = '';
+  if (correct !== null && correct !== undefined) {
+    correctVal = Array.isArray(correct) ? correct.join(', ') : String(correct);
+  }
+
+  // For mc: which option index is selected?
+  let mcIdx = 0;
+  if (type==='mc' && correct !== null && correct !== undefined) {
+    const ci = opts.findIndex(o => String(o).toLowerCase() === String(correct).toLowerCase());
+    if (ci>=0) mcIdx = ci;
+  }
+
+  return `<div class="act-form">
+    <label>Type</label>
+    <select id="af-type-${stopId}" onchange="rebuildForm('${stopId}','${act?.id??''}')">
+      ${['mc','tekst','tal','foto','info'].map(t =>
+        `<option value="${t}" ${type===t?'selected':''}>${{mc:'Multiple choice',tekst:'Tekst',tal:'Tal',foto:'Foto',info:'Info'}[t]}</option>`
+      ).join('')}
+    </select>
+
+    <label>Spørgsmål / tekst</label>
+    <textarea id="af-q-${stopId}" rows="2">${escHtml(q)}</textarea>
+
+    <label>Point</label>
+    <input type="number" id="af-pts-${stopId}" value="${pts}" style="width:80px;">
+
+    ${type==='mc' ? `
+      <label>Svarmuligheder</label>
+      ${[0,1,2,3].map(i=>`
+        <div class="row2" style="align-items:center;margin-bottom:.25rem;">
+          <span class="muted" style="width:18px;">${String.fromCharCode(65+i)}.</span>
+          <input id="af-o${i}-${stopId}" value="${escHtml(opts[i]??'')}" style="flex:1;" placeholder="Svar ${String.fromCharCode(65+i)}">
+        </div>`).join('')}
+      <label>Korrekt svar</label>
+      <select id="af-correct-${stopId}">
+        ${[0,1,2,3].map(i=>`<option value="${i}" ${mcIdx===i?'selected':''}>${String.fromCharCode(65+i)}</option>`).join('')}
+      </select>
+    ` : ''}
+
+    ${type==='tekst' ? `
+      <label>Fasit (komma-separeret hvis flere accepterede)</label>
+      <input id="af-correct-${stopId}" value="${escHtml(correctVal)}" placeholder="Fx: skovmand, Skovmand">
+    ` : ''}
+
+    ${type==='tal' ? `
+      <label>Korrekt tal</label>
+      <input type="number" step="any" id="af-correct-${stopId}" value="${escHtml(correctVal)}">
+      <label>Tolerance (± antal)</label>
+      <input type="number" step="any" id="af-tol-${stopId}" value="${tol}">
+    ` : ''}
+
+    <div class="row2" style="margin-top:.75rem;">
+      <button class="btn" onclick="saveActivity('${stopId}','${act?.id??''}')" style="flex:1;">
+        Gem opgave
+      </button>
+      <button class="btn btn-sm btn-ghost"
+        onclick="document.getElementById('af-${stopId}').innerHTML=''">
+        Annuller
+      </button>
+    </div>
+  </div>`;
+}
+
+function rebuildForm(stopId, actId) {
+  const stop = stops.find(s=>s.id===stopId);
+  const act  = actId ? stop.activities.find(a=>a.id===actId) : null;
+  const type = document.getElementById('af-type-'+stopId).value;
+  const q    = document.getElementById('af-q-'+stopId)?.value ?? '';
+  const pts  = document.getElementById('af-pts-'+stopId)?.value ?? 10;
+  document.getElementById('af-'+stopId).innerHTML =
+    buildForm(stopId, { ...act, type, question:q, points:pts });
+}
+
+async function saveActivity(stopId, actId) {
+  const stop  = stops.find(s=>s.id===stopId);
+  const type  = document.getElementById('af-type-'+stopId).value;
+  const question = document.getElementById('af-q-'+stopId).value.trim();
+  const points   = parseInt(document.getElementById('af-pts-'+stopId).value)||0;
+
+  let options = null;
+  if (type==='mc') {
+    options = [0,1,2,3].map(i => document.getElementById('af-o'+i+'-'+stopId)?.value??'');
+  }
+
+  const payload = {
+    stop_id:stopId, type, question, points, sort: stop.activities.length,
+    ...(options ? { options } : { options: null })
+  };
+
+  let actRecord;
+  if (actId) {
+    const { data, error } = await sb.schema('quiz').from('activities')
+      .update(payload).eq('id', actId).select().single();
+    if (error) { alert(error.message); return; }
+    actRecord = data;
+  } else {
+    const { data, error } = await sb.schema('quiz').from('activities')
+      .insert(payload).select().single();
+    if (error) { alert(error.message); return; }
+    actRecord = data;
+  }
+
+  // Save answer key
+  const correctVal = getCorrectVal(type, stopId, options);
+  const tolerance  = type==='tal'
+    ? parseFloat(document.getElementById('af-tol-'+stopId)?.value)||0
+    : null;
+
+  if (correctVal !== null) {
+    const existingKey = stop.activities.find(a=>a.id===actId)?.answerKey;
+    if (existingKey) {
+      await sb.schema('quiz').from('answer_keys')
+        .update({ correct: correctVal, tolerance })
+        .eq('activity_id', actRecord.id);
+    } else {
+      await sb.schema('quiz').from('answer_keys')
+        .insert({ activity_id: actRecord.id, correct: correctVal, tolerance });
+    }
+  }
+
+  await loadAll();
+  openStopId = stopId;
+  renderStops();
+  // scroll to stop
+  setTimeout(() => {
+    document.getElementById('stop-list')
+      ?.querySelector(`[onclick*="${stopId}"]`)
+      ?.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }, 100);
+}
+
+function getCorrectVal(type, stopId, options) {
+  if (type==='mc') {
+    const idx = parseInt(document.getElementById('af-correct-'+stopId).value);
+    const val = options?.[idx];
+    return val != null && val !== '' ? val : null;
+  }
+  if (type==='tekst') {
+    const raw = document.getElementById('af-correct-'+stopId)?.value.trim();
+    if (!raw) return null;
+    const parts = raw.split(',').map(v=>v.trim()).filter(Boolean);
+    return parts.length===1 ? parts[0] : parts;
+  }
+  if (type==='tal') {
+    const n = parseFloat(document.getElementById('af-correct-'+stopId)?.value);
+    return isNaN(n) ? null : n;
+  }
+  return null; // foto, info
+}
+
+async function deleteActivity(stopId, actId) {
+  if (!confirm('Slet denne opgave?')) return;
+  const { error } = await sb.schema('quiz').from('activities').delete().eq('id', actId);
+  if (error) { alert(error.message); return; }
+  const stop = stops.find(s=>s.id===stopId);
+  stop.activities = stop.activities.filter(a=>a.id!==actId);
+  renderStops();
+}
+
+// ── Teams ─────────────────────────────────────────────────────
+async function addTeam() {
+  if (!quizId) { flash('⚠️ Gem quizzen først'); return; }
+  const name = document.getElementById('new-team-name').value.trim();
+  if (!name) return;
+  const token = name.toLowerCase()
+    .replace(/æ/g,'ae').replace(/ø/g,'oe').replace(/å/g,'aa')
+    .replace(/[^a-z0-9]/g,'-') + '-' + Math.random().toString(36).slice(2,6);
+
+  const { data, error } = await sb.schema('quiz').from('teams')
+    .insert({ quiz_id: quizId, name, token }).select().single();
+  if (error) { alert(error.message); return; }
+  teams.push(data);
+  document.getElementById('new-team-name').value = '';
+  renderTeams();
+}
+
+async function deleteTeam(teamId) {
+  if (!confirm('Slet holdet? (besvarelser slettes også)')) return;
+  const { error } = await sb.schema('quiz').from('teams').delete().eq('id', teamId);
+  if (error) { alert(error.message); return; }
+  teams = teams.filter(t=>t.id!==teamId);
+  renderTeams();
+}
+
+function renderTeams() {
+  const base = location.origin +
+    location.pathname.replace(/app\/editor\.html.*/, 'play/quiz.html');
+  const el = document.getElementById('team-list');
+  if (!teams.length) {
+    el.innerHTML='<p class="muted">Ingen hold endnu.</p>'; return;
+  }
+  el.innerHTML = teams.map(t => {
+    const url = base + '?t=' + t.token;
+    return `
+      <div class="team-row">
+        <div>
+          <strong>${escHtml(t.name)}</strong>
+          <div class="muted" style="font-size:.72rem;word-break:break-all;">${url}</div>
+        </div>
+        <div style="display:flex;gap:.4rem;align-items:center;margin-left:.5rem;">
+          <button class="btn btn-sm btn-ghost" onclick="copyLink('${url}')">Kopiér</button>
+          <button class="icon-btn" onclick="deleteTeam('${t.id}')">🗑</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function copyLink(url) {
+  navigator.clipboard.writeText(url).then(()=>flash('✅ Link kopieret'));
+}
+
+// ── Helpers ───────────────────────────────────────────────────
+function escHtml(s) {
+  return String(s??'')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+init();
+</script>
 </body>
 </html>
