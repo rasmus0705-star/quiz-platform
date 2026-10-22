@@ -73,6 +73,25 @@
     #qr-url { font-size:.7rem; color:var(--text-muted); word-break:break-all;
       margin-bottom:.75rem; }
 
+    /* Tab navigation */
+    .tab-bar {
+      display:flex; gap:.25rem; margin-bottom:.75rem;
+      border-bottom:1px solid rgba(255,255,255,.1);
+      padding-bottom:.1rem;
+    }
+    .tab-btn {
+      background:none; border:none; border-bottom:2px solid transparent;
+      color:var(--text-muted); padding:.45rem .7rem;
+      cursor:pointer; font-size:.88rem; border-radius:4px 4px 0 0;
+      transition:color .15s, border-color .15s;
+    }
+    .tab-btn:hover { color:var(--text); background:rgba(255,255,255,.06); }
+    .tab-btn.active { color:var(--text); border-bottom-color:var(--accent); }
+    .badge {
+      background:rgba(255,255,255,.15); border-radius:99px;
+      padding:.05rem .4rem; font-size:.72rem;
+    }
+
     @media print {
       body > *:not(#qr-modal) { display:none !important; }
       #qr-modal { display:flex !important; position:static; background:none; }
@@ -84,63 +103,78 @@
 <body class="page-transition">
 
   <!-- Topbar -->
-  <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;">
+  <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
     <button onclick="history.back()"
-      style="background:none;border:none;color:var(--text);font-size:1.4rem;cursor:pointer;">←</button>
-    <h2 id="quiz-title-display" style="flex:1;margin:0;font-size:1.1rem;">Ny quiz</h2>
+      style="background:none;border:none;color:var(--text);font-size:1.4rem;cursor:pointer;padding:0 .25rem;">←</button>
+    <h2 id="quiz-title-display" style="flex:1;margin:0;font-size:1.05rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Ny quiz</h2>
     <span id="status-pill" class="status-pill s-kladde">kladde</span>
+    <button class="btn btn-sm" onclick="saveQuiz()" style="white-space:nowrap;">💾 Gem</button>
+  </div>
+  <div style="min-height:.5rem;display:flex;align-items:center;margin-bottom:.5rem;">
+    <span id="save-msg" style="font-size:.8rem;color:var(--text-muted);"></span>
   </div>
 
-  <!-- Quiz metadata -->
-  <div class="card">
-    <label>Titel</label>
-    <input id="title" placeholder="Fx: Auning Historiske Byvandring">
-
-    <label style="margin-top:.75rem;">Status</label>
-    <div class="row2" style="flex-wrap:wrap;margin-top:.25rem;">
-      <button class="btn btn-sm btn-ghost" onclick="setStatus('kladde')">Kladde</button>
-      <button class="btn btn-sm btn-ghost" onclick="setStatus('testing')">Testing</button>
-      <button class="btn btn-sm" onclick="setStatus('aktiv')"
-        style="background:#4caf50;">▶ Aktiv</button>
-      <button class="btn btn-sm btn-ghost" onclick="setStatus('arkiveret')">Arkivér</button>
-    </div>
-
-    <div class="row2" style="margin-top:.75rem;align-items:center;">
-      <button class="btn" onclick="saveQuiz()" style="flex:1;">💾 Gem quiz</button>
-      <span id="save-msg"></span>
-    </div>
+  <!-- Fane-navigation -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('opsaetning')" id="tab-opsaetning">⚙️ Opsætning</button>
+    <button class="tab-btn" onclick="switchTab('stop')" id="tab-stop">📍 Stop <span id="stop-count" class="badge" style="margin-left:.25rem;">0</span></button>
+    <button class="tab-btn" onclick="switchTab('hold')" id="tab-hold">👥 Hold</button>
   </div>
 
-  <!-- Kunde-PIN adgang -->
-  <div class="card" id="pin-card" style="display:none;">
-    <h3 style="margin-bottom:.5rem;">🔑 Kunde-PIN</h3>
-    <p class="muted" style="margin-bottom:.75rem;">
-      Del denne PIN med quizmasteren, så de kan logge ind på editoren.
-    </p>
-    <div class="row2" style="align-items:flex-end;gap:.5rem;">
-      <div style="flex:1;">
-        <label>Ny PIN (4–8 cifre)</label>
-        <input id="pin-new" type="text" inputmode="numeric" maxlength="8" placeholder="••••"
-          style="letter-spacing:.3rem;font-weight:700;font-size:1.1rem;">
+  <!-- TAB: Opsætning -->
+  <div id="pane-opsaetning" class="tab-pane">
+    <div class="card">
+      <label>Titel</label>
+      <input id="title" placeholder="Fx: Auning Historiske Byvandring">
+
+      <label style="margin-top:.75rem;">Status</label>
+      <div class="row2" style="flex-wrap:wrap;margin-top:.25rem;">
+        <button class="btn btn-sm btn-ghost" onclick="setStatus('kladde')">Kladde</button>
+        <button class="btn btn-sm btn-ghost" onclick="setStatus('testing')">Testing</button>
+        <button class="btn btn-sm" onclick="setStatus('aktiv')" style="background:#4caf50;">▶ Aktiv</button>
+        <button class="btn btn-sm btn-ghost" onclick="setStatus('arkiveret')">Arkivér</button>
       </div>
-      <div style="flex:1;">
-        <label>Udløber</label>
-        <input id="pin-expires" type="datetime-local">
-      </div>
-      <button class="btn btn-sm" onclick="savePin()" style="margin-bottom:.05rem;">Gem PIN</button>
     </div>
-    <p id="pin-msg" style="font-size:.82rem;color:var(--text-muted);margin-top:.4rem;min-height:1.2rem;"></p>
-    <p id="pin-current" class="muted" style="margin-top:.25rem;"></p>
+
+    <!-- Kunde-PIN (kun admin) -->
+    <div class="card" id="pin-card" style="display:none;">
+      <h3 style="margin-bottom:.25rem;">🔑 Kunde-PIN</h3>
+      <p class="muted" style="margin-bottom:.75rem;">Del denne PIN med quizmasteren, så de kan logge ind på editoren.</p>
+      <div style="display:flex;flex-direction:column;gap:.5rem;">
+        <div>
+          <label>Ny PIN (4–8 cifre)</label>
+          <input id="pin-new" type="text" inputmode="numeric" maxlength="8" placeholder="••••"
+            style="letter-spacing:.3rem;font-weight:700;font-size:1.1rem;width:100%;">
+        </div>
+        <div>
+          <label>Udløber</label>
+          <input id="pin-expires" type="datetime-local" style="width:100%;">
+        </div>
+        <button class="btn" onclick="savePin()">Gem PIN</button>
+      </div>
+      <p id="pin-msg" style="font-size:.82rem;color:var(--text-muted);margin-top:.5rem;min-height:1.2rem;"></p>
+      <p id="pin-current" class="muted" style="margin-top:.1rem;"></p>
+    </div>
   </div>
 
-  <!-- Stops -->
-  <div class="card">
-    <h3 style="margin-bottom:.5rem;">
-      Stationer <span id="stop-count" class="badge">0</span>
-    </h3>
-    <div id="map"></div>
-    <p class="muted" style="margin-bottom:.75rem;">Klik på kortet for at tilføje et stop.</p>
-    <div id="stop-list"></div>
+  <!-- TAB: Stop & Kort -->
+  <div id="pane-stop" class="tab-pane" style="display:none;">
+    <div class="card">
+      <div id="map"></div>
+      <p class="muted" style="margin:.5rem 0 .75rem;">Klik på kortet for at tilføje et stop.</p>
+      <div id="stop-list"></div>
+    </div>
+  </div>
+
+  <!-- TAB: Hold -->
+  <div id="pane-hold" class="tab-pane" style="display:none;">
+    <div class="card">
+      <div id="team-list"><p class="muted">Ingen hold endnu.</p></div>
+      <div class="row2" style="margin-top:.75rem;">
+        <input id="new-team-name" placeholder="Holdnavn…" style="flex:1;">
+        <button class="btn btn-sm" onclick="addTeam()">+ Tilføj</button>
+      </div>
+    </div>
   </div>
 
   <!-- QR modal -->
@@ -153,16 +187,6 @@
         <button id="qr-print-btn" class="btn btn-sm" onclick="window.print()">🖨️ Print</button>
         <button id="qr-close-btn" class="btn btn-sm btn-ghost" onclick="closeQR()">Luk</button>
       </div>
-    </div>
-  </div>
-
-  <!-- Hold -->
-  <div class="card">
-    <h3 style="margin-bottom:.75rem;">Hold</h3>
-    <div id="team-list"><p class="muted">Ingen hold endnu.</p></div>
-    <div class="row2" style="margin-top:.75rem;">
-      <input id="new-team-name" placeholder="Holdnavn…" style="flex:1;">
-      <button class="btn btn-sm" onclick="addTeam()">+ Tilføj</button>
     </div>
   </div>
 
@@ -196,6 +220,21 @@ async function init() {
   map.on('click', onMapClick);
 
   if (quizId) await loadAll();
+
+  // Gendan sidst valgte fane
+  try { const t = localStorage.getItem('editor_tab'); if (t) switchTab(t); } catch {}
+}
+
+// ── Tab-navigation ────────────────────────────────────────────
+function switchTab(name) {
+  const tabs = ['opsaetning', 'stop', 'hold'];
+  tabs.forEach(t => {
+    document.getElementById('pane-' + t).style.display = (t === name) ? '' : 'none';
+    document.getElementById('tab-' + t).classList.toggle('active', t === name);
+  });
+  // Leaflet kræver invalidateSize() når kortcontaineren bliver synlig
+  if (name === 'stop' && map) setTimeout(() => map.invalidateSize(), 50);
+  try { localStorage.setItem('editor_tab', name); } catch {}
 }
 
 // ── Load ─────────────────────────────────────────────────────
