@@ -1,78 +1,272 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Scoreboard</title>
-  <link rel="stylesheet" href="../themes/standard.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../js/config.js"></script>
-  <script src="../js/api.js"></script>
-  <style>
-    .team-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: .75rem 1rem;
-      border-radius: var(--radius);
-      background: var(--surface);
-      margin-bottom: .5rem;
-      animation: fadeIn .3s ease;
-    }
-    .rank { font-size: 1.25rem; width: 2.5rem; }
-    .pts  { font-weight: 700; color: var(--accent); font-size: 1.1rem; }
-    h2 { text-align: center; margin-bottom: 1.25rem; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scoreboard</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: system-ui, sans-serif;
+    background: #0f1b35;
+    color: #fff;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  header {
+    background: #1a2744;
+    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #e8445a;
+  }
+  header h1 { font-size: 1.4rem; letter-spacing: .03em; }
+  #quiz-title { font-size: 1rem; opacity: .7; }
+  #last-updated { font-size: .78rem; opacity: .5; }
+
+  main { max-width: 700px; margin: 2rem auto; padding: 0 1rem; }
+
+  .podium {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+    min-height: 160px;
+  }
+
+  .podium-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .4rem;
+  }
+  .podium-name {
+    font-size: .85rem;
+    font-weight: 600;
+    text-align: center;
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .podium-points {
+    font-size: .78rem;
+    opacity: .7;
+  }
+  .podium-block {
+    width: 90px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+  }
+  .p1 .podium-block { height: 120px; background: #f5c518; }
+  .p2 .podium-block { height: 90px;  background: #b0b8c8; }
+  .p3 .podium-block { height: 65px;  background: #cd7f32; }
+
+  .list { display: flex; flex-direction: column; gap: .6rem; }
+
+  .row {
+    background: #1a2744;
+    border-radius: 10px;
+    padding: .9rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: background .2s;
+  }
+  .row.highlight { background: #22336b; }
+
+  .rank {
+    font-size: 1rem;
+    font-weight: 700;
+    width: 2rem;
+    text-align: center;
+    opacity: .6;
+  }
+  .team-name {
+    flex: 1;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .points {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #f5c518;
+    min-width: 4rem;
+    text-align: right;
+  }
+  .correct {
+    font-size: .8rem;
+    opacity: .5;
+    min-width: 5rem;
+    text-align: right;
+  }
+
+  .empty {
+    text-align: center;
+    opacity: .4;
+    padding: 3rem 0;
+    font-size: 1rem;
+  }
+
+  .pulse {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: #4caf50;
+    border-radius: 50%;
+    margin-right: .4rem;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; }
+    50%      { opacity: .3; }
+  }
+</style>
 </head>
-<body class="page-transition">
-  <h2>🏆 Scoreboard</h2>
-  <div id="board">
-    <p style="text-align:center; color:var(--text-muted);">Indlæser…</p>
+<body>
+
+<header>
+  <div>
+    <h1>🏆 Scoreboard</h1>
+    <div id="quiz-title"></div>
   </div>
+  <div>
+    <span class="pulse"></span>
+    <span id="last-updated"></span>
+  </div>
+</header>
 
-  <script>
-    const quizId = new URLSearchParams(location.search).get('q');
+<main>
+  <div class="podium" id="podium"></div>
+  <div class="list"   id="list"></div>
+  <div class="empty"  id="empty" style="display:none">Ingen besvarelser endnu</div>
+</main>
 
-    async function load() {
-      if (!quizId) {
-        document.getElementById('board').innerHTML =
-          '<p style="color:var(--text-muted); text-align:center;">Mangler ?q= i URL\'en</p>';
-        return;
-      }
-      const { data, error } = await sb
-        .schema('quiz')
-        .from('submissions')
-        .select('team_id, points, teams(name)')
-        .eq('is_correct', true);
+<script>
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
-      if (error) {
-        document.getElementById('board').textContent = error.message;
-        return;
-      }
+const quizId = new URLSearchParams(location.search).get('q');
 
-      const totals = {};
-      data.forEach(r => {
-        const id = r.team_id;
-        totals[id] = totals[id] ?? { name: r.teams?.name ?? '?', pts: 0 };
-        totals[id].pts += r.points;
-      });
+if (!quizId) {
+  document.getElementById('quiz-title').textContent = 'Mangler ?q=<quiz-id> i URL';
+}
 
-      const sorted = Object.values(totals).sort((a, b) => b.pts - a.pts);
-      const medals = ['🥇', '🥈', '🥉'];
+// ── Hent data ──────────────────────────────────────────────────
+async function load() {
+  // Quiz-titel
+  const { data: quiz } = await sb.schema('quiz').from('quizzes')
+    .select('title').eq('id', quizId).single();
+  if (quiz) document.getElementById('quiz-title').textContent = quiz.title;
 
-      document.getElementById('board').innerHTML = sorted.length
-        ? sorted.map((t, i) => `
-            <div class="team-row">
-              <span class="rank">${medals[i] ?? i + 1}</span>
-              <span>${t.name}</span>
-              <span class="pts">${t.pts} pt</span>
-            </div>`).join('')
-        : '<p style="text-align:center; color:var(--text-muted);">Ingen besvarelser endnu.</p>';
-    }
+  // Hold + point
+  const { data: teams } = await sb.schema('quiz').from('teams')
+    .select('id, name').eq('quiz_id', quizId);
 
-    sb.channel('score-' + quizId)
-      .on('postgres_changes', { event: '*', schema: 'quiz', table: 'submissions' }, load)
-      .subscribe();
+  if (!teams || teams.length === 0) {
+    document.getElementById('empty').style.display = 'block';
+    return;
+  }
 
-    load();
-  </script>
+  const teamIds = teams.map(t => t.id);
+
+  const { data: subs } = await sb.schema('quiz').from('submissions')
+    .select('team_id, points, is_correct')
+    .in('team_id', teamIds);
+
+  // Aggreger pr. hold
+  const map = {};
+  teams.forEach(t => { map[t.id] = { name: t.name, points: 0, correct: 0 }; });
+  (subs ?? []).forEach(s => {
+    if (!map[s.team_id]) return;
+    map[s.team_id].points  += s.points ?? 0;
+    map[s.team_id].correct += s.is_correct ? 1 : 0;
+  });
+
+  const ranked = Object.values(map)
+    .sort((a, b) => b.points - a.points || b.correct - a.correct);
+
+  render(ranked);
+
+  document.getElementById('last-updated').textContent =
+    'Opdateret ' + new Date().toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+// ── Render ─────────────────────────────────────────────────────
+function render(ranked) {
+  const podiumEl = document.getElementById('podium');
+  const listEl   = document.getElementById('list');
+  const emptyEl  = document.getElementById('empty');
+
+  if (ranked.length === 0) {
+    emptyEl.style.display = 'block';
+    return;
+  }
+  emptyEl.style.display = 'none';
+
+  // Podium (top 3)
+  podiumEl.innerHTML = '';
+  const podiumOrder = [1, 0, 2]; // 2. plads, 1. plads, 3. plads
+  const medals = ['🥇','🥈','🥉'];
+  const classes = ['p1','p2','p3'];
+
+  podiumOrder.forEach(idx => {
+    const t = ranked[idx];
+    if (!t) return;
+    const slot = document.createElement('div');
+    slot.className = 'podium-slot ' + classes[idx];
+    slot.innerHTML = `
+      <div class="podium-name">${esc(t.name)}</div>
+      <div class="podium-points">${t.points} pt</div>
+      <div class="podium-block">${medals[idx]}</div>
+    `;
+    podiumEl.appendChild(slot);
+  });
+
+  // Fuld liste
+  listEl.innerHTML = '';
+  ranked.forEach((t, i) => {
+    const row = document.createElement('div');
+    row.className = 'row' + (i < 3 ? ' highlight' : '');
+    row.innerHTML = `
+      <div class="rank">${i + 1}</div>
+      <div class="team-name">${esc(t.name)}</div>
+      <div class="correct">${t.correct} rigtige</div>
+      <div class="points">${t.points} pt</div>
+    `;
+    listEl.appendChild(row);
+  });
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Realtime subscription ──────────────────────────────────────
+function subscribe() {
+  sb.channel('scoreboard-' + quizId)
+    .on('postgres_changes', {
+      event: '*',
+      schema: 'quiz',
+      table: 'submissions',
+    }, () => load())
+    .subscribe();
+}
+
+// ── Start ──────────────────────────────────────────────────────
+load();
+subscribe();
+
+// Fallback: opdater hvert 30. sekund
+setInterval(load, 30_000);
+</script>
 </body>
 </html>
