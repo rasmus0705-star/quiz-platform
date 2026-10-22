@@ -225,21 +225,21 @@
         html += `<div class="card" style="text-align:center;color:${done.is_correct ? '#4caf50' : 'var(--accent)'}">
           ${done.is_correct ? '✅ Korrekt – ' + done.points + ' point' : '❌ Forkert svar'}
         </div>`;
-      } else if (act.type === 'multiple_choice' && act.options) {
+      } else if (act.type === 'mc' && act.options) {
         const opts = Array.isArray(act.options) ? act.options : Object.values(act.options);
         html += opts.map((o, i) => `
           <button class="btn" style="margin-bottom:.5rem;width:100%;text-align:left;"
             onclick="submitAnswer('${act.id}', '${escape(o)}', '${stop.id}')">
             ${String.fromCharCode(65 + i)}. ${o}
           </button>`).join('');
-      } else if (act.type === 'text') {
+      } else if (act.type === 'tekst' || act.type === 'tal') {
         html += `
           <input id="txt-answer" placeholder="Dit svar…" style="margin-bottom:.75rem;">
           <button class="btn" style="width:100%;"
             onclick="submitAnswer('${act.id}', document.getElementById('txt-answer').value, '${stop.id}')">
             Send svar
           </button>`;
-      } else if (act.type === 'photo') {
+      } else if (act.type === 'foto') {
         html += `
           <input type="file" accept="image/*" capture="environment" id="photo-input"
             style="margin-bottom:.75rem;">
