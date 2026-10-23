@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oversigt – Quiz Platform</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #eef1f6;
+    --ink:       #16213e;
+    --ink-2:     #0f3460;
+    --accent:    #e94560;
+    --text-ink:  #eaeaea;
+    --text-dim:  #8892a4;
+    --radius-lg: 18px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* ── Sidebar ─────────────────────────────────────────────── */
+  #sidebar {
+    width: 230px; flex-shrink: 0;
+    background: var(--ink); color: var(--text-ink);
+    display: flex; flex-direction: column;
+    padding: 1.5rem 0;
+    position: sticky; top: 0; height: 100vh;
+  }
+  #sidebar .logo {
+    font-size: 1.05rem; font-weight: 700;
+    padding: 0 1.5rem 1.75rem;
+    display: flex; align-items: center; gap: .5rem;
+  }
+  nav.route { padding: 0 0 0 1.5rem; flex: 1; position: relative; }
+  nav.route::before {
+    content: ''; position: absolute; left: 1.95rem; top: .6rem; bottom: .6rem;
+    width: 2px; background: rgba(255,255,255,.12);
+  }
+  .route-item {
+    display: flex; align-items: center; gap: .75rem;
+    padding: .65rem .75rem .65rem 0;
+    color: var(--text-dim); text-decoration: none;
+    font-size: .92rem; font-weight: 600;
+    position: relative;
+  }
+  .route-item .dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--text-dim); flex-shrink: 0;
+    position: relative; z-index: 1;
+    border: 3px solid var(--ink);
+  }
+  .route-item.active { color: #fff; }
+  .route-item.active .dot { background: var(--accent); }
+  .route-item:hover:not(.active) { color: #cfd6e4; }
+  #sidebar .signout {
+    padding: 0 1.5rem; margin-top: auto;
+  }
+  #sidebar .signout button {
+    width: 100%; padding: .6rem; border-radius: var(--radius-sm);
+    background: rgba(255,255,255,.08); color: var(--text-ink);
+    border: none; font-size: .85rem; cursor: pointer;
+  }
+  #sidebar .signout button:hover { background: rgba(255,255,255,.15); }
+
+  /* Mobil: sidebar bliver til en top-bjælke */
+  #mobile-topbar { display: none; }
+
+  @media (max-width: 760px) {
+    body { flex-direction: column; }
+    #sidebar { display: none; }
+    #mobile-topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--ink); color: #fff;
+      padding: .85rem 1rem;
+    }
+    #mobile-topbar .logo { font-weight: 700; font-size: 1rem; }
+    #mobile-topbar nav { display: flex; gap: 1rem; font-size: .85rem; }
+    #mobile-topbar nav a { color: var(--text-dim); text-decoration: none; }
+    #mobile-topbar nav a.active { color: #fff; }
+  }
+
+  /* ── Main content ───────────────────────────────────────── */
+  main { flex: 1; padding: 2.25rem 2.5rem; max-width: 1100px; }
+  @media (max-width: 760px) { main { padding: 1.25rem; } }
+
+  h1 { font-size: 1.6rem; font-weight: 800; letter-spacing: -.02em; }
+  .lead { color: #5b6476; font-size: .95rem; margin-top: .25rem; margin-bottom: 1.75rem; }
+
+  /* Stat-rig: én fremhævet + tre sekundære */
+  .stats-row {
+    display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr;
+    gap: 1rem; margin-bottom: 2rem;
+  }
+  @media (max-width: 760px) { .stats-row { grid-template-columns: 1fr 1fr; } }
+
+  .stat-card {
+    background: var(--ink); color: var(--text-ink);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.4rem;
+    border-top: 3px solid var(--accent);
+  }
+  .stat-card.secondary { border-top-color: var(--ink-2); }
+  .stat-num { font-size: 2.1rem; font-weight: 800; line-height: 1; }
+  .stat-label { font-size: .82rem; color: var(--text-dim); margin-top: .4rem; }
+
+  .cols { display: grid; grid-template-columns: 1.3fr 1fr; gap: 1.5rem; }
+  @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: #fff; border-radius: var(--radius-lg);
+    padding: 1.4rem;
+  }
+  .panel h2 {
+    font-size: .95rem; font-weight: 700; margin-bottom: 1rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .panel h2 a { font-size: .8rem; font-weight: 600; color: var(--accent); text-decoration: none; }
+
+  .row-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: .7rem 0; border-bottom: 1px solid #f0f1f5;
+    font-size: .88rem; gap: .75rem;
+  }
+  .row-item:last-child { border-bottom: none; }
+  .row-item a.title { color: var(--ink); text-decoration: none; font-weight: 600; }
+  .row-item .meta { color: #9aa2b1; font-size: .78rem; }
+
+  .badge {
+    display: inline-block; padding: .15rem .55rem; border-radius: 20px;
+    font-size: .7rem; font-weight: 700; white-space: nowrap;
+  }
+  .badge-kladde    { background: #e9ebf0; color: #5b6476; }
+  .badge-testing   { background: #fdf0d5; color: #9a6b0a; }
+  .badge-aktiv     { background: #dcf5e3; color: #1a7a3a; }
+  .badge-arkiveret { background: #f3dde0; color: #9a2f3d; }
+
+  .empty-note { color: #9aa2b1; font-size: .85rem; padding: .5rem 0; }
+
+  .quick-actions { display: flex; gap: .75rem; margin-top: 1.5rem; flex-wrap: wrap; }
+  .btn {
+    padding: .7rem 1.2rem; border-radius: var(--radius-sm); border: none;
+    font-size: .88rem; font-weight: 700; cursor: pointer; text-decoration: none;
+    display: inline-flex; align-items: center; gap: .4rem;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #d13950; }
+  .btn-outline { background: #fff; color: var(--ink); border: 1.5px solid #dadfe8; }
+  .btn-outline:hover { border-color: var(--ink); }
+
+  #loading { color: #9aa2b1; padding: 2rem 0; }
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+  <div class="logo">🗺️ Quiz Platform</div>
+  <nav class="route">
+    <a href="overview.html" class="route-item active"><span class="dot"></span> Oversigt</a>
+    <a href="customers.html" class="route-item"><span class="dot"></span> Kunder</a>
+    <a href="dashboard.html" class="route-item"><span class="dot"></span> Alle løb</a>
+  </nav>
+  <div class="signout"><button onclick="signOut()">Log ud</button></div>
+</div>
+
+<div id="mobile-topbar">
+  <span class="logo">🗺️ Quiz Platform</span>
+  <nav>
+    <a href="overview.html" class="active">Oversigt</a>
+    <a href="customers.html">Kunder</a>
+    <a href="dashboard.html">Alle løb</a>
+  </nav>
+</div>
+
+<main>
+  <h1>Oversigt</h1>
+  <p class="lead">Alt det du skal bruge, samlet ét sted.</p>
+
+  <div id="loading">Indlæser…</div>
+
+  <div id="content" style="display:none;">
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-aktive">–</div>
+        <div class="stat-label">Aktive løb lige nu</div>
+      </div>
+      <div class="stat-card secondary">
+        <div class="stat-num" id="stat-total">–</div>
+        <div class="stat-label">Løb i alt</div>
+      </div>
+      <div class="stat-card secondary">
+        <div class="stat-num" id="stat-kunder">–</div>
+        <div class="stat-label">Kunder</div>
+      </div>
+      <div class="stat-card secondary">
+        <div class="stat-num" id="stat-hold">–</div>
+        <div class="stat-label">Hold i alt</div>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div class="panel">
+        <h2>Seneste løb <a href="dashboard.html">Se alle →</a></h2>
+        <div id="recent-quizzes"></div>
+      </div>
+      <div class="panel">
+        <h2>Kunder <a href="customers.html">Se alle →</a></h2>
+        <div id="recent-customers"></div>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <button class="btn btn-primary" onclick="createQuiz()">+ Ny quiz</button>
+      <a class="btn btn-outline" href="customers.html">+ Ny kunde</a>
+    </div>
+  </div>
+</main>
+
+<script>
+(async () => {
+  const session = await getSession();
+  if (!session) { location.href = 'login.html'; return; }
+  if (session.type === 'pin') {
+    if (!session.is_admin) { location.href = `editor.html?q=${session.quiz_id}`; return; }
+    activatePinClient();
+  }
+  await loadOverview();
+})();
+
+async function loadOverview() {
+  const [quizzesRes, customersRes, teamsRes] = await Promise.all([
+    sb.schema('quiz').from('quizzes')
+      .select('id, title, status, created_at, customer_id, customers(name)')
+      .order('created_at', { ascending: false }),
+    sb.schema('quiz').from('customers')
+      .select('id, name, email, company, created_at')
+      .order('created_at', { ascending: false }),
+    sb.schema('quiz').from('teams').select('id', { count: 'exact', head: true })
+  ]);
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('content').style.display = 'block';
+
+  const quizzes   = quizzesRes.data ?? [];
+  const customers = customersRes.data ?? [];
+
+  document.getElementById('stat-aktive').textContent = quizzes.filter(q => q.status === 'aktiv').length;
+  document.getElementById('stat-total').textContent  = quizzes.length;
+  document.getElementById('stat-kunder').textContent = customers.length;
+  document.getElementById('stat-hold').textContent   = teamsRes.count ?? '–';
+
+  renderRecentQuizzes(quizzes.slice(0, 5));
+  renderRecentCustomers(customers.slice(0, 5));
+}
+
+function renderRecentQuizzes(quizzes) {
+  const el = document.getElementById('recent-quizzes');
+  if (!quizzes.length) {
+    el.innerHTML = '<p class="empty-note">Ingen løb oprettet endnu.</p>';
+    return;
+  }
+  el.innerHTML = quizzes.map(q => `
+    <div class="row-item">
+      <div>
+        <a class="title" href="editor.html?q=${q.id}">${escHtml(q.title || '(uden titel)')}</a>
+        <div class="meta">${q.customers?.name ? '👤 ' + escHtml(q.customers.name) : 'Ingen kunde'} · ${formatDate(q.created_at)}</div>
+      </div>
+      <span class="badge badge-${q.status}">${labelStatus(q.status)}</span>
+    </div>`).join('');
+}
+
+function renderRecentCustomers(customers) {
+  const el = document.getElementById('recent-customers');
+  if (!customers.length) {
+    el.innerHTML = '<p class="empty-note">Ingen kunder oprettet endnu.</p>';
+    return;
+  }
+  el.innerHTML = customers.map(c => `
+    <div class="row-item">
+      <div>
+        <a class="title" href="customers.html">${escHtml(c.name)}</a>
+        <div class="meta">${escHtml(c.company || c.email || '')}</div>
+      </div>
+    </div>`).join('');
+}
+
+async function createQuiz() {
+  const session = await getSession();
+  const insertRow = { title: 'Ny quiz', status: 'kladde' };
+  if (session?.user?.id) insertRow.owner_id = session.user.id;
+  const { data, error } = await sb.schema('quiz').from('quizzes')
+    .insert(insertRow).select('id').single();
+  if (error) { alert('Kunne ikke oprette quiz: ' + error.message); return; }
+  location.href = `editor.html?q=${data.id}`;
+}
+
+function labelStatus(s) {
+  return { kladde: 'Kladde', testing: 'Test', aktiv: 'Aktiv', arkiveret: 'Arkiveret' }[s] ?? s;
+}
+function formatDate(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('da-DK', { day: 'numeric', month: 'short' });
+}
+function escHtml(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>

@@ -75,7 +75,7 @@
 
   // Kun auto-redirect hvis der IKKE er et quiz-id i URL'en (dvs. admin-login)
   if (stored && !quizId) {
-    if (stored.is_admin) location.replace('dashboard.html')
+    if (stored.is_admin) location.replace('overview.html')
     else                 location.replace('editor.html?q=' + stored.quiz_id)
   }
 
@@ -112,7 +112,7 @@
         expires_at : data.expires_at
       }))
 
-      if (data.is_admin) location.href = 'dashboard.html'
+      if (data.is_admin) location.href = 'overview.html'
       else               location.href = 'editor.html?q=' + data.quiz_id
 
     } catch (e) {

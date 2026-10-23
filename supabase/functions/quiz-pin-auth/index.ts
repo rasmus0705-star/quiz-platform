@@ -13,6 +13,14 @@ const CORS = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 
+async function logAttempt(sb: ReturnType<typeof createClient>, target: string, success: boolean) {
+  try {
+    await sb.schema('quiz').from('login_attempts').insert({ target, success })
+  } catch (e) {
+    console.error('Kunne ikke logge login-forsøg:', e)
+  }
+}
+
 async function sha256(text: string): Promise<string> {
   const buf = await crypto.subtle.digest(
     'SHA-256', new TextEncoder().encode(text)
@@ -34,7 +42,25 @@ Deno.serve(async (req) => {
     return Response.json({ error: 'PIN mangler' }, { status: 400, headers: CORS })
   }
 
-  const sb       = createClient(SUPABASE_URL, SERVICE_KEY)
+  const sb     = createClient(SUPABASE_URL, SERVICE_KEY)
+  const target = quiz_id ?? 'admin'
+
+  // ── Rate-limit: max 5 forkerte forsøg pr. 10 minutter pr. target ──
+  const windowStart = new Date(Date.now() - 10 * 60 * 1000).toISOString()
+  const { count: recentFails } = await sb
+    .schema('quiz').from('login_attempts')
+    .select('id', { count: 'exact', head: true })
+    .eq('target', target)
+    .eq('success', false)
+    .gte('created_at', windowStart)
+
+  if ((recentFails ?? 0) >= 5) {
+    return Response.json(
+      { error: 'For mange forkerte forsøg. Prøv igen om 10 minutter.' },
+      { status: 429, headers: CORS }
+    )
+  }
+
   const pinHash  = await sha256(pin.trim())
   const adminHash = await sha256(ADMIN_PIN_ENV.trim())
 
@@ -60,9 +86,11 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Quiz ikke fundet' }, { status: 404, headers: CORS })
     }
     if (!quiz.pin_hash || quiz.pin_hash !== pinHash) {
+      await logAttempt(sb, target, false)
       return Response.json({ error: 'Forkert PIN' }, { status: 401, headers: CORS })
     }
     if (quiz.pin_expires_at && new Date(quiz.pin_expires_at) < new Date()) {
+      await logAttempt(sb, target, false)
       return Response.json({ error: 'PIN er udløbet' }, { status: 401, headers: CORS })
     }
 
@@ -72,6 +100,7 @@ Deno.serve(async (req) => {
       : new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 timer fallback
 
   } else {
+    await logAttempt(sb, target, false)
     return Response.json({ error: 'Forkert PIN' }, { status: 401, headers: CORS })
   }
 
@@ -90,6 +119,8 @@ Deno.serve(async (req) => {
     console.error('Session insert fejl:', sessionErr)
     return Response.json({ error: 'Sessionsoprettelse fejlede' }, { status: 500, headers: CORS })
   }
+
+  await logAttempt(sb, target, true)
 
   return Response.json({
     session_id : session.id,

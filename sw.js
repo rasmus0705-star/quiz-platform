@@ -1,13 +1,20 @@
 // =============================================================
 // sw.js – Service Worker (PWA offline-grundlag)
+// v2: precacher nu selve app-sideren (ikke kun CSS/JS), så
+//     holdspil-siden kan åbnes igen med dårligt mobilsignal.
 // =============================================================
 
-const CACHE = 'quiz-v1';
+const CACHE = 'quiz-v2';
 const PRECACHE = [
     '/',
+    '/index.html',
     '/js/config.js',
     '/js/api.js',
     '/themes/standard.css',
+    '/play/quiz.html',
+    '/board/scoreboard.html',
+    '/app/login.html',
+    '/manifest.json',
 ];
 
 self.addEventListener('install', e => {
@@ -27,8 +34,16 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-    // Netværk først, fallback til cache
+    // Netværk først, fallback til cache (så GPS-opdateringer og
+    // besvarelser altid prøver live-serveren først).
     e.respondWith(
-        fetch(e.request).catch(() => caches.match(e.request))
+        fetch(e.request)
+            .then(res => {
+                // Opdater cachen i baggrunden med friske sider, når nettet virker
+                const copy = res.clone();
+                caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});
+                return res;
+            })
+            .catch(() => caches.match(e.request))
     );
 });
