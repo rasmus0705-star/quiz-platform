@@ -117,9 +117,10 @@
   <!-- Fane-navigation -->
   <div class="tab-bar">
     <button class="tab-btn active" onclick="switchTab('opsaetning')" id="tab-opsaetning">⚙️ Opsætning</button>
-    <button class="tab-btn" onclick="switchTab('stop')" id="tab-stop">📍 Stop <span id="stop-count" class="badge" style="margin-left:.25rem;">0</span></button>
-    <button class="tab-btn" onclick="switchTab('hold')" id="tab-hold">👥 Hold</button>
+    <button class="tab-btn" onclick="switchTab('stop')" id="tab-stop">📍 Stop <span id="stop-count" class="badge" style="margin-left:.25rem;">0</span> <span id="stop-check"></span></button>
+    <button class="tab-btn" onclick="switchTab('hold')" id="tab-hold">👥 Hold <span id="hold-check"></span></button>
   </div>
+  <div id="readiness-hint" class="muted" style="margin:-.25rem 0 .75rem;"></div>
 
   <!-- TAB: Opsætning -->
   <div id="pane-opsaetning" class="tab-pane">
@@ -131,7 +132,7 @@
       <div class="row2" style="flex-wrap:wrap;margin-top:.25rem;">
         <button class="btn btn-sm btn-ghost" onclick="setStatus('kladde')">Kladde</button>
         <button class="btn btn-sm btn-ghost" onclick="setStatus('testing')">Testing</button>
-        <button class="btn btn-sm" onclick="setStatus('aktiv')" style="background:#4caf50;">▶ Aktiv</button>
+        <button class="btn btn-sm" onclick="activateQuiz()" style="background:#4caf50;">▶ Aktiv</button>
         <button class="btn btn-sm btn-ghost" onclick="setStatus('arkiveret')">Arkivér</button>
       </div>
     </div>
@@ -150,11 +151,17 @@
   <!-- TAB: Hold -->
   <div id="pane-hold" class="tab-pane" style="display:none;">
     <div class="card">
+      <p class="muted" style="margin-bottom:.75rem;">
+        Del linket (eller QR-koden) med holdet – de skal ikke oprette login, bare åbne linket på deres mobil.
+      </p>
       <div id="team-list"><p class="muted">Ingen hold endnu.</p></div>
       <div class="row2" style="margin-top:.75rem;">
         <input id="new-team-name" placeholder="Holdnavn…" style="flex:1;">
         <button class="btn btn-sm" onclick="addTeam()">+ Tilføj</button>
       </div>
+      <button class="btn btn-sm btn-ghost" style="margin-top:.75rem;width:100%;" onclick="testAsPlayer()">
+        🧪 Test som spiller
+      </button>
     </div>
   </div>
 
@@ -197,6 +204,7 @@ async function init() {
   map.on('click', onMapClick);
 
   if (quizId) await loadAll();
+  updateReadinessUI();
 
   // Gendan sidst valgte fane
   try { const t = localStorage.getItem('editor_tab'); if (t) switchTab(t); } catch {}
@@ -257,8 +265,24 @@ async function loadAll() {
   // Teams
   const { data: teamRows } = await sb.schema('quiz').from('teams')
     .select('*').eq('quiz_id', quizId).order('created_at');
-  teams = teamRows ?? [];
+  const allTeams = teamRows ?? [];
+
+  // Et evt. efterladt testhold fra "Test som spiller" skal aldrig ses
+  // i hold-listen og ryddes automatisk op (inkl. dets testbesvarelser).
+  const leftoverTest = allTeams.filter(t => t.name === TEST_TEAM_NAME);
+  teams = allTeams.filter(t => t.name !== TEST_TEAM_NAME);
+  if (leftoverTest.length) cleanupTestTeams(leftoverTest.map(t => t.id));
+
   renderTeams();
+}
+
+const TEST_TEAM_NAME = '🧪 Testhold';
+
+async function cleanupTestTeams(teamIds) {
+  if (!teamIds.length) return;
+  await sb.schema('quiz').from('submissions').delete().in('team_id', teamIds);
+  await sb.schema('quiz').from('team_positions').delete().in('team_id', teamIds);
+  await sb.schema('quiz').from('teams').delete().in('id', teamIds);
 }
 
 // ── Quiz gem / status ─────────────────────────────────────────
@@ -298,6 +322,39 @@ async function setStatus(status) {
   quizStatus = status;
   setStatusPill(status);
   flash('Status: ' + status);
+}
+
+// ── Klar-til-aktivering ───────────────────────────────────────
+function getReadiness() {
+  const hasStopWithActivity = stops.some(s => s.activities.length > 0);
+  const hasTeam = teams.length > 0;
+  const missing = [];
+  if (!hasStopWithActivity) missing.push('mindst ét stop med en opgave');
+  if (!hasTeam) missing.push('mindst ét hold');
+  return { ready: missing.length === 0, missing, hasStopWithActivity, hasTeam };
+}
+
+function updateReadinessUI() {
+  const r = getReadiness();
+  document.getElementById('stop-check').textContent = r.hasStopWithActivity ? '✅' : '';
+  document.getElementById('hold-check').textContent  = r.hasTeam ? '✅' : '';
+  const hintEl = document.getElementById('readiness-hint');
+  if (r.ready) {
+    hintEl.textContent = quizStatus === 'aktiv' ? '' : '✅ Klar til at blive aktiveret.';
+    hintEl.style.color = '#4caf50';
+  } else {
+    hintEl.textContent = '⚠️ Mangler: ' + r.missing.join(' og ') + ' for at kunne aktivere løbet.';
+    hintEl.style.color = '';
+  }
+}
+
+async function activateQuiz() {
+  const r = getReadiness();
+  if (!r.ready) {
+    flash('⚠️ Mangler: ' + r.missing.join(' og '), 5000);
+    return;
+  }
+  await setStatus('aktiv');
 }
 
 function setStatusPill(status) {
@@ -403,6 +460,7 @@ function renderStops() {
       </div>
       ${openStopId===s.id ? stopDetail(s) : ''}
     </div>`).join('');
+  updateReadinessUI();
 }
 
 function stopDetail(stop) {
@@ -660,10 +718,32 @@ function renderTeams() {
         </div>
       </div>`;
   }).join('');
+  updateReadinessUI();
 }
 
 function copyLink(url) {
   navigator.clipboard.writeText(url).then(()=>flash('✅ Link kopieret'));
+}
+
+async function testAsPlayer() {
+  if (!quizId) { flash('⚠️ Gem quizzen først'); return; }
+  const base = location.origin +
+    location.pathname.replace(/app\/editor\.html.*/, 'play/quiz.html');
+
+  // Dedikeret, skjult testhold: vises ALDRIG i hold-listen (holdes uden
+  // for `teams`), og et evt. tidligere testhold ryddes helt op (inkl.
+  // besvarelser) før et nyt oprettes, så point ikke hober sig op.
+  const { data: oldTest } = await sb.schema('quiz').from('teams')
+    .select('id').eq('quiz_id', quizId).eq('name', TEST_TEAM_NAME);
+  if (oldTest?.length) await cleanupTestTeams(oldTest.map(t => t.id));
+
+  const token = 'test-' + Math.random().toString(36).slice(2, 8);
+  const { data: testTeam, error } = await sb.schema('quiz').from('teams')
+    .insert({ quiz_id: quizId, name: TEST_TEAM_NAME, token }).select().single();
+  if (error) { flash('❌ ' + error.message); return; }
+
+  window.open(base + '?t=' + testTeam.token, '_blank');
+  flash('🧪 Testhold oprettet – ryddes automatisk op, når du genindlæser editoren');
 }
 
 // ── QR ────────────────────────────────────────────────────────

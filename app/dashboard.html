@@ -99,16 +99,18 @@
 <header>
   <h1>🗺️ Quiz Platform</h1>
   <div class="top-bar">
+    <a href="customers.html" id="customers-link" style="display:none;color:#fff;font-size:.9rem;text-decoration:none;">👥 Kunder</a>
     <span id="user-email"></span>
     <button class="btn btn-ghost" onclick="signOut()">Log ud</button>
   </div>
 </header>
 
 <main>
-  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
-    <div class="section-title">Dine quizzer</div>
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:.25rem;">
+    <div class="section-title" style="margin-bottom:0;">Dine quizzer</div>
     <button class="btn btn-primary" onclick="createQuiz()">+ Ny quiz</button>
   </div>
+  <div id="stats-line" style="font-size:.8rem;color:#999;margin-bottom:1rem;"></div>
 
   <div id="loading">Indlæser…</div>
   <div class="quiz-grid" id="grid" style="display:none;"></div>
@@ -140,14 +142,31 @@ let isAdmin = false;
     document.getElementById('user-email').textContent = session.user?.email ?? '';
   }
 
+  if (isAdmin) document.getElementById('customers-link').style.display = 'inline';
+
   await loadQuizzes();
+  if (isAdmin) loadStats();
 })();
+
+async function loadStats() {
+  const statsEl = document.getElementById('stats-line');
+  const [{ count: aktive }, { count: holdTotal }, { count: kunder }] = await Promise.all([
+    sb.schema('quiz').from('quizzes').select('id', { count: 'exact', head: true }).eq('status', 'aktiv'),
+    sb.schema('quiz').from('teams').select('id', { count: 'exact', head: true }),
+    sb.schema('quiz').from('customers').select('id', { count: 'exact', head: true })
+  ]);
+  const parts = [];
+  if (aktive    != null) parts.push(`${aktive} aktive løb`);
+  if (holdTotal != null) parts.push(`${holdTotal} hold i alt`);
+  if (kunder    != null) parts.push(`${kunder} kunder`);
+  if (parts.length) statsEl.textContent = parts.join(' · ');
+}
 
 async function loadQuizzes() {
   const { data, error } = await sb
     .schema('quiz')
     .from('quizzes')
-    .select('id, title, status, created_at')
+    .select('id, title, status, created_at, customer_id, customers(name)')
     .order('created_at', { ascending: false });
 
   document.getElementById('loading').style.display = 'none';
@@ -166,13 +185,19 @@ async function loadQuizzes() {
     data.forEach(q => {
       const card = document.createElement('div');
       card.className = 'quiz-card';
+      const custName = q.customers?.name;
       card.innerHTML = `
         <a href="editor.html?q=${q.id}" style="text-decoration:none;color:inherit;">
           <h2>${q.title || '(uden titel)'}</h2>
           <span class="badge badge-${q.status}">${labelStatus(q.status)}</span>
           <p>Oprettet ${formatDate(q.created_at)}</p>
+          ${custName ? `<p>👤 ${custName}</p>` : ''}
         </a>
-        ${isAdmin ? `<button class="btn btn-sm" style="margin-top:.5rem;width:100%;" onclick="openPin('${q.id}','${(q.title||'').replace(/'/g,"\\'")}')">🔑 Kunde-PIN</button>` : ''}
+        ${isAdmin ? `
+          <div style="display:flex;gap:.4rem;">
+            <button class="btn btn-sm" style="flex:1;" onclick="openPin('${q.id}','${(q.title||'').replace(/'/g,"\\'")}')">🔑 Kunde-PIN</button>
+            <button class="btn btn-sm" style="background:#f8d7da;color:#842029;" onclick="deleteQuiz('${q.id}','${(q.title||'').replace(/'/g,"\\'")}')" title="Slet quiz">🗑</button>
+          </div>` : ''}
       `;
       grid.appendChild(card);
     });
@@ -196,6 +221,14 @@ async function createQuiz() {
   location.href = `editor.html?q=${data.id}`;
 }
 
+async function deleteQuiz(quizId, title) {
+  if (!confirm(`Slet "${title}" permanent? Alle stop, hold og besvarelser slettes også. Dette kan ikke fortrydes.`)) return;
+  const { error } = await sb.schema('quiz').rpc('delete_quiz_cascade', { p_quiz_id: quizId });
+  if (error) { alert('Kunne ikke slette: ' + error.message); return; }
+  await loadQuizzes();
+  if (isAdmin) loadStats();
+}
+
 function labelStatus(s) {
   return { kladde: 'Kladde', testing: 'Test', aktiv: 'Aktiv', arkiveret: 'Arkiveret' }[s] ?? s;
 }
@@ -207,14 +240,24 @@ function formatDate(iso) {
 
 // ── Kunde-PIN modal ───────────────────────────────────────────
 let pinQuizId = null;
+let customersCache = null;
 
-function openPin(quizId, title) {
+async function openPin(quizId, title) {
   pinQuizId = quizId;
   document.getElementById('pin-modal-title').textContent = title;
   document.getElementById('pin-new').value = '';
   document.getElementById('pin-expires').value = '';
   document.getElementById('pin-msg').textContent = '';
   document.getElementById('pin-modal').style.display = 'flex';
+
+  if (!customersCache) {
+    const { data } = await sb.schema('quiz').from('customers').select('id, name').order('name');
+    customersCache = data ?? [];
+  }
+  const { data: q } = await sb.schema('quiz').from('quizzes').select('customer_id').eq('id', quizId).single();
+  const sel = document.getElementById('pin-customer');
+  sel.innerHTML = '<option value="">– Ingen kunde knyttet –</option>' +
+    customersCache.map(c => `<option value="${c.id}" ${q?.customer_id===c.id?'selected':''}>${c.name}</option>`).join('');
 }
 
 function closePin() {
@@ -236,6 +279,8 @@ async function savePin() {
 
   const update = { pin_hash: pinHash };
   if (expires) update.pin_expires_at = new Date(expires).toISOString();
+  const custVal = document.getElementById('pin-customer').value;
+  update.customer_id = custVal || null;
 
   const { error } = await sb.schema('quiz').from('quizzes').update(update).eq('id', pinQuizId);
   if (error) {
@@ -244,6 +289,7 @@ async function savePin() {
     const loginUrl = `${location.origin}${location.pathname.replace('dashboard.html','login.html')}?q=${pinQuizId}`;
     msgEl.innerHTML = `✅ PIN gemt!<br><b>Kode: ${pin}</b><br><small style="word-break:break-all">${loginUrl}</small>
       <br><button onclick="navigator.clipboard.writeText('Link: ${loginUrl}\\nPIN: ${pin}')" style="margin-top:.4rem;font-size:.8rem;cursor:pointer;">📋 Kopiér link + PIN</button>`;
+    loadQuizzes();
   }
 }
 </script>
@@ -259,6 +305,12 @@ async function savePin() {
     <div>
       <label style="font-size:.82rem;color:#666;display:block;margin-bottom:.25rem;">Udløber (valgfrit)</label>
       <input id="pin-expires" type="datetime-local" style="width:100%;padding:.5rem;border:1px solid #ddd;border-radius:6px;">
+    </div>
+    <div>
+      <label style="font-size:.82rem;color:#666;display:block;margin-bottom:.25rem;">Knyt til kunde (valgfrit)</label>
+      <select id="pin-customer" style="width:100%;padding:.5rem;border:1px solid #ddd;border-radius:6px;">
+        <option value="">– Ingen kunde knyttet –</option>
+      </select>
     </div>
     <div style="display:flex;gap:.5rem;">
       <button class="btn btn-primary" style="flex:1;" onclick="savePin()">Gem PIN</button>

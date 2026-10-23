@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kunder – Quiz Platform</title>
+<link rel="stylesheet" href="../themes/standard.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #f4f6f9; min-height: 100vh; }
+
+  header {
+    background: #1a2744; color: #fff;
+    padding: 1rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  header h1 { font-size: 1.2rem; }
+  .top-bar { display: flex; align-items: center; gap: .75rem; }
+  .btn { padding: .5rem 1rem; border: none; border-radius: 6px; cursor: pointer; font-size: .9rem; }
+  .btn-primary { background: #e8445a; color: #fff; }
+  .btn-primary:hover { background: #c73349; }
+  .btn-ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.3); }
+  .btn-ghost:hover { background: rgba(255,255,255,.1); }
+  .btn-sm { padding: .3rem .65rem; font-size: .8rem; }
+
+  main { max-width: 960px; margin: 2rem auto; padding: 0 1rem; display: flex; gap: 1.5rem; align-items: flex-start; }
+
+  .panel {
+    background: #fff; border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    padding: 1.25rem;
+  }
+
+  #list-panel { flex: 1; min-width: 280px; }
+  #detail-panel { flex: 1.3; min-width: 320px; }
+
+  .section-title { font-size: 1rem; font-weight: 600; color: #444; margin-bottom: 1rem; }
+
+  input, textarea {
+    width: 100%; padding: .5rem; border: 1px solid #ddd; border-radius: 6px;
+    font-size: .9rem; font-family: inherit;
+  }
+  label { font-size: .8rem; color: #666; display: block; margin: .5rem 0 .25rem; }
+
+  .customer-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: .65rem .25rem; border-bottom: 1px solid #eee; cursor: pointer;
+  }
+  .customer-row:hover { background: #f8f9fb; }
+  .customer-row.active { background: #fdeef0; }
+  .customer-row h3 { font-size: .92rem; font-weight: 600; }
+  .customer-row p { font-size: .78rem; color: #888; }
+
+  .empty { text-align: center; color: #aaa; padding: 2rem 1rem; }
+
+  .quiz-mini {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: .55rem 0; border-bottom: 1px solid #f0f0f0; font-size: .88rem;
+  }
+  .badge {
+    display: inline-block; padding: .15rem .5rem; border-radius: 20px;
+    font-size: .72rem; font-weight: 600;
+  }
+  .badge-kladde    { background: #eee;     color: #555; }
+  .badge-testing   { background: #fff3cd;  color: #856404; }
+  .badge-aktiv     { background: #d1f5d3;  color: #1a6b1e; }
+  .badge-arkiveret { background: #f8d7da;  color: #842029; }
+
+  #search { margin-bottom: .75rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>👥 Kunder</h1>
+  <div class="top-bar">
+    <a href="dashboard.html" style="color:#fff;font-size:.9rem;text-decoration:none;">← Dashboard</a>
+    <button class="btn btn-ghost" onclick="signOut()">Log ud</button>
+  </div>
+</header>
+
+<main>
+  <div class="panel" id="list-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;">
+      <div class="section-title" style="margin:0;">Kunder</div>
+      <button class="btn btn-primary btn-sm" onclick="openNewCustomer()">+ Ny kunde</button>
+    </div>
+    <input id="search" placeholder="Søg på navn, email eller firma…" oninput="renderList()">
+    <div id="loading">Indlæser…</div>
+    <div id="customer-list" style="display:none;"></div>
+  </div>
+
+  <div class="panel" id="detail-panel">
+    <div id="detail-empty" class="empty">Vælg en kunde i listen – eller opret en ny – for at se detaljer.</div>
+    <div id="detail-content" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;">
+        <h2 id="detail-name" style="font-size:1.1rem;"></h2>
+        <button class="btn btn-sm" style="background:#eee;color:#333;" onclick="editCustomer()">✏️ Redigér</button>
+      </div>
+      <p id="detail-email" style="font-size:.85rem;color:#666;margin-bottom:.15rem;"></p>
+      <p id="detail-phone" style="font-size:.85rem;color:#666;margin-bottom:.15rem;"></p>
+      <p id="detail-company" style="font-size:.85rem;color:#666;margin-bottom:.75rem;"></p>
+
+      <label>Noter (kun synligt for dig – godt til support-historik)</label>
+      <textarea id="detail-notes" rows="3" onchange="saveNotes()"></textarea>
+
+      <div class="section-title" style="margin-top:1.25rem;">Løb oprettet af denne kunde</div>
+      <div id="detail-quizzes"></div>
+    </div>
+  </div>
+</main>
+
+<!-- Opret/redigér kunde modal -->
+<div id="cust-modal" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.5);align-items:center;justify-content:center;" onclick="if(event.target===this)closeCustomerModal()">
+  <div style="background:#fff;border-radius:10px;padding:1.5rem;width:90%;max-width:400px;display:flex;flex-direction:column;gap:.5rem;">
+    <h3 id="cust-modal-title" style="margin-bottom:.25rem;">Ny kunde</h3>
+    <label>Navn *</label>
+    <input id="cf-name" placeholder="Fx: Lions Club Auning">
+    <label>Email</label>
+    <input id="cf-email" type="email" placeholder="navn@eksempel.dk">
+    <label>Telefon</label>
+    <input id="cf-phone" placeholder="12345678">
+    <label>Firma / forening</label>
+    <input id="cf-company" placeholder="Valgfrit">
+    <div style="display:flex;gap:.5rem;margin-top:1rem;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveCustomer()">Gem</button>
+      <button class="btn" style="background:#eee;color:#333;" onclick="closeCustomerModal()">Annuller</button>
+    </div>
+    <p id="cust-msg" style="font-size:.82rem;color:#c0392b;margin:0;min-height:1rem;"></p>
+  </div>
+</div>
+
+<script>
+let customers = [];
+let activeId  = null;
+let editingId = null;
+
+(async () => {
+  const session = await getSession();
+  if (!session) { location.href = 'login.html'; return; }
+  if (session.type === 'pin') {
+    if (!session.is_admin) { location.href = `editor.html?q=${session.quiz_id}`; return; }
+    activatePinClient();
+  }
+  await loadCustomers();
+})();
+
+async function loadCustomers() {
+  const { data, error } = await sb.schema('quiz').from('customers')
+    .select('*').order('created_at', { ascending: false });
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('customer-list').style.display = 'block';
+  if (error) {
+    document.getElementById('customer-list').innerHTML =
+      `<p style="color:red;font-size:.85rem;">Fejl: ${error.message}</p>`;
+    return;
+  }
+  customers = data ?? [];
+  renderList();
+}
+
+function renderList() {
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const filtered = !q ? customers : customers.filter(c =>
+    (c.name||'').toLowerCase().includes(q) ||
+    (c.email||'').toLowerCase().includes(q) ||
+    (c.company||'').toLowerCase().includes(q));
+
+  const el = document.getElementById('customer-list');
+  if (!filtered.length) {
+    el.innerHTML = `<div class="empty">${customers.length ? 'Ingen match.' : 'Ingen kunder endnu.'}</div>`;
+    return;
+  }
+  el.innerHTML = filtered.map(c => `
+    <div class="customer-row ${c.id===activeId?'active':''}" onclick="selectCustomer('${c.id}')">
+      <div>
+        <h3>${escHtml(c.name)}</h3>
+        <p>${escHtml(c.company || c.email || '')}</p>
+      </div>
+    </div>`).join('');
+}
+
+async function selectCustomer(id) {
+  activeId = id;
+  renderList();
+  const c = customers.find(x => x.id === id);
+  if (!c) return;
+
+  document.getElementById('detail-empty').style.display = 'none';
+  document.getElementById('detail-content').style.display = 'block';
+  document.getElementById('detail-name').textContent = c.name;
+  document.getElementById('detail-email').textContent = c.email ? '✉️ ' + c.email : '';
+  document.getElementById('detail-phone').textContent = c.phone ? '📞 ' + c.phone : '';
+  document.getElementById('detail-company').textContent = c.company ? '🏢 ' + c.company : '';
+  document.getElementById('detail-notes').value = c.notes || '';
+
+  const quizzesEl = document.getElementById('detail-quizzes');
+  quizzesEl.innerHTML = '<p class="muted" style="color:#aaa;font-size:.85rem;">Indlæser…</p>';
+  const { data: quizzes, error } = await sb.schema('quiz').from('quizzes')
+    .select('id, title, status, created_at').eq('customer_id', id)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    quizzesEl.innerHTML = `<p style="color:red;font-size:.85rem;">Fejl: ${error.message}</p>`;
+    return;
+  }
+  if (!quizzes || !quizzes.length) {
+    quizzesEl.innerHTML = '<p style="color:#aaa;font-size:.85rem;">Ingen løb knyttet til denne kunde endnu.</p>';
+    return;
+  }
+  quizzesEl.innerHTML = quizzes.map(q => `
+    <div class="quiz-mini">
+      <a href="editor.html?q=${q.id}" style="color:#1a2744;text-decoration:none;font-weight:600;">${escHtml(q.title || '(uden titel)')}</a>
+      <span class="badge badge-${q.status}">${labelStatus(q.status)}</span>
+    </div>`).join('');
+}
+
+async function saveNotes() {
+  if (!activeId) return;
+  const notes = document.getElementById('detail-notes').value;
+  const { error } = await sb.schema('quiz').from('customers')
+    .update({ notes }).eq('id', activeId);
+  const c = customers.find(x => x.id === activeId);
+  if (!error && c) c.notes = notes;
+}
+
+// ── Opret / redigér kunde ───────────────────────────────────────
+function openNewCustomer() {
+  editingId = null;
+  document.getElementById('cust-modal-title').textContent = 'Ny kunde';
+  ['cf-name','cf-email','cf-phone','cf-company'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('cust-msg').textContent = '';
+  document.getElementById('cust-modal').style.display = 'flex';
+}
+
+function editCustomer() {
+  if (!activeId) return;
+  const c = customers.find(x => x.id === activeId);
+  if (!c) return;
+  editingId = c.id;
+  document.getElementById('cust-modal-title').textContent = 'Redigér kunde';
+  document.getElementById('cf-name').value    = c.name || '';
+  document.getElementById('cf-email').value   = c.email || '';
+  document.getElementById('cf-phone').value   = c.phone || '';
+  document.getElementById('cf-company').value = c.company || '';
+  document.getElementById('cust-msg').textContent = '';
+  document.getElementById('cust-modal').style.display = 'flex';
+}
+
+function closeCustomerModal() {
+  document.getElementById('cust-modal').style.display = 'none';
+}
+
+async function saveCustomer() {
+  const name    = document.getElementById('cf-name').value.trim();
+  const email   = document.getElementById('cf-email').value.trim();
+  const phone   = document.getElementById('cf-phone').value.trim();
+  const company = document.getElementById('cf-company').value.trim();
+  const msgEl   = document.getElementById('cust-msg');
+
+  if (!name) { msgEl.textContent = '⚠️ Navn er påkrævet'; return; }
+
+  const payload = { name, email: email || null, phone: phone || null, company: company || null };
+
+  if (editingId) {
+    const { error } = await sb.schema('quiz').from('customers').update(payload).eq('id', editingId);
+    if (error) { msgEl.textContent = '❌ ' + error.message; return; }
+  } else {
+    const { error } = await sb.schema('quiz').from('customers').insert(payload);
+    if (error) { msgEl.textContent = '❌ ' + error.message; return; }
+  }
+
+  closeCustomerModal();
+  const keepId = editingId;
+  await loadCustomers();
+  if (keepId) selectCustomer(keepId);
+}
+
+// ── Helpers ───────────────────────────────────────────────────
+function labelStatus(s) {
+  return { kladde: 'Kladde', testing: 'Test', aktiv: 'Aktiv', arkiveret: 'Arkiveret' }[s] ?? s;
+}
+function escHtml(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>
