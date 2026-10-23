@@ -23,6 +23,11 @@ CREATE POLICY "admin_full_access" ON quiz.customers
   USING      (quiz.check_session_is_admin() OR auth.role() = 'authenticated')
   WITH CHECK (quiz.check_session_is_admin() OR auth.role() = 'authenticated');
 
+-- RLS styrer kun hvilke rækker man må se/ændre – Postgres kræver derudover
+-- denne grundlæggende tabel-tilladelse, ellers fejler alt med
+-- "permission denied for table customers".
+GRANT SELECT, INSERT, UPDATE, DELETE ON quiz.customers TO anon, authenticated;
+
 -- ============================================================
 -- 2. Knyt quizzer til en kunde (valgfrit felt)
 -- ============================================================
