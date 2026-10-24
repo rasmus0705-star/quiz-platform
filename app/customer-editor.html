@@ -439,7 +439,13 @@ function goStep(n, save = false) {
     if (i === n) btn.classList.add('active')
     else if (i < n) btn.classList.add('done')
   })
-  if (n === 2 && map) setTimeout(() => map.invalidateSize(), 80)
+  if (n === 2) {
+    setTimeout(() => {
+      if (!map) initMap()
+      else map.invalidateSize()
+      renderStops()
+    }, 100)
+  }
   try { localStorage.setItem('ced_step', n); } catch {}
   window.scrollTo(0,0)
 }
