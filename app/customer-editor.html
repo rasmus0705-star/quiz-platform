@@ -486,8 +486,9 @@ async function loadAll() {
     .select('*').eq('quiz_id', quizId).order('created_at')
   teams = (teamRows??[]).filter(t => t.name !== '🧪 Testhold')
   renderTeams()
-  initMap()
-  renderStops()
+  if (currentStep === 2) {
+    setTimeout(() => { initMap(); renderStops(); }, 100)
+  }
 }
 
 // ── Save ──────────────────────────────────────────────────────
