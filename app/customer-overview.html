@@ -122,21 +122,22 @@
     }
     .card-stat { display: flex; align-items: center; gap: .3rem; }
 
-    .card-actions {
-      display: flex; gap: .5rem; margin-top: auto;
-    }
-    .btn-edit {
-      flex: 1; background: var(--accent); color: #fff;
-      border: none; padding: .55rem; border-radius: 8px;
-      font-size: .83rem; font-weight: 700; cursor: pointer;
-    }
-    .btn-edit:hover { background: #5a52e0; }
-    .btn-share {
-      background: #f0f0ff; color: var(--accent);
-      border: none; padding: .55rem .8rem; border-radius: 8px;
-      font-size: .83rem; font-weight: 700; cursor: pointer;
-    }
-    .btn-share:hover { background: #e0e0ff; }
+    .card-stat { font-size:.75rem; color:var(--ink-2); display:inline-flex; align-items:center; gap:3px; }
+    .card-divider { border:none; border-top:1px solid #f0f1f5; margin:.6rem 0; }
+    .card-section-label { font-size:.68rem; font-weight:700; color:var(--muted); letter-spacing:.04em; text-transform:uppercase; margin-bottom:.35rem; }
+    .team-row-mini { display:flex; justify-content:space-between; align-items:center; padding:.3rem 0; border-bottom:1px solid #f5f5f5; font-size:.82rem; }
+    .team-row-mini:last-child { border-bottom:none; }
+    .tname { font-weight:600; color:var(--ink); }
+    .team-btns { display:flex; gap:.25rem; }
+    .mini-pill { display:inline-flex; align-items:center; gap:3px; font-size:.7rem; font-weight:600; padding:.18rem .45rem; border-radius:99px; border:1px solid #e2e8f0; background:#f8f9fc; color:var(--ink-2); cursor:pointer; }
+    .mini-pill:hover { background:#eef1f6; }
+    .card-actions { display:flex; gap:.4rem; margin-top:.75rem; flex-wrap:wrap; }
+    .btn-edit { display:inline-flex; align-items:center; gap:.3rem; background:var(--accent); color:#fff; border:none; padding:.38rem .85rem; border-radius:99px; font-size:.78rem; font-weight:700; cursor:pointer; }
+    .btn-edit:hover { background:#5a52e0; }
+    .btn-pill { display:inline-flex; align-items:center; gap:.3rem; background:#f0f0ff; color:var(--accent); border:none; padding:.38rem .85rem; border-radius:99px; font-size:.78rem; font-weight:700; cursor:pointer; }
+    .btn-pill:hover { background:#e0e0ff; }
+    .btn-pill-gray { display:inline-flex; align-items:center; gap:.3rem; background:#f5f7fa; color:var(--ink-2); border:none; padding:.38rem .85rem; border-radius:99px; font-size:.78rem; font-weight:700; cursor:pointer; }
+    .btn-pill-gray:hover { background:#eef1f6; }
 
     /* ── Empty state ── */
     .empty-state {
@@ -280,7 +281,7 @@ async function init() {
 
   // Løb
   const { data, error } = await sb.schema('quiz').from('quizzes')
-    .select('id, title, status, created_at')
+    .select('id, title, status, created_at, stops(id, activities(id)), teams(id, name, token)')
     .eq('customer_id', customerId)
     .order('created_at', { ascending: false })
 
@@ -306,8 +307,29 @@ async function init() {
 
 function renderGrid() {
   const el = document.getElementById('quiz-grid')
-  el.innerHTML = quizzes.map(q => `
-    <div class="quiz-card ${q.status === 'aktiv' ? 'aktiv' : ''}" onclick="openQuiz('${q.id}')">
+  el.innerHTML = quizzes.map(q => {
+    const stops = q.stops ?? []
+    const actCount = stops.reduce((sum, s) => sum + (s.activities?.length ?? 0), 0)
+    const teams = (q.teams ?? []).filter(t => t.name !== '🧪 Testhold')
+    const baseUrl = location.origin + location.pathname.replace('app/customer-overview.html','play/quiz.html')
+    const scoreUrl = location.origin + location.pathname.replace('app/customer-overview.html','board/scoreboard.html') + '?q=' + q.id
+
+    const teamRows = teams.length
+      ? teams.map(t => {
+          const url = baseUrl + '?t=' + t.token
+          return `<div class="team-row-mini">
+            <span class="tname">${escHtml(t.name)}</span>
+            <div class="team-btns">
+              <span class="mini-pill" onclick="copyText('${url}')" title="Kopiér link">📋 Link</span>
+              <span class="mini-pill" onclick="showTeamQRCard('${t.id}','${escHtml(t.name)}','${url}')">📱 QR</span>
+              <span class="mini-pill" onclick="mailTeam('${escHtml(t.name)}','${url}')">📧</span>
+            </div>
+          </div>`
+        }).join('')
+      : `<p style="font-size:.78rem;color:var(--muted);padding:.25rem 0;">Ingen hold endnu — opret hold i editoren</p>`
+
+    return `
+    <div class="quiz-card ${q.status === 'aktiv' ? 'aktiv' : ''}">
       <div class="card-top">
         <div>
           <div class="card-title">${escHtml(q.title || 'Uden titel')}</div>
@@ -315,19 +337,32 @@ function renderGrid() {
         </div>
         <span class="status-badge s-${q.status}">${statusLabel(q.status)}</span>
       </div>
+
+      <div style="display:flex;gap:.75rem;margin-bottom:.6rem;flex-wrap:wrap;">
+        <span class="card-stat">📍 ${stops.length} stop</span>
+        <span class="card-stat">❓ ${actCount} opgaver</span>
+        <span class="card-stat">👥 ${teams.length} hold</span>
+      </div>
+
+      <hr class="card-divider">
+      <div class="card-section-label">Hold</div>
+      <div onclick="event.stopPropagation()">${teamRows}</div>
+
+      <hr class="card-divider">
       <div class="card-actions" onclick="event.stopPropagation()">
         <button class="btn-edit" onclick="openQuiz('${q.id}')">✏️ Byg løbet</button>
-        <button class="btn-share" onclick="openShare('${q.id}')">📤 Del</button>
+        <button class="btn-pill" onclick="copyText('${scoreUrl}')">📋 Scoreboard</button>
+        <button class="btn-pill-gray" onclick="showScoreQR('${q.id}','${escHtml(q.title||'')}','${scoreUrl}')">📱 QR</button>
+        <button class="btn-pill-gray" onclick="printTeams('${q.id}','${escHtml(q.title||'')}')">🖨️ Print QR</button>
       </div>
-    </div>`).join('')
+    </div>`
+  }).join('')
 }
 
 async function newQuiz() {
-  const session = getPinSession()
-  const { data, error } = await sb.schema('quiz').rpc('create_quiz_for_customer', {
-    p_session_id: session.session_id,
-    p_title: 'Nyt løb'
-  })
+  const { data, error } = await sb.schema('quiz').from('quizzes')
+    .insert({ title: 'Nyt løb', status: 'kladde', customer_id: customerId })
+    .select('id').single()
   if (error) { alert('Kunne ikke oprette løb: ' + error.message); return; }
   location.href = `customer-editor.html?q=${data.id}`
 }
@@ -380,6 +415,62 @@ function showQR(url, title) {
   document.getElementById('qr-modal').classList.add('open')
 }
 function closeQR() { document.getElementById('qr-modal').classList.remove('open') }
+
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => alert('✅ Link kopieret!'))
+}
+
+function showTeamQRCard(teamId, teamName, url) {
+  showQR(url, teamName)
+}
+
+function showScoreQR(quizId, title, url) {
+  showQR(url, (title || 'Løb') + ' – Scoreboard')
+}
+
+function mailTeam(teamName, url) {
+  const subject = encodeURIComponent('Din holdlink: ' + teamName)
+  const body = encodeURIComponent('Hej ' + teamName + ',\n\nÅbn dette link på din mobil for at deltage:\n' + url + '\n\nGod fornøjelse!')
+  window.open('mailto:?subject=' + subject + '&body=' + body)
+}
+
+function printTeams(quizId, quizTitle) {
+  const q = quizzes.find(x => x.id === quizId)
+  if (!q) return
+  const teams = (q.teams ?? []).filter(t => t.name !== '🧪 Testhold')
+  if (!teams.length) { alert('Ingen hold at printe'); return; }
+  const baseUrl = location.origin + location.pathname.replace('app/customer-overview.html','play/quiz.html')
+  const win = window.open('', '_blank')
+  win.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="UTF-8"><title>Hold – ${escHtml(quizTitle)}</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 0; padding: 1rem; }
+      h1 { font-size: 1.1rem; margin-bottom: 1.25rem; text-align: center; }
+      .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .hold { border: 2px solid #333; border-radius: 8px; padding: 1rem; text-align: center; page-break-inside: avoid; }
+      .hold h2 { font-size: .95rem; margin-bottom: .5rem; }
+      .hold p { font-size: .65rem; color: #666; word-break: break-all; margin-top: .5rem; }
+      @media print { body { padding: 0; } }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
+  </head><body>
+    <h1>🗺️ ${escHtml(quizTitle)}</h1>
+    <div class="grid">
+      ${teams.map(t => {
+        const url = baseUrl + '?t=' + t.token
+        return `<div class="hold"><h2>${escHtml(t.name)}</h2><div id="q${t.id}"></div><p>${url}</p></div>`
+      }).join('')}
+    </div>
+    <script>
+      ${teams.map(t => {
+        const url = baseUrl + '?t=' + t.token
+        return `new QRCode(document.getElementById('q${t.id}'),{text:'${url}',width:180,height:180,colorDark:'#000',colorLight:'#fff'});`
+      }).join('\n')}
+      setTimeout(()=>window.print(),800)
+    <\/script>
+  </body></html>`)
+  win.document.close()
+}
 
 function statusLabel(s) {
   return { kladde:'Kladde', testing:'Test', aktiv:'Aktiv', arkiveret:'Arkiveret' }[s] ?? s
