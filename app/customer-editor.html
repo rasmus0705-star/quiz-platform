@@ -242,7 +242,7 @@
   <span id="quiz-title-display">Nyt løb</span>
   <div class="save-area">
     <span id="save-msg"></span>
-    <button class="btn-save" onclick="saveQuiz()">💾 Gem</button>
+    <button class="btn-save" onclick="saveQuiz(true)">💾 Gem</button>
   </div>
 </header>
 
@@ -518,7 +518,7 @@ async function loadAll() {
 }
 
 // ── Save ──────────────────────────────────────────────────────
-async function saveQuiz() {
+async function saveQuiz(redirectAfter = false) {
   const title = document.getElementById('title').value.trim()
   const description = document.getElementById('description').value.trim()
   if (!title) { flash('⚠️ Titel mangler'); return; }
@@ -536,6 +536,9 @@ async function saveQuiz() {
   if (error) { flash('❌ ' + error.message); return; }
   document.getElementById('quiz-title-display').textContent = title
   flash('✅ Gemt')
+  if (redirectAfter) {
+    setTimeout(() => { location.href = 'customer-overview.html' }, 800)
+  }
 }
 
 function flash(txt, ms=3000) {

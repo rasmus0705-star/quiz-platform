@@ -349,6 +349,10 @@ function renderGrid() {
       <div onclick="event.stopPropagation()">${teamRows}</div>
 
       <hr class="card-divider">
+
+      ${quizStatusButtons(q)}
+
+      <hr class="card-divider">
       <div class="card-actions" onclick="event.stopPropagation()">
         <button class="btn-edit" onclick="openQuiz('${q.id}')">✏️ Byg løbet</button>
         <button class="btn-pill" onclick="copyText('${scoreUrl}')">📋 Scoreboard</button>
@@ -415,6 +419,69 @@ function showQR(url, title) {
   document.getElementById('qr-modal').classList.add('open')
 }
 function closeQR() { document.getElementById('qr-modal').classList.remove('open') }
+
+function quizStatusButtons(q) {
+  const stops = q.stops ?? []
+  const teams = (q.teams ?? []).filter(t => t.name !== '🧪 Testhold')
+  const actCount = stops.reduce((sum, s) => sum + (s.activities?.length ?? 0), 0)
+  const ready = stops.some(s => (s.activities?.length ?? 0) > 0) && teams.length > 0
+
+  if (q.status === 'aktiv') {
+    return `<div onclick="event.stopPropagation()" style="display:grid;grid-template-columns:1fr;gap:.5rem;margin:.25rem 0;">
+      <button onclick="setQuizStatus('${q.id}','arkiveret')" style="
+        padding:.75rem; border-radius:10px; border:1.5px solid #fca5a5;
+        background:#fff1f2; cursor:pointer; text-align:center;">
+        <div style="font-size:1.1rem;">📦</div>
+        <div style="font-size:.83rem;font-weight:700;color:#991b1b;">Afslut løbet</div>
+        <div style="font-size:.7rem;color:#9aa2b1;margin-top:.1rem;">Sæt løbet til afsluttet</div>
+      </button>
+    </div>`
+  }
+
+  if (q.status === 'arkiveret') {
+    return `<div style="text-align:center;padding:.5rem 0;font-size:.8rem;color:#9aa2b1;">📦 Afsluttet</div>`
+  }
+
+  return `<div onclick="event.stopPropagation()" style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.25rem 0;">
+    <button onclick="setQuizStatus('${q.id}','testing')" style="
+      padding:.75rem; border-radius:10px; border:1.5px solid #e2e8f0;
+      background:#fff; cursor:pointer; text-align:center;">
+      <div style="font-size:1.1rem;">🧪</div>
+      <div style="font-size:.83rem;font-weight:700;color:#1a1f36;">Test løbet</div>
+      <div style="font-size:.7rem;color:#9aa2b1;margin-top:.1rem;">Prøv løbet selv</div>
+    </button>
+    <button onclick="${ready ? `setQuizStatus('${q.id}','aktiv')` : `alert('Mangler: ${!stops.some(s=>(s.activities?.length??0)>0)?'stop med opgave':''}${(!stops.some(s=>(s.activities?.length??0)>0)&&!teams.length)?' og ':''}${!teams.length?'hold':''}')`}" style="
+      padding:.75rem; border-radius:10px;
+      border:1.5px solid ${ready ? '#6c63ff' : '#e2e8f0'};
+      background:${ready ? '#f0f0ff' : '#f8f9fc'};
+      cursor:${ready ? 'pointer' : 'not-allowed'};
+      opacity:${ready ? '1' : '.6'};
+      text-align:center;">
+      <div style="font-size:1.1rem;">▶️</div>
+      <div style="font-size:.83rem;font-weight:700;color:${ready ? '#6c63ff' : '#9aa2b1'};">Aktivér løbet</div>
+      <div style="font-size:.7rem;color:#9aa2b1;margin-top:.1rem;">${ready ? 'Gå live for deltagerne' : 'Kræver stop + hold'}</div>
+    </button>
+  </div>`
+}
+
+async function setQuizStatus(quizId, status) {
+  const { error } = await sb.schema('quiz').from('quizzes')
+    .update({ status }).eq('id', quizId)
+  if (error) { alert('Fejl: ' + error.message); return; }
+
+  const q = quizzes.find(x => x.id === quizId)
+  if (q) q.status = status
+  renderGrid()
+
+  if (status === 'testing') {
+    const q = quizzes.find(x => x.id === quizId)
+    const teams = (q?.teams ?? []).filter(t => t.name !== '🧪 Testhold')
+    if (teams.length) {
+      const baseUrl = location.origin + location.pathname.replace('app/customer-overview.html','play/quiz.html')
+      window.open(baseUrl + '?t=' + teams[0].token, '_blank')
+    }
+  }
+}
 
 function copyText(text) {
   navigator.clipboard.writeText(text).then(() => alert('✅ Link kopieret!'))
