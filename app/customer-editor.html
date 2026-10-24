@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Byg dit løb – Quiz Platform</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #f5f7fa;
+      --white:    #ffffff;
+      --ink:      #1a1f36;
+      --ink-2:    #4a5568;
+      --muted:    #8a94a6;
+      --accent:   #6c63ff;
+      --accent-h: #5a52e0;
+      --green:    #22c55e;
+      --green-bg: #dcfce7;
+      --green-ink:#166534;
+      --amber:    #f59e0b;
+      --red:      #ef4444;
+      --radius:   14px;
+      --radius-sm:8px;
+      --shadow:   0 2px 12px rgba(0,0,0,.08);
+    }
+
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      background: var(--bg); color: var(--ink);
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--white); border-bottom: 1px solid #eaecf0;
+      padding: 0 1.5rem; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 200;
+    }
+    .back-btn {
+      display: flex; align-items: center; gap: .4rem;
+      color: var(--ink-2); text-decoration: none; font-size: .88rem;
+      font-weight: 600; background: none; border: none; cursor: pointer;
+    }
+    .back-btn:hover { color: var(--ink); }
+    #quiz-title-display {
+      font-size: 1rem; font-weight: 700;
+      max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .save-area { display: flex; align-items: center; gap: .75rem; }
+    #save-msg { font-size: .8rem; color: var(--muted); }
+    .btn-save {
+      background: var(--accent); color: #fff; border: none;
+      padding: .5rem 1.1rem; border-radius: var(--radius-sm);
+      font-size: .85rem; font-weight: 700; cursor: pointer;
+    }
+    .btn-save:hover { background: var(--accent-h); }
+
+    /* ── Steps ── */
+    .steps-bar {
+      background: var(--white); border-bottom: 1px solid #eaecf0;
+      padding: 1rem 1.5rem; display: flex; gap: 0; overflow-x: auto;
+    }
+    .step {
+      display: flex; align-items: center; gap: .5rem;
+      padding: .5rem 1rem; border-radius: var(--radius-sm);
+      cursor: pointer; font-size: .88rem; font-weight: 600;
+      color: var(--muted); white-space: nowrap; flex-shrink: 0;
+      border: 2px solid transparent; transition: all .15s;
+    }
+    .step.active { color: var(--accent); border-color: var(--accent); background: #f0f0ff; }
+    .step.done { color: var(--green-ink); border-color: var(--green); background: var(--green-bg); }
+    .step-num {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: currentColor; color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .72rem; font-weight: 800; flex-shrink: 0;
+    }
+    .step.done .step-num { background: var(--green); }
+    .step.active .step-num { background: var(--accent); }
+    .step-sep { color: #ddd; padding: .5rem .25rem; align-self: center; font-size: .8rem; }
+
+    /* ── Content ── */
+    .pane { display: none; flex: 1; }
+    .pane.active { display: flex; flex-direction: column; }
+    .pane-inner { max-width: 700px; margin: 0 auto; padding: 2rem 1.5rem; width: 100%; }
+
+    .pane-title { font-size: 1.4rem; font-weight: 800; margin-bottom: .3rem; }
+    .pane-lead { color: var(--ink-2); font-size: .9rem; margin-bottom: 1.75rem; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--white); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 1.4rem; margin-bottom: 1.25rem;
+    }
+    .card-title { font-size: .88rem; font-weight: 700; margin-bottom: 1rem; color: var(--ink); }
+
+    /* ── Form ── */
+    label { font-size: .8rem; color: var(--ink-2); display: block; margin-bottom: .3rem; margin-top: .75rem; }
+    label:first-child { margin-top: 0; }
+    input[type=text], input[type=number], textarea, select {
+      width: 100%; padding: .65rem .85rem;
+      border: 1.5px solid #e2e8f0; border-radius: var(--radius-sm);
+      font-size: .9rem; font-family: inherit; color: var(--ink);
+      background: var(--white); transition: border-color .15s;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none; border-color: var(--accent);
+    }
+    textarea { resize: vertical; }
+
+    /* ── Map ── */
+    #map { height: 280px; border-radius: var(--radius-sm); margin-bottom: .75rem; }
+
+    /* ── Stops ── */
+    .stop-card {
+      background: var(--white); border-radius: var(--radius);
+      box-shadow: var(--shadow); margin-bottom: .85rem;
+      border-left: 4px solid var(--accent); overflow: hidden;
+    }
+    .stop-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: .85rem 1rem; cursor: pointer;
+    }
+    .stop-header:hover { background: #fafafa; }
+    .stop-name { font-weight: 700; font-size: .92rem; }
+    .stop-meta { font-size: .76rem; color: var(--muted); margin-top: .15rem; }
+    .stop-actions { display: flex; gap: .35rem; }
+    .icon-btn {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); font-size: .9rem;
+      padding: .25rem .4rem; border-radius: 6px;
+    }
+    .icon-btn:hover { background: #f0f0f0; color: var(--ink); }
+
+    .stop-body { padding: 0 1rem 1rem; }
+
+    /* ── Activities ── */
+    .act-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: .5rem 0; border-bottom: 1px solid #f0f0f0;
+      font-size: .85rem;
+    }
+    .act-row:last-child { border-bottom: none; }
+    .act-form {
+      background: #f8f9fc; border-radius: var(--radius-sm);
+      padding: 1rem; margin-top: .75rem;
+    }
+
+    /* ── Teams ── */
+    .team-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: .65rem 0; border-bottom: 1px solid #f0f0f0;
+    }
+    .team-row:last-child { border-bottom: none; }
+    .team-name { font-weight: 600; font-size: .9rem; }
+    .team-url { font-size: .72rem; color: var(--muted); word-break: break-all; }
+    .team-actions { display: flex; gap: .35rem; flex-shrink: 0; margin-left: .5rem; }
+
+    /* ── Buttons ── */
+    .btn {
+      padding: .6rem 1.1rem; border-radius: var(--radius-sm); border: none;
+      font-size: .85rem; font-weight: 700; cursor: pointer;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-h); }
+    .btn-outline { background: var(--white); color: var(--ink); border: 1.5px solid #e2e8f0; }
+    .btn-outline:hover { background: #f5f7fa; }
+    .btn-ghost { background: #f0f0ff; color: var(--accent); }
+    .btn-ghost:hover { background: #e0e0ff; }
+    .btn-danger { background: #fee2e2; color: #991b1b; }
+    .btn-danger:hover { background: #fecaca; }
+    .btn-sm { padding: .35rem .7rem; font-size: .78rem; }
+    .btn-full { width: 100%; }
+
+    .btn-next {
+      display: flex; align-items: center; justify-content: center; gap: .5rem;
+      width: 100%; padding: .85rem; border-radius: var(--radius-sm);
+      background: var(--accent); color: #fff; border: none;
+      font-size: .95rem; font-weight: 700; cursor: pointer;
+      margin-top: 1.5rem;
+    }
+    .btn-next:hover { background: var(--accent-h); }
+
+    /* ── Type tags ── */
+    .type-tag {
+      display: inline-block; padding: .15rem .5rem; border-radius: 99px;
+      font-size: .72rem; font-weight: 700; background: #f0f0ff; color: var(--accent);
+    }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 999;
+      background: rgba(0,0,0,.4); align-items: center; justify-content: center; padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: var(--white); border-radius: var(--radius);
+      padding: 1.75rem; width: 100%; max-width: 360px;
+    }
+    .modal-box h3 { font-size: 1.05rem; margin-bottom: 1.1rem; }
+
+    /* ── QR ── */
+    #qr-box { text-align: center; max-width: 320px; }
+    #qr-canvas { margin: .75rem auto; }
+    #qr-url-text { font-size: .7rem; color: var(--muted); word-break: break-all; margin-bottom: 1rem; }
+
+    /* ── Share team ── */
+    .share-opt {
+      display: flex; align-items: center; gap: .75rem;
+      width: 100%; padding: .75rem; border-radius: 8px;
+      border: 1.5px solid #eaecf0; background: var(--white);
+      cursor: pointer; font-size: .88rem; font-weight: 600;
+      margin-bottom: .5rem; color: var(--ink);
+    }
+    .share-opt:hover { background: #f5f7fa; }
+    .share-opt .si { font-size: 1.2rem; width: 1.8rem; text-align: center; }
+
+    @media (max-width: 600px) {
+      .pane-inner { padding: 1.25rem 1rem; }
+      header { padding: 0 1rem; }
+      #quiz-title-display { max-width: 120px; }
+    }
+
+    @media print {
+      body > *:not(#qr-modal) { display: none !important; }
+      #qr-modal { display: flex !important; position: static; background: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <button class="back-btn" onclick="location.href='customer-overview.html'">← Mine løb</button>
+  <span id="quiz-title-display">Nyt løb</span>
+  <div class="save-area">
+    <span id="save-msg"></span>
+    <button class="btn-save" onclick="saveQuiz()">💾 Gem</button>
+  </div>
+</header>
+
+<!-- Steps -->
+<div class="steps-bar">
+  <div class="step active" id="step-btn-1" onclick="goStep(1)">
+    <div class="step-num">1</div> Løbet
+  </div>
+  <span class="step-sep">›</span>
+  <div class="step" id="step-btn-2" onclick="goStep(2)">
+    <div class="step-num">2</div> Ruten & opgaver
+  </div>
+  <span class="step-sep">›</span>
+  <div class="step" id="step-btn-3" onclick="goStep(3)">
+    <div class="step-num">3</div> Hold & deling
+  </div>
+</div>
+
+<!-- ══ TRIN 1: Løbet ══ -->
+<div class="pane active" id="pane-1">
+  <div class="pane-inner">
+    <div class="pane-title">🗺️ Fortæl om dit løb</div>
+    <p class="pane-lead">Giv dit GPS-quizforløb et navn og en beskrivelse, som dine deltagere ser.</p>
+
+    <div class="card">
+      <label>Navn på løbet *</label>
+      <input type="text" id="title" placeholder="Fx: Historisk byvandring i Auning" maxlength="100">
+
+      <label style="margin-top:1rem;">Kort beskrivelse (valgfrit)</label>
+      <textarea id="description" rows="3" placeholder="Hvad handler løbet om? Giv deltagerne en forsmag…"></textarea>
+    </div>
+
+    <button class="btn-next" onclick="saveAndNext(2)">
+      Næste: Byg ruten →
+    </button>
+  </div>
+</div>
+
+<!-- ══ TRIN 2: Rute & opgaver ══ -->
+<div class="pane" id="pane-2">
+  <div class="pane-inner">
+    <div class="pane-title">📍 Byg din rute</div>
+    <p class="pane-lead">Klik på kortet for at tilføje stop. Tilføj opgaver til hvert stop.</p>
+
+    <div class="card">
+      <div id="map"></div>
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:.5rem;">Klik på kortet for at placere et nyt stop</p>
+      <div id="stop-list"></div>
+    </div>
+
+    <button class="btn-next" onclick="goStep(3)">
+      Næste: Opret hold →
+    </button>
+  </div>
+</div>
+
+<!-- ══ TRIN 3: Hold & deling ══ -->
+<div class="pane" id="pane-3">
+  <div class="pane-inner">
+    <div class="pane-title">👥 Hold & deling</div>
+    <p class="pane-lead">Opret hold og del links eller QR-koder med dine deltagere. De skal blot åbne linket på deres mobil.</p>
+
+    <div class="card">
+      <div class="card-title">Opret hold</div>
+      <div style="display:flex;gap:.5rem;">
+        <input type="text" id="new-team-name" placeholder="Holdnavn…" style="flex:1;">
+        <button class="btn btn-primary" onclick="addTeam()" style="white-space:nowrap;">+ Tilføj</button>
+      </div>
+      <div id="team-list" style="margin-top:1rem;"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📊 Scoreboard</div>
+      <p style="font-size:.85rem;color:var(--ink-2);margin-bottom:.85rem;">Del scoreboard-linket med tilskuere eller vis det på en storskærm.</p>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" onclick="copyScoreboard()">📋 Kopiér link</button>
+        <button class="btn btn-ghost btn-sm" onclick="showScoreboardQR()">📱 QR-kode</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QR modal -->
+<div id="qr-modal" class="modal-overlay" onclick="if(event.target===this)closeQR()">
+  <div class="modal-box" id="qr-box">
+    <h3 id="qr-title"></h3>
+    <div id="qr-canvas"></div>
+    <div id="qr-url-text"></div>
+    <div style="display:flex;gap:.5rem;">
+      <button class="btn btn-primary" style="flex:1;" onclick="window.print()">🖨️ Print</button>
+      <button class="btn btn-outline" style="flex:1;" onclick="closeQR()">Luk</button>
+    </div>
+  </div>
+</div>
+
+<!-- Del hold-modal -->
+<div id="share-modal" class="modal-overlay" onclick="if(event.target===this)closeShareModal()">
+  <div class="modal-box">
+    <h3 id="share-modal-title">Del holdlink</h3>
+    <button class="share-opt" onclick="doTeamShare('copy')">
+      <span class="si">📋</span> Kopiér link
+    </button>
+    <button class="share-opt" onclick="doTeamShare('qr')">
+      <span class="si">📱</span> Vis QR-kode
+    </button>
+    <button class="share-opt" onclick="doTeamShare('mail')">
+      <span class="si">📧</span> Send via mail
+    </button>
+    <button class="btn btn-outline btn-full" style="margin-top:.5rem;" onclick="closeShareModal()">Luk</button>
+  </div>
+</div>
+
+<!-- Opgave-form modal -->
+<div id="act-modal" class="modal-overlay" onclick="if(event.target===this)closeActModal()">
+  <div class="modal-box" style="max-width:440px;">
+    <h3 id="act-modal-title">Tilføj opgave</h3>
+    <div id="act-modal-body"></div>
+  </div>
+</div>
+
+<script>
+const params   = new URLSearchParams(location.search)
+let quizId     = params.get('q')
+let quizStatus = 'kladde'
+let stops      = []
+let teams      = []
+let map, markers = []
+let openStopId = null
+let currentStep = 1
+let shareTeam  = null
+let editActId  = null
+let editStopId = null
+
+// ── Init ──────────────────────────────────────────────────────
+async function init() {
+  const session = await getSession()
+  if (!session) { location.href = 'login.html'; return; }
+  if (session.type === 'pin') {
+    if (session.is_admin) { location.href = 'overview.html'; return; }
+    activatePinClient()
+  }
+  if (quizId) await loadAll()
+  try { const t = parseInt(localStorage.getItem('ced_step')); if (t >= 1 && t <= 3) goStep(t, false); } catch {}
+}
+
+// ── Steps ─────────────────────────────────────────────────────
+function goStep(n, save = false) {
+  if (save) saveQuiz()
+  currentStep = n
+  ;[1,2,3].forEach(i => {
+    document.getElementById('pane-'+i).classList.toggle('active', i === n)
+    const btn = document.getElementById('step-btn-'+i)
+    btn.classList.remove('active','done')
+    if (i === n) btn.classList.add('active')
+    else if (i < n) btn.classList.add('done')
+  })
+  if (n === 2 && map) setTimeout(() => map.invalidateSize(), 80)
+  try { localStorage.setItem('ced_step', n); } catch {}
+  window.scrollTo(0,0)
+}
+
+async function saveAndNext(next) {
+  await saveQuiz()
+  goStep(next)
+}
+
+// ── Load ──────────────────────────────────────────────────────
+async function loadAll() {
+  const { data: q } = await sb.schema('quiz').from('quizzes')
+    .select('*').eq('id', quizId).single()
+  if (!q) return
+  quizStatus = q.status
+  document.getElementById('title').value = q.title ?? ''
+  document.getElementById('description').value = q.description ?? ''
+  document.getElementById('quiz-title-display').textContent = q.title || 'Nyt løb'
+
+  // Stops + activities
+  const { data: stopRows } = await sb.schema('quiz').from('stops')
+    .select('*, activities(*)').eq('quiz_id', quizId).order('sort')
+  const actIds = (stopRows??[]).flatMap(s => (s.activities??[]).map(a => a.id))
+  let keyMap = {}
+  if (actIds.length) {
+    const { data: keys } = await sb.schema('quiz').from('answer_keys')
+      .select('*').in('activity_id', actIds)
+    ;(keys??[]).forEach(k => { keyMap[k.activity_id] = k })
+  }
+  stops = (stopRows??[]).map(s => ({
+    ...s,
+    activities: (s.activities??[]).sort((a,b)=>(a.sort??0)-(b.sort??0))
+      .map(a => ({ ...a, answerKey: keyMap[a.id]??null }))
+  }))
+
+  // Teams
+  const { data: teamRows } = await sb.schema('quiz').from('teams')
+    .select('*').eq('quiz_id', quizId).order('created_at')
+  teams = (teamRows??[]).filter(t => t.name !== '🧪 Testhold')
+  renderTeams()
+  initMap()
+  renderStops()
+}
+
+// ── Save ──────────────────────────────────────────────────────
+async function saveQuiz() {
+  const title = document.getElementById('title').value.trim()
+  const description = document.getElementById('description').value.trim()
+  if (!title) { flash('⚠️ Titel mangler'); return; }
+
+  const payload = { title, description: description || null }
+  let error
+  if (quizId) {
+    ({ error } = await sb.schema('quiz').from('quizzes').update(payload).eq('id', quizId))
+  } else {
+    const { data, error: e } = await sb.schema('quiz').from('quizzes')
+      .insert({ ...payload, status: 'kladde' }).select().single()
+    error = e
+    if (data) { quizId = data.id; history.replaceState(null,'','?q='+quizId) }
+  }
+  if (error) { flash('❌ ' + error.message); return; }
+  document.getElementById('quiz-title-display').textContent = title
+  flash('✅ Gemt')
+}
+
+function flash(txt, ms=3000) {
+  const el = document.getElementById('save-msg')
+  el.textContent = txt
+  clearTimeout(flash._t)
+  flash._t = setTimeout(() => { el.textContent = '' }, ms)
+}
+
+// ── Map ───────────────────────────────────────────────────────
+function initMap() {
+  if (map) return
+  map = L.map('map').setView([56.3, 10.0], 7)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    { attribution: '© OpenStreetMap' }).addTo(map)
+  map.on('click', onMapClick)
+}
+
+async function onMapClick(e) {
+  if (!quizId) { await saveQuiz(); if (!quizId) return; }
+  const name = prompt('Navn på dette stop:')
+  if (!name) return
+  const { data, error } = await sb.schema('quiz').from('stops').insert({
+    quiz_id: quizId, name, lat: e.latlng.lat, lng: e.latlng.lng,
+    sort: stops.length, radius_m: 50
+  }).select().single()
+  if (error) { alert(error.message); return; }
+  stops.push({ ...data, activities: [] })
+  openStopId = data.id
+  renderStops()
+}
+
+function renderStops() {
+  markers.forEach(m => m.remove()); markers = []
+  const bounds = []
+  stops.forEach((s,i) => {
+    if (s.lat && s.lng) {
+      const m = L.marker([s.lat, s.lng]).addTo(map)
+        .bindPopup(`<b>${i+1}. ${s.name}</b>`)
+      markers.push(m); bounds.push([s.lat, s.lng])
+    }
+  })
+  if (bounds.length) map.fitBounds(bounds, { padding:[40,40] })
+
+  const el = document.getElementById('stop-list')
+  if (!stops.length) {
+    el.innerHTML = '<p style="text-align:center;color:var(--muted);padding:1rem;">Klik på kortet for at tilføje dit første stop</p>'
+    return
+  }
+
+  el.innerHTML = stops.map((s,i) => `
+    <div class="stop-card">
+      <div class="stop-header" onclick="toggleStop('${s.id}')">
+        <div>
+          <div class="stop-name">${i+1}. ${escHtml(s.name)}</div>
+          <div class="stop-meta">${s.activities.length} opgave${s.activities.length!==1?'r':''}</div>
+        </div>
+        <div class="stop-actions" onclick="event.stopPropagation()">
+          <button class="icon-btn" onclick="toggleStop('${s.id}')">${openStopId===s.id?'▲':'▼'}</button>
+          <button class="icon-btn" onclick="deleteStop('${s.id}')" title="Slet stop">🗑</button>
+        </div>
+      </div>
+      ${openStopId===s.id ? renderStopBody(s) : ''}
+    </div>`).join('')
+}
+
+function renderStopBody(stop) {
+  const rows = stop.activities.map(a => `
+    <div class="act-row">
+      <span>
+        <span class="type-tag">${typeLabel(a.type)}</span>
+        ${escHtml(shortQ(a.question))} · <b>${a.points??0}p</b>
+        ${a.media_url ? ' 🖼' : ''}
+      </span>
+      <div style="display:flex;gap:.25rem;">
+        <button class="icon-btn" onclick="openActModal('${stop.id}','${a.id}')">✏️</button>
+        <button class="icon-btn" onclick="deleteActivity('${stop.id}','${a.id}')">🗑</button>
+      </div>
+    </div>`).join('')
+
+  return `<div class="stop-body">
+    ${rows || '<p style="color:var(--muted);font-size:.85rem;margin-bottom:.75rem;">Ingen opgaver endnu</p>'}
+    <button class="btn btn-ghost btn-sm btn-full" style="margin-top:.5rem;"
+      onclick="openActModal('${stop.id}','')">+ Tilføj opgave</button>
+  </div>`
+}
+
+function toggleStop(stopId) {
+  openStopId = openStopId === stopId ? null : stopId
+  renderStops()
+}
+
+async function deleteStop(stopId) {
+  if (!confirm('Slet dette stop og alle dets opgaver?')) return
+  const { error } = await sb.schema('quiz').from('stops').delete().eq('id', stopId)
+  if (error) { alert(error.message); return; }
+  stops = stops.filter(s => s.id !== stopId)
+  if (openStopId === stopId) openStopId = null
+  renderStops()
+}
+
+// ── Activity modal ────────────────────────────────────────────
+function openActModal(stopId, actId) {
+  editStopId = stopId
+  editActId  = actId
+  const stop = stops.find(s => s.id === stopId)
+  const act  = actId ? stop.activities.find(a => a.id === actId) : null
+  document.getElementById('act-modal-title').textContent = actId ? 'Redigér opgave' : 'Tilføj opgave'
+  document.getElementById('act-modal-body').innerHTML = buildActForm(stopId, act)
+  document.getElementById('act-modal').classList.add('open')
+}
+
+function closeActModal() {
+  document.getElementById('act-modal').classList.remove('open')
+  editStopId = null; editActId = null
+}
+
+function buildActForm(stopId, act) {
+  const type     = act?.type ?? 'mc'
+  const q        = act?.question ?? ''
+  const pts      = act?.points ?? 10
+  const approval = act?.approval ?? 'auto'
+  const mediaUrl = act?.media_url ?? ''
+  const opts     = act?.options
+    ? (Array.isArray(act.options) ? act.options : Object.values(act.options))
+    : ['','','','']
+  const key      = act?.answerKey
+  const correct  = key?.correct
+  const tol      = key?.tolerance ?? 0
+
+  let correctVal = ''
+  if (correct !== null && correct !== undefined) {
+    correctVal = Array.isArray(correct) ? correct.join(', ') : String(correct)
+  }
+  let mcIdx = 0
+  if (type==='mc' && correct != null) {
+    const ci = opts.findIndex(o => String(o).toLowerCase() === String(correct).toLowerCase())
+    if (ci>=0) mcIdx = ci
+  }
+
+  return `
+    <label>Type</label>
+    <select id="maf-type" onchange="refreshActForm()">
+      ${['mc','tekst','tal','foto','info'].map(t =>
+        `<option value="${t}" ${type===t?'selected':''}>${{mc:'Multiple choice',tekst:'Tekst-svar',tal:'Tal-svar',foto:'Foto-opgave',info:'Info/tekst'}[t]}</option>`
+      ).join('')}
+    </select>
+
+    <label>Spørgsmål</label>
+    <textarea id="maf-q" rows="2">${escHtml(q)}</textarea>
+
+    <label>Billede til opgaven (valgfrit)</label>
+    <div style="display:flex;gap:.5rem;align-items:center;margin-top:.25rem;">
+      <input type="file" id="maf-img" accept="image/*" style="flex:1;font-size:.8rem;" onchange="previewActImg()">
+      <button class="btn btn-ghost btn-sm" type="button" onclick="uploadActImg()">⬆ Upload</button>
+    </div>
+    <div id="maf-img-preview" style="margin-top:.4rem;">
+      ${mediaUrl ? `<img src="${escHtml(mediaUrl)}" style="max-width:100%;max-height:100px;border-radius:8px;">` : ''}
+    </div>
+    <input type="hidden" id="maf-media-url" value="${escHtml(mediaUrl)}">
+
+    <label>Point</label>
+    <input type="number" id="maf-pts" value="${pts}" style="width:80px;">
+
+    ${type==='mc' ? `
+      <label>Svarmuligheder</label>
+      ${[0,1,2,3].map(i=>`
+        <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.35rem;">
+          <span style="color:var(--muted);width:18px;font-size:.8rem;">${String.fromCharCode(65+i)}.</span>
+          <input id="maf-o${i}" value="${escHtml(opts[i]??'')}" style="flex:1;" placeholder="Svar ${String.fromCharCode(65+i)}">
+        </div>`).join('')}
+      <label>Korrekt svar</label>
+      <select id="maf-correct">
+        ${[0,1,2,3].map(i=>`<option value="${i}" ${mcIdx===i?'selected':''}>${String.fromCharCode(65+i)}</option>`).join('')}
+      </select>
+    ` : ''}
+
+    ${type==='tekst' ? `
+      <label>Fasit</label>
+      <input id="maf-correct" value="${escHtml(correctVal)}" placeholder="Fx: skovmand, Skovmand">
+    ` : ''}
+
+    ${type==='tal' ? `
+      <label>Korrekt tal</label>
+      <input type="number" step="any" id="maf-correct" value="${escHtml(correctVal)}">
+      <label>Tolerance (±)</label>
+      <input type="number" step="any" id="maf-tol" value="${tol}" style="width:80px;">
+    ` : ''}
+
+    ${type==='foto' ? `
+      <label>Godkendelse</label>
+      <select id="maf-approval">
+        <option value="auto"    ${approval==='auto'   ?'selected':''}>Auto – point med det samme</option>
+        <option value="manuel"  ${approval==='manuel' ?'selected':''}>Manuel – du godkender</option>
+        <option value="vis_kun" ${approval==='vis_kun'?'selected':''}>Vis kun – ingen point</option>
+      </select>
+    ` : ''}
+
+    <div style="display:flex;gap:.5rem;margin-top:1rem;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveActivity()">Gem opgave</button>
+      <button class="btn btn-outline" onclick="closeActModal()">Annuller</button>
+    </div>`
+}
+
+function refreshActForm() {
+  const stop = stops.find(s => s.id === editStopId)
+  const act  = editActId ? stop?.activities.find(a => a.id === editActId) : null
+  const type = document.getElementById('maf-type').value
+  const q    = document.getElementById('maf-q')?.value ?? ''
+  const pts  = document.getElementById('maf-pts')?.value ?? 10
+  const mUrl = document.getElementById('maf-media-url')?.value ?? ''
+  document.getElementById('act-modal-body').innerHTML =
+    buildActForm(editStopId, { ...act, type, question:q, points:pts, media_url:mUrl })
+}
+
+function previewActImg() {
+  const file = document.getElementById('maf-img')?.files?.[0]
+  if (!file) return
+  const r = new FileReader()
+  r.onload = e => {
+    document.getElementById('maf-img-preview').innerHTML =
+      `<img src="${e.target.result}" style="max-width:100%;max-height:100px;border-radius:8px;">`
+  }
+  r.readAsDataURL(file)
+}
+
+async function uploadActImg() {
+  const file = document.getElementById('maf-img')?.files?.[0]
+  if (!file) { flash('⚠️ Vælg et billede først'); return; }
+  if (!quizId) { flash('⚠️ Gem løbet først'); return; }
+  const ext  = file.name.split('.').pop().toLowerCase()
+  const path = `task-images/${quizId}/${Date.now()}.${ext}`
+  flash('⏳ Uploader…')
+  const { error } = await sb.storage.from('quiz-uploads').upload(path, file, { upsert: true })
+  if (error) { flash('❌ ' + error.message); return; }
+  const { data: urlData } = sb.storage.from('quiz-uploads').getPublicUrl(path)
+  document.getElementById('maf-media-url').value = urlData.publicUrl
+  document.getElementById('maf-img-preview').innerHTML =
+    `<img src="${escHtml(urlData.publicUrl)}" style="max-width:100%;max-height:100px;border-radius:8px;">`
+  flash('✅ Billede uploadet')
+}
+
+async function saveActivity() {
+  const stopId   = editStopId
+  const actId    = editActId
+  const stop     = stops.find(s => s.id === stopId)
+  const type     = document.getElementById('maf-type').value
+  const question = document.getElementById('maf-q').value.trim()
+  const points   = parseInt(document.getElementById('maf-pts').value)||0
+  const mediaUrl = document.getElementById('maf-media-url')?.value || null
+  const approval = type==='foto' ? (document.getElementById('maf-approval')?.value ?? 'auto') : 'auto'
+
+  let options = null
+  if (type==='mc') {
+    options = [0,1,2,3].map(i => document.getElementById('maf-o'+i)?.value??'')
+  }
+
+  const payload = {
+    stop_id: stopId, type, question, points,
+    sort: stop.activities.length,
+    media_url: mediaUrl, approval,
+    ...(options ? { options } : { options: null })
+  }
+
+  let actRecord
+  if (actId) {
+    const { data, error } = await sb.schema('quiz').from('activities')
+      .update(payload).eq('id', actId).select().single()
+    if (error) { alert(error.message); return; }
+    actRecord = data
+  } else {
+    const { data, error } = await sb.schema('quiz').from('activities')
+      .insert(payload).select().single()
+    if (error) { alert(error.message); return; }
+    actRecord = data
+  }
+
+  // Fasit
+  const correctVal = getCorrectVal(type, options)
+  const tolerance  = type==='tal' ? parseFloat(document.getElementById('maf-tol')?.value)||0 : null
+  if (correctVal !== null) {
+    const existingKey = stop.activities.find(a=>a.id===actId)?.answerKey
+    if (existingKey) {
+      await sb.schema('quiz').from('answer_keys')
+        .update({ correct: correctVal, tolerance }).eq('activity_id', actRecord.id)
+    } else {
+      await sb.schema('quiz').from('answer_keys')
+        .insert({ activity_id: actRecord.id, correct: correctVal, tolerance })
+    }
+  }
+
+  closeActModal()
+  await loadAll()
+  openStopId = stopId
+  renderStops()
+}
+
+function getCorrectVal(type, options) {
+  if (type==='mc') {
+    const idx = parseInt(document.getElementById('maf-correct').value)
+    const val = options?.[idx]
+    return val != null && val !== '' ? val : null
+  }
+  if (type==='tekst') {
+    const raw = document.getElementById('maf-correct')?.value.trim()
+    if (!raw) return null
+    const parts = raw.split(',').map(v=>v.trim()).filter(Boolean)
+    return parts.length===1 ? parts[0] : parts
+  }
+  if (type==='tal') {
+    const n = parseFloat(document.getElementById('maf-correct')?.value)
+    return isNaN(n) ? null : n
+  }
+  return null
+}
+
+async function deleteActivity(stopId, actId) {
+  if (!confirm('Slet denne opgave?')) return
+  const { error } = await sb.schema('quiz').from('activities').delete().eq('id', actId)
+  if (error) { alert(error.message); return; }
+  const stop = stops.find(s => s.id === stopId)
+  stop.activities = stop.activities.filter(a => a.id !== actId)
+  renderStops()
+}
+
+// ── Teams ─────────────────────────────────────────────────────
+function getBaseUrl() {
+  return location.origin + location.pathname.replace('app/customer-editor.html','play/quiz.html')
+}
+function getScoreboardUrl() {
+  return location.origin + location.pathname.replace('app/customer-editor.html','board/scoreboard.html') + '?q=' + quizId
+}
+
+async function addTeam() {
+  if (!quizId) { await saveQuiz(); if (!quizId) return; }
+  const name = document.getElementById('new-team-name').value.trim()
+  if (!name) return
+  const token = name.toLowerCase()
+    .replace(/æ/g,'ae').replace(/ø/g,'oe').replace(/å/g,'aa')
+    .replace(/[^a-z0-9]/g,'-') + '-' + Math.random().toString(36).slice(2,6)
+  const { data, error } = await sb.schema('quiz').from('teams')
+    .insert({ quiz_id: quizId, name, token }).select().single()
+  if (error) { alert(error.message); return; }
+  teams.push(data)
+  document.getElementById('new-team-name').value = ''
+  renderTeams()
+}
+
+async function deleteTeam(teamId) {
+  if (!confirm('Slet holdet?')) return
+  const { error } = await sb.schema('quiz').from('teams').delete().eq('id', teamId)
+  if (error) { alert(error.message); return; }
+  teams = teams.filter(t => t.id !== teamId)
+  renderTeams()
+}
+
+function renderTeams() {
+  const el = document.getElementById('team-list')
+  if (!el) return
+  if (!teams.length) {
+    el.innerHTML = '<p style="color:var(--muted);font-size:.85rem;">Ingen hold endnu — tilføj et hold ovenfor</p>'
+    return
+  }
+  el.innerHTML = teams.map(t => {
+    const url = getBaseUrl() + '?t=' + t.token
+    return `
+      <div class="team-row">
+        <div style="min-width:0;">
+          <div class="team-name">${escHtml(t.name)}</div>
+          <div class="team-url">${url}</div>
+        </div>
+        <div class="team-actions">
+          <button class="btn btn-ghost btn-sm" onclick="openTeamShare('${t.id}')">📤</button>
+          <button class="icon-btn" onclick="deleteTeam('${t.id}')">🗑</button>
+        </div>
+      </div>`
+  }).join('')
+}
+
+function openTeamShare(teamId) {
+  shareTeam = teams.find(t => t.id === teamId)
+  document.getElementById('share-modal-title').textContent = '📤 Del: ' + (shareTeam?.name || 'Hold')
+  document.getElementById('share-modal').classList.add('open')
+}
+function closeShareModal() {
+  document.getElementById('share-modal').classList.remove('open')
+  shareTeam = null
+}
+
+function doTeamShare(type) {
+  if (!shareTeam) return
+  const url = getBaseUrl() + '?t=' + shareTeam.token
+  if (type === 'copy') {
+    navigator.clipboard.writeText(url).then(() => { closeShareModal(); alert('✅ Link kopieret!') })
+  } else if (type === 'qr') {
+    closeShareModal()
+    showQR(url, shareTeam.name)
+  } else if (type === 'mail') {
+    const subject = encodeURIComponent('Din holdlink: ' + shareTeam.name)
+    const body = encodeURIComponent('Åbn dette link på din mobil for at deltage:\n' + url)
+    window.open('mailto:?subject=' + subject + '&body=' + body)
+    closeShareModal()
+  }
+}
+
+function copyScoreboard() {
+  navigator.clipboard.writeText(getScoreboardUrl())
+    .then(() => alert('✅ Scoreboard-link kopieret!'))
+}
+
+function showScoreboardQR() {
+  const title = document.getElementById('title').value || 'Scoreboard'
+  showQR(getScoreboardUrl(), title + ' – Scoreboard')
+}
+
+// ── QR ────────────────────────────────────────────────────────
+function showQR(url, title) {
+  document.getElementById('qr-title').textContent = title
+  document.getElementById('qr-url-text').textContent = url
+  const canvas = document.getElementById('qr-canvas')
+  canvas.innerHTML = ''
+  new QRCode(canvas, { text: url, width: 220, height: 220,
+    colorDark:'#000000', colorLight:'#ffffff', correctLevel: QRCode.CorrectLevel.M })
+  document.getElementById('qr-modal').classList.add('open')
+}
+function closeQR() { document.getElementById('qr-modal').classList.remove('open') }
+
+// ── Helpers ───────────────────────────────────────────────────
+function typeLabel(t) {
+  return {mc:'MC',tekst:'Tekst',tal:'Tal',foto:'Foto',info:'Info'}[t]??t
+}
+function shortQ(q) {
+  if (!q) return '–'
+  return q.length>40 ? q.substring(0,40)+'…' : q
+}
+function escHtml(s) {
+  return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+}
+
+init()
+</script>
+</body>
+</html>
