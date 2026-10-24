@@ -352,6 +352,9 @@
         <button class="btn btn-primary" onclick="addTeam()" style="white-space:nowrap;">+ Tilføj</button>
       </div>
       <div id="team-list" style="margin-top:1rem;"></div>
+      <div id="team-actions-bar" style="display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid #f0f0f0;">
+        <button class="btn btn-ghost btn-sm" onclick="printAllTeams()">🖨️ Print alle hold-QR</button>
+      </div>
     </div>
 
     <div class="card">
@@ -360,6 +363,7 @@
       <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
         <button class="btn btn-ghost btn-sm" onclick="copyScoreboard()">📋 Kopiér link</button>
         <button class="btn btn-ghost btn-sm" onclick="showScoreboardQR()">📱 QR-kode</button>
+        <button class="btn btn-ghost btn-sm" onclick="mailScoreboard()">📧 Send via mail</button>
       </div>
     </div>
   </div>
@@ -439,13 +443,7 @@ function goStep(n, save = false) {
     if (i === n) btn.classList.add('active')
     else if (i < n) btn.classList.add('done')
   })
-  if (n === 2) {
-    setTimeout(() => {
-      if (!map) initMap()
-      else map.invalidateSize()
-      renderStops()
-    }, 100)
-  }
+  if (n === 2 && map) setTimeout(() => map.invalidateSize(), 80)
   try { localStorage.setItem('ced_step', n); } catch {}
   window.scrollTo(0,0)
 }
@@ -486,9 +484,8 @@ async function loadAll() {
     .select('*').eq('quiz_id', quizId).order('created_at')
   teams = (teamRows??[]).filter(t => t.name !== '🧪 Testhold')
   renderTeams()
-  if (currentStep === 2) {
-    setTimeout(() => { initMap(); renderStops(); }, 100)
-  }
+  initMap()
+  renderStops()
 }
 
 // ── Save ──────────────────────────────────────────────────────
@@ -868,11 +865,14 @@ async function deleteTeam(teamId) {
 
 function renderTeams() {
   const el = document.getElementById('team-list')
+  const bar = document.getElementById('team-actions-bar')
   if (!el) return
   if (!teams.length) {
     el.innerHTML = '<p style="color:var(--muted);font-size:.85rem;">Ingen hold endnu — tilføj et hold ovenfor</p>'
+    if (bar) bar.style.display = 'none'
     return
   }
+  if (bar) bar.style.display = 'block'
   el.innerHTML = teams.map(t => {
     const url = getBaseUrl() + '?t=' + t.token
     return `
@@ -882,11 +882,37 @@ function renderTeams() {
           <div class="team-url">${url}</div>
         </div>
         <div class="team-actions">
-          <button class="btn btn-ghost btn-sm" onclick="openTeamShare('${t.id}')">📤</button>
+          <button class="btn btn-ghost btn-sm" onclick="copyTeamLink('${t.token}')" title="Kopiér link">📋</button>
+          <button class="btn btn-ghost btn-sm" onclick="showTeamQR('${t.id}')" title="QR-kode">📱</button>
+          <button class="btn btn-ghost btn-sm" onclick="mailTeamLink('${t.id}')" title="Send mail">📧</button>
           <button class="icon-btn" onclick="deleteTeam('${t.id}')">🗑</button>
         </div>
       </div>`
   }).join('')
+}
+
+function copyTeamLink(token) {
+  const url = getBaseUrl() + '?t=' + token
+  navigator.clipboard.writeText(url).then(() => alert('✅ Hold-link kopieret!'))
+}
+
+function showTeamQR(teamId) {
+  const team = teams.find(t => t.id === teamId)
+  if (!team) return
+  showQR(getBaseUrl() + '?t=' + team.token, team.name)
+}
+
+function mailTeamLink(teamId) {
+  const team = teams.find(t => t.id === teamId)
+  if (!team) return
+  const url = getBaseUrl() + '?t=' + team.token
+  const subject = encodeURIComponent('Din holdlink: ' + team.name)
+  const body = encodeURIComponent(
+    'Hej ' + team.name + ',\n\n' +
+    'Åbn dette link på din mobil for at deltage i quizzen:\n' + url +
+    '\n\nGod fornøjelse!'
+  )
+  window.open('mailto:?subject=' + subject + '&body=' + body)
 }
 
 function openTeamShare(teamId) {
@@ -923,6 +949,62 @@ function copyScoreboard() {
 function showScoreboardQR() {
   const title = document.getElementById('title').value || 'Scoreboard'
   showQR(getScoreboardUrl(), title + ' – Scoreboard')
+}
+
+function mailScoreboard() {
+  const title = document.getElementById('title').value || 'Quiz'
+  const url = getScoreboardUrl()
+  const subject = encodeURIComponent('Scoreboard: ' + title)
+  const body = encodeURIComponent('Følg med på live scoreboard her:\n' + url)
+  window.open('mailto:?subject=' + subject + '&body=' + body)
+}
+
+function printAllTeams() {
+  if (!teams.length) return
+  const base = getBaseUrl()
+  const quizTitle = document.getElementById('title').value || 'Quiz'
+
+  const win = window.open('', '_blank')
+  win.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="UTF-8">
+    <title>Hold – ${escHtml(quizTitle)}</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 0; padding: 1rem; }
+      h1 { font-size: 1.2rem; margin-bottom: 1.5rem; text-align: center; }
+      .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .hold {
+        border: 2px solid #333; border-radius: 8px; padding: 1rem;
+        text-align: center; page-break-inside: avoid;
+      }
+      .hold h2 { font-size: 1rem; margin-bottom: .5rem; }
+      .hold p { font-size: .7rem; color: #666; word-break: break-all; margin-top: .5rem; }
+      @media print { body { padding: 0; } }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
+  </head><body>
+    <h1>🗺️ ${escHtml(quizTitle)} — Hold</h1>
+    <div class="grid">
+      ${teams.map(t => {
+        const url = base + '?t=' + t.token
+        return `<div class="hold">
+          <h2>${escHtml(t.name)}</h2>
+          <div id="qr-${t.id}"></div>
+          <p>${url}</p>
+        </div>`
+      }).join('')}
+    </div>
+    <script>
+      ${teams.map(t => {
+        const url = base + '?t=' + t.token
+        return `new QRCode(document.getElementById('qr-${t.id}'), {
+          text: '${url}', width: 180, height: 180,
+          colorDark: '#000', colorLight: '#fff'
+        });`
+      }).join('\n')}
+      setTimeout(() => window.print(), 800)
+    <\/script>
+  </body></html>`)
+  win.document.close()
 }
 
 // ── QR ────────────────────────────────────────────────────────
