@@ -498,9 +498,21 @@
 </section>
 
 <!-- Login -->
-<div class="login-section">
-  <p>Er du allerede kunde og har fået dit login-link?</p>
-  <a href="app/login.html" class="btn-primary" style="font-size:.85rem;padding:.6rem 1.25rem;">Log ind her</a>
+<div class="login-section" id="login">
+  <p style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:.4rem;">Er du allerede kunde?</p>
+  <p>Indtast din email og vi finder dit login-link.</p>
+
+  <div style="display:flex;gap:.5rem;justify-content:center;margin-top:1.25rem;flex-wrap:wrap;">
+    <input type="email" id="login-email" placeholder="din@email.dk"
+      style="padding:.7rem 1.1rem;border-radius:99px;border:1px solid var(--border);
+      background:var(--panel);color:var(--text);font-size:.9rem;width:260px;outline:none;"
+      onkeydown="if(event.key==='Enter')findLogin()">
+    <button onclick="findLogin()" class="btn-primary" style="padding:.7rem 1.4rem;">
+      Find mit login
+    </button>
+  </div>
+
+  <div id="login-result" style="margin-top:1.25rem;min-height:1.5rem;font-size:.88rem;"></div>
 </div>
 
 <!-- Footer -->
@@ -509,5 +521,44 @@
   <div style="margin-top:.5rem;">GPS-quiz og escape room · Danmark · <a href="mailto:ralv@verdo.com" style="color:inherit;">ralv@verdo.com</a></div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script>
+const { createClient } = supabase
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON)
+
+async function findLogin() {
+  const email = document.getElementById('login-email').value.trim().toLowerCase()
+  const result = document.getElementById('login-result')
+
+  if (!email || !email.includes('@')) {
+    result.innerHTML = '<span style="color:#f87171;">Indtast venligst en gyldig email.</span>'
+    return
+  }
+
+  result.innerHTML = '<span style="color:var(--muted);">Søger…</span>'
+
+  const { data, error } = await sb.schema('quiz').from('customers')
+    .select('id, name')
+    .eq('email', email)
+    .maybeSingle()
+
+  if (error || !data) {
+    result.innerHTML = `<span style="color:var(--muted);">
+      Vi kunne ikke finde en konto med den email.<br>
+      <a href="#kontakt" style="color:var(--gold);">Kontakt os</a> hvis du mener det er en fejl.
+    </span>`
+    return
+  }
+
+  const loginUrl = `${location.origin}/${location.pathname.split('/')[1] ? '' : ''}app/login.html?c=${data.id}`
+  result.innerHTML = `
+    <span style="color:#86efac;">Vi fandt din konto — velkommen, ${data.name}!</span><br>
+    <a href="${loginUrl}" class="btn-primary"
+      style="display:inline-block;margin-top:.75rem;font-size:.85rem;padding:.6rem 1.25rem;">
+      Gå til login →
+    </a>`
+}
+</script>
 </body>
 </html>
