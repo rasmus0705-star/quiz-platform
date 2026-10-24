@@ -364,11 +364,13 @@ function renderGrid() {
 }
 
 async function newQuiz() {
-  const { data, error } = await sb.schema('quiz').from('quizzes')
-    .insert({ title: 'Nyt løb', status: 'kladde', customer_id: customerId })
-    .select('id').single()
+  const session = getPinSession()
+  const { data, error } = await sb.schema('quiz').rpc('create_quiz_for_customer', {
+    p_session_id: session.session_id,
+    p_title: 'Nyt løb'
+  })
   if (error) { alert('Kunne ikke oprette løb: ' + error.message); return; }
-  location.href = `customer-editor.html?q=${data.id}`
+  location.href = `customer-editor.html?q=${data}`
 }
 
 function openQuiz(quizId) {
