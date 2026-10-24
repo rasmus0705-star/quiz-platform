@@ -28,7 +28,7 @@
       font-size: .85rem; min-height: 1.2rem;
       margin-top: .5rem;
     }
-    #quiz-label {
+    #context-label {
       text-align: center; font-size: .8rem;
       color: var(--text-muted); margin-bottom: 1rem;
     }
@@ -40,7 +40,7 @@
     <div class="app-name">Quiz Platform</div>
 
     <div class="card">
-      <div id="quiz-label"></div>
+      <div id="context-label"></div>
       <label style="display:block;margin-bottom:.4rem;font-size:.82rem;color:var(--text-muted);">
         PIN-kode
       </label>
@@ -53,11 +53,12 @@
   </div>
 
 <script>
-  const params  = new URLSearchParams(location.search)
-  const quizId  = params.get('q')   // null = forsøg admin-login
+  const params     = new URLSearchParams(location.search)
+  const customerId = params.get('c')   // kunde-login
+  // admin-login: ingen parameter
 
-  if (quizId) {
-    document.getElementById('quiz-label').textContent = 'Quiz-adgang'
+  if (customerId) {
+    document.getElementById('context-label').textContent = 'Kunde-adgang'
   }
 
   // Allerede logget ind? Redirect
@@ -73,10 +74,13 @@
     } catch { return null }
   })()
 
-  // Kun auto-redirect hvis der IKKE er et quiz-id i URL'en (dvs. admin-login)
-  if (stored && !quizId) {
+  // Auto-redirect hvis session findes og vi ikke er midt i et nyt login
+  if (stored && !customerId) {
     if (stored.is_admin) location.replace('overview.html')
-    else                 location.replace('editor.html?q=' + stored.quiz_id)
+    else                 location.replace('customer-overview.html')
+  }
+  if (stored && customerId && stored.customer_id === customerId) {
+    location.replace('customer-overview.html')
   }
 
   document.getElementById('pin-input').addEventListener('keydown', e => {
@@ -95,9 +99,11 @@
       const { createClient } = supabase
       const client = createClient(SUPABASE_URL, SUPABASE_ANON)
 
-      const { data, error } = await client.functions.invoke('quiz-pin-auth', {
-        body: { quiz_id: quizId ?? null, pin }
-      })
+      const body = customerId
+        ? { customer_id: customerId, pin }
+        : { pin }
+
+      const { data, error } = await client.functions.invoke('quiz-pin-auth', { body })
 
       if (error || data?.error) {
         showError(data?.error ?? 'Fejl ved login')
@@ -106,14 +112,14 @@
       }
 
       localStorage.setItem('pin_session', JSON.stringify({
-        session_id : data.session_id,
-        is_admin   : data.is_admin,
-        quiz_id    : data.quiz_id,
-        expires_at : data.expires_at
+        session_id  : data.session_id,
+        is_admin    : data.is_admin,
+        customer_id : data.customer_id,
+        expires_at  : data.expires_at
       }))
 
       if (data.is_admin) location.href = 'overview.html'
-      else               location.href = 'editor.html?q=' + data.quiz_id
+      else               location.href = 'customer-overview.html'
 
     } catch (e) {
       showError('Netværksfejl – prøv igen')
