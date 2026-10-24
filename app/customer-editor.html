@@ -285,11 +285,51 @@
 <div class="pane" id="pane-2">
   <div class="pane-inner">
     <div class="pane-title">📍 Byg din rute</div>
-    <p class="pane-lead">Klik på kortet for at tilføje stop. Tilføj opgaver til hvert stop.</p>
+
+    <!-- Vejledning -->
+    <div style="display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+      <div style="flex:1;min-width:160px;background:var(--white);border-radius:var(--radius-sm);padding:.85rem;box-shadow:var(--shadow);display:flex;gap:.6rem;align-items:flex-start;">
+        <span style="font-size:1.3rem;">🔍</span>
+        <div>
+          <div style="font-weight:700;font-size:.85rem;margin-bottom:.2rem;">1. Find stedet</div>
+          <div style="font-size:.78rem;color:var(--ink-2);">Søg på by eller postnummer for at zoome ind</div>
+        </div>
+      </div>
+      <div style="flex:1;min-width:160px;background:var(--white);border-radius:var(--radius-sm);padding:.85rem;box-shadow:var(--shadow);display:flex;gap:.6rem;align-items:flex-start;">
+        <span style="font-size:1.3rem;">📍</span>
+        <div>
+          <div style="font-weight:700;font-size:.85rem;margin-bottom:.2rem;">2. Placer stop</div>
+          <div style="font-size:.78rem;color:var(--ink-2);">Klik på kortet der hvor et stop skal ligge</div>
+        </div>
+      </div>
+      <div style="flex:1;min-width:160px;background:var(--white);border-radius:var(--radius-sm);padding:.85rem;box-shadow:var(--shadow);display:flex;gap:.6rem;align-items:flex-start;">
+        <span style="font-size:1.3rem;">❓</span>
+        <div>
+          <div style="font-weight:700;font-size:.85rem;margin-bottom:.2rem;">3. Tilføj opgaver</div>
+          <div style="font-size:.78rem;color:var(--ink-2);">Åbn hvert stop og tilføj spørgsmål til deltagerne</div>
+        </div>
+      </div>
+    </div>
 
     <div class="card">
+      <!-- Søgefelt -->
+      <div style="position:relative;margin-bottom:.75rem;">
+        <input type="text" id="map-search" placeholder="🔍  Søg på by eller postnummer…"
+          style="padding-right:2.5rem;"
+          oninput="onSearchInput()" onkeydown="if(event.key==='Enter')doSearch()">
+        <button onclick="doSearch()" style="position:absolute;right:.5rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1rem;color:var(--muted);">→</button>
+        <div id="search-results" style="
+          display:none;position:absolute;top:100%;left:0;right:0;z-index:1000;
+          background:var(--white);border:1.5px solid #e2e8f0;border-top:none;
+          border-radius:0 0 var(--radius-sm) var(--radius-sm);
+          box-shadow:var(--shadow);max-height:220px;overflow-y:auto;">
+        </div>
+      </div>
+
       <div id="map"></div>
-      <p style="font-size:.8rem;color:var(--muted);margin-bottom:.5rem;">Klik på kortet for at placere et nyt stop</p>
+      <p style="font-size:.78rem;color:var(--muted);margin-top:.5rem;margin-bottom:.75rem;">
+        Klik på kortet for at placere et nyt stop
+      </p>
       <div id="stop-list"></div>
     </div>
 
@@ -889,6 +929,66 @@ function showQR(url, title) {
   document.getElementById('qr-modal').classList.add('open')
 }
 function closeQR() { document.getElementById('qr-modal').classList.remove('open') }
+
+// ── Kortsøgning (Nominatim) ───────────────────────────────────
+let searchTimer = null
+
+function onSearchInput() {
+  clearTimeout(searchTimer)
+  const q = document.getElementById('map-search').value.trim()
+  if (q.length < 2) { hideSearchResults(); return; }
+  searchTimer = setTimeout(doSearch, 400)
+}
+
+async function doSearch() {
+  const q = document.getElementById('map-search').value.trim()
+  if (!q) return
+  const res = document.getElementById('search-results')
+  res.style.display = 'block'
+  res.innerHTML = '<div style="padding:.6rem 1rem;color:var(--muted);font-size:.85rem;">Søger…</div>'
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&countrycodes=dk&format=json&limit=6&addressdetails=1`
+    const resp = await fetch(url, { headers: { 'Accept-Language': 'da' } })
+    const data = await resp.json()
+    if (!data.length) {
+      res.innerHTML = '<div style="padding:.6rem 1rem;color:var(--muted);font-size:.85rem;">Ingen resultater</div>'
+      return
+    }
+    res.innerHTML = data.map((r,i) => `
+      <div onclick="selectSearchResult(${r.lat},${r.lon},'${escHtml(r.display_name)}')"
+        style="padding:.55rem 1rem;cursor:pointer;font-size:.85rem;border-bottom:1px solid #f0f0f0;"
+        onmouseover="this.style.background='#f5f7fa'" onmouseout="this.style.background=''">
+        <div style="font-weight:600;">${escHtml(shortDisplay(r))}</div>
+        <div style="font-size:.74rem;color:var(--muted);">${escHtml(r.display_name)}</div>
+      </div>`).join('')
+  } catch {
+    res.innerHTML = '<div style="padding:.6rem 1rem;color:var(--muted);font-size:.85rem;">Søgning fejlede</div>'
+  }
+}
+
+function shortDisplay(r) {
+  const a = r.address
+  return [a.city || a.town || a.village || a.municipality, a.postcode]
+    .filter(Boolean).join(' · ') || r.display_name.split(',')[0]
+}
+
+function selectSearchResult(lat, lon, name) {
+  hideSearchResults()
+  document.getElementById('map-search').value = ''
+  if (!map) return
+  map.setView([lat, lon], 14)
+}
+
+function hideSearchResults() {
+  const el = document.getElementById('search-results')
+  if (el) el.style.display = 'none'
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('#map-search') && !e.target.closest('#search-results')) {
+    hideSearchResults()
+  }
+})
 
 // ── Helpers ───────────────────────────────────────────────────
 function typeLabel(t) {
