@@ -499,7 +499,7 @@ function buildForm(stopId, act, mcCountOverride) {
   const rawOpts  = act?.options
     ? (Array.isArray(act.options) ? act.options : Object.values(act.options))
     : ['','','',''];
-  const mcCount  = mcCountOverride ?? rawOpts.filter(o => o !== '').length || 4;
+  const mcCount  = mcCountOverride !== undefined ? mcCountOverride : (rawOpts.filter(o => o !== '').length || 4);
   const opts     = Array.from({length: 4}, (_, i) => rawOpts[i] ?? '');
   const key      = act?.answerKey;
   const correct  = key?.correct;
@@ -609,8 +609,9 @@ function rebuildForm(stopId, actId, mcCountOverride) {
   const q    = document.getElementById('af-q-'+stopId)?.value ?? '';
   const pts  = document.getElementById('af-pts-'+stopId)?.value ?? 10;
   const mediaUrl = document.getElementById('af-media-url-'+stopId)?.value ?? '';
+  const mc   = mcCountOverride !== undefined ? mcCountOverride : parseInt(document.getElementById('af-mccount-'+stopId)?.value ?? '4');
   document.getElementById('af-'+stopId).innerHTML =
-    buildForm(stopId, { ...act, type, question:q, points:pts, media_url:mediaUrl }, mcCountOverride);
+    buildForm(stopId, { ...act, type, question:q, points:pts, media_url:mediaUrl }, mc);
 }
 
 function previewTaskImage(stopId) {

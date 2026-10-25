@@ -629,7 +629,7 @@ function closeActModal() {
   editStopId = null; editActId = null
 }
 
-function buildActForm(stopId, act) {
+function buildActForm(stopId, act, mcCountOverride) {
   const type     = act?.type ?? 'mc'
   const q        = act?.question ?? ''
   const pts      = act?.points ?? 10
@@ -655,7 +655,7 @@ function buildActForm(stopId, act) {
   const rawOpts2 = act?.options
     ? (Array.isArray(act.options) ? act.options : Object.values(act.options))
     : ['','','','']
-  const mcCount2 = rawOpts2.filter(o => o !== '').length || 4
+  const mcCount2 = mcCountOverride !== undefined ? mcCountOverride : (rawOpts2.filter(o => o !== '').length || 4)
 
   return `
     <label>Type</label>
@@ -734,8 +734,9 @@ function refreshActForm() {
   const q    = document.getElementById('maf-q')?.value ?? ''
   const pts  = document.getElementById('maf-pts')?.value ?? 10
   const mUrl = document.getElementById('maf-media-url')?.value ?? ''
+  const mc   = parseInt(document.getElementById('maf-mccount')?.value ?? '4')
   document.getElementById('act-modal-body').innerHTML =
-    buildActForm(editStopId, { ...act, type, question:q, points:pts, media_url:mUrl })
+    buildActForm(editStopId, { ...act, type, question:q, points:pts, media_url:mUrl }, mc)
 }
 
 function previewActImg() {
