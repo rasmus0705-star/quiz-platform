@@ -261,6 +261,11 @@
       font-size: .9rem; line-height: 1.6;
     }
 
+    @keyframes fall {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
     @keyframes bounce-in {
       0%   { transform: scale(0); opacity: 0; }
       60%  { transform: scale(1.2); }
@@ -381,27 +386,40 @@
 
 <!-- Færdig-skærm -->
 <div id="finished-screen" style="
-  display:none; position:fixed; inset:0; z-index:900;
+  display:none; position:fixed; inset:0; z-index:1000;
   background:var(--night); flex-direction:column;
   align-items:center; justify-content:center;
   text-align:center; padding:2rem;">
-  <div style="font-size:4rem;margin-bottom:1rem;animation:bounce-in .6s ease-out;">🏆</div>
-  <h1 style="font-family:system-ui;font-size:1.8rem;font-weight:800;margin-bottom:.5rem;">
-    Jagten er slut!
-  </h1>
-  <p style="color:var(--muted);font-size:.95rem;margin-bottom:2rem;">
-    I har gennemført alle stop — godt gået!
-  </p>
-  <div style="
-    background:var(--panel);border:1px solid var(--border);
-    border-radius:20px;padding:1.5rem 2.5rem;margin-bottom:2rem;">
-    <div style="font-size:.8rem;color:var(--muted);margin-bottom:.25rem;">Samlet score</div>
-    <div id="final-points" style="font-size:3rem;font-weight:800;color:var(--gold);">0 p</div>
-    <div id="final-team" style="font-size:.9rem;color:var(--muted);margin-top:.25rem;"></div>
+
+  <!-- Konfetti-agtig baggrund -->
+  <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none;">
+    <div id="confetti-container"></div>
   </div>
-  <p style="font-size:.82rem;color:var(--muted);">
-    Følg med på scoreboardet for at se hvordan I klarede jer 🎯
-  </p>
+
+  <div style="position:relative;z-index:1;width:100%;max-width:340px;">
+    <div style="font-size:5rem;margin-bottom:.75rem;animation:bounce-in .5s ease-out;">🏆</div>
+
+    <h1 style="font-size:2rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.4rem;">
+      Tillykke!
+    </h1>
+    <p style="color:var(--muted);font-size:.95rem;margin-bottom:2rem;line-height:1.5;">
+      I har gennemført alle poster på jagten.<br>Godt gået!
+    </p>
+
+    <div style="
+      background:linear-gradient(135deg,rgba(232,200,74,.15),rgba(232,200,74,.05));
+      border:1px solid rgba(232,200,74,.3);
+      border-radius:20px;padding:1.75rem 2rem;margin-bottom:1.5rem;">
+      <div style="font-size:.78rem;color:var(--muted);margin-bottom:.35rem;letter-spacing:.05em;">JERES SCORE</div>
+      <div id="final-points" style="font-size:3.5rem;font-weight:800;color:var(--gold);line-height:1;">0</div>
+      <div style="font-size:.85rem;color:var(--muted);margin-top:.2rem;">point</div>
+      <div id="final-team" style="font-size:.88rem;color:rgba(255,255,255,.6);margin-top:.75rem;font-weight:600;"></div>
+    </div>
+
+    <p style="font-size:.82rem;color:var(--muted);line-height:1.5;">
+      🎯 Følg med på live-scoreboardet<br>for at se hvordan I klarede jer mod de andre hold
+    </p>
+  </div>
 </div>
 
 <!-- Stop-liste overlay -->
@@ -634,14 +652,15 @@ function updateNextStop() {
   const nameEl = document.getElementById('next-stop-name')
   const distEl = document.getElementById('next-stop-dist')
 
-  // Find næste ubesvaret/tilgængeligt stop
-  const next = stops.find(s => isStopAccessible(s))
+  // Find næste ubesvaret stop (ikke nødvendigvis tilgængeligt — bare det næste i køen)
+  const next = stops.find(s => {
+    if (!s.activities.length) return false
+    return !s.activities.every(a => submissions[a.id])
+  })
+
   if (!next) {
-    // Alle besvaret
-    card.style.display = 'block'
-    nameEl.textContent = '🎉 Alle stop besvaret!'
-    distEl.textContent = ''
-    distEl.className = 'next-stop-dist'
+    // Alle stop faktisk besvaret
+    card.style.display = 'none'
     return
   }
 
@@ -828,10 +847,37 @@ function checkAllDone() {
 }
 
 function showFinished() {
-  document.getElementById('final-points').textContent = (teamData?.points ?? 0) + ' p'
+  document.getElementById('final-points').textContent = teamData?.points ?? 0
   document.getElementById('final-team').textContent = teamData?.team_name ?? ''
-  document.getElementById('finished-screen').style.display = 'flex'
+  const screen = document.getElementById('finished-screen')
+  screen.style.display = 'flex'
+  // Skjul bund-panel
+  document.getElementById('bottom-panel').style.display = 'none'
+  // Simple konfetti
+  spawnConfetti()
 }
+
+function spawnConfetti() {
+  const container = document.getElementById('confetti-container')
+  if (!container) return
+  const colors = ['#e8c84a','#22c55e','#e94560','#a78bfa','#60a5fa']
+  for (let i = 0; i < 60; i++) {
+    const el = document.createElement('div')
+    const size = 6 + Math.random() * 8
+    el.style.cssText = `
+      position:absolute;
+      width:${size}px;height:${size}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      border-radius:${Math.random() > .5 ? '50%' : '2px'};
+      left:${Math.random()*100}%;
+      top:-20px;
+      opacity:${0.6 + Math.random()*.4};
+      animation:fall ${2+Math.random()*3}s ${Math.random()*2}s linear forwards;
+    `
+    container.appendChild(el)
+  }
+}
+
 
 // ── Indsend svar ──────────────────────────────────────────────
 async function submitMC(btn, activityId, answer, stopId) {
