@@ -1,11 +1,11 @@
 # CLAUDE.md – GPS-quizplatform projektkort
 
 > Indsæt dette i starten af en ny chat for hurtig kontekst.
-> Opdateret efter stor session 24. oktober 2026.
+> Opdateret efter session 25. oktober 2026.
 
 ## Hvad er dette?
 
-Dansk selvbetjeningsplatform til GPS-quiz og indendørs opgaverum.
+Dansk selvbetjeningsplatform til GPS-quiz og escape room — "Jagten".
 Rasmus (admin) sælger adgang til kunder (foreninger/arrangører), som selv bygger
 og deler løb via en kunde-PIN. Hold spiller via QR/link i mobilbrowser uden login.
 Bygget af Rasmus (ralv@verdo.com).
@@ -19,15 +19,15 @@ Bygget af Rasmus (ralv@verdo.com).
 | Backend | Supabase – projekt `qmdqzdatlanyhewjwpzc` |
 | Skema | `quiz` (separat fra public/beersniffer-tabeller) |
 | Kort | Leaflet + OpenStreetMap + Nominatim (geocoding) |
-| Storage | Supabase Storage – bucket `quiz-uploads` (opgave- og svar-billeder) |
+| Storage | Supabase Storage – bucket `quiz-uploads` |
 | Betaling | Stripe (Fase 3 – ikke bygget endnu) |
 
 ## URL-oversigt
 
 | Side | URL |
 |---|---|
-| Forside (redirect) | `/index.html` → `/app/login.html` |
-| Admin-login | `/app/login.html` (ingen parameter) |
+| Landingsside | `/index.html` (Jagten – mørkt design, guld) |
+| Admin-login | `/app/login.html` |
 | Kunde-login | `/app/login.html?c=<customer-id>` |
 | Admin-oversigt | `/app/overview.html` |
 | Kunder (admin) | `/app/customers.html` |
@@ -38,152 +38,140 @@ Bygget af Rasmus (ralv@verdo.com).
 | Holdspil | `/play/quiz.html?t=<hold-token>` |
 | Scoreboard | `/board/scoreboard.html?q=<quiz-id>` |
 
-## Filstruktur – vigtige filer
+## Filstruktur
 
 ```
-/app/login.html              – Admin + kunde-login (?c=<customer-id> for kunde)
-/app/overview.html           – Admin-landingsside, nøgletal + seneste løb/kunder
-/app/customers.html          – Kundeliste, PIN pr. kunde, del-knapper (link/QR/mail)
-/app/dashboard.html          – Alle løb: fuld liste, filtre, slet
-/app/editor.html             – Admin-editor: fuld kontrol over løb
+/index.html                  – Landingsside (Jagten – mørkt tema, guld)
+/app/login.html              – Admin + kunde-login
+/app/overview.html           – Admin-landingsside
+/app/customers.html          – Kundeliste, PIN pr. kunde, del-knapper
+/app/dashboard.html          – Alle løb (admin)
+/app/editor.html             – Admin-editor: fuld kontrol, GPS-radius pr. stop,
+                               MC antal svarmuligheder, stop_order toggle
 /app/customer-overview.html  – Kunde-landingsside: løbkort med stats, hold-deling,
-                               test/aktivér knapper direkte på kortet
+                               test/aktivér/genaktivér knapper, scoreboard-pill
 /app/customer-editor.html    – Kunde-wizard (3 trin): løb → rute+opgaver → hold+deling
-/js/api.js                   – Supabase-klient, PIN-session, getSession()
-/js/config.js                – Supabase URL + anon key (aldrig i git)
-/play/quiz.html              – Holdspil: GPS-check, live point, realtime
-/board/scoreboard.html       – Live scoreboard med realtime opdatering
+/play/quiz.html              – Spiller: kort fylder alt, GPS-popup, auto-opgave ved radius,
+                               afstandsnedtæller, stop-liste overlay, færdig-skærm med konfetti
+/board/scoreboard.html       – Live scoreboard: rangliste, fremgang, foto-galleri, vinder-banner
+/js/api.js                   – Supabase-klient, PIN-session (VIGTIGT: scoreboard bruger IKKE api.js)
+/js/config.js                – Supabase URL + anon key
 ```
 
 ## Auth-system
 
-### To aktørtyper:
-| Aktør | Login | Session indeholder |
+| Aktør | Login | Session |
 |---|---|---|
-| Admin (Rasmus) | `login.html` uden parameter | `is_admin: true` |
+| Admin | `login.html` uden parameter | `is_admin: true` |
 | Kunde | `login.html?c=<customer-id>` | `customer_id: <id>` |
-| Spiller | Ingen login — token i URL `?t=<token>` | – |
+| Spiller | Ingen — token i URL `?t=<token>` | – |
 
-### PIN-struktur:
-- **Admin-PIN**: Supabase Edge Function secret (`ADMIN_PIN`)
-- **Kunde-PIN**: Gemt som SHA-256 hash på `customers.pin_hash` (ikke på quizzes længere!)
-- Min. 6 cifre, rate-limit: 5 forkerte forsøg → 10 min. blokering
-- Nulstil akut: `DELETE FROM quiz.login_attempts;`
-
-### Edge Function `quiz-pin-auth`:
-- Sender `{ customer_id, pin }` for kunde, `{ pin }` for admin
-- Returnerer `{ session_id, is_admin, customer_id, expires_at }`
-- Quiz-PIN-logik er FJERNET — PIN sidder nu på customers, ikke quizzes
-- Deploy via Supabase Dashboard → Edge Functions (IKKE git push)
+- PIN sidder på `customers.pin_hash` (ikke på quizzes)
+- Edge Function `quiz-pin-auth` — sender `{ customer_id, pin }` for kunde, `{ pin }` for admin
+- Rate-limit: 5 forsøg → 10 min blokering. Nulstil: `DELETE FROM quiz.login_attempts;`
+- Deploy via Supabase Dashboard (ikke git push)
 - CORS-headers skal inkludere: `authorization, x-client-info, apikey, content-type`
-
-### Sessions-tabel har nu:
-- `id`, `is_admin`, `expires_at`, `quiz_id` (nullable, legacy), `customer_id` (nullable, ny)
 
 ## Datamodel (schema: quiz)
 
-| Tabel | Vigtige kolonner / noter |
+| Tabel | Vigtige kolonner |
 |---|---|
-| `quizzes` | `title`, `status` (kladde/testing/aktiv/arkiveret), `customer_id` (FK→customers), `description` (ny) |
-| `customers` | `name`, `email`, `phone`, `company`, `notes`, `pin_hash` (ny), `pin_expires_at` (ny) |
-| `stops` | `quiz_id`, `name`, `lat`, `lng`, `radius_m`, `sort`, `qr_token` (ny, fremtidssikring) |
-| `activities` | `type`, `question`, `points`, `options`, `media_url` (ny), `approval` (ny: auto/manuel/vis_kun) |
-| `answer_keys` | `activity_id`, `correct`, `tolerance` – sendes ALDRIG til klienten |
-| `teams` | `quiz_id`, `name`, `token`, `push_token` (ny, fremtidssikring) |
-| `submissions` | `team_id`, `activity_id`, `answer` (jsonb – foto-URL gemmes her) |
+| `quizzes` | `title`, `status` (kladde/testing/aktiv/arkiveret), `customer_id`, `description`, `stop_order` (fri/laast), `mode` (gps/rum/hybrid) |
+| `customers` | `name`, `email`, `phone`, `company`, `notes`, `pin_hash`, `pin_expires_at` |
+| `stops` | `quiz_id`, `name`, `lat`, `lng`, `radius_m` (default 15m!), `sort`, `qr_token` |
+| `activities` | `type`, `question`, `points`, `options`, `media_url`, `approval` (auto/manuel/vis_kun) |
+| `answer_keys` | `activity_id`, `correct`, `tolerance` — sendes ALDRIG til klienten |
+| `teams` | `quiz_id`, `name`, `token`, `push_token` |
+| `submissions` | `team_id`, `activity_id`, `answer` (jsonb — foto-URL gemmes her), `points`, `is_correct` |
 | `sessions` | `is_admin`, `customer_id`, `quiz_id`, `expires_at` |
-| `login_attempts` | Rate-limit-log |
-| `notifications` | Fremtidssikring til push (ikke i brug endnu) |
-
-## Storage (Supabase)
-
-- Bucket: `quiz-uploads` (public)
-- `task-images/<quiz-id>/<timestamp>.<ext>` – opgavebilleder uploadet i editor
-- `answers/<team-id>/<timestamp>.<ext>` – svar-billeder uploadet af spillere
-- RLS: anon må uploade til begge mapper, alle må læse
-
-## Opgavetyper
-
-| Type | Fasit | Godkendelse |
-|---|---|---|
-| `mc` | Index i options | Automatisk |
-| `tekst` | String eller array af strings | Automatisk |
-| `tal` | Tal + tolerance | Automatisk |
-| `foto` | Ingen fasit | `approval`: auto/manuel/vis_kun |
-| `info` | Ingen fasit | Ingen point |
-
-Alle opgavetyper kan have et valgfrit billede (`media_url`).
-Foto-opgaver har `approval`-felt: `auto` (point med det samme), `manuel` (admin godkender på scoreboard), `vis_kun` (ingen point, vises på scoreboard).
-
-## Kunde-flow
-
-1. Admin opretter kunde i `customers.html`, sætter PIN
-2. Admin sender login-link: `login.html?c=<customer-id>` + PIN via mail/QR
-3. Kunde logger ind → lander på `customer-overview.html`
-4. Kunde opretter løb → `customer-editor.html` (wizard: 3 trin)
-   - Trin 1: Navn + beskrivelse
-   - Trin 2: Rute (kort med Nominatim-søgning) + stop + opgaver
-   - Trin 3: Hold + deling (link/QR/mail/print pr. hold)
-5. Gem → redirect til oversigt
-6. På oversigtskortet: **🧪 Test** og **▶️ Aktivér** knapper direkte
-7. Spiller åbner hold-link → spiller løbet
+| `notifications` | Fremtidssikring til push (ikke i brug) |
 
 ## RPC-funktioner
 
 | Funktion | Formål |
 |---|---|
-| `delete_quiz_cascade(p_quiz_id)` | Slet quiz + alle relaterede data |
-| `get_team_by_token(p_token)` | Hent hold uden login (til spillet) |
-| `create_quiz_for_customer(p_session_id, p_title)` | Opret quiz som kunde (omgår RLS) |
+| `delete_quiz_cascade(p_quiz_id)` | Slet quiz + alt relateret |
+| `get_team_by_token(p_token)` | Hent hold uden login |
+| `get_quiz_stops(p_token)` | Hent stop + aktiviteter til spillet — returnerer også `quiz_mode` (stop_order) og `activity_approval` |
+| `create_quiz_for_customer(p_session_id, p_title)` | Opret quiz som kunde (omgår RLS, SET LOCAL row_security = off) |
+| `update_team_position(p_token, p_lat, p_lng, p_accuracy_m)` | Opdater holdets GPS-position |
+| `get_team_submissions(p_token)` | Hent holdets besvarelser |
+| `check_session(quiz_id)` | Tjek session — admin ELLER customer_id ejer quizzen |
 
-## RLS-noter
+## GPS-indstillinger i play/quiz.html
 
-- `check_session(quiz_id)` – tjekker om session er admin ELLER har customer_id der ejer quizzen
-- `anon` har GRANT SELECT på `quiz.sessions` og `quiz.customers`
-- Kunde-sessioner bruger `x-session` header (sat via `activatePinClient()` i api.js)
-- Supabase Storage: anon må uploade til `task-images/` og `answers/`
+```javascript
+const MIN_ACCURACY_M = 25        // Ignorer GPS hvis nøjagtighed > 25m
+const PROXIMITY_HITS_NEEDED = 4  // Kræv 4 hits i træk (~8 sek) før popup
+```
+- Default radius på stops: **15m** (tidligere 50m — alle eksisterende er opdateret)
+- GPS-nøjagtighedsindikator vises i topbar (grøn/rød)
+
+## Spiller-flow (play/quiz.html)
+
+1. GPS-permission popup — kan ikke lukkes før accepteret
+2. Kort fylder hele skærmen — holdets position som blå prik
+3. Stop-pins: rød=tilgængelig, grøn=besvaret, grå=låst
+4. Afstandsnedtæller i bunden til næste stop
+5. Auto-popup når inden for radius (4 hits i træk)
+6. Opgave fylder hele skærmen — kan ikke lukkes før besvaret
+7. 3 sekunders nedtæller → automatisk tilbage til kort
+8. Alle besvaret → festlig færdig-skærm med konfetti + scoreboard-link
+9. Låst løb (arkiveret) → lås-skærm med scoreboard-link
+
+## Scoreboard (board/scoreboard.html)
+
+**VIGTIGT:** Scoreboard bruger IKKE `api.js` — har sin egen `createClient`:
+```javascript
+const { createClient } = supabase
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON)
+```
+- Live-opdatering via Supabase realtime + 15 sekunders interval
+- Rangliste med progressbar, tid brugt, tiebreaker på tid
+- Vinder-banner når alle hold er færdige
+- Foto-galleri nederst
+- Admin-bar (kun synlig for admin): "Afslut løbet nu"-knap
+- **KENDT FEJL:** Scoreboard viser ikke data korrekt — fejlsøges næste session
+
+## Hvad er færdigt ✅
+
+- Landingsside (Jagten) med "Find mit login" via email
+- PIN-auth pr. kunde, rate-limiting, sessions
+- Admin: Oversigt, Kunder, Alle løb, Editor (fuld kontrol)
+- Kunde: Oversigt med stats/hold-deling/test/aktivér, Editor-wizard
+- Spiller: Kort, GPS, auto-popup, afstandsnedtæller, færdig-skærm
+- Stop-rækkefølge: fri/låst (stop_order kolonne)
+- MC: valgfrit antal svarmuligheder (2/3/4)
+- GPS-radius redigerbar pr. stop i admin-editor (kun admin)
+- Foto-upload til Storage (editor + spiller)
+- Scoreboard: struktur bygget, realtime-subscription
+
+## Hvad mangler / kendte fejl ❌
+
+- **Scoreboard viser ikke data** — fejl under fejlsøgning (næste prioritet)
+- Foto-opgaver: manuel godkendelse på scoreboard
+- Tema-system — `standard.json` forberedt men ikke i brug
+- Oprydning: døde type-aliaser i `play/quiz.html`
+- Betaling (Stripe – Fase 3)
+- Push-notifikationer (infrastruktur klar)
+
+## Roadmap
+
+- **Fase 1–1c** ✅ Auth, admin, kunde-flow, spiller-kort
+- **Fase 2** ← næste: Fix scoreboard, foto-godkendelse, temaer
+- **Fase 3** — Stripe-betaling
+- **Fase 4** — QR-scanner alternativ til GPS, escape room/indendørs
+- **Fase 5** — Eget domæne, separat Supabase-projekt
+- **Fase 6** — Push-notifikationer, app-forbedringer
+- **Fase 7** — Marketing, Lions-kanal
 
 ## Konventioner
 
 - `answer_keys` sendes ALDRIG til klienten
-- Hold bruger token fra URL: `?t=<token>`, ikke login
+- Hold: token i URL `?t=<token>`, ikke login
 - Kun `config.js` indeholder Supabase anon key
-- Alle stier er relative – ingen hardkodede domæner
-- PowerShell: brug `;` i stedet for `&&` mellem git-kommandoer
-- Statusværdier er **danske**: `kladde`/`testing`/`aktiv`/`arkiveret`
-- Edge Functions deployes via Supabase Dashboard (ikke git push)
-- Fælles admin-sidebar er dupliceret inline i hver side (ingen build-trin)
-
-## Hvad er færdigt ✅
-
-- PIN-auth pr. kunde (ikke pr. quiz), rate-limiting, admin + kunde, sessions
-- Admin: Oversigt, Kunder (med PIN, del-knapper: link/QR/mail), Alle løb
-- Admin-editor: fuld kontrol, foto-upload til Storage, godkendelse-dropdown, media_url
-- Kunde-oversigt: løbkort med stats (stop/opgaver/hold), hold-deling pr. hold,
-  test/aktivér knapper direkte på kortet
-- Kunde-editor: wizard (3 trin), kortsøgning via Nominatim, vejledning, del pr. hold
-- Gem redirecter til kunde-oversigt
-- Holdspil og scoreboard er fuldt bygget (GPS-check, live point, realtime)
-- Storage bucket + RLS policies
-- Fremtidssikring: `qr_token` på stops, `push_token` på teams, `notifications`-tabel
-- RPC `create_quiz_for_customer` (omgår RLS for kunde-oprettelse)
-
-## Hvad mangler ❌
-
-- `play/quiz.html` – foto-svar uploader ikke til Storage endnu (gemmer kun filnavn)
-- Scoreboard – manuel godkendelse af foto-svar (admin-lag på scoreboard)
-- Tema-system – `themes/standard.json` forberedt men ikke i brug
-- Oprydning: `'text'/'number'` type-aliaser i `play/quiz.html` er dødt kode
-- Betaling (Stripe – Fase 3)
-
-## Roadmap
-
-- **Fase 1** – Basisfunktioner ✅
-- **Fase 1b** – Admin-overblik, kundestyring, sikkerhed ✅
-- **Fase 1c** – Kunde-flow, kunde-editor, del-knapper ✅ (denne session)
-- **Fase 2** – Foto-svar til Storage + manuel godkendelse på scoreboard + temaer ← næste
-- **Fase 3** – Betaling (Stripe)
-- **Fase 4** – QR-scanner som alternativ til GPS, opgaverum + hybrid
-- **Fase 5** – Eget domæne + separat Supabase-projekt (lancering)
-- **Fase 6** – Push-notifikationer (infrastruktur klar), app-forbedringer
-- **Fase 7** – Marketing, Lions-kanal
+- Alle stier er relative — ingen hardkodede domæner
+- PowerShell: brug `;` i stedet for `&&`
+- Statusværdier: `kladde`/`testing`/`aktiv`/`arkiveret` (dansk)
+- Edge Functions: deploy via Supabase Dashboard (ikke git push)
+- Scoreboard: egen klient, ikke api.js
