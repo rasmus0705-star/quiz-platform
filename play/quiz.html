@@ -261,6 +261,16 @@
       font-size: .9rem; line-height: 1.6;
     }
 
+    @keyframes bounce-in {
+      0%   { transform: scale(0); opacity: 0; }
+      60%  { transform: scale(1.2); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Skjul Leaflet UI-elementer */
+    .leaflet-control-attribution,
+    .leaflet-control-zoom { display: none !important; }
+
     /* Loading */
     #loading {
       position: fixed; inset: 0; z-index: 9997;
@@ -369,6 +379,31 @@
   <button class="map-btn" id="btn-wake" onclick="toggleWakeLock()" title="Skærm vågen">🔆</button>
 </div>
 
+<!-- Færdig-skærm -->
+<div id="finished-screen" style="
+  display:none; position:fixed; inset:0; z-index:900;
+  background:var(--night); flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center; padding:2rem;">
+  <div style="font-size:4rem;margin-bottom:1rem;animation:bounce-in .6s ease-out;">🏆</div>
+  <h1 style="font-family:system-ui;font-size:1.8rem;font-weight:800;margin-bottom:.5rem;">
+    Jagten er slut!
+  </h1>
+  <p style="color:var(--muted);font-size:.95rem;margin-bottom:2rem;">
+    I har gennemført alle stop — godt gået!
+  </p>
+  <div style="
+    background:var(--panel);border:1px solid var(--border);
+    border-radius:20px;padding:1.5rem 2.5rem;margin-bottom:2rem;">
+    <div style="font-size:.8rem;color:var(--muted);margin-bottom:.25rem;">Samlet score</div>
+    <div id="final-points" style="font-size:3rem;font-weight:800;color:var(--gold);">0 p</div>
+    <div id="final-team" style="font-size:.9rem;color:var(--muted);margin-top:.25rem;"></div>
+  </div>
+  <p style="font-size:.82rem;color:var(--muted);">
+    Følg med på scoreboardet for at se hvordan I klarede jer 🎯
+  </p>
+</div>
+
 <!-- Stop-liste overlay -->
 <div id="stops-list-overlay">
   <div id="stops-list-header">
@@ -413,7 +448,7 @@ async function init() {
   if (!token) { showScreen('token'); return }
 
   // Initialiser kort tidligt
-  map = L.map('map', { zoomControl: false, attributionControl: false })
+  map = L.map('map', { zoomControl: false, attributionControl: false, attributionControl: false })
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map)
   map.setView([56.26, 9.5], 7)
 
@@ -780,6 +815,22 @@ function closeActivity() {
   activeStopId = null
   renderMapPins()
   updateNextStop()
+  setTimeout(() => checkAllDone(), 400)
+}
+
+function checkAllDone() {
+  const allStopsWithActivities = stops.filter(s => s.activities.length > 0)
+  if (!allStopsWithActivities.length) return
+  const allDone = allStopsWithActivities.every(s =>
+    s.activities.every(a => submissions[a.id])
+  )
+  if (allDone) showFinished()
+}
+
+function showFinished() {
+  document.getElementById('final-points').textContent = (teamData?.points ?? 0) + ' p'
+  document.getElementById('final-team').textContent = teamData?.team_name ?? ''
+  document.getElementById('finished-screen').style.display = 'flex'
 }
 
 // ── Indsend svar ──────────────────────────────────────────────
