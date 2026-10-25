@@ -137,6 +137,17 @@
       <label>Titel</label>
       <input id="title" placeholder="Fx: Auning Historiske Byvandring">
 
+      <label style="margin-top:.75rem;">Stop-rækkefølge</label>
+      <div class="row2" style="margin-top:.25rem;gap:.5rem;">
+        <button id="mode-fri" class="btn btn-sm btn-ghost" onclick="setMode('fri')"
+          style="flex:1;">🔓 Fri rækkefølge</button>
+        <button id="mode-laast" class="btn btn-sm btn-ghost" onclick="setMode('laast')"
+          style="flex:1;">🔒 Låst rækkefølge</button>
+      </div>
+      <p class="muted" style="margin-top:.35rem;font-size:.78rem;">
+        Fri: hold vælger selv hvilke stop de tager. Låst: næste stop låses op når forrige er besvaret.
+      </p>
+
       <label style="margin-top:.75rem;">Status</label>
       <div class="row2" style="flex-wrap:wrap;margin-top:.25rem;">
         <button class="btn btn-sm btn-ghost" onclick="setStatus('kladde')">Kladde</button>
@@ -191,6 +202,7 @@
 const params   = new URLSearchParams(location.search);
 let quizId     = params.get('q');
 let quizStatus = 'kladde';
+let quizMode   = 'fri';
 let stops      = [];
 let teams      = [];
 let map, markers = [];
@@ -233,9 +245,11 @@ async function loadAll() {
     .select('*').eq('id', quizId).single();
   if (!q) return;
   quizStatus = q.status;
+  quizMode   = q.mode ?? 'fri';
   document.getElementById('title').value = q.title;
   document.getElementById('quiz-title-display').textContent = q.title;
   setStatusPill(q.status);
+  setModePill(quizMode);
 
   if (q.pin_expires_at) {
     const exp = new Date(q.pin_expires_at).toLocaleString('da-DK');
@@ -289,7 +303,7 @@ async function saveQuiz() {
   const title   = document.getElementById('title').value.trim();
   if (!title) { flash('⚠️ Titel mangler'); return; }
 
-  const payload = { title, status: quizStatus };
+  const payload = { title, status: quizStatus, mode: quizMode };
   if (session?.user?.id) payload.owner_id = session.user.id;
   let error;
 
@@ -352,6 +366,28 @@ async function activateQuiz() {
     return;
   }
   await setStatus('aktiv');
+}
+
+function setMode(mode) {
+  quizMode = mode;
+  setModePill(mode);
+  if (quizId) {
+    sb.schema('quiz').from('quizzes').update({ mode }).eq('id', quizId)
+      .then(() => flash('✅ Rækkefølge gemt'));
+  }
+}
+
+function setModePill(mode) {
+  const fri   = document.getElementById('mode-fri');
+  const laast = document.getElementById('mode-laast');
+  if (!fri || !laast) return;
+  if (mode === 'laast') {
+    fri.classList.remove('btn-primary');   fri.style.background = '';
+    laast.style.background = '#6c63ff';   laast.style.color = '#fff';
+  } else {
+    laast.style.background = '';          laast.style.color = '';
+    fri.style.background = '#6c63ff';    fri.style.color = '#fff';
+  }
 }
 
 function setStatusPill(status) {

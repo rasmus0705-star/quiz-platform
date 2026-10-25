@@ -273,6 +273,25 @@
 
       <label style="margin-top:1rem;">Kort beskrivelse (valgfrit)</label>
       <textarea id="description" rows="3" placeholder="Hvad handler løbet om? Giv deltagerne en forsmag…"></textarea>
+
+      <label style="margin-top:1rem;">Stop-rækkefølge</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.35rem;">
+        <button id="cmode-fri" onclick="setQuizMode('fri')" style="
+          padding:.75rem; border-radius:var(--radius-sm); border:1.5px solid var(--accent);
+          background:var(--bg-accent,#f0f0ff); color:var(--accent); cursor:pointer; text-align:center;
+          font-weight:700; font-size:.85rem;">
+          🔓 Fri rækkefølge
+        </button>
+        <button id="cmode-laast" onclick="setQuizMode('laast')" style="
+          padding:.75rem; border-radius:var(--radius-sm); border:1.5px solid #e2e8f0;
+          background:var(--white); color:var(--ink-2); cursor:pointer; text-align:center;
+          font-weight:700; font-size:.85rem;">
+          🔒 Låst rækkefølge
+        </button>
+      </div>
+      <p style="font-size:.75rem;color:var(--muted);margin-top:.35rem;">
+        Fri: hold vælger selv rækkefølge. Låst: næste stop låses op når forrige er besvaret.
+      </p>
     </div>
 
     <button class="btn-next" onclick="saveAndNext(2)">
@@ -411,6 +430,7 @@
 const params   = new URLSearchParams(location.search)
 let quizId     = params.get('q')
 let quizStatus = 'kladde'
+let quizMode   = 'fri'
 let stops      = []
 let teams      = []
 let map, markers = []
@@ -460,9 +480,11 @@ async function loadAll() {
     .select('*').eq('id', quizId).single()
   if (!q) return
   quizStatus = q.status
+  quizMode   = q.mode ?? 'fri'
   document.getElementById('title').value = q.title ?? ''
   document.getElementById('description').value = q.description ?? ''
   document.getElementById('quiz-title-display').textContent = q.title || 'Nyt løb'
+  updateModeUI(quizMode)
 
   // Stops + activities
   const { data: stopRows } = await sb.schema('quiz').from('stops')
@@ -496,7 +518,7 @@ async function saveQuiz(redirectAfter = false) {
   const description = document.getElementById('description').value.trim()
   if (!title) { flash('⚠️ Titel mangler'); return; }
 
-  const payload = { title, description: description || null }
+  const payload = { title, description: description || null, mode: quizMode }
   let error
   if (quizId) {
     ({ error } = await sb.schema('quiz').from('quizzes').update(payload).eq('id', quizId))
@@ -907,6 +929,25 @@ function renderTeams() {
         </div>
       </div>`
   }).join('')
+}
+
+// ── Mode ──────────────────────────────────────────────────────
+function setQuizMode(mode) {
+  quizMode = mode
+  updateModeUI(mode)
+}
+
+function updateModeUI(mode) {
+  const fri   = document.getElementById('cmode-fri')
+  const laast = document.getElementById('cmode-laast')
+  if (!fri || !laast) return
+  if (mode === 'laast') {
+    fri.style.background = 'var(--white)'; fri.style.color = 'var(--ink-2)'; fri.style.borderColor = '#e2e8f0'
+    laast.style.background = 'var(--accent)'; laast.style.color = '#fff'; laast.style.borderColor = 'var(--accent)'
+  } else {
+    laast.style.background = 'var(--white)'; laast.style.color = 'var(--ink-2)'; laast.style.borderColor = '#e2e8f0'
+    fri.style.background = 'var(--accent)'; fri.style.color = '#fff'; fri.style.borderColor = 'var(--accent)'
+  }
 }
 
 // ── Status ────────────────────────────────────────────────────
