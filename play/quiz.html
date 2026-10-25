@@ -345,13 +345,13 @@
 <div id="map"></div>
 
 <!-- Topbar -->
-<div id="topbar">
+<div id="topbar" style="display:none;">
   <div class="team-pill" id="team-name">–</div>
   <div class="points-pill" id="point-display">0 p</div>
 </div>
 
 <!-- Bund-panel -->
-<div id="bottom-panel">
+<div id="bottom-panel" style="display:none;">
   <div id="next-stop-card">
     <div id="next-stop-name">Næste stop</div>
     <div id="next-stop-dist">–</div>
@@ -431,8 +431,8 @@ async function init() {
   renderMapPins()
   updateNextStop()
 
-  // GPS
-  showScreen('gps-permission')
+  // Vis GPS-permission popup
+  document.getElementById('gps-permission').style.display = 'flex'
 }
 
 // ── GPS ───────────────────────────────────────────────────────
@@ -443,6 +443,9 @@ function requestGPS() {
     showScreen('gps-permission')
     return
   }
+  // Vis UI nu
+  document.getElementById('bottom-panel').style.display = 'flex'
+  document.getElementById('topbar').style.display = 'flex'
   startGPS()
 }
 
@@ -462,8 +465,10 @@ function startGPS() {
     },
     err => {
       if (err.code === 1) {
-        // Bruger afviste — vis popup igen
-        showScreen('gps-permission')
+        // Bruger afviste — vis popup igen og skjul UI
+        document.getElementById('gps-permission').style.display = 'flex'
+        document.getElementById('bottom-panel').style.display = 'none'
+        document.getElementById('topbar').style.display = 'none'
       }
     },
     { enableHighAccuracy: true, maximumAge: 2000 }
@@ -877,8 +882,14 @@ function distanceTo(lat, lng) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
 }
 
-function showScreen(id) { document.getElementById('screen-'+id).style.display = 'flex' }
-function hideScreen(id) { document.getElementById(id).style.display = 'none' }
+function showScreen(id) {
+  const el = document.getElementById('screen-'+id) || document.getElementById(id)
+  if (el) el.style.display = 'flex'
+}
+function hideScreen(id) {
+  const el = document.getElementById('screen-'+id) || document.getElementById(id)
+  if (el) el.style.display = 'none'
+}
 
 function escJs(s) {
   return String(s ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"')
