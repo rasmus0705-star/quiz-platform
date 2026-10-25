@@ -400,8 +400,8 @@ let quizMode    = 'fri'  // 'fri' eller 'laast'
 let userLat     = null, userLng = null
 let userAccuracy = null
 let proximityHits = {}  // stopId → antal på hinanden følgende hits
-const MIN_ACCURACY_M = 40   // ignorer GPS hvis nøjagtighed er dårligere end 40m
-const PROXIMITY_HITS_NEEDED = 3  // kræv 3 hits i træk før popup
+const MIN_ACCURACY_M = 25   // ignorer GPS hvis nøjagtighed er dårligere end 25m
+const PROXIMITY_HITS_NEEDED = 4  // kræv 4 hits i træk før popup (~8 sekunder)
 let map, userMarker, stopMarkers = {}
 let wakeLock    = null
 let wakeLockOn  = false
