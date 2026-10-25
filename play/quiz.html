@@ -384,6 +384,26 @@
   <button class="map-btn" id="btn-wake" onclick="toggleWakeLock()" title="Skærm vågen">🔆</button>
 </div>
 
+<!-- Løbet afsluttet/låst skærm -->
+<div id="locked-screen" style="
+  display:none; position:fixed; inset:0; z-index:9999;
+  background:var(--night); flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center; padding:2rem;">
+  <div style="font-size:3.5rem;margin-bottom:1rem;">🔒</div>
+  <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:.5rem;">Løbet er afsluttet</h2>
+  <p style="color:var(--muted);font-size:.9rem;line-height:1.6;max-width:280px;margin-bottom:1.5rem;">
+    Dette løb er ikke længere aktivt. Kontakt din quizmaster for at starte et nyt løb.
+  </p>
+  <a id="locked-scoreboard-link" href="#" target="_blank" style="
+    display:inline-flex;align-items:center;gap:.5rem;
+    background:rgba(232,200,74,.15);border:1px solid rgba(232,200,74,.3);
+    color:var(--gold);font-weight:700;font-size:.9rem;
+    padding:.75rem 1.5rem;border-radius:99px;text-decoration:none;">
+    📊 Se scoreboard
+  </a>
+</div>
+
 <!-- Færdig-skærm -->
 <div id="finished-screen" style="
   display:none; position:fixed; inset:0; z-index:1000;
@@ -416,8 +436,17 @@
       <div id="final-team" style="font-size:.88rem;color:rgba(255,255,255,.6);margin-top:.75rem;font-weight:600;"></div>
     </div>
 
-    <p style="font-size:.82rem;color:var(--muted);line-height:1.5;">
-      🎯 Følg med på live-scoreboardet<br>for at se hvordan I klarede jer mod de andre hold
+    <a id="scoreboard-link" href="#" target="_blank" style="
+      display:flex; align-items:center; justify-content:center; gap:.5rem;
+      background:linear-gradient(135deg,rgba(232,200,74,.2),rgba(232,200,74,.05));
+      border:1px solid rgba(232,200,74,.3); border-radius:14px;
+      padding:1rem; text-decoration:none; color:var(--gold);
+      font-weight:700; font-size:.95rem; margin-bottom:1rem;">
+      📊 Se live scoreboard
+    </a>
+
+    <p style="font-size:.78rem;color:var(--muted);line-height:1.5;">
+      Følg med på scoreboardet for at se hvordan I klarede jer mod de andre hold 🎯
     </p>
   </div>
 </div>
@@ -478,6 +507,15 @@ async function init() {
   teamData = teamRows[0]
   document.getElementById('team-name').textContent   = teamData.team_name
   document.getElementById('point-display').textContent = teamData.points + ' p'
+
+  // Tjek om løbet er afsluttet/arkiveret
+  const { data: quizCheck } = await sb.schema('quiz').from('quizzes')
+    .select('status').eq('id', teamData.quiz_id).single()
+  if (quizCheck?.status === 'arkiveret') {
+    hideScreen('loading')
+    showLockedScreen()
+    return
+  }
 
   // Hent stop
   const { data: stopRows } = await sb
@@ -846,14 +884,27 @@ function checkAllDone() {
   if (allDone) showFinished()
 }
 
+function showLockedScreen() {
+  const scoreUrl = location.origin + location.pathname
+    .replace('play/quiz.html', 'board/scoreboard.html') + '?q=' + teamData?.quiz_id
+  const link = document.getElementById('locked-scoreboard-link')
+  if (link) link.href = scoreUrl
+  document.getElementById('locked-screen').style.display = 'flex'
+}
+
 function showFinished() {
   document.getElementById('final-points').textContent = teamData?.points ?? 0
   document.getElementById('final-team').textContent = teamData?.team_name ?? ''
+
+  // Sæt scoreboard-link
+  const scoreUrl = location.origin + location.pathname
+    .replace('play/quiz.html', 'board/scoreboard.html') + '?q=' + teamData?.quiz_id
+  const link = document.getElementById('scoreboard-link')
+  if (link) link.href = scoreUrl
+
   const screen = document.getElementById('finished-screen')
   screen.style.display = 'flex'
-  // Skjul bund-panel
   document.getElementById('bottom-panel').style.display = 'none'
-  // Simple konfetti
   spawnConfetti()
 }
 

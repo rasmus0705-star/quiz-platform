@@ -3,270 +3,527 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scoreboard</title>
+<title>Scoreboard – Jagten</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    font-family: system-ui, sans-serif;
-    background: #0f1b35;
-    color: #fff;
+  :root {
+    --night:  #0d0f14;
+    --deep:   #13161e;
+    --panel:  #1a1e28;
+    --border: rgba(255,255,255,.08);
+    --gold:   #e8c84a;
+    --silver: #b0b8c8;
+    --bronze: #cd7f32;
+    --green:  #22c55e;
+    --coral:  #e94560;
+    --muted:  rgba(255,255,255,.4);
+    --text:   #f0eeea;
+  }
+
+  html, body {
     min-height: 100vh;
-    padding: 0;
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background: var(--night); color: var(--text);
   }
 
+  /* ── HEADER ── */
   header {
-    background: #1a2744;
-    padding: 1.2rem 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 2px solid #e8445a;
+    background: var(--deep);
+    border-bottom: 1px solid var(--border);
+    padding: 1.1rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; flex-wrap: wrap;
+    position: sticky; top: 0; z-index: 100;
   }
-  header h1 { font-size: 1.4rem; letter-spacing: .03em; }
-  #quiz-title { font-size: 1rem; opacity: .7; }
-  #last-updated { font-size: .78rem; opacity: .5; }
+  .header-left h1 {
+    font-size: 1.2rem; font-weight: 800; letter-spacing: -.01em;
+  }
+  #quiz-title { font-size: .85rem; color: var(--muted); margin-top: .15rem; }
 
-  main { max-width: 700px; margin: 2rem auto; padding: 0 1rem; }
+  .header-right { display: flex; align-items: center; gap: .75rem; }
 
+  .live-pill {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: rgba(34,197,94,.15); border: 1px solid rgba(34,197,94,.3);
+    color: var(--green); font-size: .75rem; font-weight: 600;
+    padding: .3rem .75rem; border-radius: 99px;
+  }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+
+  .finished-pill {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: rgba(232,200,74,.15); border: 1px solid rgba(232,200,74,.3);
+    color: var(--gold); font-size: .75rem; font-weight: 600;
+    padding: .3rem .75rem; border-radius: 99px;
+  }
+
+  #last-updated { font-size: .72rem; color: var(--muted); }
+
+  /* Admin-knap */
+  .admin-bar {
+    display: none;
+    background: var(--panel); border-bottom: 1px solid var(--border);
+    padding: .6rem 2rem; gap: .75rem; align-items: center;
+    font-size: .82rem; color: var(--muted);
+  }
+  .admin-bar.show { display: flex; }
+  .btn-end {
+    background: var(--coral); color: #fff; border: none;
+    padding: .4rem .9rem; border-radius: 99px;
+    font-size: .78rem; font-weight: 700; cursor: pointer;
+  }
+  .btn-end:hover { background: #c73a50; }
+
+  /* ── MAIN ── */
+  main { max-width: 780px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+  /* ── VINDER BANNER ── */
+  #winner-banner {
+    display: none;
+    background: linear-gradient(135deg, rgba(232,200,74,.2), rgba(232,200,74,.05));
+    border: 1px solid rgba(232,200,74,.3);
+    border-radius: 16px; padding: 1.75rem; text-align: center;
+    margin-bottom: 2rem;
+    animation: fade-in .5s ease-out;
+  }
+  #winner-banner .trophy { font-size: 3rem; margin-bottom: .5rem; }
+  #winner-banner h2 { font-size: 1.4rem; font-weight: 800; color: var(--gold); margin-bottom: .25rem; }
+  #winner-banner p { color: var(--muted); font-size: .9rem; }
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── STATISTIK ── */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem;
+    margin-bottom: 2rem;
+  }
+  .stat-box {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; padding: .9rem; text-align: center;
+  }
+  .stat-val { font-size: 1.5rem; font-weight: 800; color: var(--gold); }
+  .stat-lbl { font-size: .72rem; color: var(--muted); margin-top: .2rem; }
+
+  /* ── PODIUM ── */
   .podium {
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 2.5rem;
-    min-height: 160px;
+    display: flex; align-items: flex-end; justify-content: center;
+    gap: 1rem; margin-bottom: 2rem; min-height: 180px;
   }
-
-  .podium-slot {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: .4rem;
-  }
+  .podium-slot { display: flex; flex-direction: column; align-items: center; gap: .4rem; }
   .podium-name {
-    font-size: .85rem;
-    font-weight: 600;
-    text-align: center;
-    max-width: 90px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    font-size: .82rem; font-weight: 700; text-align: center;
+    max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
-  .podium-points {
-    font-size: .78rem;
-    opacity: .7;
-  }
+  .podium-pts { font-size: .75rem; color: var(--muted); }
+  .podium-progress { font-size: .68rem; color: var(--muted); }
   .podium-block {
-    width: 90px;
-    border-radius: 8px 8px 0 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.6rem;
+    width: 100px; border-radius: 10px 10px 0 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem;
   }
-  .p1 .podium-block { height: 120px; background: #f5c518; }
-  .p2 .podium-block { height: 90px;  background: #b0b8c8; }
-  .p3 .podium-block { height: 65px;  background: #cd7f32; }
+  .p1 .podium-block { height: 140px; background: linear-gradient(180deg,#f5c518,#c9a200); }
+  .p2 .podium-block { height: 100px; background: linear-gradient(180deg,#c8d0dc,#8a95a8); }
+  .p3 .podium-block { height:  70px; background: linear-gradient(180deg,#cd7f32,#a05e1a); }
 
-  .list { display: flex; flex-direction: column; gap: .6rem; }
+  /* ── RANGLISTE ── */
+  .section-title {
+    font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+    color: var(--muted); margin-bottom: .75rem;
+  }
 
-  .row {
-    background: #1a2744;
-    border-radius: 10px;
-    padding: .9rem 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+  .team-row {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; padding: .9rem 1.1rem;
+    display: flex; align-items: center; gap: .85rem;
+    margin-bottom: .5rem;
     transition: background .2s;
   }
-  .row.highlight { background: #22336b; }
+  .team-row.top3 { border-color: rgba(232,200,74,.2); }
+  .team-row.done { border-color: rgba(34,197,94,.2); }
 
-  .rank {
-    font-size: 1rem;
-    font-weight: 700;
-    width: 2rem;
-    text-align: center;
-    opacity: .6;
+  .rank-num {
+    font-size: 1rem; font-weight: 800; width: 1.75rem;
+    text-align: center; color: var(--muted);
   }
-  .team-name {
-    flex: 1;
-    font-size: 1rem;
-    font-weight: 600;
-  }
-  .points {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #f5c518;
-    min-width: 4rem;
-    text-align: right;
-  }
-  .correct {
-    font-size: .8rem;
-    opacity: .5;
-    min-width: 5rem;
-    text-align: right;
-  }
+  .rank-num.gold   { color: var(--gold); }
+  .rank-num.silver { color: var(--silver); }
+  .rank-num.bronze { color: var(--bronze); }
 
-  .empty {
-    text-align: center;
-    opacity: .4;
-    padding: 3rem 0;
-    font-size: 1rem;
+  .team-info { flex: 1; min-width: 0; }
+  .team-nm { font-size: .95rem; font-weight: 700; }
+  .team-meta { font-size: .75rem; color: var(--muted); margin-top: .1rem; display: flex; gap: .6rem; flex-wrap: wrap; }
+
+  .progress-bar-wrap {
+    height: 4px; background: rgba(255,255,255,.08);
+    border-radius: 99px; margin-top: .35rem; overflow: hidden;
+  }
+  .progress-bar { height: 100%; border-radius: 99px; background: var(--gold); transition: width .5s; }
+  .progress-bar.done { background: var(--green); }
+
+  .team-pts {
+    font-size: 1.1rem; font-weight: 800; color: var(--gold);
+    text-align: right; flex-shrink: 0;
+  }
+  .team-time {
+    font-size: .72rem; color: var(--muted);
+    text-align: right; flex-shrink: 0; min-width: 3rem;
   }
 
-  .pulse {
-    display: inline-block;
-    width: 8px; height: 8px;
-    background: #4caf50;
-    border-radius: 50%;
-    margin-right: .4rem;
-    animation: pulse 2s infinite;
+  .done-badge {
+    font-size: .65rem; font-weight: 700; padding: .15rem .45rem;
+    border-radius: 99px; background: rgba(34,197,94,.15);
+    color: var(--green); border: 1px solid rgba(34,197,94,.3);
+    white-space: nowrap;
   }
+
+  /* ── FOTO GALLERI ── */
+  #foto-section { margin-top: 2.5rem; display: none; }
+  .foto-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: .75rem; margin-top: .75rem;
+  }
+  .foto-item { position: relative; border-radius: 10px; overflow: hidden; aspect-ratio: 1; }
+  .foto-item img { width: 100%; height: 100%; object-fit: cover; }
+  .foto-caption {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,.7));
+    padding: .35rem .5rem; font-size: .68rem; color: #fff; font-weight: 600;
+  }
+
+  /* ── EMPTY ── */
+  .empty { text-align: center; color: var(--muted); padding: 3rem 0; font-size: .95rem; }
+
   @keyframes pulse {
     0%,100% { opacity: 1; }
     50%      { opacity: .3; }
+  }
+
+  @media (max-width: 600px) {
+    header { padding: .85rem 1rem; }
+    main { padding: 1.25rem 1rem 3rem; }
+    .stats-row { grid-template-columns: repeat(3,1fr); }
+    .podium-block { width: 80px; }
+    .p1 .podium-block { height: 110px; }
+    .p2 .podium-block { height: 80px; }
+    .p3 .podium-block { height: 55px; }
+    .podium-name { max-width: 80px; }
   }
 </style>
 </head>
 <body>
 
 <header>
-  <div>
+  <div class="header-left">
     <h1>🏆 Scoreboard</h1>
-    <div id="quiz-title"></div>
+    <div id="quiz-title">Indlæser…</div>
   </div>
-  <div>
-    <span class="pulse"></span>
-    <span id="last-updated"></span>
+  <div class="header-right">
+    <div id="status-pill" class="live-pill"><span class="live-dot"></span> Live</div>
+    <div id="last-updated"></div>
   </div>
 </header>
 
+<!-- Admin-bar (kun synlig for admin) -->
+<div class="admin-bar" id="admin-bar">
+  <span>Admin-tilstand</span>
+  <button class="btn-end" onclick="endQuiz()">🏁 Afslut løbet nu</button>
+  <span id="admin-status"></span>
+</div>
+
 <main>
+  <!-- Vinder-banner (vises når alle er færdige) -->
+  <div id="winner-banner">
+    <div class="trophy">🏆</div>
+    <h2 id="winner-name">–</h2>
+    <p>Vinder af løbet – tillykke!</p>
+  </div>
+
+  <!-- Statistik -->
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="stat-val" id="stat-teams">–</div>
+      <div class="stat-lbl">Hold</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val" id="stat-done">–</div>
+      <div class="stat-lbl">Færdige</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val" id="stat-stops">–</div>
+      <div class="stat-lbl">Stop i alt</div>
+    </div>
+  </div>
+
+  <!-- Podium -->
   <div class="podium" id="podium"></div>
-  <div class="list"   id="list"></div>
-  <div class="empty"  id="empty" style="display:none">Ingen besvarelser endnu</div>
+
+  <!-- Rangliste -->
+  <div class="section-title">RANGLISTE</div>
+  <div id="list"></div>
+  <div class="empty" id="empty" style="display:none;">Ingen besvarelser endnu — hold styr på opdateringer</div>
+
+  <!-- Foto-galleri -->
+  <div id="foto-section">
+    <div class="section-title" style="margin-top:.5rem;">📸 FOTO-BESVARELSER</div>
+    <div class="foto-grid" id="foto-grid"></div>
+  </div>
 </main>
 
 <script>
-const { createClient } = supabase;
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+const { createClient } = supabase
+const sb2 = createClient(SUPABASE_URL, SUPABASE_ANON)
 
-const quizId = new URLSearchParams(location.search).get('q');
+const quizId = new URLSearchParams(location.search).get('q')
+let quizData    = null
+let teamsData   = []
+let stopCount   = 0
+let actCount    = 0
+let isAdmin     = false
+let quizEnded   = false
 
-if (!quizId) {
-  document.getElementById('quiz-title').textContent = 'Mangler ?q=<quiz-id> i URL';
+// Tjek admin-session
+async function checkAdmin() {
+  const session = getPinSession?.()
+  if (session?.is_admin) {
+    isAdmin = true
+    document.getElementById('admin-bar').classList.add('show')
+    activatePinClient?.()
+  }
 }
 
-// ── Hent data ──────────────────────────────────────────────────
+// ── Hent data ─────────────────────────────────────────────────
 async function load() {
-  // Quiz-titel
-  const { data: quiz } = await sb.schema('quiz').from('quizzes')
-    .select('title').eq('id', quizId).single();
-  if (quiz) document.getElementById('quiz-title').textContent = quiz.title;
-
-  // Hold + point
-  const { data: teams } = await sb.schema('quiz').from('teams')
-    .select('id, name').eq('quiz_id', quizId);
-
-  if (!teams || teams.length === 0) {
-    document.getElementById('empty').style.display = 'block';
-    return;
+  if (!quizId) {
+    document.getElementById('quiz-title').textContent = 'Mangler ?q=<quiz-id> i URL'
+    return
   }
 
-  const teamIds = teams.map(t => t.id);
+  // Quiz
+  const { data: quiz } = await sb2.schema('quiz').from('quizzes')
+    .select('title, status, stop_order').eq('id', quizId).single()
+  if (quiz) {
+    quizData = quiz
+    document.getElementById('quiz-title').textContent = quiz.title ?? ''
+    if (quiz.status === 'arkiveret') {
+      quizEnded = true
+      document.getElementById('status-pill').outerHTML =
+        '<div class="finished-pill" id="status-pill">🏁 Afsluttet</div>'
+    }
+  }
 
-  const { data: subs } = await sb.schema('quiz').from('submissions')
-    .select('team_id, points, is_correct')
-    .in('team_id', teamIds);
+  // Stop-antal
+  const { data: stops } = await sb2.schema('quiz').from('stops')
+    .select('id').eq('quiz_id', quizId)
+  stopCount = stops?.length ?? 0
 
-  // Aggreger pr. hold
-  const map = {};
-  teams.forEach(t => { map[t.id] = { name: t.name, points: 0, correct: 0 }; });
-  (subs ?? []).forEach(s => {
-    if (!map[s.team_id]) return;
-    map[s.team_id].points  += s.points ?? 0;
-    map[s.team_id].correct += s.is_correct ? 1 : 0;
-  });
+  // Aktiviteter
+  const { data: acts } = await sb2.schema('quiz').from('activities')
+    .select('id, stop_id').in('stop_id', (stops ?? []).map(s => s.id))
+  actCount = acts?.length ?? 0
+  document.getElementById('stat-stops').textContent = stopCount
 
-  const ranked = Object.values(map)
-    .sort((a, b) => b.points - a.points || b.correct - a.correct);
+  // Hold
+  const { data: teams } = await sb2.schema('quiz').from('teams')
+    .select('id, name, created_at').eq('quiz_id', quizId)
+  if (!teams?.length) {
+    document.getElementById('empty').style.display = 'block'
+    document.getElementById('stat-teams').textContent = 0
+    document.getElementById('stat-done').textContent = 0
+    return
+  }
+  document.getElementById('stat-teams').textContent = teams.filter(t => t.name !== '🧪 Testhold').length
+  const realTeams = teams.filter(t => t.name !== '🧪 Testhold')
 
-  render(ranked);
+  // Besvarelser
+  const { data: subs } = await sb2.schema('quiz').from('submissions')
+    .select('team_id, activity_id, points, is_correct, created_at, answer')
+    .in('team_id', realTeams.map(t => t.id))
 
-  document.getElementById('last-updated').textContent =
-    'Opdateret ' + new Date().toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  // Byg rangering
+  const map = {}
+  realTeams.forEach(t => {
+    map[t.id] = {
+      id: t.id, name: t.name,
+      points: 0, correct: 0, answered: 0,
+      firstSub: null, lastSub: null,
+      fotos: []
+    }
+  })
+
+  ;(subs ?? []).forEach(s => {
+    if (!map[s.team_id]) return
+    const m = map[s.team_id]
+    m.points   += s.points ?? 0
+    m.correct  += s.is_correct ? 1 : 0
+    m.answered += 1
+    if (!m.firstSub || s.created_at < m.firstSub) m.firstSub = s.created_at
+    if (!m.lastSub  || s.created_at > m.lastSub)  m.lastSub  = s.created_at
+    // Foto-svar
+    if (typeof s.answer === 'string' && s.answer.startsWith('http') && s.answer.includes('quiz-uploads')) {
+      m.fotos.push({ url: s.answer, team: map[s.team_id].name })
+    }
+  })
+
+  const ranked = Object.values(map).sort((a, b) => {
+    if (b.points !== a.points) return b.points - a.points
+    // Tiebreaker: færrest sekunder brugt
+    const aTime = a.lastSub && a.firstSub ? new Date(a.lastSub) - new Date(a.firstSub) : Infinity
+    const bTime = b.lastSub && b.firstSub ? new Date(b.lastSub) - new Date(b.firstSub) : Infinity
+    return aTime - bTime
+  })
+
+  teamsData = ranked
+
+  // Færdige hold
+  const doneCount = ranked.filter(t => t.answered >= actCount && actCount > 0).length
+  document.getElementById('stat-done').textContent = doneCount
+
+  // Tjek om alle er færdige
+  if (actCount > 0 && doneCount === ranked.length && ranked.length > 0 && !quizEnded) {
+    showWinner(ranked[0])
+  }
+
+  render(ranked)
+  renderFotos(ranked)
+  updateTimestamp()
 }
 
-// ── Render ─────────────────────────────────────────────────────
+// ── Render rangliste ──────────────────────────────────────────
 function render(ranked) {
-  const podiumEl = document.getElementById('podium');
-  const listEl   = document.getElementById('list');
-  const emptyEl  = document.getElementById('empty');
+  const podiumEl = document.getElementById('podium')
+  const listEl   = document.getElementById('list')
 
-  if (ranked.length === 0) {
-    emptyEl.style.display = 'block';
-    return;
+  if (!ranked.length) {
+    document.getElementById('empty').style.display = 'block'
+    return
   }
-  emptyEl.style.display = 'none';
+  document.getElementById('empty').style.display = 'none'
 
   // Podium (top 3)
-  podiumEl.innerHTML = '';
-  const podiumOrder = [1, 0, 2]; // 2. plads, 1. plads, 3. plads
-  const medals = ['🥇','🥈','🥉'];
-  const classes = ['p1','p2','p3'];
+  podiumEl.innerHTML = ''
+  const order   = [1, 0, 2]
+  const medals  = ['🥇','🥈','🥉']
+  const classes = ['p2','p1','p3']
 
-  podiumOrder.forEach(idx => {
-    const t = ranked[idx];
-    if (!t) return;
-    const slot = document.createElement('div');
-    slot.className = 'podium-slot ' + classes[idx];
+  order.forEach(idx => {
+    const t = ranked[idx]
+    if (!t) return
+    const done = actCount > 0 && t.answered >= actCount
+    const pct  = actCount > 0 ? Math.round(t.answered / actCount * 100) : 0
+    const slot = document.createElement('div')
+    slot.className = 'podium-slot ' + classes[idx === 0 ? 1 : idx === 1 ? 0 : 2]
     slot.innerHTML = `
       <div class="podium-name">${esc(t.name)}</div>
-      <div class="podium-points">${t.points} pt</div>
-      <div class="podium-block">${medals[idx]}</div>
-    `;
-    podiumEl.appendChild(slot);
-  });
+      <div class="podium-pts">${t.points} pt</div>
+      <div class="podium-progress">${t.answered}/${actCount} svar</div>
+      <div class="podium-block">${medals[idx]}</div>`
+    podiumEl.appendChild(slot)
+  })
 
   // Fuld liste
-  listEl.innerHTML = '';
+  listEl.innerHTML = ''
   ranked.forEach((t, i) => {
-    const row = document.createElement('div');
-    row.className = 'row' + (i < 3 ? ' highlight' : '');
+    const done   = actCount > 0 && t.answered >= actCount
+    const pct    = actCount > 0 ? (t.answered / actCount * 100) : 0
+    const timeStr = t.firstSub && t.lastSub
+      ? formatDuration(new Date(t.lastSub) - new Date(t.firstSub))
+      : '–'
+    const rankClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : ''
+
+    const row = document.createElement('div')
+    row.className = 'team-row' + (i < 3 ? ' top3' : '') + (done ? ' done' : '')
     row.innerHTML = `
-      <div class="rank">${i + 1}</div>
-      <div class="team-name">${esc(t.name)}</div>
-      <div class="correct">${t.correct} rigtige</div>
-      <div class="points">${t.points} pt</div>
-    `;
-    listEl.appendChild(row);
-  });
+      <div class="rank-num ${rankClass}">${i+1}</div>
+      <div class="team-info">
+        <div class="team-nm">${esc(t.name)} ${done ? '<span class="done-badge">✅ Færdig</span>' : ''}</div>
+        <div class="team-meta">
+          <span>${t.correct} rigtige</span>
+          <span>${t.answered}/${actCount} besvaret</span>
+          ${done ? `<span>⏱ ${timeStr}</span>` : ''}
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar ${done ? 'done' : ''}" style="width:${pct}%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="team-pts">${t.points} pt</div>
+        ${done ? `<div class="team-time">${timeStr}</div>` : ''}
+      </div>`
+    listEl.appendChild(row)
+  })
+}
+
+// ── Foto-galleri ──────────────────────────────────────────────
+function renderFotos(ranked) {
+  const allFotos = ranked.flatMap(t => t.fotos)
+  const section  = document.getElementById('foto-section')
+  const grid     = document.getElementById('foto-grid')
+  if (!allFotos.length) { section.style.display = 'none'; return }
+  section.style.display = 'block'
+  grid.innerHTML = allFotos.map(f => `
+    <div class="foto-item">
+      <img src="${esc(f.url)}" alt="${esc(f.team)}" loading="lazy">
+      <div class="foto-caption">${esc(f.team)}</div>
+    </div>`).join('')
+}
+
+// ── Vinder-banner ──────────────────────────────────────────────
+function showWinner(winner) {
+  const banner = document.getElementById('winner-banner')
+  document.getElementById('winner-name').textContent = '🥇 ' + winner.name
+  banner.style.display = 'block'
+}
+
+// ── Admin: afslut løbet ───────────────────────────────────────
+async function endQuiz() {
+  if (!confirm('Afslut løbet nu? Alle hold låses ude fra videre besvarelse.')) return
+  const { error } = await sb2.schema('quiz').from('quizzes')
+    .update({ status: 'arkiveret' }).eq('id', quizId)
+  if (error) { alert('Fejl: ' + error.message); return }
+  document.getElementById('admin-status').textContent = '✅ Løbet er afsluttet'
+  quizEnded = true
+  load()
+}
+
+// ── Hjælpere ──────────────────────────────────────────────────
+function formatDuration(ms) {
+  const s = Math.floor(ms / 1000)
+  const m = Math.floor(s / 60)
+  const h = Math.floor(m / 60)
+  if (h > 0) return `${h}t ${m % 60}m`
+  if (m > 0) return `${m}m ${s % 60}s`
+  return `${s}s`
+}
+
+function updateTimestamp() {
+  document.getElementById('last-updated').textContent =
+    'Opdateret ' + new Date().toLocaleTimeString('da-DK', { hour:'2-digit', minute:'2-digit', second:'2-digit' })
 }
 
 function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
 }
 
-// ── Realtime subscription ──────────────────────────────────────
+// ── Realtime ──────────────────────────────────────────────────
 function subscribe() {
-  sb.channel('scoreboard-' + quizId)
-    .on('postgres_changes', {
-      event: '*',
-      schema: 'quiz',
-      table: 'submissions',
-    }, () => load())
-    .subscribe();
+  sb2.channel('scoreboard-' + quizId)
+    .on('postgres_changes', { event: '*', schema: 'quiz', table: 'submissions' }, () => load())
+    .on('postgres_changes', { event: '*', schema: 'quiz', table: 'team_positions' }, () => load())
+    .subscribe()
 }
 
-// ── Start ──────────────────────────────────────────────────────
-load();
-subscribe();
-
-// Fallback: opdater hvert 30. sekund
-setInterval(load, 30_000);
+// ── Start ─────────────────────────────────────────────────────
+checkAdmin()
+load()
+subscribe()
+setInterval(load, 15000)
 </script>
 </body>
 </html>
