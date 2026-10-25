@@ -480,7 +480,7 @@ async function loadAll() {
     .select('*').eq('id', quizId).single()
   if (!q) return
   quizStatus = q.status
-  quizMode   = q.mode ?? 'fri'
+  quizMode   = q.stop_order ?? 'fri'
   document.getElementById('title').value = q.title ?? ''
   document.getElementById('description').value = q.description ?? ''
   document.getElementById('quiz-title-display').textContent = q.title || 'Nyt løb'
@@ -518,7 +518,7 @@ async function saveQuiz(redirectAfter = false) {
   const description = document.getElementById('description').value.trim()
   if (!title) { flash('⚠️ Titel mangler'); return; }
 
-  const payload = { title, description: description || null, mode: quizMode }
+  const payload = { title, description: description || null, stop_order: quizMode }
   let error
   if (quizId) {
     ({ error } = await sb.schema('quiz').from('quizzes').update(payload).eq('id', quizId))

@@ -245,7 +245,7 @@ async function loadAll() {
     .select('*').eq('id', quizId).single();
   if (!q) return;
   quizStatus = q.status;
-  quizMode   = q.mode ?? 'fri';
+  quizMode   = q.stop_order ?? 'fri';
   document.getElementById('title').value = q.title;
   document.getElementById('quiz-title-display').textContent = q.title;
   setStatusPill(q.status);
@@ -303,7 +303,7 @@ async function saveQuiz() {
   const title   = document.getElementById('title').value.trim();
   if (!title) { flash('⚠️ Titel mangler'); return; }
 
-  const payload = { title, status: quizStatus, mode: quizMode };
+  const payload = { title, status: quizStatus, stop_order: quizMode };
   if (session?.user?.id) payload.owner_id = session.user.id;
   let error;
 
@@ -372,7 +372,7 @@ function setMode(mode) {
   quizMode = mode;
   setModePill(mode);
   if (quizId) {
-    sb.schema('quiz').from('quizzes').update({ mode }).eq('id', quizId)
+    sb.schema('quiz').from('quizzes').update({ stop_order: mode }).eq('id', quizId)
       .then(() => flash('✅ Rækkefølge gemt'));
   }
 }
