@@ -277,9 +277,6 @@
 </main>
 
 <script>
-const { createClient } = supabase
-const sb2 = createClient(SUPABASE_URL, SUPABASE_ANON)
-
 const quizId = new URLSearchParams(location.search).get('q')
 let quizData    = null
 let teamsData   = []
@@ -306,7 +303,7 @@ async function load() {
   }
 
   // Quiz
-  const { data: quiz } = await sb2.schema('quiz').from('quizzes')
+  const { data: quiz } = await sb.schema('quiz').from('quizzes')
     .select('title, status, stop_order').eq('id', quizId).single()
   if (quiz) {
     quizData = quiz
@@ -319,18 +316,18 @@ async function load() {
   }
 
   // Stop-antal
-  const { data: stops } = await sb2.schema('quiz').from('stops')
+  const { data: stops } = await sb.schema('quiz').from('stops')
     .select('id').eq('quiz_id', quizId)
   stopCount = stops?.length ?? 0
 
   // Aktiviteter
-  const { data: acts } = await sb2.schema('quiz').from('activities')
+  const { data: acts } = await sb.schema('quiz').from('activities')
     .select('id, stop_id').in('stop_id', (stops ?? []).map(s => s.id))
   actCount = acts?.length ?? 0
   document.getElementById('stat-stops').textContent = stopCount
 
   // Hold
-  const { data: teams } = await sb2.schema('quiz').from('teams')
+  const { data: teams } = await sb.schema('quiz').from('teams')
     .select('id, name, created_at').eq('quiz_id', quizId)
   if (!teams?.length) {
     document.getElementById('empty').style.display = 'block'
@@ -342,7 +339,7 @@ async function load() {
   const realTeams = teams.filter(t => t.name !== '🧪 Testhold')
 
   // Besvarelser
-  const { data: subs } = await sb2.schema('quiz').from('submissions')
+  const { data: subs } = await sb.schema('quiz').from('submissions')
     .select('team_id, activity_id, points, is_correct, created_at, answer')
     .in('team_id', realTeams.map(t => t.id))
 
@@ -484,7 +481,7 @@ function showWinner(winner) {
 // ── Admin: afslut løbet ───────────────────────────────────────
 async function endQuiz() {
   if (!confirm('Afslut løbet nu? Alle hold låses ude fra videre besvarelse.')) return
-  const { error } = await sb2.schema('quiz').from('quizzes')
+  const { error } = await sb.schema('quiz').from('quizzes')
     .update({ status: 'arkiveret' }).eq('id', quizId)
   if (error) { alert('Fejl: ' + error.message); return }
   document.getElementById('admin-status').textContent = '✅ Løbet er afsluttet'
@@ -513,7 +510,7 @@ function esc(s) {
 
 // ── Realtime ──────────────────────────────────────────────────
 function subscribe() {
-  sb2.channel('scoreboard-' + quizId)
+  sb.channel('scoreboard-' + quizId)
     .on('postgres_changes', { event: '*', schema: 'quiz', table: 'submissions' }, () => load())
     .on('postgres_changes', { event: '*', schema: 'quiz', table: 'team_positions' }, () => load())
     .subscribe()
