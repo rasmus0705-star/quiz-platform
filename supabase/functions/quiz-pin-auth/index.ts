@@ -9,7 +9,7 @@ const ADMIN_PIN_ENV = Deno.env.get('ADMIN_PIN') ?? ''
 
 const CORS = {
   'Access-Control-Allow-Origin' : '*',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 

@@ -376,6 +376,9 @@ async function selectCustomer(id) {
   await loadCustomerQuizzes(id)
 }
 
+let quizCache = {}
+const quizTitle = id => quizCache[id]?.title || '(uden titel)'
+
 async function loadCustomerQuizzes(id) {
   const el = document.getElementById('detail-quizzes')
   el.innerHTML = '<p style="color:#9aa2b1;font-size:.85rem;">Indlæser…</p>'
@@ -386,6 +389,7 @@ async function loadCustomerQuizzes(id) {
   if (error) { el.innerHTML = `<p style="color:red;font-size:.85rem;">Fejl: ${error.message}</p>`; return; }
   if (!quizzes?.length) { el.innerHTML = '<p style="color:#9aa2b1;font-size:.85rem;">Ingen løb endnu.</p>'; return; }
 
+  quizzes.forEach(q => { quizCache[q.id] = q })
   el.innerHTML = quizzes.map(q => `
     <div class="quiz-mini">
       <div>
@@ -395,9 +399,9 @@ async function loadCustomerQuizzes(id) {
       <div style="display:flex;gap:.3rem;flex-wrap:wrap;">
         <a href="editor.html?q=${q.id}" class="btn btn-sm btn-outline">✏️</a>
         <button class="btn btn-sm btn-ghost-light" onclick="copyScoreboard('${q.id}')" title="Kopiér scoreboard-link">📋</button>
-        <button class="btn btn-sm btn-ghost-light" onclick="showScoreboardQR('${q.id}','${escAttr(q.title||'')}')">📱</button>
-        <button class="btn btn-sm btn-ghost-light" onclick="mailQuizLinks('${q.id}','${escAttr(q.title||'')}')">📧</button>
-        <button class="btn btn-sm btn-danger-ghost" onclick="deleteQuiz('${q.id}','${escAttr(q.title||'')}')">🗑</button>
+        <button class="btn btn-sm btn-ghost-light" onclick="showScoreboardQR('${q.id}')">📱</button>
+        <button class="btn btn-sm btn-ghost-light" onclick="mailQuizLinks('${q.id}')">📧</button>
+        <button class="btn btn-sm btn-danger-ghost" onclick="deleteQuiz('${q.id}')">🗑</button>
       </div>
     </div>`).join('')
 }
@@ -441,12 +445,13 @@ function copyScoreboard(quizId) {
     .then(() => alert('✅ Scoreboard-link kopieret'))
 }
 
-function showScoreboardQR(quizId, title) {
-  showQR(getScoreboardUrl(quizId), 'Scoreboard – ' + title)
+function showScoreboardQR(quizId) {
+  showQR(getScoreboardUrl(quizId), 'Scoreboard – ' + quizTitle(quizId))
 }
 
-function mailQuizLinks(quizId, title) {
+function mailQuizLinks(quizId) {
   if (!activeId) return
+  const title = quizTitle(quizId)
   const c = customers.find(x => x.id === activeId)
   const scoreUrl = getScoreboardUrl(quizId)
   const editorUrl = location.origin + location.pathname.replace('customers.html','editor.html') + '?q=' + quizId
@@ -482,7 +487,8 @@ async function newQuizForCustomer() {
   location.href = `editor.html?q=${data.id}`
 }
 
-async function deleteQuiz(quizId, title) {
+async function deleteQuiz(quizId) {
+  const title = quizTitle(quizId)
   if (!confirm(`Slet "${title}" permanent? Kan ikke fortrydes.`)) return
   const { error } = await sb.schema('quiz').rpc('delete_quiz_cascade', { p_quiz_id: quizId })
   if (error) { alert('Kunne ikke slette: ' + error.message); return; }
@@ -566,21 +572,18 @@ async function savePin() {
   if (!pin || pin.length < 6) { msgEl.textContent = '⚠️ PIN skal være mindst 6 cifre'; return; }
   if (!/^\d+$/.test(pin))     { msgEl.textContent = '⚠️ PIN må kun indeholde tal'; return; }
 
-  const buf     = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pin))
-  const pinHash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('')
-
-  const update = { pin_hash: pinHash }
-  if (expires) update.pin_expires_at = new Date(expires).toISOString()
-
-  const { error } = await sb.schema('quiz').from('customers').update(update).eq('id', activeId)
+  const expIso = expires ? new Date(expires).toISOString() : null
+  const { error } = await sb.schema('quiz').rpc('set_customer_pin', {
+    p_customer_id: activeId, p_pin: pin, p_expires: expIso
+  })
   if (error) {
     msgEl.textContent = '❌ ' + error.message
     return
   }
 
-  // Opdatér lokal cache
+  // Opdatér lokal cache (selve hashen ligger kun på serveren)
   const c = customers.find(x => x.id === activeId)
-  if (c) { c.pin_hash = pinHash; c.pin_expires_at = expires ? new Date(expires).toISOString() : null }
+  if (c) { c.pin_hash = 'sat'; c.pin_expires_at = expIso }
 
   const loginUrl = getLoginUrl(activeId)
   msgEl.innerHTML = `✅ PIN gemt!<br><b>Kode: ${pin}</b><br>
@@ -598,7 +601,7 @@ function labelStatus(s) {
   return { kladde:'Kladde', testing:'Test', aktiv:'Aktiv', arkiveret:'Arkiveret' }[s] ?? s
 }
 function escHtml(s) {
-  return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+  return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')
 }
 function escAttr(s) {
   return String(s??'').replace(/'/g,"\\'")

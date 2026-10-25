@@ -9,1151 +9,835 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/nosleep.js@0.12.0/dist/NoSleep.min.js"></script>
   <script src="../js/config.js"></script>
   <script src="../js/api.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --night:   #0d0f14;
-      --deep:    #13161e;
-      --panel:   #1a1e28;
-      --border:  rgba(255,255,255,.1);
-      --gold:    #e8c84a;
-      --coral:   #e94560;
-      --green:   #22c55e;
-      --muted:   rgba(255,255,255,.45);
-      --text:    #f0eeea;
-      --radius:  16px;
+      --night:#0d0f14; --deep:#13161e; --panel:#1a1e28; --border:rgba(255,255,255,.1);
+      --gold:#e8c84a; --coral:#e94560; --green:#22c55e; --muted:rgba(255,255,255,.5);
+      --text:#f0eeea; --radius:16px;
     }
-
     html, body {
-      height: 100%; width: 100%;
-      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-      background: var(--night); color: var(--text);
-      overflow: hidden;
+      height:100%; width:100%; overflow:hidden; background:var(--night); color:var(--text);
+      font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
     }
+    button { font-family:inherit; }
+    #map { position:fixed; inset:0; z-index:1; }
 
-    /* ── GPS TILLADELSE POPUP ── */
-    #gps-permission {
-      position: fixed; inset: 0; z-index: 9999;
-      background: var(--night);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 2rem; text-align: center;
+    /* ── Fuldskærms-skærme ── */
+    .screen {
+      position:fixed; inset:0; display:none; flex-direction:column; align-items:center;
+      justify-content:center; text-align:center; padding:2rem 1.5rem; background:var(--night);
+      overflow-y:auto; -webkit-overflow-scrolling:touch;
     }
-    #gps-permission .icon { font-size: 4rem; margin-bottom: 1.5rem; }
-    #gps-permission h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: .75rem; }
-    #gps-permission p { color: var(--muted); font-size: .92rem; line-height: 1.6; margin-bottom: 2rem; max-width: 300px; }
-    .btn-gps {
-      background: var(--gold); color: var(--night);
-      border: none; padding: 1rem 2rem; border-radius: 99px;
-      font-size: 1rem; font-weight: 700; cursor: pointer;
-      width: 100%; max-width: 280px;
+    .screen.show { display:flex; }
+    #finished   { z-index:1000; }
+    #welcome    { z-index:9970; }
+    #msg-screen { z-index:9980; }
+    #loading    { z-index:9990; }
+    .big-icon { font-size:3.5rem; margin-bottom:1rem; }
+    .screen h1 { font-size:1.7rem; font-weight:800; letter-spacing:-.02em; margin-bottom:.5rem; }
+    .screen p.lead { color:var(--muted); font-size:.95rem; line-height:1.6; max-width:320px; margin:0 auto 1.25rem; white-space:pre-line; }
+    .btn-gold {
+      background:var(--gold); color:var(--night); border:none; border-radius:99px;
+      padding:1rem 2rem; font-size:1rem; font-weight:800; cursor:pointer;
+      width:100%; max-width:300px; display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+      text-decoration:none;
     }
-
-    /* ── UGYLDIGT TOKEN ── */
-    #screen-token {
-      position: fixed; inset: 0; z-index: 9998;
-      display: none; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 2rem; text-align: center;
-      background: var(--night);
+    .btn-gold:disabled { opacity:.5; }
+    .btn-ghost {
+      background:rgba(232,200,74,.12); color:var(--gold); border:1px solid rgba(232,200,74,.3);
+      border-radius:99px; padding:.8rem 1.5rem; font-weight:700; font-size:.92rem; text-decoration:none;
+      display:none; align-items:center; justify-content:center; gap:.4rem; cursor:pointer;
     }
-    #screen-token h2 { font-size: 1.3rem; margin-bottom: .5rem; }
-    #screen-token p { color: var(--muted); font-size: .9rem; }
-
-    /* ── TOPBAR ── */
-    #topbar {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: env(safe-area-inset-top, 0px) 1rem .75rem;
-      padding-top: calc(env(safe-area-inset-top, 0px) + .75rem);
-      background: linear-gradient(to bottom, rgba(13,15,20,.95) 0%, rgba(13,15,20,0) 100%);
-      pointer-events: none;
-    }
-    #topbar > * { pointer-events: all; }
-
-    .team-pill {
-      background: rgba(13,15,20,.85);
-      backdrop-filter: blur(8px);
-      border: 1px solid var(--border);
-      border-radius: 99px; padding: .4rem .9rem;
-      font-size: .85rem; font-weight: 600;
-    }
-
-    .points-pill {
-      background: var(--gold);
-      color: var(--night);
-      border-radius: 99px; padding: .4rem .9rem;
-      font-size: .85rem; font-weight: 800;
-    }
-
-    /* ── KORT ── */
-    #map {
-      position: fixed; inset: 0; z-index: 1;
-    }
-
-    /* ── BUND-PANEL ── */
-    #bottom-panel {
-      position: fixed; bottom: 0; left: 0; right: 0; z-index: 500;
-      padding: .75rem 1rem calc(env(safe-area-inset-bottom, 0px) + .75rem);
-      background: linear-gradient(to top, rgba(13,15,20,.95) 0%, rgba(13,15,20,0) 100%);
-      display: flex; align-items: flex-end; justify-content: space-between;
-      gap: .75rem; pointer-events: none;
-    }
-    #bottom-panel > * { pointer-events: all; }
-
-    /* Afstandskort til næste stop */
-    #next-stop-card {
-      flex: 1; background: rgba(13,15,20,.88);
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--border);
-      border-radius: var(--radius); padding: .75rem 1rem;
-      display: none;
-    }
-    #next-stop-name { font-size: .78rem; color: var(--muted); margin-bottom: .15rem; }
-    #next-stop-dist {
-      font-size: 1.5rem; font-weight: 800; color: var(--gold);
-      line-height: 1;
-    }
-    #next-stop-dist.near { color: var(--green); }
-
-    /* Knapper */
-    .map-btn {
-      width: 48px; height: 48px; border-radius: 50%;
-      background: rgba(13,15,20,.88);
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--border);
-      color: var(--text); font-size: 1.2rem;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; flex-shrink: 0;
-    }
-    .map-btn:active { background: rgba(255,255,255,.15); }
-
-    /* GPS prik */
-    .gps-dot {
-      width: 16px; height: 16px; border-radius: 50%;
-      background: #4a9eff;
-      border: 2.5px solid #fff;
-      box-shadow: 0 0 0 6px rgba(74,158,255,.25);
-    }
-
-    /* Stop-pins */
-    .stop-pin {
-      width: 32px; height: 32px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: .8rem; font-weight: 800; color: #fff;
-      border: 2.5px solid rgba(255,255,255,.4);
-      cursor: pointer; transition: transform .15s;
-    }
-    .stop-pin.locked   { background: #374151; }
-    .stop-pin.active   { background: var(--gold); color: var(--night); border-color: var(--gold); animation: pulse-pin 1.5s infinite; }
-    .stop-pin.done     { background: var(--green); border-color: var(--green); }
-    .stop-pin.available { background: var(--coral); border-color: var(--coral); }
-
-    @keyframes pulse-pin {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(232,200,74,.4); }
-      50%       { box-shadow: 0 0 0 10px rgba(232,200,74,0); }
-    }
-
-    /* ── OPGAVE OVERLAY ── */
-    #activity-overlay {
-      position: fixed; inset: 0; z-index: 800;
-      background: var(--night);
-      display: none; flex-direction: column;
-      transform: translateY(100%);
-      transition: transform .35s cubic-bezier(.32,.72,0,1);
-    }
-    #activity-overlay.open {
-      display: flex;
-      transform: translateY(0);
-    }
-
-    #activity-header {
-      padding: calc(env(safe-area-inset-top, 0px) + 1rem) 1.25rem 1rem;
-      background: var(--deep);
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-    #activity-stop-name { font-size: .78rem; color: var(--muted); margin-bottom: .2rem; }
-    #activity-title { font-size: 1.05rem; font-weight: 700; }
-
-    #activity-body {
-      flex: 1; overflow-y: auto;
-      padding: 1.25rem;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    #activity-question {
-      font-size: 1rem; line-height: 1.6;
-      margin-bottom: 1.25rem;
-    }
-
-    #activity-media {
-      width: 100%; border-radius: var(--radius);
-      margin-bottom: 1.25rem; display: none;
-    }
-
-    .opt-btn {
-      display: block; width: 100%;
-      background: var(--panel); border: 1.5px solid var(--border);
-      color: var(--text); text-align: left;
-      padding: .85rem 1rem; border-radius: var(--radius);
-      font-size: .92rem; margin-bottom: .6rem; cursor: pointer;
-      transition: background .1s, border-color .1s;
-    }
-    .opt-btn:active { background: rgba(255,255,255,.1); }
-    .opt-btn.correct { background: rgba(34,197,94,.15); border-color: var(--green); color: var(--green); }
-    .opt-btn.wrong   { background: rgba(233,69,96,.15); border-color: var(--coral); color: var(--coral); }
-
-    #txt-input {
-      width: 100%; background: var(--panel);
-      border: 1.5px solid var(--border); color: var(--text);
-      padding: .85rem 1rem; border-radius: var(--radius);
-      font-size: .95rem; margin-bottom: .75rem;
-    }
-    #txt-input:focus { outline: none; border-color: var(--gold); }
-
-    .send-btn {
-      width: 100%; background: var(--gold); color: var(--night);
-      border: none; padding: 1rem; border-radius: var(--radius);
-      font-size: 1rem; font-weight: 700; cursor: pointer;
-    }
-    .send-btn:disabled { opacity: .5; cursor: not-allowed; }
-
-    .result-box {
-      text-align: center; padding: 1.5rem;
-      border-radius: var(--radius); margin-bottom: 1rem;
-    }
-    .result-box.correct { background: rgba(34,197,94,.15); }
-    .result-box.wrong   { background: rgba(233,69,96,.15); }
-    .result-emoji { font-size: 2.5rem; margin-bottom: .5rem; }
-    .result-label { font-size: 1.1rem; font-weight: 700; margin-bottom: .25rem; }
-    .result-pts   { color: var(--muted); font-size: .88rem; }
-
-    .back-btn {
-      width: 100%; background: var(--panel);
-      border: 1px solid var(--border); color: var(--text);
-      padding: .85rem; border-radius: var(--radius);
-      font-size: .92rem; font-weight: 600; cursor: pointer;
-      margin-top: .5rem;
-    }
-
-    /* Foto */
-    .photo-preview {
-      width: 100%; border-radius: var(--radius);
-      margin-bottom: .75rem; display: none;
-    }
-    .photo-label {
-      display: block; width: 100%;
-      background: var(--panel); border: 2px dashed var(--border);
-      color: var(--muted); text-align: center;
-      padding: 2rem 1rem; border-radius: var(--radius);
-      font-size: .9rem; cursor: pointer; margin-bottom: .75rem;
-    }
-
-    /* Info-type */
-    .info-box {
-      background: var(--panel); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.25rem;
-      margin-bottom: 1rem; color: var(--muted);
-      font-size: .9rem; line-height: 1.6;
-    }
-
-    @keyframes fall {
-      0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
-    }
-
-    @keyframes bounce-in {
-      0%   { transform: scale(0); opacity: 0; }
-      60%  { transform: scale(1.2); }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    /* Skjul Leaflet UI-elementer */
-    .leaflet-control-attribution,
-    .leaflet-control-zoom { display: none !important; }
-
-    /* Loading */
-    #loading {
-      position: fixed; inset: 0; z-index: 9997;
-      display: flex; align-items: center; justify-content: center;
-      background: var(--night); flex-direction: column; gap: 1rem;
-    }
-    #loading p { color: var(--muted); font-size: .9rem; }
     .spinner {
-      width: 36px; height: 36px; border: 3px solid var(--border);
-      border-top-color: var(--gold); border-radius: 50%;
-      animation: spin .8s linear infinite;
+      width:36px; height:36px; border:3px solid var(--border); border-top-color:var(--gold);
+      border-radius:50%; animation:spin .8s linear infinite; margin-bottom:1rem;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes spin { to { transform:rotate(360deg); } }
 
-    /* Stop-liste overlay (til fri tilstand — se alle) */
-    #stops-list-overlay {
-      position: fixed; inset: 0; z-index: 600;
-      background: var(--night); display: none;
-      flex-direction: column;
+    .rules { text-align:left; list-style:none; max-width:320px; margin:0 auto 1.5rem; }
+    .rules li { font-size:.85rem; color:var(--muted); line-height:1.5; padding:.3rem 0 .3rem 1.6rem; position:relative; }
+    .rules li::before { content:'•'; position:absolute; left:.5rem; color:var(--gold); }
+    .warn-box {
+      background:rgba(233,69,96,.12); border:1px solid rgba(233,69,96,.35); color:#ffb3c0;
+      border-radius:12px; padding:.85rem 1rem; font-size:.82rem; line-height:1.5;
+      max-width:320px; margin:0 auto 1.25rem; display:none;
     }
-    #stops-list-overlay.open { display: flex; }
-    #stops-list-header {
-      padding: calc(env(safe-area-inset-top, 0px) + 1rem) 1.25rem 1rem;
-      background: var(--deep); border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
+    .warn-box button {
+      margin-top:.5rem; background:var(--coral); color:#fff; border:none; border-radius:99px;
+      padding:.4rem .9rem; font-size:.78rem; font-weight:700; cursor:pointer;
     }
-    #stops-list-header h2 { font-size: 1rem; font-weight: 700; }
-    .close-btn {
-      background: none; border: none; color: var(--muted);
-      font-size: 1.5rem; cursor: pointer; line-height: 1;
+    #welcome-err { color:#ffb3c0; font-size:.85rem; min-height:1.2rem; margin-bottom:.75rem; max-width:320px; }
+    .attr { margin-top:1.5rem; font-size:.7rem; color:rgba(255,255,255,.3); }
+
+    /* ── Topbar ── */
+    #topbar {
+      position:fixed; top:0; left:0; right:0; z-index:500; display:none;
+      align-items:center; justify-content:space-between; gap:.5rem;
+      padding:calc(env(safe-area-inset-top,0px) + .75rem) 1rem 1rem;
+      background:linear-gradient(to bottom, rgba(13,15,20,.95), rgba(13,15,20,0));
+      pointer-events:none;
     }
-    #stops-list-body { flex: 1; overflow-y: auto; padding: 1rem; }
-    .stop-list-item {
-      background: var(--panel); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1rem 1.25rem;
-      margin-bottom: .75rem; cursor: pointer;
-      display: flex; align-items: center; gap: .85rem;
+    #topbar > * { pointer-events:auto; }
+    .pill {
+      background:rgba(13,15,20,.85); backdrop-filter:blur(8px); border:1px solid var(--border);
+      border-radius:99px; padding:.4rem .9rem; font-size:.85rem; font-weight:600;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:42vw;
     }
-    .stop-list-item:active { background: rgba(255,255,255,.08); }
-    .stop-num {
-      width: 32px; height: 32px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: .8rem; font-weight: 800; flex-shrink: 0;
+    .pill.pts { background:var(--gold); color:var(--night); font-weight:800; border-color:var(--gold); }
+    .pill.acc { font-size:.75rem; color:var(--muted); }
+    .pill.test { color:var(--gold); border-color:rgba(232,200,74,.4); font-size:.75rem; }
+    .top-right { display:flex; align-items:center; gap:.4rem; }
+
+    /* ── Bundpanel ── */
+    #bottom-panel {
+      position:fixed; left:0; right:0; bottom:0; z-index:500; display:none;
+      align-items:flex-end; justify-content:space-between; gap:.75rem;
+      padding:1rem 1rem calc(env(safe-area-inset-bottom,0px) + .75rem);
+      background:linear-gradient(to top, rgba(13,15,20,.95), rgba(13,15,20,0));
+      pointer-events:none;
     }
-    .stop-num.done     { background: var(--green); color: #fff; }
-    .stop-num.available { background: var(--coral); color: #fff; }
-    .stop-num.locked   { background: #374151; color: var(--muted); }
-    .stop-list-info { flex: 1; }
-    .stop-list-name { font-weight: 600; font-size: .92rem; }
-    .stop-list-meta { font-size: .75rem; color: var(--muted); margin-top: .15rem; }
-    .stop-dist-badge {
-      font-size: .75rem; color: var(--gold); font-weight: 600;
-      flex-shrink: 0;
+    #bottom-panel > * { pointer-events:auto; }
+    #next-card {
+      flex:1; min-width:0; background:rgba(13,15,20,.88); backdrop-filter:blur(10px);
+      border:1px solid var(--border); border-radius:var(--radius); padding:.7rem 1rem; display:none;
     }
-    .stop-dist-badge.near { color: var(--green); }
+    #next-name { font-size:.78rem; color:var(--muted); margin-bottom:.15rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    #next-dist { font-size:1.6rem; font-weight:800; color:var(--gold); line-height:1; }
+    #next-dist.near { color:var(--green); }
+    .btns { display:flex; gap:.5rem; }
+    .map-btn {
+      width:48px; height:48px; border-radius:50%; background:rgba(13,15,20,.88);
+      backdrop-filter:blur(10px); border:1px solid var(--border); color:var(--text);
+      font-size:1.2rem; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+    }
+    .map-btn.on { color:var(--gold); background:rgba(232,200,74,.15); border-color:rgba(232,200,74,.4); }
+
+    /* Kort-elementer */
+    .gps-dot { width:16px; height:16px; border-radius:50%; background:#4a9eff; border:2.5px solid #fff; box-shadow:0 0 0 6px rgba(74,158,255,.25); }
+    .stop-pin {
+      width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+      font-size:.8rem; font-weight:800; color:#fff; border:2.5px solid rgba(255,255,255,.4);
+    }
+    .stop-pin.available { background:var(--coral); border-color:var(--coral); animation:pulse-pin 1.8s infinite; }
+    .stop-pin.done { background:var(--green); border-color:var(--green); }
+    @keyframes pulse-pin { 0%,100%{box-shadow:0 0 0 0 rgba(233,69,96,.5)} 50%{box-shadow:0 0 0 10px rgba(233,69,96,0)} }
+    .leaflet-control-zoom { display:none !important; }
+    .leaflet-bottom.leaflet-right { bottom:calc(env(safe-area-inset-bottom,0px) + 84px); z-index:400; }
+    .leaflet-control-attribution { background:rgba(13,15,20,.7) !important; color:#9aa !important; font-size:10px !important; }
+    .leaflet-control-attribution a { color:#bcd !important; }
+
+    /* ── Opgave-overlay ── */
+    #activity-overlay {
+      position:fixed; inset:0; z-index:800; background:var(--night); display:flex; flex-direction:column;
+      transform:translateY(100%); visibility:hidden;
+      transition:transform .35s cubic-bezier(.32,.72,0,1), visibility 0s linear .35s;
+    }
+    #activity-overlay.open { transform:none; visibility:visible; transition:transform .35s cubic-bezier(.32,.72,0,1); }
+    #act-header {
+      padding:calc(env(safe-area-inset-top,0px) + 1rem) 1.25rem 1rem; background:var(--deep);
+      border-bottom:1px solid var(--border); flex-shrink:0;
+    }
+    #act-stop { font-size:1.05rem; font-weight:700; }
+    #act-count { font-size:.78rem; color:var(--muted); margin-top:.15rem; }
+    #act-body { flex:1; overflow-y:auto; padding:1.25rem; -webkit-overflow-scrolling:touch; }
+    #act-media { display:none; width:100%; border-radius:var(--radius); margin-bottom:1.25rem; }
+    #act-question { font-size:1.05rem; line-height:1.6; margin-bottom:1.25rem; white-space:pre-line; }
+    .opt-btn {
+      display:flex; align-items:center; gap:.75rem; width:100%; text-align:left; background:var(--panel);
+      border:1.5px solid var(--border); color:var(--text); padding:.9rem 1rem; border-radius:var(--radius);
+      font-size:.95rem; margin-bottom:.6rem; cursor:pointer;
+    }
+    .opt-btn:disabled { opacity:.9; }
+    .opt-letter { width:26px; height:26px; border-radius:50%; background:rgba(255,255,255,.08); display:inline-flex; align-items:center; justify-content:center; font-size:.8rem; font-weight:700; flex-shrink:0; }
+    .opt-btn.correct { background:rgba(34,197,94,.15); border-color:var(--green); color:var(--green); }
+    .opt-btn.wrong   { background:rgba(233,69,96,.15); border-color:var(--coral); color:var(--coral); }
+    .txt-input {
+      width:100%; background:var(--panel); border:1.5px solid var(--border); color:var(--text);
+      padding:.9rem 1rem; border-radius:var(--radius); font-size:1rem; margin-bottom:.75rem;
+    }
+    .txt-input:focus { outline:none; border-color:var(--gold); }
+    .send-btn {
+      width:100%; background:var(--gold); color:var(--night); border:none; padding:1rem;
+      border-radius:var(--radius); font-size:1rem; font-weight:800; cursor:pointer;
+    }
+    .send-btn:disabled { opacity:.5; }
+    .alt-btn {
+      width:100%; background:var(--panel); border:1px solid var(--border); color:var(--text);
+      padding:.9rem; border-radius:var(--radius); font-size:.92rem; font-weight:600; cursor:pointer; margin-top:.6rem;
+    }
+    .result-box { text-align:center; padding:1.5rem; border-radius:var(--radius); margin-bottom:1rem; }
+    .result-box.correct { background:rgba(34,197,94,.15); }
+    .result-box.wrong   { background:rgba(233,69,96,.15); }
+    .result-box.pending { background:rgba(232,200,74,.12); }
+    .result-emoji { font-size:2.5rem; margin-bottom:.4rem; }
+    .result-label { font-size:1.15rem; font-weight:800; margin-bottom:.2rem; }
+    .result-sub { color:var(--muted); font-size:.88rem; }
+    .info-box { background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:1rem 1.1rem; margin-bottom:1rem; color:var(--muted); font-size:.88rem; }
+    .photo-label {
+      display:block; width:100%; background:var(--panel); border:2px dashed var(--border); color:var(--muted);
+      text-align:center; padding:2rem 1rem; border-radius:var(--radius); font-size:.95rem; cursor:pointer; margin-bottom:.75rem;
+    }
+    #photo-preview { display:none; width:100%; border-radius:var(--radius); margin-bottom:.75rem; }
+    .inline-err { color:#ffb3c0; font-size:.85rem; margin-top:.6rem; text-align:center; min-height:1.1rem; }
+
+    /* ── Stop-liste ── */
+    #stops-overlay { position:fixed; inset:0; z-index:600; background:var(--night); display:none; flex-direction:column; }
+    #stops-overlay.open { display:flex; }
+    #stops-head {
+      padding:calc(env(safe-area-inset-top,0px) + 1rem) 1.25rem 1rem; background:var(--deep);
+      border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;
+    }
+    #stops-head h2 { font-size:1rem; }
+    .close-btn { background:none; border:none; color:var(--muted); font-size:1.8rem; line-height:1; cursor:pointer; }
+    #stops-body { flex:1; overflow-y:auto; padding:1rem; }
+    .stop-item {
+      background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+      padding:.9rem 1.1rem; margin-bottom:.7rem; display:flex; align-items:center; gap:.85rem; cursor:pointer;
+    }
+    .stop-num { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.8rem; font-weight:800; flex-shrink:0; background:var(--coral); color:#fff; }
+    .stop-num.done { background:var(--green); }
+    .stop-info { flex:1; min-width:0; text-align:left; }
+    .stop-name { font-weight:700; font-size:.92rem; }
+    .stop-meta { font-size:.75rem; color:var(--muted); margin-top:.1rem; }
+    .stop-dist { font-size:.78rem; color:var(--gold); font-weight:700; }
+    .stop-dist.near { color:var(--green); }
+    .stops-foot { text-align:center; font-size:.7rem; color:rgba(255,255,255,.3); padding:1rem 0 2rem; }
+
+    /* ── Færdig ── */
+    #confetti { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+    .score-card {
+      background:linear-gradient(135deg, rgba(232,200,74,.15), rgba(232,200,74,.05));
+      border:1px solid rgba(232,200,74,.3); border-radius:20px; padding:1.5rem 2rem; margin:1rem auto 1.25rem; width:100%; max-width:320px;
+    }
+    #final-points { font-size:3.4rem; font-weight:800; color:var(--gold); line-height:1; }
+    @keyframes fall { 0%{transform:translateY(-20px) rotate(0)} 100%{transform:translateY(110vh) rotate(720deg); opacity:0} }
+    @keyframes pop { 0%{transform:scale(0)} 60%{transform:scale(1.2)} 100%{transform:scale(1)} }
   </style>
 </head>
 <body>
 
-<!-- Loading -->
-<div id="loading">
-  <div class="spinner"></div>
-  <p>Indlæser løbet…</p>
-</div>
-
-<!-- Ugyldigt token -->
-<div id="screen-token" style="display:none;flex-direction:column;align-items:center;justify-content:center;position:fixed;inset:0;z-index:9998;background:var(--night);text-align:center;padding:2rem;">
-  <div style="font-size:3rem;margin-bottom:1rem;">❌</div>
-  <h2 style="margin-bottom:.5rem;">Ugyldigt link</h2>
-  <p style="color:var(--muted);">Scan QR-koden igen eller kontakt din quizmaster.</p>
-</div>
-
-<!-- GPS tilladelse -->
-<div id="gps-permission" style="display:none;">
-  <div class="icon">📍</div>
-  <h2>GPS-adgang kræves</h2>
-  <p>For at deltage i jagten skal vi bruge din placering. Din position deles kun med dit holds quizmaster.</p>
-  <button class="btn-gps" onclick="requestGPS()">Giv adgang til GPS</button>
-</div>
-
-<!-- Kort -->
 <div id="map"></div>
 
-<!-- Topbar -->
-<div id="topbar" style="display:none;">
-  <div class="team-pill" id="team-name">–</div>
-  <div style="display:flex;align-items:center;gap:.5rem;">
-    <div id="gps-accuracy-pill" style="
-      background:rgba(13,15,20,.85);backdrop-filter:blur(8px);
-      border:1px solid var(--border);border-radius:99px;
-      padding:.4rem .75rem;font-size:.75rem;color:var(--muted);display:none;">
-      📡 <span id="gps-acc-text">–</span>
-    </div>
-    <div class="points-pill" id="point-display">0 p</div>
+<!-- Indlæser -->
+<div id="loading" class="screen show"><div class="spinner"></div><p style="color:var(--muted)">Indlæser løbet…</p></div>
+
+<!-- Generel besked (ugyldigt link / låst / ikke åbnet) -->
+<div id="msg-screen" class="screen">
+  <div class="big-icon" id="msg-icon"></div>
+  <h1 id="msg-title"></h1>
+  <p class="lead" id="msg-text"></p>
+  <a id="msg-link" class="btn-ghost" href="#" target="_blank" rel="noopener"></a>
+</div>
+
+<!-- Velkomst / start -->
+<div id="welcome" class="screen">
+  <div class="big-icon">🗺️</div>
+  <h1 id="welcome-title">Jagten</h1>
+  <p class="lead" id="welcome-desc"></p>
+  <div id="inapp-warn" class="warn-box">
+    <b>Åbn i Chrome eller Safari.</b> Du er i en app-browser (fx Messenger), og dér kan GPS ofte ikke bruges.
+    <br><button onclick="copyLink()">Kopiér link</button>
+  </div>
+  <ul class="rules">
+    <li>Gå rundt til stopene – opgaven åbner automatisk, når I er tæt nok på.</li>
+    <li>Hold telefonen tændt og lad GPS være slået til.</li>
+    <li>I har ét forsøg pr. opgave.</li>
+    <li>Jeres position deles med quizmasteren, mens I spiller.</li>
+  </ul>
+  <div id="welcome-err"></div>
+  <button class="btn-gold" id="welcome-btn" onclick="startGame()">Start jagten</button>
+  <button class="btn-ghost" id="skip-gps" style="margin-top:.75rem" onclick="startGame(true)">🧪 Test uden GPS</button>
+  <div class="attr">Kort: © OpenStreetMap-bidragydere</div>
+</div>
+
+<!-- Topbar / bundpanel -->
+<div id="topbar">
+  <div class="pill" id="team-name">–</div>
+  <div class="top-right">
+    <div class="pill test" id="test-pill" style="display:none">🧪 Test</div>
+    <div class="pill acc" id="acc-pill" style="display:none">📡 <span id="acc-text">–</span></div>
+    <div class="pill pts" id="points">0 p</div>
+  </div>
+</div>
+<div id="bottom-panel">
+  <div id="next-card"><div id="next-name">Næste stop</div><div id="next-dist">–</div></div>
+  <div class="btns">
+    <button class="map-btn" id="btn-list"   onclick="openStops()"     title="Alle stop">☰</button>
+    <button class="map-btn" id="btn-locate" onclick="centerOnUser()"  title="Find mig">◎</button>
+    <button class="map-btn" id="btn-wake"   onclick="toggleWake()"    title="Hold skærmen tændt">🔆</button>
   </div>
 </div>
 
-<!-- Bund-panel -->
-<div id="bottom-panel" style="display:none;">
-  <div id="next-stop-card">
-    <div id="next-stop-name">Næste stop</div>
-    <div id="next-stop-dist">–</div>
-  </div>
-  <button class="map-btn" id="btn-list" onclick="openStopsList()" title="Se alle stop">☰</button>
-  <button class="map-btn" id="btn-locate" onclick="centerOnUser()" title="Find mig">◎</button>
-  <button class="map-btn" id="btn-wake" onclick="toggleWakeLock()" title="Skærm vågen">🔆</button>
+<!-- Stop-liste -->
+<div id="stops-overlay">
+  <div id="stops-head"><h2>Alle stop</h2><button class="close-btn" onclick="closeStops()">×</button></div>
+  <div id="stops-body"></div>
 </div>
 
-<!-- Løbet afsluttet/låst skærm -->
-<div id="locked-screen" style="
-  display:none; position:fixed; inset:0; z-index:9999;
-  background:var(--night); flex-direction:column;
-  align-items:center; justify-content:center;
-  text-align:center; padding:2rem;">
-  <div style="font-size:3.5rem;margin-bottom:1rem;">🔒</div>
-  <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:.5rem;">Løbet er afsluttet</h2>
-  <p style="color:var(--muted);font-size:.9rem;line-height:1.6;max-width:280px;margin-bottom:1.5rem;">
-    Dette løb er ikke længere aktivt. Kontakt din quizmaster for at starte et nyt løb.
-  </p>
-  <a id="locked-scoreboard-link" href="#" target="_blank" style="
-    display:inline-flex;align-items:center;gap:.5rem;
-    background:rgba(232,200,74,.15);border:1px solid rgba(232,200,74,.3);
-    color:var(--gold);font-weight:700;font-size:.9rem;
-    padding:.75rem 1.5rem;border-radius:99px;text-decoration:none;">
-    📊 Se scoreboard
-  </a>
-</div>
-
-<!-- Færdig-skærm -->
-<div id="finished-screen" style="
-  display:none; position:fixed; inset:0; z-index:1000;
-  background:var(--night); flex-direction:column;
-  align-items:center; justify-content:center;
-  text-align:center; padding:2rem;">
-
-  <!-- Konfetti-agtig baggrund -->
-  <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none;">
-    <div id="confetti-container"></div>
-  </div>
-
-  <div style="position:relative;z-index:1;width:100%;max-width:340px;">
-    <div style="font-size:5rem;margin-bottom:.75rem;animation:bounce-in .5s ease-out;">🏆</div>
-
-    <h1 style="font-size:2rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.4rem;">
-      Tillykke!
-    </h1>
-    <p style="color:var(--muted);font-size:.95rem;margin-bottom:2rem;line-height:1.5;">
-      I har gennemført alle poster på jagten.<br>Godt gået!
-    </p>
-
-    <div style="
-      background:linear-gradient(135deg,rgba(232,200,74,.15),rgba(232,200,74,.05));
-      border:1px solid rgba(232,200,74,.3);
-      border-radius:20px;padding:1.75rem 2rem;margin-bottom:1.5rem;">
-      <div style="font-size:.78rem;color:var(--muted);margin-bottom:.35rem;letter-spacing:.05em;">JERES SCORE</div>
-      <div id="final-points" style="font-size:3.5rem;font-weight:800;color:var(--gold);line-height:1;">0</div>
-      <div style="font-size:.85rem;color:var(--muted);margin-top:.2rem;">point</div>
-      <div id="final-team" style="font-size:.88rem;color:rgba(255,255,255,.6);margin-top:.75rem;font-weight:600;"></div>
-    </div>
-
-    <a id="scoreboard-link" href="#" target="_blank" style="
-      display:flex; align-items:center; justify-content:center; gap:.5rem;
-      background:linear-gradient(135deg,rgba(232,200,74,.2),rgba(232,200,74,.05));
-      border:1px solid rgba(232,200,74,.3); border-radius:14px;
-      padding:1rem; text-decoration:none; color:var(--gold);
-      font-weight:700; font-size:.95rem; margin-bottom:1rem;">
-      📊 Se live scoreboard
-    </a>
-
-    <p style="font-size:.78rem;color:var(--muted);line-height:1.5;">
-      Følg med på scoreboardet for at se hvordan I klarede jer mod de andre hold 🎯
-    </p>
-  </div>
-</div>
-
-<!-- Stop-liste overlay -->
-<div id="stops-list-overlay">
-  <div id="stops-list-header">
-    <h2>Alle stop</h2>
-    <button class="close-btn" onclick="closeStopsList()">×</button>
-  </div>
-  <div id="stops-list-body"></div>
-</div>
-
-<!-- Opgave overlay -->
+<!-- Opgave (kan ikke lukkes før besvaret) -->
 <div id="activity-overlay">
-  <div id="activity-header">
-    <div id="activity-stop-name"></div>
-    <div id="activity-title"></div>
+  <div id="act-header"><div id="act-stop"></div><div id="act-count"></div></div>
+  <div id="act-body">
+    <img id="act-media" alt="">
+    <p id="act-question"></p>
+    <div id="act-inputs"></div>
   </div>
-  <div id="activity-body">
-    <img id="activity-media" src="" alt="">
-    <div id="activity-question"></div>
-    <div id="activity-inputs"></div>
+</div>
+
+<!-- Færdig -->
+<div id="finished" class="screen">
+  <div id="confetti"></div>
+  <div style="position:relative;z-index:1;width:100%;max-width:340px">
+    <div style="font-size:5rem;animation:pop .5s ease-out">🏆</div>
+    <h1>Tillykke!</h1>
+    <p class="lead">I har gennemført alle stop på jagten.<br>Godt gået!</p>
+    <div class="score-card">
+      <div style="font-size:.75rem;color:var(--muted);letter-spacing:.06em;margin-bottom:.3rem">JERES SCORE</div>
+      <div id="final-points">0</div>
+      <div style="font-size:.85rem;color:var(--muted)">point</div>
+      <div id="final-team" style="margin-top:.7rem;font-weight:700"></div>
+      <div id="final-rank" style="margin-top:.35rem;color:var(--gold);font-weight:800"></div>
+    </div>
+    <p id="final-wait" class="lead" style="font-size:.82rem;margin-bottom:1rem"></p>
+    <a id="final-link" class="btn-gold" href="#" target="_blank" rel="noopener">📊 Se live scoreboard</a>
   </div>
 </div>
 
 <script>
-const token = getTeamToken()
-let teamData    = null
-let stops       = []
-let submissions = {}
-let quizMode    = 'fri'  // 'fri' eller 'laast'
-let userLat     = null, userLng = null
-let userAccuracy = null
-let proximityHits = {}  // stopId → antal på hinanden følgende hits
-const MIN_ACCURACY_M = 25   // ignorer GPS hvis nøjagtighed er dårligere end 25m
-const PROXIMITY_HITS_NEEDED = 4  // kræv 4 hits i træk før popup (~8 sekunder)
-let map, userMarker, stopMarkers = {}
-let wakeLock    = null
-let wakeLockOn  = false
-let gpsWatcher  = null
-let activeStopId = null
+// ═════════ Indstillinger ═════════
+const NEAR_MS        = 4000;    // hvor længe man skal være inden for radius før opgaven åbner
+const ACC_FLOOR_M    = 20;      // GPS-nøjagtighed der kræves (mindst; stigende med stoppets radius)
+const MAX_FIX_AGE_MS = 20000;   // ignorér hvis seneste position er ældre
+const POS_SEND_MS    = 5000;    // max hvor tit position sendes til serveren
 
-// ── Init ──────────────────────────────────────────────────────
+// ═════════ State ═════════
+const token = getTeamToken();
+let team = null, stops = [], subs = {};
+let userLat = null, userLng = null, userAcc = null, lastFixAt = 0;
+let map, userMarker, pinMarkers = {}, didFit = false;
+let gpsWatch = null, gameOn = false, cur = null, busy = false, backTimer = null;
+let nearSince = {}, lastSent = { t: 0, lat: null, lng: null };
+let finishedShown = false;
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const showScreen = id => $(id).classList.add('show');
+const hideScreen = id => $(id).classList.remove('show');
+const scoreboardUrl = () => new URL('../board/scoreboard.html?q=' + team.quiz_id, location.href).href;
+
+function showMessage(icon, title, text, href, linkText) {
+  hideScreen('loading');
+  $('msg-icon').textContent = icon; $('msg-title').textContent = title; $('msg-text').textContent = text;
+  const a = $('msg-link');
+  if (href) { a.href = href; a.textContent = linkText; a.style.display = 'inline-flex'; } else a.style.display = 'none';
+  showScreen('msg-screen');
+}
+
+// ═════════ Start ═════════
 async function init() {
-  if (!token) { showScreen('token'); return }
+  if (!token) return showMessage('❌', 'Ugyldigt link', 'Scan QR-koden igen eller kontakt din quizmaster.');
 
-  // Initialiser kort tidligt
-  map = L.map('map', { zoomControl: false, attributionControl: false, attributionControl: false })
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map)
-  map.setView([56.26, 9.5], 7)
+  const { data: t, error } = await sb.schema('quiz').rpc('get_team_by_token', { p_token: token });
+  if (error || !t?.length) return showMessage('❌', 'Ugyldigt link', 'Scan QR-koden igen eller kontakt din quizmaster.');
+  team = t[0];
 
-  // Hent hold-data
-  const { data: teamRows, error: teamErr } = await sb
-    .schema('quiz').rpc('get_team_by_token', { p_token: token })
-  if (teamErr || !teamRows?.length) { showScreen('token'); return }
-
-  teamData = teamRows[0]
-  document.getElementById('team-name').textContent   = teamData.team_name
-  document.getElementById('point-display').textContent = teamData.points + ' p'
-
-  // Tjek om løbet er afsluttet/arkiveret
-  const { data: quizCheck } = await sb.schema('quiz').from('quizzes')
-    .select('status').eq('id', teamData.quiz_id).single()
-  if (quizCheck?.status === 'arkiveret') {
-    hideScreen('loading')
-    showLockedScreen()
-    return
+  if (team.quiz_status === 'arkiveret') {
+    return showMessage('🔒', 'Løbet er afsluttet', 'Dette løb er ikke længere aktivt. Spørg din quizmaster, hvis I vil spille igen.', scoreboardUrl(), '📊 Se scoreboard');
+  }
+  if (team.quiz_status === 'kladde' && !team.is_test) {
+    return showMessage('⏳', 'Løbet er ikke åbnet endnu', 'Prøv igen, når din quizmaster har åbnet løbet.');
   }
 
-  // Hent stop
-  const { data: stopRows } = await sb
-    .schema('quiz').rpc('get_quiz_stops', { p_token: token })
-  if (stopRows?.length) {
-    quizMode = stopRows[0].quiz_mode ?? 'fri'
-    stops = buildStops(stopRows)
-  }
+  initMap();
+  await loadSubs();
+  await loadStops();
+  renderPins();
+  $('team-name').textContent = team.team_name;
+  $('test-pill').style.display = team.is_test ? 'block' : 'none';
+  hideScreen('loading');
 
-  // Hent besvarelser
-  const { data: subRows } = await sb
-    .schema('quiz').rpc('get_team_submissions', { p_token: token })
-  if (subRows) subRows.forEach(s => { submissions[s.activity_id] = s })
-
-  hideScreen('loading')
-  renderMapPins()
-  updateNextStop()
-
-  // Vis GPS-permission popup
-  document.getElementById('gps-permission').style.display = 'flex'
+  if (allDone()) return showFinished();
+  showWelcome();
+  setInterval(tick, 1000);
+  setInterval(pollStatus, 30000);
 }
 
-// ── GPS ───────────────────────────────────────────────────────
-function requestGPS() {
-  hideScreen('gps-permission')
-  if (!navigator.geolocation) {
-    alert('GPS er ikke tilgængeligt i denne browser. Prøv at åbne linket i Safari eller Chrome.')
-    showScreen('gps-permission')
-    return
+function showWelcome() {
+  $('welcome-title').textContent = team.quiz_title || 'Jagten';
+  $('welcome-desc').textContent  = team.quiz_description || '';
+  $('welcome-desc').style.display = team.quiz_description ? 'block' : 'none';
+  $('welcome-btn').textContent = team.started_at ? 'Fortsæt jagten' : 'Start jagten';
+  $('skip-gps').style.display = team.is_test ? 'inline-flex' : 'none';
+  if (/FBAN|FBAV|FB_IAB|Messenger|Instagram|Snapchat|Line\//i.test(navigator.userAgent)) {
+    $('inapp-warn').style.display = 'block';
   }
-  // Vis UI nu
-  document.getElementById('bottom-panel').style.display = 'flex'
-  document.getElementById('topbar').style.display = 'flex'
-  startGPS()
+  showScreen('welcome');
 }
 
-function startGPS() {
-  gpsWatcher = navigator.geolocation.watchPosition(
-    pos => {
-      userAccuracy = pos.coords.accuracy
-      // Ignorer hvis GPS-nøjagtighed er for dårlig
-      if (userAccuracy > MIN_ACCURACY_M) {
-        updateAccuracyIndicator(userAccuracy, false)
-        return
-      }
-      userLat = pos.coords.latitude
-      userLng = pos.coords.longitude
-      updateAccuracyIndicator(userAccuracy, true)
-      updateUserMarker()
-      updateNextStop()
-      checkProximity()
-      // Send position
-      sb.schema('quiz').rpc('update_team_position', {
-        p_token: token, p_lat: userLat, p_lng: userLng,
-        p_accuracy_m: Math.round(pos.coords.accuracy)
-      })
-    },
-    err => {
-      if (err.code === 1) {
-        // Bruger afviste — vis popup igen og skjul UI
-        document.getElementById('gps-permission').style.display = 'flex'
-        document.getElementById('bottom-panel').style.display = 'none'
-        document.getElementById('topbar').style.display = 'none'
-      }
-    },
-    { enableHighAccuracy: true, maximumAge: 2000 }
-  )
+function copyLink() {
+  navigator.clipboard?.writeText(location.href).then(() => alert('Link kopieret – åbn det i Chrome eller Safari.'));
+}
+
+// ═════════ Data ═════════
+async function loadStops() {
+  const { data, error } = await sb.schema('quiz').rpc('get_quiz_stops', { p_token: token });
+  if (error || !data) return;                       // behold gamle stop ved netværksfejl
+  const m = {};
+  data.forEach(r => {
+    if (!m[r.stop_id]) m[r.stop_id] = { id: r.stop_id, name: r.stop_name, sort: r.sort, lat: r.lat, lng: r.lng, radius_m: r.radius_m ?? 15, activities: [] };
+    if (r.activity_id) m[r.stop_id].activities.push({
+      id: r.activity_id, type: r.activity_type, question: r.activity_question,
+      media_url: r.activity_media_url, options: r.activity_options, points: r.activity_points, approval: r.activity_approval
+    });
+  });
+  stops = Object.values(m).sort((a, b) => a.sort - b.sort);
+}
+
+async function loadSubs() {
+  const { data } = await sb.schema('quiz').rpc('get_team_submissions', { p_token: token });
+  subs = {};
+  (data ?? []).forEach(s => { subs[s.activity_id] = s; });
+  recomputePoints();
+}
+
+function recomputePoints() {
+  team.points = Object.values(subs).reduce((sum, s) => sum + (s.status === 'ok' && s.is_correct ? (s.points || 0) : 0), 0);
+  $('points').textContent = team.points + ' p';
+}
+
+const isDone  = s => s.activities.length === 0 || s.activities.every(a => subs[a.id]);
+const allDone = () => stops.some(s => s.activities.length > 0) && stops.every(isDone);
+
+// ═════════ Kort ═════════
+function initMap() {
+  map = L.map('map', { zoomControl: false, attributionControl: false });
+  L.control.attribution({ prefix: false, position: 'bottomright' }).addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19, attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+  }).addTo(map);
+  map.setView([56.26, 9.5], 7);
+  renderPins();
+}
+
+function renderPins() {
+  Object.values(pinMarkers).forEach(m => m.remove());
+  pinMarkers = {};
+  stops.forEach((s, i) => {
+    if (s.lat == null || s.lng == null) return;
+    const icon = L.divIcon({
+      html: `<div class="stop-pin ${isDone(s) ? 'done' : 'available'}">${i + 1}</div>`,
+      iconSize: [32, 32], iconAnchor: [16, 16], className: ''
+    });
+    pinMarkers[s.id] = L.marker([s.lat, s.lng], { icon }).addTo(map).on('click', () => onPinClick(s));
+  });
+  if (!didFit) {
+    const pts = stops.filter(s => s.lat != null).map(s => [s.lat, s.lng]);
+    if (pts.length) { map.fitBounds(pts, { padding: [60, 60], maxZoom: 17 }); didFit = true; }
+  }
+}
+
+function onPinClick(s) {
+  if (team.is_test && !isDone(s)) return openStop(s.id);     // testhold må åbne uden GPS
+  const d = distanceTo(s.lat, s.lng);
+  const box = document.createElement('div');
+  box.textContent = s.name + (d !== null ? ' · ' + fmtDist(d) : '');
+  L.popup().setLatLng([s.lat, s.lng]).setContent(box).openOn(map);
 }
 
 function updateUserMarker() {
-  if (!map || userLat === null) return
+  if (!map || userLat === null) return;
   if (!userMarker) {
-    const icon = L.divIcon({
-      html: '<div class="gps-dot"></div>',
-      iconSize: [16,16], iconAnchor: [8,8], className: ''
-    })
-    userMarker = L.marker([userLat, userLng], { icon, zIndexOffset: 1000 }).addTo(map)
-  } else {
-    userMarker.setLatLng([userLat, userLng])
+    const icon = L.divIcon({ html: '<div class="gps-dot"></div>', iconSize: [16, 16], iconAnchor: [8, 8], className: '' });
+    userMarker = L.marker([userLat, userLng], { icon, zIndexOffset: 1000, interactive: false }).addTo(map);
+  } else userMarker.setLatLng([userLat, userLng]);
+}
+
+function centerOnUser() { if (userLat !== null) map.setView([userLat, userLng], 17, { animate: true }); }
+
+// ═════════ GPS ═════════
+async function startGame(skipGps) {
+  $('welcome-err').textContent = '';
+  if (!skipGps && !navigator.geolocation) {
+    $('welcome-err').textContent = 'GPS er ikke tilgængeligt i denne browser. Prøv Chrome eller Safari.';
+    return;
+  }
+  $('welcome-btn').disabled = true;
+  if (!team.started_at) {
+    const { data } = await sb.schema('quiz').rpc('start_team_run', { p_token: token });
+    team.started_at = data || new Date().toISOString();
+  }
+  if (!skipGps) {
+    if (gpsWatch !== null) navigator.geolocation.clearWatch(gpsWatch);
+    gpsWatch = navigator.geolocation.watchPosition(onPos, onPosErr, { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 });
+  }
+  gameOn = true;
+  hideScreen('welcome');
+  $('topbar').style.display = 'flex';
+  $('bottom-panel').style.display = 'flex';
+  $('next-card').style.display = 'block';
+  updateNextStop();
+  $('welcome-btn').disabled = false;
+}
+
+function onPosErr(err) {
+  if (err.code === 1) {                               // afvist
+    gameOn = false;
+    $('topbar').style.display = 'none';
+    $('bottom-panel').style.display = 'none';
+    $('welcome-err').textContent = 'GPS er afvist. Tillad placering for denne side i browserens indstillinger – og tryk så igen.';
+    showScreen('welcome');
   }
 }
 
-function updateAccuracyIndicator(accuracy, good) {
-  const pill = document.getElementById('gps-accuracy-pill')
-  const txt  = document.getElementById('gps-acc-text')
-  if (!pill || !txt) return
-  pill.style.display = 'block'
-  txt.textContent = Math.round(accuracy) + ' m'
-  pill.style.borderColor = good ? 'rgba(34,197,94,.4)' : 'rgba(233,69,96,.4)'
-  pill.style.color = good ? 'var(--green)' : 'var(--coral)'
+function onPos(pos) {
+  userLat = pos.coords.latitude; userLng = pos.coords.longitude; userAcc = pos.coords.accuracy; lastFixAt = Date.now();
+  updateUserMarker();
+  $('acc-pill').style.display = 'block';
+  $('acc-text').textContent = '±' + Math.round(userAcc) + ' m';
+  $('acc-pill').style.color = userAcc <= ACC_FLOOR_M ? 'var(--green)' : 'var(--coral)';
+  updateNextStop();
+  maybeSendPosition();
 }
 
-function centerOnUser() {
-  if (userLat !== null && map) {
-    map.setView([userLat, userLng], 16, { animate: true })
+function maybeSendPosition() {
+  const now = Date.now();
+  if (now - lastSent.t < POS_SEND_MS) return;
+  const moved = lastSent.lat === null ? 999 : haversine(lastSent.lat, lastSent.lng, userLat, userLng);
+  if (moved < 3 && now - lastSent.t < 30000) return;
+  lastSent = { t: now, lat: userLat, lng: userLng };
+  sb.schema('quiz').rpc('update_team_position', {
+    p_token: token, p_lat: userLat, p_lng: userLng, p_accuracy_m: Math.round(userAcc || 0)
+  }).then(() => {}, () => {});
+}
+
+// Tidsbaseret nærhedstjek – virker også når man står stille og GPS'en ikke sender nye punkter
+function tick() {
+  if (!gameOn || cur || finishedShown || userLat === null) return;
+  const now = Date.now();
+  if (now - lastFixAt > MAX_FIX_AGE_MS) { nearSince = {}; return; }
+  for (const s of stops) {
+    if (isDone(s) || s.lat == null) { delete nearSince[s.id]; continue; }
+    const d = distanceTo(s.lat, s.lng);
+    const accOk = userAcc !== null && userAcc <= Math.max(ACC_FLOOR_M, s.radius_m);
+    if (d !== null && d <= s.radius_m && accOk) {
+      nearSince[s.id] = nearSince[s.id] ?? now;
+      if (now - nearSince[s.id] >= NEAR_MS) { nearSince = {}; openStop(s.id); return; }
+    } else delete nearSince[s.id];
   }
 }
 
-// ── Byg stop-struktur ─────────────────────────────────────────
-function buildStops(rows) {
-  const map2 = {}
-  rows.forEach(r => {
-    if (!map2[r.stop_id]) {
-      map2[r.stop_id] = {
-        id: r.stop_id, name: r.stop_name, sort: r.sort,
-        lat: r.lat, lng: r.lng, radius_m: r.radius_m ?? 15,
-        activities: []
-      }
-    }
-    if (r.activity_id) {
-      map2[r.stop_id].activities.push({
-        id: r.activity_id, type: r.activity_type,
-        question: r.activity_question, media_url: r.activity_media_url,
-        options: r.activity_options, points: r.activity_points,
-        approval: r.activity_approval
-      })
-    }
-  })
-  return Object.values(map2).sort((a,b) => a.sort - b.sort)
-}
-
-// ── Stop-status ───────────────────────────────────────────────
-function stopStatus(stop) {
-  if (!stop.activities.length) return 'done'
-  const allDone = stop.activities.every(a => submissions[a.id])
-  if (allDone) return 'done'
-
-  if (quizMode === 'laast') {
-    // Kun første ubesvaret stop er tilgængeligt
-    const firstUndone = stops.find(s => {
-      if (!s.activities.length) return false
-      return !s.activities.every(a => submissions[a.id])
-    })
-    return firstUndone?.id === stop.id ? 'available' : 'locked'
-  }
-  return 'available' // fri tilstand — alle tilgængelige
-}
-
-function isStopAccessible(stop) {
-  return stopStatus(stop) === 'available'
-}
-
-// ── Kort-pins ─────────────────────────────────────────────────
-function renderMapPins() {
-  // Ryd gamle
-  Object.values(stopMarkers).forEach(m => m.remove())
-  stopMarkers = {}
-
-  stops.forEach((s, i) => {
-    if (!s.lat || !s.lng) return
-    const status = stopStatus(s)
-    const icon = L.divIcon({
-      html: `<div class="stop-pin ${status}">${i+1}</div>`,
-      iconSize: [32,32], iconAnchor: [16,16], className: ''
-    })
-    const m = L.marker([s.lat, s.lng], { icon })
-      .addTo(map)
-      .on('click', () => {
-        if (isStopAccessible(s)) openStop(s.id)
-      })
-    stopMarkers[s.id] = m
-  })
-
-  // Zoom til alle stops
-  const bounds = stops.filter(s => s.lat && s.lng).map(s => [s.lat, s.lng])
-  if (bounds.length) map.fitBounds(bounds, { padding: [60,60] })
-}
-
-// ── Næste stop + afstand ──────────────────────────────────────
 function updateNextStop() {
-  const card = document.getElementById('next-stop-card')
-  const nameEl = document.getElementById('next-stop-name')
-  const distEl = document.getElementById('next-stop-dist')
-
-  // Find næste ubesvaret stop (ikke nødvendigvis tilgængeligt — bare det næste i køen)
-  const next = stops.find(s => {
-    if (!s.activities.length) return false
-    return !s.activities.every(a => submissions[a.id])
-  })
-
-  if (!next) {
-    // Alle stop faktisk besvaret
-    card.style.display = 'none'
-    return
+  const open = stops.filter(s => !isDone(s));
+  const card = $('next-card');
+  if (!open.length) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
+  let next = open[0];
+  if (userLat !== null && team.stop_order !== 'laast') {
+    next = open.reduce((a, b) => (distanceTo(a.lat, a.lng) ?? 1e12) <= (distanceTo(b.lat, b.lng) ?? 1e12) ? a : b);
   }
-
-  const dist = distanceTo(next.lat, next.lng)
-  card.style.display = 'block'
-  nameEl.textContent = next.name
-  if (dist !== null) {
-    const near = dist <= next.radius_m
-    distEl.textContent = dist < 1000
-      ? Math.round(dist) + ' m'
-      : (dist/1000).toFixed(1) + ' km'
-    distEl.className = 'next-stop-dist' + (near ? ' near' : '')
-  } else {
-    distEl.textContent = '–'
-    distEl.className = 'next-stop-dist'
-  }
+  $('next-name').textContent = next.name;
+  const d = distanceTo(next.lat, next.lng);
+  $('next-dist').textContent = d === null ? 'Finder position…' : fmtDist(d);
+  $('next-dist').className = d !== null && d <= next.radius_m ? 'near' : '';
 }
 
-// ── Nærhedstjek → auto-popup ──────────────────────────────────
-function checkProximity() {
-  if (document.getElementById('activity-overlay').classList.contains('open')) return
-
-  for (const stop of stops) {
-    if (!isStopAccessible(stop)) continue
-    const dist = distanceTo(stop.lat, stop.lng)
-    const near = dist !== null && dist <= stop.radius_m
-
-    if (near) {
-      proximityHits[stop.id] = (proximityHits[stop.id] ?? 0) + 1
-      if (proximityHits[stop.id] >= PROXIMITY_HITS_NEEDED) {
-        proximityHits[stop.id] = 0
-        openStop(stop.id)
-        break
-      }
-    } else {
-      // Nulstil tæller hvis man bevæger sig væk
-      proximityHits[stop.id] = 0
-    }
-  }
-}
-
-// ── Åbn stop ──────────────────────────────────────────────────
+// ═════════ Opgaver ═════════
 function openStop(stopId) {
-  const stop = stops.find(s => s.id === stopId)
-  if (!stop || !isStopAccessible(stop)) return
-  activeStopId = stopId
-  closeStopsList()
-
-  // Find første ubesvaret aktivitet
-  const act = stop.activities.find(a => !submissions[a.id]) || stop.activities[0]
-  if (!act) return
-
-  showActivity(stop, act)
+  const stop = stops.find(s => s.id === stopId);
+  if (!stop || cur) return;
+  const act = stop.activities.find(a => !subs[a.id]);
+  if (act) showActivity(stop, act);
 }
 
-// ── Vis aktivitet ─────────────────────────────────────────────
 function showActivity(stop, act) {
-  document.getElementById('activity-stop-name').textContent = stop.name
-  document.getElementById('activity-title').textContent = act.question ?? ''
-  document.getElementById('activity-question').textContent = ''
-
-  // Billede
-  const img = document.getElementById('activity-media')
-  if (act.media_url) {
-    img.src = act.media_url
-    img.style.display = 'block'
-  } else {
-    img.style.display = 'none'
-  }
-
-  const inputs = document.getElementById('activity-inputs')
-  const done = submissions[act.id]
-
-  if (done) {
-    renderResult(inputs, act, done)
-  } else {
-    renderInputs(inputs, stop, act)
-  }
-
-  const overlay = document.getElementById('activity-overlay')
-  overlay.style.display = 'flex'
-  requestAnimationFrame(() => overlay.classList.add('open'))
+  cur = { stop, act };
+  closeStops();
+  const idx = stop.activities.findIndex(a => a.id === act.id) + 1;
+  $('act-stop').textContent  = stop.name;
+  $('act-count').textContent = stop.activities.length > 1 ? `Opgave ${idx} af ${stop.activities.length}` : '';
+  $('act-question').textContent = act.question ?? '';
+  const img = $('act-media');
+  if (act.media_url) { img.src = act.media_url; img.style.display = 'block'; } else img.style.display = 'none';
+  renderInputs(act);
+  $('activity-overlay').classList.add('open');
+  $('act-body').scrollTop = 0;
 }
 
-function renderResult(el, act, submission) {
-  const correct = submission.is_correct
-  el.innerHTML = `
-    <div class="result-box ${correct ? 'correct' : 'wrong'}">
-      <div class="result-emoji">${correct ? '✅' : '❌'}</div>
-      <div class="result-label">${correct ? 'Korrekt!' : 'Forkert svar'}</div>
-      <div class="result-pts">${correct ? '+' + (submission.points ?? 0) + ' point' : 'Ingen point denne gang'}</div>
-    </div>
-    <div style="text-align:center;color:var(--muted);font-size:.85rem;margin-top:.5rem;">
-      Vender tilbage til kortet om <span id="back-countdown">3</span> sekunder…
-    </div>
-    <button class="back-btn" onclick="closeActivity()" style="margin-top:.75rem;">← Gå til kortet nu</button>`
+function renderInputs(act) {
+  const el = $('act-inputs');
+  el.onclick = null;
+  const opts = Array.isArray(act.options) ? act.options : Object.values(act.options ?? {});
 
-  // Auto-tilbage efter 3 sekunder
-  let count = 3
-  const timer = setInterval(() => {
-    count--
-    const el2 = document.getElementById('back-countdown')
-    if (el2) el2.textContent = count
-    if (count <= 0) {
-      clearInterval(timer)
-      closeActivity()
-    }
-  }, 1000)
-}
-
-function renderInputs(el, stop, act) {
-  if (act.type === 'info') {
-    el.innerHTML = `
-      <div class="info-box">${act.question ?? ''}</div>
-      <button class="back-btn" onclick="closeActivity()">← Tilbage til kortet</button>`
-    return
+  if (act.type === 'mc' && opts.length) {
+    el.innerHTML = opts.map((o, i) =>
+      `<button class="opt-btn" data-i="${i}"><span class="opt-letter">${String.fromCharCode(65 + i)}</span><span>${esc(o)}</span></button>`
+    ).join('') + '<div class="inline-err" id="err"></div>';
+    el.onclick = e => { const b = e.target.closest('.opt-btn'); if (b) submitMC(+b.dataset.i, opts); };
+    return;
   }
-
-  if (act.type === 'mc') {
-    const opts = Array.isArray(act.options) ? act.options : Object.values(act.options ?? {})
-    el.innerHTML = opts.map((o, i) => `
-      <button class="opt-btn" onclick="submitMC(this, '${act.id}', '${escJs(o)}', '${stop.id}')">
-        <span style="opacity:.5;margin-right:.4rem;">${String.fromCharCode(65+i)}.</span>${o}
-      </button>`).join('')
-    return
-  }
-
   if (act.type === 'tekst' || act.type === 'tal') {
-    el.innerHTML = `
-      <input id="txt-input" class="txt-input" type="${act.type === 'tal' ? 'number' : 'text'}"
-        placeholder="${act.type === 'tal' ? 'Indtast tal…' : 'Skriv dit svar…'}"
-        style="width:100%;background:var(--panel);border:1.5px solid var(--border);
-        color:var(--text);padding:.85rem 1rem;border-radius:var(--radius);
-        font-size:.95rem;margin-bottom:.75rem;">
-      <button class="send-btn" onclick="submitText('${act.id}', '${stop.id}')">Send svar</button>`
-    setTimeout(() => document.getElementById('txt-input')?.focus(), 300)
-    return
+    el.innerHTML = `<input id="txt" class="txt-input" type="text" autocomplete="off" autocapitalize="off"
+        inputmode="${act.type === 'tal' ? 'decimal' : 'text'}" placeholder="${act.type === 'tal' ? 'Indtast tal…' : 'Skriv dit svar…'}">
+      <button class="send-btn" id="send">Send svar</button><div class="inline-err" id="err"></div>`;
+    $('send').onclick = submitText;
+    $('txt').addEventListener('keydown', e => { if (e.key === 'Enter') submitText(); });
+    setTimeout(() => $('txt')?.focus(), 350);
+    return;
   }
-
   if (act.type === 'foto') {
-    el.innerHTML = `
-      <input type="file" accept="image/*" capture="environment" id="photo-input"
-        style="display:none;" onchange="previewPhoto(this)">
-      <label for="photo-input" class="photo-label">📷 Tryk for at tage billede</label>
-      <img id="photo-preview" class="photo-preview">
-      <button class="send-btn" id="send-photo-btn" onclick="submitPhoto('${act.id}','${stop.id}')" disabled>
-        Send foto
-      </button>`
-    return
+    el.innerHTML = `<input type="file" accept="image/*" capture="environment" id="photo" style="display:none">
+      <label for="photo" class="photo-label" id="photo-label">📷 Tryk for at tage billede</label>
+      <img id="photo-preview" alt="">
+      <button class="send-btn" id="send" disabled>Send foto</button><div class="inline-err" id="err"></div>`;
+    $('photo').onchange = previewPhoto;
+    $('send').onclick = submitPhoto;
+    return;
+  }
+  // info – og alt andet der ikke kan besvares – kræver bare "fortsæt"
+  el.innerHTML = `${act.type === 'info' ? '' : '<div class="info-box">Denne opgave kan ikke besvares her.</div>'}
+    <button class="send-btn" id="send">Fortsæt →</button><div class="inline-err" id="err"></div>`;
+  $('send').onclick = submitInfo;
+}
+
+const inlineErr = msg => { const e = $('err'); if (e) e.textContent = msg; };
+
+async function submit(answer) {
+  if (busy || !cur) return null;
+  busy = true; inlineErr('');
+  try {
+    const { data, error } = await sb.functions.invoke('quiz-check-answer', {
+      body: { token, activity_id: cur.act.id, answer }
+    });
+    if (error) {
+      let msg = 'Noget gik galt – tjek forbindelsen og prøv igen.';
+      try { const b = await error.context.json(); msg = b.error || msg; } catch (_) {}
+      throw new Error(msg);
+    }
+    subs[cur.act.id] = { activity_id: cur.act.id, is_correct: data.is_correct, points: data.points ?? 0, status: data.status ?? 'ok' };
+    recomputePoints();
+    return data;
+  } catch (e) { inlineErr(e.message); return null; }
+  finally { busy = false; }
+}
+
+async function submitMC(i, opts) {
+  const btns = [...document.querySelectorAll('.opt-btn')];
+  btns.forEach(b => b.disabled = true);
+  const res = await submit(String(opts[i]));
+  if (!res) { btns.forEach(b => b.disabled = false); return; }
+  btns[i].classList.add(res.is_correct ? 'correct' : 'wrong');
+  setTimeout(() => showResult(res), 700);
+}
+
+async function submitText() {
+  const v = $('txt')?.value.trim();
+  if (!v) return;
+  $('send').disabled = true; $('send').textContent = '…';
+  const res = await submit(v);
+  if (!res) { $('send').disabled = false; $('send').textContent = 'Send svar'; return; }
+  showResult(res);
+}
+
+async function submitInfo() {
+  $('send').disabled = true;
+  const res = await submit('ok');
+  if (!res) { $('send').disabled = false; return; }
+  afterAnswer();
+}
+
+function previewPhoto() {
+  const f = $('photo').files?.[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = e => { $('photo-preview').src = e.target.result; $('photo-preview').style.display = 'block'; $('send').disabled = false; $('photo-label').textContent = '📷 Skift billede'; };
+  r.readAsDataURL(f);
+}
+
+async function compressImage(file, maxDim = 1600, quality = 0.8) {
+  try {
+    const bmp = await createImageBitmap(file, { imageOrientation: 'from-image' });
+    const k = Math.min(1, maxDim / Math.max(bmp.width, bmp.height));
+    const c = document.createElement('canvas');
+    c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+    const blob = await new Promise(res => c.toBlob(res, 'image/jpeg', quality));
+    if (blob) return blob;
+  } catch (_) { /* falder tilbage til original */ }
+  return file;
+}
+
+async function submitPhoto() {
+  const f = $('photo').files?.[0];
+  if (!f || busy) return;
+  $('send').disabled = true; $('send').textContent = '⏳ Sender…'; inlineErr('');
+  const blob = await compressImage(f);
+  if (blob.size > 5 * 1024 * 1024) { inlineErr('Billedet er for stort – tag et nyt.'); $('send').disabled = false; $('send').textContent = 'Send foto'; return; }
+  const path = `answers/${team.team_id}/${cur.act.id}-${Date.now()}.jpg`;
+  const { error: upErr } = await sb.storage.from('quiz-uploads').upload(path, blob, { contentType: blob.type || 'image/jpeg', upsert: false });
+  if (upErr) { inlineErr('Upload fejlede: ' + upErr.message); $('send').disabled = false; $('send').textContent = 'Send foto'; return; }
+  const url = sb.storage.from('quiz-uploads').getPublicUrl(path).data.publicUrl;
+  const res = await submit(url);
+  if (!res) { $('send').disabled = false; $('send').textContent = 'Send foto'; return; }
+  showResult(res);
+}
+
+function showResult(res) {
+  const { stop, act } = cur;
+  let cls, emoji, label, sub;
+  if (res.status === 'pending')        { cls = 'pending'; emoji = '📸'; label = 'Billede sendt'; sub = 'Afventer godkendelse fra quizmaster'; }
+  else if (act.type === 'foto' && act.approval === 'vis_kun') { cls = 'correct'; emoji = '📸'; label = 'Tak for billedet!'; sub = 'Det vises på scoreboardet'; }
+  else if (res.is_correct)             { cls = 'correct'; emoji = '✅'; label = act.type === 'foto' ? 'Billede modtaget' : 'Korrekt!'; sub = '+' + (res.points ?? 0) + ' point'; }
+  else                                 { cls = 'wrong';   emoji = '❌'; label = 'Forkert svar'; sub = 'Ingen point denne gang'; }
+
+  const next = stop.activities.find(a => !subs[a.id]);
+  $('act-inputs').onclick = null;
+  $('act-inputs').innerHTML = `
+    <div class="result-box ${cls}"><div class="result-emoji">${emoji}</div>
+      <div class="result-label">${esc(label)}</div><div class="result-sub">${esc(sub)}</div></div>
+    ${next
+      ? '<button class="send-btn" id="go">Næste opgave →</button>'
+      : '<div class="result-sub" style="text-align:center;margin-bottom:.4rem">Tilbage til kortet om <span id="cd">3</span> sek…</div><button class="alt-btn" id="go">← Tilbage til kortet nu</button>'}`;
+  $('go').onclick = afterAnswer;
+  if (!next) {
+    let n = 3;
+    clearInterval(backTimer);
+    backTimer = setInterval(() => { n--; const c = $('cd'); if (c) c.textContent = n; if (n <= 0) afterAnswer(); }, 1000);
   }
 }
 
-function previewPhoto(input) {
-  const file = input.files?.[0]
-  if (!file) return
-  const preview = document.getElementById('photo-preview')
-  const reader = new FileReader()
-  reader.onload = e => {
-    preview.src = e.target.result
-    preview.style.display = 'block'
-    document.getElementById('send-photo-btn').disabled = false
-    document.querySelector('.photo-label').textContent = '📷 Skift billede'
-  }
-  reader.readAsDataURL(file)
+function afterAnswer() {
+  clearInterval(backTimer);
+  if (!cur) return;
+  const next = cur.stop.activities.find(a => !subs[a.id]);
+  if (next) { showActivity(cur.stop, next); return; }
+  closeActivity();
 }
 
-function closeActivity() {
-  const overlay = document.getElementById('activity-overlay')
-  overlay.classList.remove('open')
-  setTimeout(() => { overlay.style.display = 'none' }, 350)
-  activeStopId = null
-  renderMapPins()
-  updateNextStop()
-  setTimeout(() => checkAllDone(), 400)
+async function closeActivity() {
+  clearInterval(backTimer);
+  $('activity-overlay').classList.remove('open');
+  cur = null; nearSince = {};
+  await loadStops();                    // låst rækkefølge: næste stop afsløres nu
+  renderPins(); updateNextStop();
+  if (allDone()) showFinished();
 }
 
-function checkAllDone() {
-  const allStopsWithActivities = stops.filter(s => s.activities.length > 0)
-  if (!allStopsWithActivities.length) return
-  const allDone = allStopsWithActivities.every(s =>
-    s.activities.every(a => submissions[a.id])
-  )
-  if (allDone) showFinished()
+// ═════════ Stop-liste ═════════
+function openStops() {
+  $('stops-body').innerHTML = stops.map((s, i) => {
+    const d = distanceTo(s.lat, s.lng);
+    return `<div class="stop-item" data-id="${esc(s.id)}">
+      <div class="stop-num ${isDone(s) ? 'done' : ''}">${i + 1}</div>
+      <div class="stop-info"><div class="stop-name">${esc(s.name)}</div>
+        <div class="stop-meta">${s.activities.length} opgave${s.activities.length !== 1 ? 'r' : ''}${isDone(s) ? ' · ✅ Besvaret' : ''}</div></div>
+      ${d !== null && !isDone(s) ? `<div class="stop-dist ${d <= s.radius_m ? 'near' : ''}">${fmtDist(d)}</div>` : ''}
+    </div>`;
+  }).join('') + '<div class="stops-foot">Kort: © OpenStreetMap-bidragydere</div>';
+  $('stops-body').onclick = e => {
+    const it = e.target.closest('.stop-item'); if (!it) return;
+    const s = stops.find(x => x.id === it.dataset.id);
+    closeStops();
+    if (s && team.is_test && !isDone(s)) return openStop(s.id);
+    if (s && s.lat != null) map.setView([s.lat, s.lng], 17, { animate: true });
+  };
+  $('stops-overlay').classList.add('open');
 }
+function closeStops() { $('stops-overlay').classList.remove('open'); }
 
-function showLockedScreen() {
-  const scoreUrl = location.origin + location.pathname
-    .replace('play/quiz.html', 'board/scoreboard.html') + '?q=' + teamData?.quiz_id
-  const link = document.getElementById('locked-scoreboard-link')
-  if (link) link.href = scoreUrl
-  document.getElementById('locked-screen').style.display = 'flex'
-}
-
+// ═════════ Færdig ═════════
 function showFinished() {
-  document.getElementById('final-points').textContent = teamData?.points ?? 0
-  document.getElementById('final-team').textContent = teamData?.team_name ?? ''
-
-  // Sæt scoreboard-link
-  const scoreUrl = location.origin + location.pathname
-    .replace('play/quiz.html', 'board/scoreboard.html') + '?q=' + teamData?.quiz_id
-  const link = document.getElementById('scoreboard-link')
-  if (link) link.href = scoreUrl
-
-  const screen = document.getElementById('finished-screen')
-  screen.style.display = 'flex'
-  document.getElementById('bottom-panel').style.display = 'none'
-  spawnConfetti()
+  if (finishedShown) return;
+  finishedShown = true; gameOn = false;
+  if (gpsWatch !== null) navigator.geolocation.clearWatch(gpsWatch);
+  $('topbar').style.display = 'none'; $('bottom-panel').style.display = 'none';
+  hideScreen('welcome');
+  $('final-points').textContent = team.points ?? 0;
+  $('final-team').textContent = team.team_name ?? '';
+  $('final-link').href = scoreboardUrl();
+  showScreen('finished');
+  confetti(); refreshRank();
+  setInterval(refreshRank, 10000);
 }
 
-function spawnConfetti() {
-  const container = document.getElementById('confetti-container')
-  if (!container) return
-  const colors = ['#e8c84a','#22c55e','#e94560','#a78bfa','#60a5fa']
+async function refreshRank() {
+  const { data } = await sb.schema('quiz').rpc('get_scoreboard', { p_quiz_id: team.quiz_id });
+  if (!data) return;
+  const teams = data.teams ?? [];
+  const idx = teams.findIndex(t => t.name === team.team_name);
+  const done = teams.filter(t => t.finished).length;
+  $('final-rank').textContent = idx >= 0 ? `Nr. ${idx + 1} af ${teams.length}` : '';
+  $('final-wait').textContent = done < teams.length
+    ? `${teams.length - done} hold er stadig på vej – placeringen kan ændre sig`
+    : 'Alle hold er færdige – dette er den endelige placering';
+}
+
+function confetti() {
+  const box = $('confetti'), colors = ['#e8c84a', '#22c55e', '#e94560', '#a78bfa', '#60a5fa'];
   for (let i = 0; i < 60; i++) {
-    const el = document.createElement('div')
-    const size = 6 + Math.random() * 8
-    el.style.cssText = `
-      position:absolute;
-      width:${size}px;height:${size}px;
-      background:${colors[Math.floor(Math.random()*colors.length)]};
-      border-radius:${Math.random() > .5 ? '50%' : '2px'};
-      left:${Math.random()*100}%;
-      top:-20px;
-      opacity:${0.6 + Math.random()*.4};
-      animation:fall ${2+Math.random()*3}s ${Math.random()*2}s linear forwards;
-    `
-    container.appendChild(el)
+    const el = document.createElement('div'), size = 6 + Math.random() * 8;
+    el.style.cssText = `position:absolute;top:-20px;left:${Math.random() * 100}%;width:${size}px;height:${size}px;
+      background:${colors[i % colors.length]};border-radius:${Math.random() > .5 ? '50%' : '2px'};
+      animation:fall ${2 + Math.random() * 3}s ${Math.random() * 2}s linear forwards`;
+    box.appendChild(el);
   }
 }
 
-
-// ── Indsend svar ──────────────────────────────────────────────
-async function submitMC(btn, activityId, answer, stopId) {
-  // Deaktivér alle knapper
-  btn.closest('#activity-inputs').querySelectorAll('.opt-btn')
-    .forEach(b => b.disabled = true)
-
-  const result = await checkAnswer(activityId, answer)
-  if (!result) return
-
-  const stop = stops.find(s => s.id === stopId)
-  const act  = stop?.activities.find(a => a.id === activityId)
-  if (!act) return
-
-  // Farv knappen
-  btn.classList.add(result.is_correct ? 'correct' : 'wrong')
-
-  setTimeout(() => {
-    const inputs = document.getElementById('activity-inputs')
-    renderResult(inputs, act, result)
-  }, 800)
-}
-
-async function submitText(activityId, stopId) {
-  const val = document.getElementById('txt-input')?.value.trim()
-  if (!val) return
-  const btn = document.querySelector('.send-btn')
-  btn.disabled = true; btn.textContent = '…'
-
-  const result = await checkAnswer(activityId, val)
-  if (!result) { btn.disabled = false; btn.textContent = 'Send svar'; return }
-
-  const stop = stops.find(s => s.id === stopId)
-  const act  = stop?.activities.find(a => a.id === activityId)
-  if (stop && act) {
-    const inputs = document.getElementById('activity-inputs')
-    renderResult(inputs, act, result)
+// ═════════ Status-polling (quizmaster afslutter / starter ny runde) ═════════
+async function pollStatus() {
+  const { data } = await sb.schema('quiz').rpc('get_team_by_token', { p_token: token });
+  const t = data?.[0]; if (!t) return;
+  if (t.round_no !== team.round_no) { location.reload(); return; }
+  if (t.quiz_status === 'arkiveret' && !finishedShown) {
+    $('activity-overlay').classList.remove('open'); cur = null; gameOn = false;
+    showMessage('🔒', 'Løbet er afsluttet', 'Quizmasteren har afsluttet løbet. Tak fordi I var med!', scoreboardUrl(), '📊 Se scoreboard');
   }
 }
 
-async function submitPhoto(activityId, stopId) {
-  const file = document.getElementById('photo-input')?.files?.[0]
-  if (!file) return
-  const btn = document.getElementById('send-photo-btn')
-  btn.disabled = true; btn.textContent = '⏳ Sender…'
-
-  // Upload til Storage
-  const ext  = file.name.split('.').pop().toLowerCase()
-  const path = `answers/${teamData.team_id}/${activityId}-${Date.now()}.${ext}`
-  const { data: uploadData, error: uploadErr } = await sb.storage
-    .from('quiz-uploads').upload(path, file, { upsert: true })
-
-  let answer = file.name
-  if (!uploadErr) {
-    const { data: urlData } = sb.storage.from('quiz-uploads').getPublicUrl(path)
-    answer = urlData.publicUrl
+// ═════════ Hold skærmen tændt ═════════
+let wakeLock = null, wakeWanted = false, noSleep = null;
+async function toggleWake() {
+  const btn = $('btn-wake');
+  if (wakeWanted) {
+    wakeWanted = false; btn.classList.remove('on');
+    try { await wakeLock?.release(); } catch (_) {} wakeLock = null;
+    try { noSleep?.disable(); } catch (_) {}
+    return;
   }
-
-  const result = await checkAnswer(activityId, answer)
-  if (!result) { btn.disabled = false; btn.textContent = 'Send foto'; return }
-
-  const stop = stops.find(s => s.id === stopId)
-  const act  = stop?.activities.find(a => a.id === activityId)
-  if (stop && act) {
-    const inputs = document.getElementById('activity-inputs')
-    renderResult(inputs, act, result)
+  wakeWanted = true; btn.classList.add('on');
+  await acquireWake();
+}
+async function acquireWake() {
+  if ('wakeLock' in navigator) {
+    try { wakeLock = await navigator.wakeLock.request('screen'); return; } catch (_) {}
   }
-}
-
-async function checkAnswer(activityId, answer) {
-  const { data, error } = await sb.functions.invoke('quiz-check-answer', {
-    body: { token, activity_id: activityId, answer }
-  })
-  if (error) { alert('Fejl: ' + error.message); return null }
-
-  submissions[activityId] = {
-    activity_id: activityId,
-    is_correct: data.is_correct,
-    points: data.points ?? 0
+  if (typeof NoSleep !== 'undefined') {
+    try { noSleep = noSleep || new NoSleep(); await noSleep.enable(); return; } catch (_) {}
   }
-  if (data.is_correct) {
-    teamData.points = (teamData.points || 0) + (data.points ?? 0)
-    document.getElementById('point-display').textContent = teamData.points + ' p'
-  }
-  return data
+  wakeWanted = false; $('btn-wake').classList.remove('on');
+  alert('Skærm-lås virker ikke i denne browser. Slå "Skærm altid tændt" til i telefonens indstillinger.');
 }
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && wakeWanted && 'wakeLock' in navigator) acquireWake();
+});
 
-// ── Stop-liste overlay ────────────────────────────────────────
-function openStopsList() {
-  const el = document.getElementById('stops-list-body')
-  el.innerHTML = stops.map((s, i) => {
-    const status = stopStatus(s)
-    const dist   = distanceTo(s.lat, s.lng)
-    const distLabel = dist !== null
-      ? `<span class="stop-dist-badge ${dist <= s.radius_m ? 'near' : ''}">${
-          dist < 1000 ? Math.round(dist) + ' m' : (dist/1000).toFixed(1) + ' km'
-        }</span>`
-      : ''
-    const allDone = s.activities.every(a => submissions[a.id])
-
-    return `
-      <div class="stop-list-item" onclick="${status === 'available' ? `openStop('${s.id}')` : ''}">
-        <div class="stop-num ${status}">${i+1}</div>
-        <div class="stop-list-info">
-          <div class="stop-list-name">${s.name}</div>
-          <div class="stop-list-meta">
-            ${s.activities.length} opgave${s.activities.length !== 1 ? 'r' : ''}
-            ${allDone ? '· ✅ Besvaret' : ''}
-            ${status === 'locked' ? '· 🔒 Låst' : ''}
-          </div>
-        </div>
-        ${distLabel}
-      </div>`
-  }).join('')
-
-  document.getElementById('stops-list-overlay').classList.add('open')
+// ═════════ Hjælpere ═════════
+function haversine(la1, ln1, la2, ln2) {
+  const R = 6371000, r = Math.PI / 180, dLa = (la2 - la1) * r, dLn = (ln2 - ln1) * r;
+  const a = Math.sin(dLa / 2) ** 2 + Math.cos(la1 * r) * Math.cos(la2 * r) * Math.sin(dLn / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
-
-function closeStopsList() {
-  document.getElementById('stops-list-overlay').classList.remove('open')
-}
-
-// ── Wake lock ─────────────────────────────────────────────────
-// Wake lock — prøver Screen Wake Lock API, falder tilbage til video-trick
-let noSleepVideo = null
-
-async function toggleWakeLock() {
-  const btn = document.getElementById('btn-wake')
-  if (wakeLockOn) {
-    // Sluk
-    wakeLock?.release?.()
-    wakeLock = null
-    if (noSleepVideo) { noSleepVideo.pause(); noSleepVideo = null }
-    wakeLockOn = false
-    btn.style.color = ''
-    btn.style.background = ''
-    btn.title = 'Hold skærm tændt'
-  } else {
-    // Prøv Screen Wake Lock API først
-    if ('wakeLock' in navigator) {
-      try {
-        wakeLock = await navigator.wakeLock.request('screen')
-        wakeLockOn = true
-        btn.style.color = 'var(--gold)'
-        btn.style.background = 'rgba(232,200,74,.15)'
-        btn.title = 'Skærm holdes tændt — tryk for at slukke'
-        wakeLock.addEventListener('release', () => {
-          if (wakeLockOn) navigator.wakeLock.request('screen')
-            .then(wl => { wakeLock = wl })
-            .catch(() => {})
-        })
-        return
-      } catch {}
-    }
-    // Fallback: usynlig video-loop (virker på iOS Safari og Samsung Browser)
-    try {
-      const v = document.createElement('video')
-      v.setAttribute('playsinline', '')
-      v.setAttribute('muted', '')
-      v.style.cssText = 'position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;'
-      // Minimal transparent video som base64
-      v.src = 'data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAAAAhtZGF0'
-      v.loop = true
-      document.body.appendChild(v)
-      await v.play()
-      noSleepVideo = v
-      wakeLockOn = true
-      btn.style.color = 'var(--gold)'
-      btn.style.background = 'rgba(232,200,74,.15)'
-      btn.title = 'Skærm holdes tændt — tryk for at slukke'
-    } catch {
-      alert('Skærm-lås virker ikke i denne browser. Slå "Skærm altid tændt" til i telefonens indstillinger.')
-    }
-  }
-}
-
-// ── Hjælpere ──────────────────────────────────────────────────
 function distanceTo(lat, lng) {
-  if (userLat === null || lat === null) return null
-  const R = 6371000
-  const dLat = (lat - userLat) * Math.PI / 180
-  const dLng = (lng - userLng) * Math.PI / 180
-  const a = Math.sin(dLat/2)**2 +
-    Math.cos(userLat * Math.PI/180) * Math.cos(lat * Math.PI/180) * Math.sin(dLng/2)**2
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+  if (userLat === null || lat == null || lng == null) return null;
+  return haversine(userLat, userLng, lat, lng);
 }
+const fmtDist = d => d < 1000 ? Math.round(d) + ' m' : (d / 1000).toFixed(1) + ' km';
 
-function showScreen(id) {
-  const el = document.getElementById('screen-'+id) || document.getElementById(id)
-  if (el) el.style.display = 'flex'
-}
-function hideScreen(id) {
-  const el = document.getElementById('screen-'+id) || document.getElementById(id)
-  if (el) el.style.display = 'none'
-}
-
-function escJs(s) {
-  return String(s ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"')
-}
-
-// ── Realtime ──────────────────────────────────────────────────
-function subscribeRealtime() {
-  if (!teamData) return
-  sb.channel('team-' + teamData.team_id)
-    .on('postgres_changes', {
-      event: 'INSERT', schema: 'quiz', table: 'submissions',
-      filter: 'team_id=eq.' + teamData.team_id
-    }, payload => {
-      const s = payload.new
-      submissions[s.activity_id] = s
-      if (s.is_correct) {
-        teamData.points += s.points ?? 0
-        document.getElementById('point-display').textContent = teamData.points + ' p'
-      }
-      renderMapPins()
-      updateNextStop()
-    }).subscribe()
-}
-
-// ── Start ─────────────────────────────────────────────────────
-init().then(subscribeRealtime)
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('../sw.js')
-}
+init();
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('../sw.js').catch(() => {});
 </script>
 </body>
 </html>

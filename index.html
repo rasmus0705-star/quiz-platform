@@ -528,36 +528,33 @@ const { createClient } = supabase
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON)
 
 async function findLogin() {
-  const email = document.getElementById('login-email').value.trim().toLowerCase()
+  const email = document.getElementById('login-email').value.trim()
   const result = document.getElementById('login-result')
+  result.textContent = ''
 
-  if (!email || !email.includes('@')) {
-    result.innerHTML = '<span style="color:#f87171;">Indtast venligst en gyldig email.</span>'
+  const note = (text, color) => { const sp = document.createElement('span'); sp.style.color = color; sp.textContent = text; result.appendChild(sp); return sp }
+
+  if (!email || !email.includes('@')) { note('Indtast venligst en gyldig email.', '#f87171'); return }
+  note('Søger…', 'var(--muted)')
+
+  const { data, error } = await sb.schema('quiz').rpc('find_login', { p_email: email })
+  result.textContent = ''
+
+  if (error || !data || !data.length) {
+    const sp = note('Vi kunne ikke finde en konto med den email. ', 'var(--muted)')
+    const a = document.createElement('a'); a.href = '#kontakt'; a.style.color = 'var(--gold)'; a.textContent = 'Kontakt os'
+    sp.appendChild(a); sp.appendChild(document.createTextNode(' hvis du mener det er en fejl.'))
     return
   }
 
-  result.innerHTML = '<span style="color:var(--muted);">Søger…</span>'
-
-  const { data, error } = await sb.schema('quiz').from('customers')
-    .select('id, name')
-    .eq('email', email)
-    .maybeSingle()
-
-  if (error || !data) {
-    result.innerHTML = `<span style="color:var(--muted);">
-      Vi kunne ikke finde en konto med den email.<br>
-      <a href="#kontakt" style="color:var(--gold);">Kontakt os</a> hvis du mener det er en fejl.
-    </span>`
-    return
-  }
-
-  const loginUrl = `${location.origin}/${location.pathname.split('/')[1] ? '' : ''}app/login.html?c=${data.id}`
-  result.innerHTML = `
-    <span style="color:#86efac;">Vi fandt din konto — velkommen, ${data.name}!</span><br>
-    <a href="${loginUrl}" class="btn-primary"
-      style="display:inline-block;margin-top:.75rem;font-size:.85rem;padding:.6rem 1.25rem;">
-      Gå til login →
-    </a>`
+  const c = data[0]
+  const loginUrl = new URL('app/login.html?c=' + encodeURIComponent(c.customer_id), location.href).href
+  note('Vi fandt din konto – velkommen, ' + c.customer_name + '!', '#86efac')
+  result.appendChild(document.createElement('br'))
+  const btn = document.createElement('a')
+  btn.href = loginUrl; btn.className = 'btn-primary'; btn.textContent = 'Gå til login →'
+  btn.style.cssText = 'display:inline-block;margin-top:.75rem;font-size:.85rem;padding:.6rem 1.25rem;'
+  result.appendChild(btn)
 }
 </script>
 </body>

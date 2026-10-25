@@ -56,6 +56,8 @@ async function signInWithMagicLink(email) {
 
 async function signOut() {
   if (getPinSession()) {
+    // slet sessionen på serveren (ellers lever den videre til den udløber)
+    try { await sb.schema('quiz').rpc('end_session') } catch (_) {}
     localStorage.removeItem('pin_session')
     location.href = 'login.html'
     return

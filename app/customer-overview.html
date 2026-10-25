@@ -274,20 +274,23 @@ async function init() {
     customerId = session.customer_id
   }
 
-  // Kundenavn
-  const { data: customer } = await sb.schema('quiz').from('customers')
-    .select('name').eq('id', customerId).single()
-  document.getElementById('customer-badge').textContent = customer?.name ?? 'Kunde'
+  // Kundenavn (kunder må ikke læse customers direkte – via RPC)
+  const { data: me } = await sb.schema('quiz').rpc('get_my_customer')
+  document.getElementById('customer-badge').textContent = me?.[0]?.customer_name ?? 'Kunde'
 
-  // Løb
+  await loadQuizzes()
+}
+
+async function loadQuizzes() {
   const { data, error } = await sb.schema('quiz').from('quizzes')
-    .select('id, title, status, created_at, stops(id, activities(id)), teams(id, name, token)')
+    .select('id, title, status, round_no, created_at, stops(id, activities(id)), teams(id, name, token)')
     .eq('customer_id', customerId)
     .order('created_at', { ascending: false })
 
   document.getElementById('loading').style.display = 'none'
   document.getElementById('quiz-grid').style.display = 'grid'
 
+  if (error) { alert('Kunne ikke hente dine løb: ' + error.message) }
   if (error || !data?.length) {
     document.getElementById('quiz-grid').style.display = 'none'
     document.getElementById('loading').style.display = 'block'
@@ -311,8 +314,8 @@ function renderGrid() {
     const stops = q.stops ?? []
     const actCount = stops.reduce((sum, s) => sum + (s.activities?.length ?? 0), 0)
     const teams = (q.teams ?? []).filter(t => t.name !== '🧪 Testhold')
-    const baseUrl = location.origin + location.pathname.replace('app/customer-overview.html','play/quiz.html')
-    const scoreUrl = location.origin + location.pathname.replace('app/customer-overview.html','board/scoreboard.html') + '?q=' + q.id
+    const baseUrl = new URL('../play/quiz.html', location.href).href
+    const scoreUrl = new URL('../board/scoreboard.html?q=' + q.id, location.href).href
 
     const teamRows = teams.length
       ? teams.map(t => {
@@ -321,8 +324,8 @@ function renderGrid() {
             <span class="tname">${escHtml(t.name)}</span>
             <div class="team-btns">
               <span class="mini-pill" onclick="copyText('${url}')" title="Kopiér link">📋 Link</span>
-              <span class="mini-pill" onclick="showTeamQRCard('${t.id}','${escHtml(t.name)}','${url}')">📱 QR</span>
-              <span class="mini-pill" onclick="mailTeam('${escHtml(t.name)}','${url}')">📧</span>
+              <span class="mini-pill" onclick="showTeamQRCard('${q.id}','${t.id}')">📱 QR</span>
+              <span class="mini-pill" onclick="mailTeam('${q.id}','${t.id}')">📧</span>
             </div>
           </div>`
         }).join('')
@@ -335,7 +338,7 @@ function renderGrid() {
           <div class="card-title">${escHtml(q.title || 'Uden titel')}</div>
           <div class="card-date">${new Date(q.created_at).toLocaleDateString('da-DK', {day:'numeric',month:'long',year:'numeric'})}</div>
         </div>
-        <span class="status-badge s-${q.status}">${statusLabel(q.status)}</span>
+        <span class="status-badge s-${q.status}">${statusLabel(q.status)}${(q.round_no ?? 1) > 1 ? ' · runde ' + q.round_no : ''}</span>
       </div>
 
       <div style="display:flex;gap:.75rem;margin-bottom:.6rem;flex-wrap:wrap;">
@@ -354,7 +357,7 @@ function renderGrid() {
 
       <hr class="card-divider">
 
-      ${q.status === 'aktiv' ? `
+      ${(q.status === 'aktiv' || q.status === 'arkiveret') ? `
       <div onclick="event.stopPropagation()" style="margin:.25rem 0 .6rem;">
         <a href="${scoreUrl}" target="_blank" style="
           display:flex;align-items:center;justify-content:center;gap:.5rem;
@@ -362,28 +365,24 @@ function renderGrid() {
           color:#fff;font-weight:700;font-size:.9rem;
           padding:.75rem;border-radius:10px;text-decoration:none;
           box-shadow:0 2px 8px rgba(34,197,94,.3);">
-          📊 Gå til scoreboard
+          📊 ${q.status === 'aktiv' ? 'Gå til scoreboard' : 'Se resultater'}
         </a>
       </div>` : ''}
 
       <div class="card-actions" onclick="event.stopPropagation()">
         <button class="btn-edit" onclick="openQuiz('${q.id}')">✏️ Byg løbet</button>
         <button class="btn-pill" onclick="copyText('${scoreUrl}')">📋 Scoreboard</button>
-        <button class="btn-pill-gray" onclick="showScoreQR('${q.id}','${escHtml(q.title||'')}','${scoreUrl}')">📱 QR</button>
-        <button class="btn-pill-gray" onclick="printTeams('${q.id}','${escHtml(q.title||'')}')">🖨️ Print QR</button>
+        <button class="btn-pill-gray" onclick="showScoreQR('${q.id}')">📱 QR</button>
+        <button class="btn-pill-gray" onclick="printTeams('${q.id}')">🖨️ Print QR</button>
       </div>
     </div>`
   }).join('')
 }
 
-async function newQuiz() {
-  const session = getPinSession()
-  const { data, error } = await sb.schema('quiz').rpc('create_quiz_for_customer', {
-    p_session_id: session.session_id,
-    p_title: 'Nyt løb'
-  })
-  if (error) { alert('Kunne ikke oprette løb: ' + error.message); return; }
-  location.href = `customer-editor.html?q=${data}`
+function newQuiz() {
+  // Løbet oprettes først, når kunden gemmer – så der ikke opstår tomme "Nyt løb"
+  try { localStorage.removeItem('ced_step') } catch (_) {}
+  location.href = 'customer-editor.html'
 }
 
 function openQuiz(quizId) {
@@ -435,101 +434,93 @@ function showQR(url, title) {
 }
 function closeQR() { document.getElementById('qr-modal').classList.remove('open') }
 
+function realTeams(q) { return (q.teams ?? []).filter(t => t.name !== '🧪 Testhold') }
+
 function quizStatusButtons(q) {
   const stops = q.stops ?? []
-  const teams = (q.teams ?? []).filter(t => t.name !== '🧪 Testhold')
-  const actCount = stops.reduce((sum, s) => sum + (s.activities?.length ?? 0), 0)
-  const ready = stops.some(s => (s.activities?.length ?? 0) > 0) && teams.length > 0
+  const teams = realTeams(q)
+  const hasAct = stops.some(s => (s.activities?.length ?? 0) > 0)
+  const ready = hasAct && teams.length > 0
+  const missing = [!hasAct ? 'mindst ét stop med en opgave' : '', !teams.length ? 'mindst ét hold' : ''].filter(Boolean).join(' og ')
+
+  const box = (inner, cols) => `<div onclick="event.stopPropagation()" style="display:grid;grid-template-columns:${cols};gap:.5rem;margin:.25rem 0;">${inner}</div>`
+  const btn = (onclick, border, bg, emoji, title, color, sub, extra = '') => `
+    <button onclick="${onclick}" style="padding:.75rem;border-radius:10px;border:1.5px solid ${border};background:${bg};cursor:pointer;text-align:center;${extra}">
+      <div style="font-size:1.1rem;">${emoji}</div>
+      <div style="font-size:.83rem;font-weight:700;color:${color};">${title}</div>
+      <div style="font-size:.7rem;color:#9aa2b1;margin-top:.1rem;">${sub}</div>
+    </button>`
+
+  const test = btn(`startTestRun('${q.id}')`, '#e2e8f0', '#fff', '🧪', 'Test løbet', '#1a1f36', 'Spil det som et testhold – tæller ikke med')
 
   if (q.status === 'aktiv') {
-    return `<div onclick="event.stopPropagation()" style="display:grid;grid-template-columns:1fr;gap:.5rem;margin:.25rem 0;">
-      <button onclick="setQuizStatus('${q.id}','arkiveret')" style="
-        padding:.75rem; border-radius:10px; border:1.5px solid #fca5a5;
-        background:#fff1f2; cursor:pointer; text-align:center;">
-        <div style="font-size:1.1rem;">📦</div>
-        <div style="font-size:.83rem;font-weight:700;color:#991b1b;">Afslut løbet</div>
-        <div style="font-size:.7rem;color:#9aa2b1;margin-top:.1rem;">Sæt løbet til afsluttet</div>
-      </button>
-    </div>`
+    return box(test + btn(`setQuizStatus('${q.id}','arkiveret')`, '#fca5a5', '#fff1f2', '📦', 'Afslut løbet', '#991b1b', 'Holdene kan ikke spille mere'), '1fr 1fr')
   }
-
   if (q.status === 'arkiveret') {
-    return `<div onclick="event.stopPropagation()" style="display:grid;grid-template-columns:1fr;gap:.5rem;margin:.25rem 0;">
-      <button onclick="setQuizStatus('${q.id}','aktiv')" style="
-        padding:.75rem; border-radius:10px; border:1.5px solid #86efac;
-        background:#f0fdf4; cursor:pointer; text-align:center;">
-        <div style="font-size:1.1rem;">▶️</div>
-        <div style="font-size:.83rem;font-weight:700;color:#166534;">Genaktivér løbet</div>
-        <div style="font-size:.7rem;color:#9aa2b1;margin-top:.1rem;">Sæt løbet aktiv igen</div>
-      </button>
-    </div>`
+    return box(btn(`setQuizStatus('${q.id}','aktiv')`, '#86efac', '#f0fdf4', '▶️', 'Start ny runde', '#166534', 'Alle starter forfra – gamle resultater gemmes'), '1fr')
   }
-
-  return `<div onclick="event.stopPropagation()" style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.25rem 0;">
-    <button onclick="setQuizStatus('${q.id}','testing')" style="
-      padding:.75rem; border-radius:10px; border:1.5px solid #e2e8f0;
-      background:#fff; cursor:pointer; text-align:center;">
-      <div style="font-size:1.1rem;">🧪</div>
-      <div style="font-size:.83rem;font-weight:700;color:#1a1f36;">Test løbet</div>
-      <div style="font-size:.7rem;color:#9aa2b1;margin-top:.1rem;">Prøv løbet selv</div>
-    </button>
-    <button onclick="${ready ? `setQuizStatus('${q.id}','aktiv')` : `alert('Mangler: ${!stops.some(s=>(s.activities?.length??0)>0)?'stop med opgave':''}${(!stops.some(s=>(s.activities?.length??0)>0)&&!teams.length)?' og ':''}${!teams.length?'hold':''}')`}" style="
-      padding:.75rem; border-radius:10px;
-      border:1.5px solid ${ready ? '#6c63ff' : '#e2e8f0'};
-      background:${ready ? '#f0f0ff' : '#f8f9fc'};
-      cursor:${ready ? 'pointer' : 'not-allowed'};
-      opacity:${ready ? '1' : '.6'};
-      text-align:center;">
-      <div style="font-size:1.1rem;">▶️</div>
-      <div style="font-size:.83rem;font-weight:700;color:${ready ? '#6c63ff' : '#9aa2b1'};">Aktivér løbet</div>
-      <div style="font-size:.7rem;color:#9aa2b1;margin-top:.1rem;">${ready ? 'Gå live for deltagerne' : 'Kræver stop + hold'}</div>
-    </button>
-  </div>`
+  const act = ready
+    ? btn(`setQuizStatus('${q.id}','aktiv')`, '#6c63ff', '#f0f0ff', '▶️', 'Aktivér løbet', '#6c63ff', 'Gå live for deltagerne')
+    : btn(`alert('Mangler: ${missing}')`, '#e2e8f0', '#f8f9fc', '▶️', 'Aktivér løbet', '#9aa2b1', 'Kræver stop + hold', 'opacity:.6;cursor:not-allowed;')
+  return box(test + act, '1fr 1fr')
 }
 
 async function setQuizStatus(quizId, status) {
-  const { error } = await sb.schema('quiz').from('quizzes')
-    .update({ status }).eq('id', quizId)
-  if (error) { alert('Fejl: ' + error.message); return; }
-
   const q = quizzes.find(x => x.id === quizId)
-  if (q) q.status = status
-  renderGrid()
+  if (status === 'arkiveret' && !confirm('Afslut løbet?\n\nHoldene kan ikke spille videre. Resultaterne gemmes.')) return
+  if (status === 'aktiv' && q?.status === 'arkiveret' &&
+      !confirm('Start en ny runde?\n\nHoldene starter forfra med nul point. Resultaterne fra forrige runde gemmes.')) return
 
-  if (status === 'testing') {
-    const q = quizzes.find(x => x.id === quizId)
-    const teams = (q?.teams ?? []).filter(t => t.name !== '🧪 Testhold')
-    if (teams.length) {
-      const baseUrl = location.origin + location.pathname.replace('app/customer-overview.html','play/quiz.html')
-      window.open(baseUrl + '?t=' + teams[0].token, '_blank')
-    }
+  const { error } = await sb.schema('quiz').rpc('set_quiz_status', { p_quiz_id: quizId, p_status: status })
+  if (error) { alert(error.message); return }
+  await loadQuizzes()
+}
+
+// Test = eget skjult testhold. Berører hverken rigtige hold, point eller status.
+async function startTestRun(quizId) {
+  const q = quizzes.find(x => x.id === quizId)
+  if (!(q?.stops ?? []).some(s => (s.activities?.length ?? 0) > 0)) {
+    alert('Tilføj mindst ét stop med en opgave, før du kan teste.'); return
   }
+  const { data: token, error } = await sb.schema('quiz').rpc('create_test_team', { p_quiz_id: quizId })
+  if (error) { alert('Kunne ikke starte test: ' + error.message); return }
+  window.open(new URL('../play/quiz.html?t=' + token, location.href).href, '_blank')
 }
 
 function copyText(text) {
   navigator.clipboard.writeText(text).then(() => alert('✅ Link kopieret!'))
 }
 
-function showTeamQRCard(teamId, teamName, url) {
-  showQR(url, teamName)
+function findTeam(quizId, teamId) {
+  const q = quizzes.find(x => x.id === quizId)
+  return { q, t: realTeams(q ?? {}).find(x => x.id === teamId) }
+}
+const teamUrl = t => new URL('../play/quiz.html?t=' + t.token, location.href).href
+
+function showTeamQRCard(quizId, teamId) {
+  const { t } = findTeam(quizId, teamId); if (!t) return
+  showQR(teamUrl(t), t.name)
 }
 
-function showScoreQR(quizId, title, url) {
-  showQR(url, (title || 'Løb') + ' – Scoreboard')
+function showScoreQR(quizId) {
+  const q = quizzes.find(x => x.id === quizId); if (!q) return
+  showQR(new URL('../board/scoreboard.html?q=' + q.id, location.href).href, (q.title || 'Løb') + ' – Scoreboard')
 }
 
-function mailTeam(teamName, url) {
-  const subject = encodeURIComponent('Din holdlink: ' + teamName)
-  const body = encodeURIComponent('Hej ' + teamName + ',\n\nÅbn dette link på din mobil for at deltage:\n' + url + '\n\nGod fornøjelse!')
+function mailTeam(quizId, teamId) {
+  const { t } = findTeam(quizId, teamId); if (!t) return
+  const subject = encodeURIComponent('Din holdlink: ' + t.name)
+  const body = encodeURIComponent('Hej ' + t.name + ',\n\nÅbn dette link på din mobil for at deltage:\n' + teamUrl(t) + '\n\nGod fornøjelse!')
   window.open('mailto:?subject=' + subject + '&body=' + body)
 }
 
-function printTeams(quizId, quizTitle) {
+function printTeams(quizId) {
   const q = quizzes.find(x => x.id === quizId)
   if (!q) return
+  const quizTitle = q.title || 'Løb'
   const teams = (q.teams ?? []).filter(t => t.name !== '🧪 Testhold')
   if (!teams.length) { alert('Ingen hold at printe'); return; }
-  const baseUrl = location.origin + location.pathname.replace('app/customer-overview.html','play/quiz.html')
+  const baseUrl = new URL('../play/quiz.html', location.href).href
   const win = window.open('', '_blank')
   win.document.write(`<!DOCTYPE html><html><head>
     <meta charset="UTF-8"><title>Hold – ${escHtml(quizTitle)}</title>
@@ -566,7 +557,7 @@ function statusLabel(s) {
   return { kladde:'Kladde', testing:'Test', aktiv:'Aktiv', arkiveret:'Arkiveret' }[s] ?? s
 }
 function escHtml(s) {
-  return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+  return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')
 }
 
 init()

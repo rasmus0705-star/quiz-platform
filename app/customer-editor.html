@@ -448,8 +448,12 @@ async function init() {
     if (session.is_admin) { location.href = 'overview.html'; return; }
     activatePinClient()
   }
-  if (quizId) await loadAll()
-  try { const t = parseInt(localStorage.getItem('ced_step')); if (t >= 1 && t <= 3) goStep(t, false); } catch {}
+  if (quizId) {
+    await loadAll()
+    try { const t = parseInt(localStorage.getItem('ced_step')); if (t >= 1 && t <= 3) goStep(t, false); } catch {}
+  } else {
+    try { localStorage.removeItem('ced_step') } catch {}
+  }
 }
 
 // ── Steps ─────────────────────────────────────────────────────
@@ -464,7 +468,6 @@ function goStep(n, save = false) {
     else if (i < n) btn.classList.add('done')
   })
   if (n === 2) setTimeout(() => { if (!map) initMap(); else map.invalidateSize(); renderStops(); }, 100)
-  if (n === 3) setTimeout(() => updateStatusUI(), 50)
   try { localStorage.setItem('ced_step', n); } catch {}
   window.scrollTo(0,0)
 }
@@ -509,7 +512,6 @@ async function loadAll() {
   renderTeams()
   initMap()
   renderStops()
-  updateStatusUI()
 }
 
 // ── Save ──────────────────────────────────────────────────────
@@ -523,10 +525,19 @@ async function saveQuiz(redirectAfter = false) {
   if (quizId) {
     ({ error } = await sb.schema('quiz').from('quizzes').update(payload).eq('id', quizId))
   } else {
-    const { data, error: e } = await sb.schema('quiz').from('quizzes')
-      .insert({ ...payload, status: 'kladde' }).select().single()
+    // Løbet oprettes først nu – så vi undgår tomme "Nyt løb"-rækker
+    const session = getPinSession()
+    const { data: newId, error: e } = await sb.schema('quiz').rpc('create_quiz_for_customer', {
+      p_session_id: session.session_id, p_title: title
+    })
     error = e
-    if (data) { quizId = data.id; history.replaceState(null,'','?q='+quizId) }
+    if (!e) {
+      quizId = newId
+      history.replaceState(null, '', '?q=' + quizId)
+      const r = await sb.schema('quiz').from('quizzes')
+        .update({ description: payload.description, stop_order: payload.stop_order }).eq('id', quizId)
+      error = r.error
+    }
   }
   if (error) { flash('❌ ' + error.message); return; }
   document.getElementById('quiz-title-display').textContent = title
@@ -554,15 +565,43 @@ function initMap() {
 
 async function onMapClick(e) {
   if (!quizId) { await saveQuiz(); if (!quizId) return; }
-  const name = prompt('Navn på dette stop:')
+  const name = (prompt('Navn på dette stop:') || '').trim().slice(0, 80)
   if (!name) return
   const { data, error } = await sb.schema('quiz').from('stops').insert({
     quiz_id: quizId, name, lat: e.latlng.lat, lng: e.latlng.lng,
-    sort: stops.length, radius_m: 50
+    sort: nextSort(stops), radius_m: 15
   }).select().single()
   if (error) { alert(error.message); return; }
   stops.push({ ...data, activities: [] })
   openStopId = data.id
+  renderStops()
+}
+
+let didFit = false
+const nextSort = list => list.reduce((m, x) => Math.max(m, x.sort ?? -1), -1) + 1
+
+async function renameStop(stopId) {
+  const stop = stops.find(s => s.id === stopId); if (!stop) return
+  const name = (prompt('Nyt navn på stoppet:', stop.name) || '').trim().slice(0, 80)
+  if (!name || name === stop.name) return
+  const { error } = await sb.schema('quiz').from('stops').update({ name }).eq('id', stopId)
+  if (error) { alert(error.message); return }
+  stop.name = name
+  renderStops()
+}
+
+// Byt rækkefølge: normaliser sort til 0..n-1 og gem de rækker der ændrer sig
+async function moveStop(stopId, dir) {
+  const i = stops.findIndex(s => s.id === stopId), j = i + dir
+  if (i < 0 || j < 0 || j >= stops.length) return
+  ;[stops[i], stops[j]] = [stops[j], stops[i]]
+  const jobs = []
+  stops.forEach((s, idx) => {
+    if (s.sort !== idx) { s.sort = idx; jobs.push(sb.schema('quiz').from('stops').update({ sort: idx }).eq('id', s.id)) }
+  })
+  const res = await Promise.all(jobs)
+  const err = res.find(r => r.error)
+  if (err) { alert(err.error.message); await loadAll(); return }
   renderStops()
 }
 
@@ -572,11 +611,12 @@ function renderStops() {
   stops.forEach((s,i) => {
     if (s.lat && s.lng) {
       const m = L.marker([s.lat, s.lng]).addTo(map)
-        .bindPopup(`<b>${i+1}. ${s.name}</b>`)
+      const box = document.createElement('b'); box.textContent = (i+1) + '. ' + s.name   // tekst, ikke HTML
+      m.bindPopup(box)
       markers.push(m); bounds.push([s.lat, s.lng])
     }
   })
-  if (bounds.length) map.fitBounds(bounds, { padding:[40,40] })
+  if (bounds.length && !didFit) { map.fitBounds(bounds, { padding:[40,40] }); didFit = true }
 
   const el = document.getElementById('stop-list')
   if (!stops.length) {
@@ -592,6 +632,9 @@ function renderStops() {
           <div class="stop-meta">${s.activities.length} opgave${s.activities.length!==1?'r':''}</div>
         </div>
         <div class="stop-actions" onclick="event.stopPropagation()">
+          <button class="icon-btn" onclick="moveStop('${s.id}',-1)" title="Flyt op i rækkefølgen">↑</button>
+          <button class="icon-btn" onclick="moveStop('${s.id}',1)" title="Flyt ned i rækkefølgen">↓</button>
+          <button class="icon-btn" onclick="renameStop('${s.id}')" title="Omdøb stop">✏️</button>
           <button class="icon-btn" onclick="toggleStop('${s.id}')">${openStopId===s.id?'▲':'▼'}</button>
           <button class="icon-btn" onclick="deleteStop('${s.id}')" title="Slet stop">🗑</button>
         </div>
@@ -806,10 +849,10 @@ async function saveActivity() {
 
   const payload = {
     stop_id: stopId, type, question, points,
-    sort: stop.activities.length,
     media_url: mediaUrl, approval,
     ...(options ? { options } : { options: null })
   }
+  if (!actId) payload.sort = nextSort(stop.activities)
 
   let actRecord
   if (actId) {
@@ -886,7 +929,7 @@ async function addTeam() {
   if (!name) return
   const token = name.toLowerCase()
     .replace(/æ/g,'ae').replace(/ø/g,'oe').replace(/å/g,'aa')
-    .replace(/[^a-z0-9]/g,'-') + '-' + Math.random().toString(36).slice(2,6)
+    .replace(/[^a-z0-9]/g,'-').slice(0, 24) + '-' + crypto.randomUUID().replace(/-/g,'').slice(0, 16)
   const { data, error } = await sb.schema('quiz').from('teams')
     .insert({ quiz_id: quizId, name, token }).select().single()
   if (error) { alert(error.message); return; }
@@ -948,77 +991,6 @@ function updateModeUI(mode) {
     laast.style.background = 'var(--white)'; laast.style.color = 'var(--ink-2)'; laast.style.borderColor = '#e2e8f0'
     fri.style.background = 'var(--accent)'; fri.style.color = '#fff'; fri.style.borderColor = 'var(--accent)'
   }
-}
-
-// ── Status ────────────────────────────────────────────────────
-function updateStatusUI() {
-  const pill = document.getElementById('status-pill-cust')
-  const hint = document.getElementById('readiness-hint-cust')
-  const card = document.getElementById('status-card')
-  const btnTest = document.getElementById('btn-test')
-  const btnAct  = document.getElementById('btn-activate')
-  if (!pill) return
-
-  const labels = { kladde:'📝 Kladde', testing:'🧪 Test', aktiv:'✅ Aktiv', arkiveret:'📦 Afsluttet' }
-  const colors = { kladde:'#555', testing:'#92400e', aktiv:'#166534', arkiveret:'#666' }
-  pill.textContent = labels[quizStatus] ?? quizStatus
-  pill.style.color = colors[quizStatus] ?? '#555'
-
-  const r = getCustomerReadiness()
-  if (!r.ready) {
-    hint.textContent = '⚠️ Mangler: ' + r.missing.join(' og ')
-    if (btnAct) { btnAct.style.opacity = '.5'; btnAct.style.cursor = 'not-allowed'; }
-  } else {
-    hint.textContent = quizStatus === 'aktiv' ? '🟢 Løbet kører live' : '✅ Klar til aktivering'
-    if (btnAct) { btnAct.style.opacity = '1'; btnAct.style.cursor = 'pointer'; }
-  }
-
-  if (quizStatus === 'aktiv') {
-    card.style.borderColor = '#86efac'
-    card.style.background = '#f0fdf4'
-    if (btnTest) btnTest.style.display = 'none'
-    if (btnAct) {
-      btnAct.style.gridColumn = '1 / -1'
-      btnAct.querySelector('div:nth-child(2)').textContent = 'Afslut løbet'
-      btnAct.querySelector('div:nth-child(3)').textContent = 'Sæt løbet til afsluttet'
-      btnAct.onclick = () => customerSetStatus('arkiveret')
-      btnAct.style.borderColor = '#fca5a5'
-      btnAct.style.background = '#fff1f2'
-      btnAct.querySelector('div:nth-child(2)').style.color = '#991b1b'
-    }
-  }
-}
-
-function getCustomerReadiness() {
-  const hasStop = stops.some(s => s.activities.length > 0)
-  const hasTeam = teams.length > 0
-  const missing = []
-  if (!hasStop) missing.push('mindst ét stop med en opgave')
-  if (!hasTeam) missing.push('mindst ét hold')
-  return { ready: missing.length === 0, missing }
-}
-
-async function customerSetStatus(status) {
-  if (!quizId) { await saveQuiz(); if (!quizId) return; }
-  const { error } = await sb.schema('quiz').from('quizzes')
-    .update({ status }).eq('id', quizId)
-  if (error) { flash('❌ ' + error.message); return; }
-  quizStatus = status
-  updateStatusUI()
-  flash('✅ Status opdateret: ' + status)
-  if (status === 'testing') {
-    const base = location.origin + location.pathname.replace('app/customer-editor.html','play/quiz.html')
-    if (teams.length) window.open(base + '?t=' + teams[0].token, '_blank')
-  }
-}
-
-async function customerActivate() {
-  const r = getCustomerReadiness()
-  if (!r.ready) {
-    flash('⚠️ Mangler: ' + r.missing.join(' og '), 5000)
-    return
-  }
-  await customerSetStatus('aktiv')
 }
 
 function copyTeamLink(token) {
@@ -1218,7 +1190,7 @@ function shortQ(q) {
   return q.length>40 ? q.substring(0,40)+'…' : q
 }
 function escHtml(s) {
-  return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+  return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')
 }
 
 init()

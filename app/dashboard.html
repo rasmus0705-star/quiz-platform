@@ -97,7 +97,7 @@
   .btn-danger-ghost { background: #f8dde1; color: #9a2f3d; }
   .btn-danger-ghost:hover { background: #f3c6cc; }
 
-  .filters { display: flex; gap: .5rem; margin-bottom: 1.25rem; }
+  .filters { display: flex; gap: .5rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
   .filter-chip {
     padding: .45rem .9rem; border-radius: 20px; font-size: .82rem; font-weight: 600;
     background: #fff; color: #5b6476; border: 1.5px solid #dadfe8; cursor: pointer;
@@ -126,15 +126,6 @@
   .badge-testing   { background: #fdf0d5; color: #9a6b0a; }
   .badge-aktiv     { background: #dcf5e3; color: #1a7a3a; }
   .badge-arkiveret { background: #f3dde0; color: #9a2f3d; }
-
-  .new-card {
-    background: transparent; border-radius: var(--radius-lg);
-    border: 2px dashed #c9d0dd;
-    display: flex; align-items: center; justify-content: center;
-    gap: .5rem; cursor: pointer; color: #5b6476; font-size: .9rem;
-    min-height: 120px;
-  }
-  .new-card:hover { border-color: var(--accent); color: var(--accent); }
 
   .empty { text-align: center; color: #9aa2b1; padding: 3rem 1rem; grid-column: 1 / -1; }
   #loading { text-align: center; color: #9aa2b1; padding: 3rem 1rem; }
@@ -165,7 +156,7 @@
   <div class="top-row">
     <div>
       <h1>Alle løb</h1>
-      <p class="lead">Fuld oversigt over samtlige quiz-løb, uanset kunde eller status.</p>
+      <p class="lead">Fuld oversigt over samtlige quiz-løb, uanset kunde eller status. PIN-koder styres pr. kunde under “Kunder”.</p>
     </div>
     <button class="btn btn-primary" onclick="createQuiz()">+ Ny quiz</button>
   </div>
@@ -180,33 +171,6 @@
   <div class="quiz-grid" id="grid" style="display:none;"></div>
 </main>
 
-<!-- Kunde-PIN modal -->
-<div id="pin-modal" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.5);align-items:center;justify-content:center;" onclick="if(event.target===this)closePin()">
-  <div style="background:#fff;border-radius:14px;padding:1.5rem;width:90%;max-width:380px;display:flex;flex-direction:column;gap:.75rem;">
-    <h3 style="margin:0;">🔑 Kunde-PIN – <span id="pin-modal-title"></span></h3>
-    <div>
-      <label style="font-size:.82rem;color:#666;display:block;margin-bottom:.25rem;">Ny PIN (6–8 cifre)</label>
-      <input id="pin-new" type="text" inputmode="numeric" maxlength="8" placeholder="••••••"
-        style="width:100%;padding:.5rem;border:1px solid #ddd;border-radius:6px;font-size:1.1rem;letter-spacing:.3rem;font-weight:700;">
-    </div>
-    <div>
-      <label style="font-size:.82rem;color:#666;display:block;margin-bottom:.25rem;">Udløber (valgfrit)</label>
-      <input id="pin-expires" type="datetime-local" style="width:100%;padding:.5rem;border:1px solid #ddd;border-radius:6px;">
-    </div>
-    <div>
-      <label style="font-size:.82rem;color:#666;display:block;margin-bottom:.25rem;">Knyt til kunde (valgfrit)</label>
-      <select id="pin-customer" style="width:100%;padding:.5rem;border:1px solid #ddd;border-radius:6px;">
-        <option value="">– Ingen kunde knyttet –</option>
-      </select>
-    </div>
-    <div style="display:flex;gap:.5rem;">
-      <button class="btn btn-primary" style="flex:1;" onclick="savePin()">Gem PIN</button>
-      <button class="btn" style="background:#eee;color:#333;" onclick="closePin()">Luk</button>
-    </div>
-    <p id="pin-msg" style="font-size:.82rem;color:#555;margin:0;min-height:1rem;"></p>
-  </div>
-</div>
-
 <script>
 let allQuizzes = [];
 let currentFilter = 'alle';
@@ -215,7 +179,7 @@ let currentFilter = 'alle';
   const session = await getSession();
   if (!session) { location.href = 'login.html'; return; }
   if (session.type === 'pin') {
-    if (!session.is_admin) { location.href = `editor.html?q=${session.quiz_id}`; return; }
+    if (!session.is_admin) { location.href = 'customer-overview.html'; return; }
     activatePinClient();
   }
   await loadQuizzes();
@@ -225,14 +189,17 @@ async function loadQuizzes() {
   const { data, error } = await sb
     .schema('quiz')
     .from('quizzes')
-    .select('id, title, status, created_at, customer_id, customers(name)')
+    .select('id, title, status, round_no, created_at, customer_id, customers(name)')
     .order('created_at', { ascending: false });
 
   document.getElementById('loading').style.display = 'none';
   document.getElementById('grid').style.display = 'grid';
 
   if (error) {
-    document.getElementById('grid').innerHTML = `<p style="color:red;grid-column:1/-1">Fejl: ${error.message}</p>`;
+    const p = document.createElement('p');
+    p.style.cssText = 'color:red;grid-column:1/-1';
+    p.textContent = 'Fejl: ' + error.message;
+    document.getElementById('grid').replaceChildren(p);
     return;
   }
   allQuizzes = data ?? [];
@@ -261,13 +228,13 @@ function renderGrid() {
     <div class="quiz-card">
       <a href="editor.html?q=${q.id}" style="text-decoration:none;color:inherit;">
         <h2>${escHtml(q.title || '(uden titel)')}</h2>
-        <span class="badge badge-${q.status}">${labelStatus(q.status)}</span>
+        <span class="badge badge-${q.status}">${labelStatus(q.status)}${(q.round_no ?? 1) > 1 ? ' · runde ' + q.round_no : ''}</span>
         <p>Oprettet ${formatDate(q.created_at)}</p>
         ${custName ? `<p>👤 ${escHtml(custName)}</p>` : '<p>Ingen kunde</p>'}
       </a>
       <div style="display:flex;gap:.4rem;margin-top:.25rem;">
-        <button class="btn btn-sm btn-outline" style="flex:1;" onclick="openPin('${q.id}','${escAttr(q.title||'')}')">🔑 PIN</button>
-        <button class="btn btn-sm btn-danger-ghost" onclick="deleteQuiz('${q.id}','${escAttr(q.title||'')}')" title="Slet quiz">🗑</button>
+        <a class="btn btn-sm btn-outline" style="flex:1;text-align:center;text-decoration:none;" href="editor.html?q=${q.id}">✏️ Åbn</a>
+        <button class="btn btn-sm btn-danger-ghost" onclick="deleteQuiz('${q.id}')" title="Slet quiz">🗑</button>
       </div>
     </div>`;
   }).join('');
@@ -283,7 +250,8 @@ async function createQuiz() {
   location.href = `editor.html?q=${data.id}`;
 }
 
-async function deleteQuiz(quizId, title) {
+async function deleteQuiz(quizId) {
+  const title = allQuizzes.find(q => q.id === quizId)?.title || '(uden titel)';
   if (!confirm(`Slet "${title}" permanent? Alle stop, hold og besvarelser slettes også. Dette kan ikke fortrydes.`)) return;
   const { error } = await sb.schema('quiz').rpc('delete_quiz_cascade', { p_quiz_id: quizId });
   if (error) { alert('Kunne ikke slette: ' + error.message); return; }
@@ -297,68 +265,8 @@ function formatDate(iso) {
   if (!iso) return '';
   return new Date(iso).toLocaleDateString('da-DK', { day: 'numeric', month: 'short', year: 'numeric' });
 }
-
-// ── Kunde-PIN modal ───────────────────────────────────────────
-let pinQuizId = null;
-let customersCache = null;
-
-async function openPin(quizId, title) {
-  pinQuizId = quizId;
-  document.getElementById('pin-modal-title').textContent = title;
-  document.getElementById('pin-new').value = '';
-  document.getElementById('pin-expires').value = '';
-  document.getElementById('pin-msg').textContent = '';
-  document.getElementById('pin-modal').style.display = 'flex';
-
-  if (!customersCache) {
-    const { data } = await sb.schema('quiz').from('customers').select('id, name').order('name');
-    customersCache = data ?? [];
-  }
-  const { data: q } = await sb.schema('quiz').from('quizzes').select('customer_id').eq('id', quizId).single();
-  const sel = document.getElementById('pin-customer');
-  sel.innerHTML = '<option value="">– Ingen kunde knyttet –</option>' +
-    customersCache.map(c => `<option value="${c.id}" ${q?.customer_id===c.id?'selected':''}>${escHtml(c.name)}</option>`).join('');
-}
-
-function closePin() {
-  document.getElementById('pin-modal').style.display = 'none';
-  pinQuizId = null;
-}
-
-async function savePin() {
-  if (!pinQuizId) return;
-  const pin     = document.getElementById('pin-new').value.trim();
-  const expires = document.getElementById('pin-expires').value;
-  const msgEl   = document.getElementById('pin-msg');
-
-  if (!pin || pin.length < 6) { msgEl.textContent = '⚠️ PIN skal være mindst 6 cifre'; return; }
-  if (!/^\d+$/.test(pin))     { msgEl.textContent = '⚠️ PIN må kun indeholde tal'; return; }
-
-  const buf     = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pin));
-  const pinHash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-
-  const update = { pin_hash: pinHash };
-  if (expires) update.pin_expires_at = new Date(expires).toISOString();
-  const custVal = document.getElementById('pin-customer').value;
-  update.customer_id = custVal || null;
-
-  const { error } = await sb.schema('quiz').from('quizzes').update(update).eq('id', pinQuizId);
-  if (error) {
-    msgEl.textContent = '❌ ' + error.message;
-  } else {
-    const loginUrl = `${location.origin}${location.pathname.replace('dashboard.html','login.html')}?q=${pinQuizId}`;
-    msgEl.innerHTML = `✅ PIN gemt!<br><b>Kode: ${pin}</b><br><small style="word-break:break-all">${loginUrl}</small>
-      <br><button onclick="navigator.clipboard.writeText('Link: ${loginUrl}\\nPIN: ${pin}')" style="margin-top:.4rem;font-size:.8rem;cursor:pointer;">📋 Kopiér link + PIN</button>`;
-    loadQuizzes();
-  }
-}
-
-// ── Helpers ──────────────────────────────────────────────────
 function escHtml(s) {
-  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-function escAttr(s) {
-  return String(s ?? '').replace(/'/g, "\\'");
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 </script>
 </body>

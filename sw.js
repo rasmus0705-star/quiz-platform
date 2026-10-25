@@ -1,49 +1,57 @@
 // =============================================================
 // sw.js – Service Worker (PWA offline-grundlag)
-// v2: precacher nu selve app-sideren (ikke kun CSS/JS), så
-//     holdspil-siden kan åbnes igen med dårligt mobilsignal.
+// v3: relative stier (virker på GitHub Pages under /quiz-platform/),
+//     cacher KUN egne filer – aldrig Supabase-kald eller kort-tiles.
 // =============================================================
 
-const CACHE = 'quiz-v2';
-const PRECACHE = [
-    '/',
-    '/index.html',
-    '/js/config.js',
-    '/js/api.js',
-    '/themes/standard.css',
-    '/play/quiz.html',
-    '/board/scoreboard.html',
-    '/app/login.html',
-    '/manifest.json',
+const CACHE = 'jagten-v3';
+const FILES = [
+  'index.html',
+  'js/config.js',
+  'js/api.js',
+  'play/quiz.html',
+  'board/scoreboard.html',
+  'app/login.html',
+  'manifest.json',
 ];
 
 self.addEventListener('install', e => {
-    e.waitUntil(
-        caches.open(CACHE).then(c => c.addAll(PRECACHE))
-    );
-    self.skipWaiting();
+  e.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+    // én fil der mangler må ikke vælte hele installationen
+    await Promise.all(FILES.map(f =>
+      cache.add(new URL(f, self.registration.scope)).catch(() => {})
+    ));
+  })());
+  self.skipWaiting();
 });
 
 self.addEventListener('activate', e => {
-    e.waitUntil(
-        caches.keys().then(keys =>
-            Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-        )
-    );
-    self.clients.claim();
+  e.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+    )
+  );
+  self.clients.claim();
 });
 
 self.addEventListener('fetch', e => {
-    // Netværk først, fallback til cache (så GPS-opdateringer og
-    // besvarelser altid prøver live-serveren først).
-    e.respondWith(
-        fetch(e.request)
-            .then(res => {
-                // Opdater cachen i baggrunden med friske sider, når nettet virker
-                const copy = res.clone();
-                caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});
-                return res;
-            })
-            .catch(() => caches.match(e.request))
-    );
+  const req = e.request;
+  const url = new URL(req.url);
+
+  // Kun egne GET-filer. Supabase (API, storage, functions), tiles og CDN går direkte til nettet.
+  if (req.method !== 'GET' || url.origin !== self.location.origin) return;
+
+  // Netværk først (altid friske filer efter et push) – cache som nødløsning ved dårligt signal
+  e.respondWith(
+    fetch(req)
+      .then(res => {
+        if (res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
+        }
+        return res;
+      })
+      .catch(() => caches.match(req))
+  );
 });

@@ -214,6 +214,7 @@ async function init() {
   if (!session) { location.href = 'login.html'; return; }
 
   if (session.type === 'pin') {
+    if (!session.is_admin) { location.href = 'customer-editor.html' + (quizId ? '?q=' + quizId : ''); return; }
     activatePinClient();
   }
 
@@ -281,21 +282,12 @@ async function loadAll() {
     .select('*').eq('quiz_id', quizId).order('created_at');
   const allTeams = teamRows ?? [];
 
-  const leftoverTest = allTeams.filter(t => t.name === TEST_TEAM_NAME);
   teams = allTeams.filter(t => t.name !== TEST_TEAM_NAME);
-  if (leftoverTest.length) cleanupTestTeams(leftoverTest.map(t => t.id));
 
   renderTeams();
 }
 
 const TEST_TEAM_NAME = '🧪 Testhold';
-
-async function cleanupTestTeams(teamIds) {
-  if (!teamIds.length) return;
-  await sb.schema('quiz').from('submissions').delete().in('team_id', teamIds);
-  await sb.schema('quiz').from('team_positions').delete().in('team_id', teamIds);
-  await sb.schema('quiz').from('teams').delete().in('id', teamIds);
-}
 
 // ── Quiz gem / status ─────────────────────────────────────────
 async function saveQuiz() {
@@ -303,7 +295,7 @@ async function saveQuiz() {
   const title   = document.getElementById('title').value.trim();
   if (!title) { flash('⚠️ Titel mangler'); return; }
 
-  const payload = { title, status: quizStatus, stop_order: quizMode };
+  const payload = { title, stop_order: quizMode };
   if (session?.user?.id) payload.owner_id = session.user.id;
   let error;
 
@@ -311,7 +303,7 @@ async function saveQuiz() {
     ({ error } = await sb.schema('quiz').from('quizzes').update(payload).eq('id', quizId));
   } else {
     const { data, error: e } = await sb.schema('quiz').from('quizzes')
-      .insert(payload).select().single();
+      .insert({ ...payload, status: 'kladde' }).select().single();
     error = e;
     if (data) {
       quizId = data.id;
@@ -327,12 +319,16 @@ async function saveQuiz() {
 
 async function setStatus(status) {
   if (!quizId) { await saveQuiz(); if (!quizId) return; }
-  const { error } = await sb.schema('quiz').from('quizzes')
-    .update({ status }).eq('id', quizId);
-  if (error) { flash('❌ ' + error.message); return; }
-  quizStatus = status;
-  setStatusPill(status);
-  flash('Status: ' + status);
+  if (status === 'aktiv' && quizStatus === 'arkiveret' &&
+      !confirm('Start en ny runde?\n\nHoldene starter forfra. Resultater fra forrige runde gemmes.')) return;
+  if (status === 'arkiveret' && !confirm('Afslut løbet? Holdene kan ikke spille videre.')) return;
+
+  const { data, error } = await sb.schema('quiz').rpc('set_quiz_status', { p_quiz_id: quizId, p_status: status });
+  if (error) { flash('❌ ' + error.message, 7000); return; }
+  quizStatus = data.status;
+  setStatusPill(quizStatus);
+  updateReadinessUI();
+  flash('Status: ' + quizStatus + (data.round_no > 1 ? ' (runde ' + data.round_no + ')' : ''));
 }
 
 // ── Klar-til-aktivering ───────────────────────────────────────
@@ -406,12 +402,12 @@ function flash(txt, ms=3000) {
 // ── Stops ─────────────────────────────────────────────────────
 async function onMapClick(e) {
   if (!quizId) { flash('⚠️ Gem quizzen først'); return; }
-  const name = prompt('Stop-navn:');
+  const name = (prompt('Stop-navn:') || '').trim().slice(0, 80);
   if (!name) return;
   const { data, error } = await sb.schema('quiz').from('stops').insert({
     quiz_id: quizId, name,
     lat: e.latlng.lat, lng: e.latlng.lng,
-    sort: stops.length, radius_m: 15
+    sort: nextSort(stops), radius_m: 15
   }).select().single();
   if (error) { alert(error.message); return; }
   stops.push({ ...data, activities: [] });
@@ -444,30 +440,62 @@ function toggleStop(stopId) {
   renderStops();
 }
 
+let didFit = false;
+const nextSort = list => list.reduce((m, x) => Math.max(m, x.sort ?? -1), -1) + 1;
+
+async function renameStop(stopId) {
+  const stop = stops.find(s => s.id === stopId); if (!stop) return;
+  const name = (prompt('Nyt navn på stoppet:', stop.name) || '').trim().slice(0, 80);
+  if (!name || name === stop.name) return;
+  const { error } = await sb.schema('quiz').from('stops').update({ name }).eq('id', stopId);
+  if (error) { alert(error.message); return; }
+  stop.name = name;
+  renderStops();
+}
+
+// Byt rækkefølge: normaliser sort til 0..n-1 og gem de rækker der ændrer sig
+async function moveStop(stopId, dir) {
+  const i = stops.findIndex(s => s.id === stopId), j = i + dir;
+  if (i < 0 || j < 0 || j >= stops.length) return;
+  [stops[i], stops[j]] = [stops[j], stops[i]];
+  const jobs = [];
+  stops.forEach((s, idx) => {
+    if (s.sort !== idx) { s.sort = idx; jobs.push(sb.schema('quiz').from('stops').update({ sort: idx }).eq('id', s.id)); }
+  });
+  const res = await Promise.all(jobs);
+  const err = res.find(r => r.error);
+  if (err) { alert(err.error.message); await loadAll(); return; }
+  renderStops();
+}
+
 function renderStops() {
   markers.forEach(m => m.remove()); markers = [];
   const bounds = [];
   stops.forEach((s, i) => {
     if (s.lat && s.lng) {
-      const m = L.marker([s.lat, s.lng]).addTo(map)
-        .bindPopup(`<b>${i+1}. ${s.name}</b>`);
+      const m = L.marker([s.lat, s.lng]).addTo(map);
+      const box = document.createElement('b'); box.textContent = (i+1) + '. ' + s.name;   // tekst, ikke HTML
+      m.bindPopup(box);
       markers.push(m);
       bounds.push([s.lat, s.lng]);
     }
   });
-  if (bounds.length) map.fitBounds(bounds, { padding:[40,40] });
+  if (bounds.length && !didFit) { map.fitBounds(bounds, { padding:[40,40] }); didFit = true; }
 
   document.getElementById('stop-count').textContent = stops.length;
   document.getElementById('stop-list').innerHTML = stops.map((s,i) => `
     <div class="card stop-card ${openStopId===s.id?'open':''}">
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <span style="cursor:pointer;font-weight:600;" onclick="toggleStop('${s.id}')">
-          ${i+1}. ${s.name}
+          ${i+1}. ${escHtml(s.name)}
           <span class="muted" style="font-weight:400;">
             (${s.activities.length} opgave${s.activities.length!==1?'r':''})
           </span>
         </span>
         <div>
+          <button class="icon-btn" onclick="moveStop('${s.id}',-1)" title="Flyt op i rækkefølgen">↑</button>
+          <button class="icon-btn" onclick="moveStop('${s.id}',1)" title="Flyt ned i rækkefølgen">↓</button>
+          <button class="icon-btn" onclick="renameStop('${s.id}')" title="Omdøb stop">✏️</button>
           <button class="icon-btn" onclick="toggleStop('${s.id}')">${openStopId===s.id?'▲':'▼'}</button>
           <button class="icon-btn" onclick="deleteStop('${s.id}')" title="Slet stop">🗑</button>
         </div>
@@ -480,7 +508,7 @@ function renderStops() {
 function stopDetail(stop) {
   const rows = stop.activities.map(a => `
     <div class="act-row">
-      <span>${typeLabel(a.type)} – ${shortQ(a.question)} · ${a.points??0}p
+      <span>${typeLabel(a.type)} – ${escHtml(shortQ(a.question))} · ${a.points??0}p
         ${a.type==='foto' ? `<span class="muted">(${approvalLabel(a.approval)})</span>` : ''}
         ${a.media_url ? '🖼' : ''}
         ${(a.type !== 'foto' && a.type !== 'info') && !a.answerKey ? '<span style="color:#f59e0b;" title="Ingen fasit">⚠️</span>' : ''}
@@ -495,7 +523,7 @@ function stopDetail(stop) {
     <div style="margin-top:.5rem;">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem;">
         <label style="margin:0;white-space:nowrap;">GPS-radius (meter)</label>
-        <input type="number" id="radius-${stop.id}" value="${stop.radius_m??50}"
+        <input type="number" id="radius-${stop.id}" value="${stop.radius_m??15}"
           style="width:70px;" min="5" max="500"
           onchange="saveRadius('${stop.id}',this.value)">
         <span class="muted" style="font-size:.75rem;">Anbefalet: 10–20m</span>
@@ -713,11 +741,11 @@ async function saveActivity(stopId, actId) {
 
   const payload = {
     stop_id: stopId, type, question, points,
-    sort: stop.activities.length,
     media_url: mediaUrl,
     approval,
     ...(options ? { options } : { options: null })
   };
+  if (!actId) payload.sort = nextSort(stop.activities);
 
   let actRecord;
   if (actId) {
@@ -795,7 +823,7 @@ async function addTeam() {
   if (!name) return;
   const token = name.toLowerCase()
     .replace(/æ/g,'ae').replace(/ø/g,'oe').replace(/å/g,'aa')
-    .replace(/[^a-z0-9]/g,'-') + '-' + Math.random().toString(36).slice(2,6);
+    .replace(/[^a-z0-9]/g,'-').slice(0, 24) + '-' + crypto.randomUUID().replace(/-/g,'').slice(0, 16);
 
   const { data, error } = await sb.schema('quiz').from('teams')
     .insert({ quiz_id: quizId, name, token }).select().single();
@@ -830,12 +858,18 @@ function renderTeams() {
         </div>
         <div style="display:flex;gap:.4rem;align-items:center;margin-left:.5rem;">
           <button class="btn btn-sm btn-ghost" onclick="copyLink('${url}')">Kopiér</button>
-          <button class="btn btn-sm btn-ghost" onclick="showQR('${escHtml(url)}','${escHtml(t.name)}')">QR</button>
+          <button class="btn btn-sm btn-ghost" onclick="showTeamQR('${t.id}')">QR</button>
           <button class="icon-btn" onclick="deleteTeam('${t.id}')">🗑</button>
         </div>
       </div>`;
   }).join('');
   updateReadinessUI();
+}
+
+function showTeamQR(teamId) {
+  const t = teams.find(x => x.id === teamId); if (!t) return;
+  const base = location.origin + location.pathname.replace(/app\/editor\.html.*/, 'play/quiz.html');
+  showQR(base + '?t=' + t.token, t.name);
 }
 
 function copyLink(url) {
@@ -844,20 +878,11 @@ function copyLink(url) {
 
 async function testAsPlayer() {
   if (!quizId) { flash('⚠️ Gem quizzen først'); return; }
-  const base = location.origin +
-    location.pathname.replace(/app\/editor\.html.*/, 'play/quiz.html');
-
-  const { data: oldTest } = await sb.schema('quiz').from('teams')
-    .select('id').eq('quiz_id', quizId).eq('name', TEST_TEAM_NAME);
-  if (oldTest?.length) await cleanupTestTeams(oldTest.map(t => t.id));
-
-  const token = 'test-' + Math.random().toString(36).slice(2, 8);
-  const { data: testTeam, error } = await sb.schema('quiz').from('teams')
-    .insert({ quiz_id: quizId, name: TEST_TEAM_NAME, token }).select().single();
-  if (error) { flash('❌ ' + error.message); return; }
-
-  window.open(base + '?t=' + testTeam.token, '_blank');
-  flash('🧪 Testhold oprettet – ryddes automatisk op, når du genindlæser editoren');
+  const { data: token, error } = await sb.schema('quiz').rpc('create_test_team', { p_quiz_id: quizId });
+  if (error) { flash('❌ ' + error.message, 6000); return; }
+  const base = location.origin + location.pathname.replace(/app\/editor\.html.*/, 'play/quiz.html');
+  window.open(base + '?t=' + token, '_blank');
+  flash('🧪 Testhold klar – ryddes automatisk, når løbet aktiveres');
 }
 
 // ── QR ────────────────────────────────────────────────────────
@@ -882,7 +907,7 @@ function closeQR() {
 function escHtml(s) {
   return String(s??'')
     .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 init();

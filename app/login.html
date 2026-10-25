@@ -106,7 +106,10 @@
       const { data, error } = await client.functions.invoke('quiz-pin-auth', { body })
 
       if (error || data?.error) {
-        showError(data?.error ?? 'Fejl ved login')
+        // supabase-js giver kun en generisk fejl ved 401/429 – læs den rigtige besked fra svaret
+        let msg = data?.error ?? 'Fejl ved login'
+        if (error) { try { const body = await error.context.json(); msg = body.error || msg } catch (_) {} }
+        showError(msg)
         btn.disabled = false; btn.textContent = 'Log ind'
         return
       }
