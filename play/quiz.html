@@ -699,7 +699,22 @@ function renderResult(el, act, submission) {
       <div class="result-label">${correct ? 'Korrekt!' : 'Forkert svar'}</div>
       <div class="result-pts">${correct ? '+' + (submission.points ?? 0) + ' point' : 'Ingen point denne gang'}</div>
     </div>
-    <button class="back-btn" onclick="closeActivity()">← Tilbage til kortet</button>`
+    <div style="text-align:center;color:var(--muted);font-size:.85rem;margin-top:.5rem;">
+      Vender tilbage til kortet om <span id="back-countdown">3</span> sekunder…
+    </div>
+    <button class="back-btn" onclick="closeActivity()" style="margin-top:.75rem;">← Gå til kortet nu</button>`
+
+  // Auto-tilbage efter 3 sekunder
+  let count = 3
+  const timer = setInterval(() => {
+    count--
+    const el2 = document.getElementById('back-countdown')
+    if (el2) el2.textContent = count
+    if (count <= 0) {
+      clearInterval(timer)
+      closeActivity()
+    }
+  }, 1000)
 }
 
 function renderInputs(el, stop, act) {
@@ -889,22 +904,55 @@ function closeStopsList() {
 }
 
 // ── Wake lock ─────────────────────────────────────────────────
+// Wake lock — prøver Screen Wake Lock API, falder tilbage til video-trick
+let noSleepVideo = null
+
 async function toggleWakeLock() {
   const btn = document.getElementById('btn-wake')
   if (wakeLockOn) {
-    wakeLock?.release()
+    // Sluk
+    wakeLock?.release?.()
     wakeLock = null
+    if (noSleepVideo) { noSleepVideo.pause(); noSleepVideo = null }
     wakeLockOn = false
     btn.style.color = ''
-    btn.title = 'Hold skærm vågen'
+    btn.style.background = ''
+    btn.title = 'Hold skærm tændt'
   } else {
+    // Prøv Screen Wake Lock API først
+    if ('wakeLock' in navigator) {
+      try {
+        wakeLock = await navigator.wakeLock.request('screen')
+        wakeLockOn = true
+        btn.style.color = 'var(--gold)'
+        btn.style.background = 'rgba(232,200,74,.15)'
+        btn.title = 'Skærm holdes tændt — tryk for at slukke'
+        wakeLock.addEventListener('release', () => {
+          if (wakeLockOn) navigator.wakeLock.request('screen')
+            .then(wl => { wakeLock = wl })
+            .catch(() => {})
+        })
+        return
+      } catch {}
+    }
+    // Fallback: usynlig video-loop (virker på iOS Safari og Samsung Browser)
     try {
-      wakeLock = await navigator.wakeLock.request('screen')
+      const v = document.createElement('video')
+      v.setAttribute('playsinline', '')
+      v.setAttribute('muted', '')
+      v.style.cssText = 'position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;'
+      // Minimal transparent video som base64
+      v.src = 'data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAAAAhtZGF0'
+      v.loop = true
+      document.body.appendChild(v)
+      await v.play()
+      noSleepVideo = v
       wakeLockOn = true
       btn.style.color = 'var(--gold)'
-      btn.title = 'Skærm holdes vågen (tryk for at slukke)'
+      btn.style.background = 'rgba(232,200,74,.15)'
+      btn.title = 'Skærm holdes tændt — tryk for at slukke'
     } catch {
-      alert('Skærm-lås ikke tilgængeligt i denne browser.')
+      alert('Skærm-lås virker ikke i denne browser. Slå "Skærm altid tændt" til i telefonens indstillinger.')
     }
   }
 }
