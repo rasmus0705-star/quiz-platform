@@ -347,7 +347,15 @@
 <!-- Topbar -->
 <div id="topbar" style="display:none;">
   <div class="team-pill" id="team-name">–</div>
-  <div class="points-pill" id="point-display">0 p</div>
+  <div style="display:flex;align-items:center;gap:.5rem;">
+    <div id="gps-accuracy-pill" style="
+      background:rgba(13,15,20,.85);backdrop-filter:blur(8px);
+      border:1px solid var(--border);border-radius:99px;
+      padding:.4rem .75rem;font-size:.75rem;color:var(--muted);display:none;">
+      📡 <span id="gps-acc-text">–</span>
+    </div>
+    <div class="points-pill" id="point-display">0 p</div>
+  </div>
 </div>
 
 <!-- Bund-panel -->
@@ -390,6 +398,10 @@ let stops       = []
 let submissions = {}
 let quizMode    = 'fri'  // 'fri' eller 'laast'
 let userLat     = null, userLng = null
+let userAccuracy = null
+let proximityHits = {}  // stopId → antal på hinanden følgende hits
+const MIN_ACCURACY_M = 40   // ignorer GPS hvis nøjagtighed er dårligere end 40m
+const PROXIMITY_HITS_NEEDED = 3  // kræv 3 hits i træk før popup
 let map, userMarker, stopMarkers = {}
 let wakeLock    = null
 let wakeLockOn  = false
@@ -452,8 +464,15 @@ function requestGPS() {
 function startGPS() {
   gpsWatcher = navigator.geolocation.watchPosition(
     pos => {
+      userAccuracy = pos.coords.accuracy
+      // Ignorer hvis GPS-nøjagtighed er for dårlig
+      if (userAccuracy > MIN_ACCURACY_M) {
+        updateAccuracyIndicator(userAccuracy, false)
+        return
+      }
       userLat = pos.coords.latitude
       userLng = pos.coords.longitude
+      updateAccuracyIndicator(userAccuracy, true)
       updateUserMarker()
       updateNextStop()
       checkProximity()
@@ -486,6 +505,16 @@ function updateUserMarker() {
   } else {
     userMarker.setLatLng([userLat, userLng])
   }
+}
+
+function updateAccuracyIndicator(accuracy, good) {
+  const pill = document.getElementById('gps-accuracy-pill')
+  const txt  = document.getElementById('gps-acc-text')
+  if (!pill || !txt) return
+  pill.style.display = 'block'
+  txt.textContent = Math.round(accuracy) + ' m'
+  pill.style.borderColor = good ? 'rgba(34,197,94,.4)' : 'rgba(233,69,96,.4)'
+  pill.style.color = good ? 'var(--green)' : 'var(--coral)'
 }
 
 function centerOnUser() {
@@ -603,9 +632,18 @@ function checkProximity() {
   for (const stop of stops) {
     if (!isStopAccessible(stop)) continue
     const dist = distanceTo(stop.lat, stop.lng)
-    if (dist !== null && dist <= stop.radius_m) {
-      openStop(stop.id)
-      break
+    const near = dist !== null && dist <= stop.radius_m
+
+    if (near) {
+      proximityHits[stop.id] = (proximityHits[stop.id] ?? 0) + 1
+      if (proximityHits[stop.id] >= PROXIMITY_HITS_NEEDED) {
+        proximityHits[stop.id] = 0
+        openStop(stop.id)
+        break
+      }
+    } else {
+      // Nulstil tæller hvis man bevæger sig væk
+      proximityHits[stop.id] = 0
     }
   }
 }
