@@ -343,34 +343,7 @@
 <div class="pane" id="pane-3">
   <div class="pane-inner">
     <div class="pane-title">👥 Hold & deling</div>
-    <p class="pane-lead">Opret hold, del links med deltagerne, og aktivér løbet når du er klar.</p>
-
-    <!-- Status-kort -->
-    <div id="status-card" style="border-radius:var(--radius);padding:1.1rem 1.25rem;margin-bottom:1.25rem;border:2px solid #e2e8f0;background:var(--white);">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;flex-wrap:wrap;gap:.5rem;">
-        <div>
-          <div style="font-size:.8rem;color:var(--ink-2);margin-bottom:.2rem;">Løbets status</div>
-          <span id="status-pill-cust" style="font-size:.85rem;font-weight:700;"></span>
-        </div>
-        <div id="readiness-hint-cust" style="font-size:.78rem;color:var(--muted);"></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;">
-        <button id="btn-test" onclick="customerSetStatus('testing')" style="
-          padding:.75rem; border-radius:var(--radius-sm); border:1.5px solid #e2e8f0;
-          background:var(--white); cursor:pointer; text-align:center;">
-          <div style="font-size:1.3rem;margin-bottom:.2rem;">🧪</div>
-          <div style="font-size:.85rem;font-weight:700;color:var(--ink);">Test løbet</div>
-          <div style="font-size:.72rem;color:var(--muted);margin-top:.15rem;">Prøv løbet selv før du aktiverer</div>
-        </button>
-        <button id="btn-activate" onclick="customerActivate()" style="
-          padding:.75rem; border-radius:var(--radius-sm); border:1.5px solid var(--accent);
-          background:#f0f0ff; cursor:pointer; text-align:center;">
-          <div style="font-size:1.3rem;margin-bottom:.2rem;">▶️</div>
-          <div style="font-size:.85rem;font-weight:700;color:var(--accent);">Aktivér løbet</div>
-          <div style="font-size:.72rem;color:var(--muted);margin-top:.15rem;">Klar til deltagerne — gå live</div>
-        </button>
-      </div>
-    </div>
+    <p class="pane-lead">Opret hold og del links med deltagerne. Test og aktivér løbet fra oversigten når du er klar.</p>
 
     <div class="card">
       <div class="card-title">Opret hold</div>
@@ -679,6 +652,11 @@ function buildActForm(stopId, act) {
     if (ci>=0) mcIdx = ci
   }
 
+  const rawOpts2 = act?.options
+    ? (Array.isArray(act.options) ? act.options : Object.values(act.options))
+    : ['','','','']
+  const mcCount2 = rawOpts2.filter(o => o !== '').length || 4
+
   return `
     <label>Type</label>
     <select id="maf-type" onchange="refreshActForm()">
@@ -704,15 +682,21 @@ function buildActForm(stopId, act) {
     <input type="number" id="maf-pts" value="${pts}" style="width:80px;">
 
     ${type==='mc' ? `
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;">
+        <label style="margin:0;">Antal svarmuligheder</label>
+        <select id="maf-mccount" style="width:70px;" onchange="refreshActForm()">
+          ${[2,3,4].map(n=>`<option value="${n}" ${mcCount2===n?'selected':''}>${n}</option>`).join('')}
+        </select>
+      </div>
       <label>Svarmuligheder</label>
-      ${[0,1,2,3].map(i=>`
+      ${[0,1,2,3].filter(i=>i<mcCount2).map(i=>`
         <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.35rem;">
           <span style="color:var(--muted);width:18px;font-size:.8rem;">${String.fromCharCode(65+i)}.</span>
           <input id="maf-o${i}" value="${escHtml(opts[i]??'')}" style="flex:1;" placeholder="Svar ${String.fromCharCode(65+i)}">
         </div>`).join('')}
       <label>Korrekt svar</label>
       <select id="maf-correct">
-        ${[0,1,2,3].map(i=>`<option value="${i}" ${mcIdx===i?'selected':''}>${String.fromCharCode(65+i)}</option>`).join('')}
+        ${[0,1,2,3].filter(i=>i<mcCount2).map(i=>`<option value="${i}" ${mcIdx===i?'selected':''}>${String.fromCharCode(65+i)}</option>`).join('')}
       </select>
     ` : ''}
 
@@ -793,7 +777,8 @@ async function saveActivity() {
 
   let options = null
   if (type==='mc') {
-    options = [0,1,2,3].map(i => document.getElementById('maf-o'+i)?.value??'')
+    const mcCount = parseInt(document.getElementById('maf-mccount')?.value ?? '4')
+    options = [0,1,2,3].filter(i=>i<mcCount).map(i => document.getElementById('maf-o'+i)?.value??'')
   }
 
   const payload = {

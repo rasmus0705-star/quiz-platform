@@ -353,6 +353,19 @@ function renderGrid() {
       ${quizStatusButtons(q)}
 
       <hr class="card-divider">
+
+      ${q.status === 'aktiv' ? `
+      <div onclick="event.stopPropagation()" style="margin:.25rem 0 .6rem;">
+        <a href="${scoreUrl}" target="_blank" style="
+          display:flex;align-items:center;justify-content:center;gap:.5rem;
+          background:linear-gradient(135deg,#166534,#22c55e);
+          color:#fff;font-weight:700;font-size:.9rem;
+          padding:.75rem;border-radius:10px;text-decoration:none;
+          box-shadow:0 2px 8px rgba(34,197,94,.3);">
+          📊 Gå til scoreboard
+        </a>
+      </div>` : ''}
+
       <div class="card-actions" onclick="event.stopPropagation()">
         <button class="btn-edit" onclick="openQuiz('${q.id}')">✏️ Byg løbet</button>
         <button class="btn-pill" onclick="copyText('${scoreUrl}')">📋 Scoreboard</button>
@@ -441,7 +454,15 @@ function quizStatusButtons(q) {
   }
 
   if (q.status === 'arkiveret') {
-    return `<div style="text-align:center;padding:.5rem 0;font-size:.8rem;color:#9aa2b1;">📦 Afsluttet</div>`
+    return `<div onclick="event.stopPropagation()" style="display:grid;grid-template-columns:1fr;gap:.5rem;margin:.25rem 0;">
+      <button onclick="setQuizStatus('${q.id}','aktiv')" style="
+        padding:.75rem; border-radius:10px; border:1.5px solid #86efac;
+        background:#f0fdf4; cursor:pointer; text-align:center;">
+        <div style="font-size:1.1rem;">▶️</div>
+        <div style="font-size:.83rem;font-weight:700;color:#166534;">Genaktivér løbet</div>
+        <div style="font-size:.7rem;color:#9aa2b1;margin-top:.1rem;">Sæt løbet aktiv igen</div>
+      </button>
+    </div>`
   }
 
   return `<div onclick="event.stopPropagation()" style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.25rem 0;">

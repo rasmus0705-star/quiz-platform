@@ -375,7 +375,7 @@ async function onMapClick(e) {
   const { data, error } = await sb.schema('quiz').from('stops').insert({
     quiz_id: quizId, name,
     lat: e.latlng.lat, lng: e.latlng.lng,
-    sort: stops.length, radius_m: 50
+    sort: stops.length, radius_m: 15
   }).select().single();
   if (error) { alert(error.message); return; }
   stops.push({ ...data, activities: [] });
@@ -390,6 +390,17 @@ async function deleteStop(stopId) {
   stops = stops.filter(s => s.id !== stopId);
   if (openStopId === stopId) openStopId = null;
   renderStops();
+}
+
+async function saveRadius(stopId, value) {
+  const radius = parseInt(value)
+  if (isNaN(radius) || radius < 5) return
+  const { error } = await sb.schema('quiz').from('stops')
+    .update({ radius_m: radius }).eq('id', stopId)
+  if (error) { flash('❌ ' + error.message); return; }
+  const stop = stops.find(s => s.id === stopId)
+  if (stop) stop.radius_m = radius
+  flash('✅ Radius gemt')
 }
 
 function toggleStop(stopId) {
@@ -446,6 +457,13 @@ function stopDetail(stop) {
 
   return `
     <div style="margin-top:.5rem;">
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem;">
+        <label style="margin:0;white-space:nowrap;">GPS-radius (meter)</label>
+        <input type="number" id="radius-${stop.id}" value="${stop.radius_m??50}"
+          style="width:70px;" min="5" max="500"
+          onchange="saveRadius('${stop.id}',this.value)">
+        <span class="muted" style="font-size:.75rem;">Anbefalet: 10–20m</span>
+      </div>
       ${rows || '<p class="muted">Ingen opgaver endnu.</p>'}
       <button class="btn btn-sm" style="margin-top:.5rem;width:100%;"
         onclick="openActForm('${stop.id}','')">+ Tilføj opgave</button>
@@ -472,15 +490,17 @@ function openActForm(stopId, actId) {
   el.innerHTML = buildForm(stopId, act);
 }
 
-function buildForm(stopId, act) {
+function buildForm(stopId, act, mcCountOverride) {
   const type     = act?.type ?? 'mc';
   const q        = act?.question ?? '';
   const pts      = act?.points ?? 10;
   const approval = act?.approval ?? 'auto';
   const mediaUrl = act?.media_url ?? '';
-  const opts     = act?.options
+  const rawOpts  = act?.options
     ? (Array.isArray(act.options) ? act.options : Object.values(act.options))
     : ['','','',''];
+  const mcCount  = mcCountOverride ?? rawOpts.filter(o => o !== '').length || 4;
+  const opts     = Array.from({length: 4}, (_, i) => rawOpts[i] ?? '');
   const key      = act?.answerKey;
   const correct  = key?.correct;
   const tol      = key?.tolerance ?? 0;
@@ -530,15 +550,22 @@ function buildForm(stopId, act) {
     <input type="number" id="af-pts-${stopId}" value="${pts}" style="width:80px;">
 
     ${type==='mc' ? `
+      <div class="row2" style="align-items:center;margin-bottom:.5rem;">
+        <label style="margin:0;">Antal svarmuligheder</label>
+        <select id="af-mccount-${stopId}" style="width:70px;"
+          onchange="rebuildForm('${stopId}','${act?.id??''}',parseInt(this.value))">
+          ${[2,3,4].map(n=>`<option value="${n}" ${mcCount===n?'selected':''}>${n}</option>`).join('')}
+        </select>
+      </div>
       <label>Svarmuligheder</label>
-      ${[0,1,2,3].map(i=>`
+      ${[0,1,2,3].filter(i=>i<mcCount).map(i=>`
         <div class="row2" style="align-items:center;margin-bottom:.25rem;">
           <span class="muted" style="width:18px;">${String.fromCharCode(65+i)}.</span>
           <input id="af-o${i}-${stopId}" value="${escHtml(opts[i]??'')}" style="flex:1;" placeholder="Svar ${String.fromCharCode(65+i)}">
         </div>`).join('')}
       <label>Korrekt svar</label>
       <select id="af-correct-${stopId}">
-        ${[0,1,2,3].map(i=>`<option value="${i}" ${mcIdx===i?'selected':''}>${String.fromCharCode(65+i)}</option>`).join('')}
+        ${[0,1,2,3].filter(i=>i<mcCount).map(i=>`<option value="${i}" ${mcIdx===i?'selected':''}>${String.fromCharCode(65+i)}</option>`).join('')}
       </select>
     ` : ''}
 
@@ -575,7 +602,7 @@ function buildForm(stopId, act) {
   </div>`;
 }
 
-function rebuildForm(stopId, actId) {
+function rebuildForm(stopId, actId, mcCountOverride) {
   const stop = stops.find(s=>s.id===stopId);
   const act  = actId ? stop.activities.find(a=>a.id===actId) : null;
   const type = document.getElementById('af-type-'+stopId).value;
@@ -583,7 +610,7 @@ function rebuildForm(stopId, actId) {
   const pts  = document.getElementById('af-pts-'+stopId)?.value ?? 10;
   const mediaUrl = document.getElementById('af-media-url-'+stopId)?.value ?? '';
   document.getElementById('af-'+stopId).innerHTML =
-    buildForm(stopId, { ...act, type, question:q, points:pts, media_url:mediaUrl });
+    buildForm(stopId, { ...act, type, question:q, points:pts, media_url:mediaUrl }, mcCountOverride);
 }
 
 function previewTaskImage(stopId) {
@@ -643,7 +670,8 @@ async function saveActivity(stopId, actId) {
 
   let options = null;
   if (type==='mc') {
-    options = [0,1,2,3].map(i => document.getElementById('af-o'+i+'-'+stopId)?.value??'');
+    const mcCount = parseInt(document.getElementById('af-mccount-'+stopId)?.value ?? '4');
+    options = [0,1,2,3].filter(i=>i<mcCount).map(i => document.getElementById('af-o'+i+'-'+stopId)?.value??'');
   }
 
   const payload = {
