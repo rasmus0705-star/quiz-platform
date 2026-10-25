@@ -6,7 +6,7 @@
 <title>Scoreboard – Jagten</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../js/config.js"></script>
-<script src="../js/api.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -277,6 +277,9 @@
 </main>
 
 <script>
+const { createClient } = supabase
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON)
+
 const quizId = new URLSearchParams(location.search).get('q')
 let quizData    = null
 let teamsData   = []
@@ -287,12 +290,15 @@ let quizEnded   = false
 
 // Tjek admin-session
 async function checkAdmin() {
-  const session = getPinSession?.()
-  if (session?.is_admin) {
-    isAdmin = true
-    document.getElementById('admin-bar').classList.add('show')
-    activatePinClient?.()
-  }
+  try {
+    const raw = localStorage.getItem('pin_session')
+    if (!raw) return
+    const s = JSON.parse(raw)
+    if (s?.is_admin && s?.expires_at && new Date(s.expires_at) > new Date()) {
+      isAdmin = true
+      document.getElementById('admin-bar').classList.add('show')
+    }
+  } catch {}
 }
 
 // ── Hent data ─────────────────────────────────────────────────
