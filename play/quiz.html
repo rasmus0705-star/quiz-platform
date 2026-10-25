@@ -73,6 +73,11 @@
     #welcome-err { color:#ffb3c0; font-size:.85rem; min-height:1.2rem; margin-bottom:.75rem; max-width:320px; }
     .attr { margin-top:1.5rem; font-size:.7rem; color:rgba(255,255,255,.3); }
 
+    .sos-link { margin-top:.45rem; background:none; border:none; color:var(--muted); font-size:.74rem; text-decoration:underline; cursor:pointer; padding:0; }
+    .sos-link.alert { color:#ffb3c0; font-weight:700; }
+    #sos { z-index:700; }
+    #sos select.txt-input { appearance:none; -webkit-appearance:none; }
+
     /* ── Topbar ── */
     #topbar {
       position:fixed; top:0; left:0; right:0; z-index:500; display:none;
@@ -251,6 +256,7 @@
   <div id="welcome-err"></div>
   <button class="btn-gold" id="welcome-btn" onclick="startGame()">Start jagten</button>
   <button class="btn-ghost" id="skip-gps" style="margin-top:.75rem" onclick="startGame(true)">🧪 Test uden GPS</button>
+  <button class="btn-ghost" id="nogps-btn" style="margin-top:.75rem" onclick="startGame(true)">Fortsæt uden GPS (kræver nødkode)</button>
   <div class="attr">Kort: © OpenStreetMap-bidragydere</div>
 </div>
 
@@ -264,11 +270,25 @@
   </div>
 </div>
 <div id="bottom-panel">
-  <div id="next-card"><div id="next-name">Næste stop</div><div id="next-dist">–</div></div>
+  <div id="next-card"><div id="next-name">Næste stop</div><div id="next-dist">–</div><button class="sos-link" id="sos-link" onclick="openSos()">🆘 Problemer med GPS? Brug nødkode</button></div>
   <div class="btns">
     <button class="map-btn" id="btn-list"   onclick="openStops()"     title="Alle stop">☰</button>
     <button class="map-btn" id="btn-locate" onclick="centerOnUser()"  title="Find mig">◎</button>
     <button class="map-btn" id="btn-wake"   onclick="toggleWake()"    title="Hold skærmen tændt">🔆</button>
+  </div>
+</div>
+
+<!-- Nødkode (hvis GPS driller) -->
+<div id="sos" class="screen">
+  <div style="width:100%;max-width:340px">
+    <div class="big-icon">🆘</div>
+    <h1 style="font-size:1.4rem">Problemer med GPS?</h1>
+    <p class="lead">Ring eller skriv til jeres quizmaster og få en nødkode til stoppet. Koden låser opgaven op, selv om GPS'en ikke kan finde jer.</p>
+    <select id="sos-stop" class="txt-input"></select>
+    <input id="sos-code" class="txt-input" type="text" inputmode="numeric" maxlength="8" placeholder="Nødkode" autocomplete="off">
+    <div id="sos-err" class="inline-err"></div>
+    <button class="send-btn" id="sos-go" onclick="submitSos()">Lås stop op</button>
+    <button class="alt-btn" onclick="closeSos()">Annullér</button>
   </div>
 </div>
 
@@ -321,6 +341,7 @@ let userLat = null, userLng = null, userAcc = null, lastFixAt = 0;
 let map, userMarker, pinMarkers = {}, didFit = false;
 let gpsWatch = null, gameOn = false, cur = null, busy = false, backTimer = null;
 let nearSince = {}, lastSent = { t: 0, lat: null, lng: null };
+let unlocked = new Set(), manualMode = false, gameStartAt = 0;
 let finishedShown = false;
 
 const $ = id => document.getElementById(id);
@@ -354,6 +375,7 @@ async function init() {
 
   initMap();
   await loadSubs();
+  await loadUnlocks();
   await loadStops();
   renderPins();
   $('team-name').textContent = team.team_name;
@@ -372,6 +394,7 @@ function showWelcome() {
   $('welcome-desc').style.display = team.quiz_description ? 'block' : 'none';
   $('welcome-btn').textContent = team.started_at ? 'Fortsæt jagten' : 'Start jagten';
   $('skip-gps').style.display = team.is_test ? 'inline-flex' : 'none';
+  $('nogps-btn').style.display = 'none';
   if (/FBAN|FBAV|FB_IAB|Messenger|Instagram|Snapchat|Line\//i.test(navigator.userAgent)) {
     $('inapp-warn').style.display = 'block';
   }
@@ -395,6 +418,11 @@ async function loadStops() {
     });
   });
   stops = Object.values(m).sort((a, b) => a.sort - b.sort);
+}
+
+async function loadUnlocks() {
+  const { data } = await sb.schema('quiz').rpc('get_team_unlocks', { p_token: token });
+  unlocked = new Set((data ?? []).map(r => r.stop_id));
 }
 
 async function loadSubs() {
@@ -462,7 +490,8 @@ function centerOnUser() { if (userLat !== null) map.setView([userLat, userLng], 
 async function startGame(skipGps) {
   $('welcome-err').textContent = '';
   if (!skipGps && !navigator.geolocation) {
-    $('welcome-err').textContent = 'GPS er ikke tilgængeligt i denne browser. Prøv Chrome eller Safari.';
+    $('welcome-err').textContent = 'GPS er ikke tilgængeligt i denne browser. Prøv Chrome eller Safari – eller fortsæt uden GPS med nødkoder.';
+    if (!team.is_test) $('nogps-btn').style.display = 'inline-flex';
     return;
   }
   $('welcome-btn').disabled = true;
@@ -474,6 +503,9 @@ async function startGame(skipGps) {
     if (gpsWatch !== null) navigator.geolocation.clearWatch(gpsWatch);
     gpsWatch = navigator.geolocation.watchPosition(onPos, onPosErr, { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 });
   }
+  manualMode = !!skipGps && !team.is_test;       // uden GPS: hvert stop låses op med nødkode
+  gameStartAt = Date.now();
+  if (manualMode) { $('acc-pill').style.display = 'block'; $('acc-text').textContent = 'uden GPS'; $('acc-pill').style.color = 'var(--coral)'; }
   gameOn = true;
   hideScreen('welcome');
   $('topbar').style.display = 'flex';
@@ -488,7 +520,8 @@ function onPosErr(err) {
     gameOn = false;
     $('topbar').style.display = 'none';
     $('bottom-panel').style.display = 'none';
-    $('welcome-err').textContent = 'GPS er afvist. Tillad placering for denne side i browserens indstillinger – og tryk så igen.';
+    $('welcome-err').textContent = 'GPS er afvist. Tillad placering for denne side i browserens indstillinger og tryk igen – eller fortsæt uden GPS.';
+    if (!team.is_test) $('nogps-btn').style.display = 'inline-flex';
     showScreen('welcome');
   }
 }
@@ -516,7 +549,11 @@ function maybeSendPosition() {
 
 // Tidsbaseret nærhedstjek – virker også når man står stille og GPS'en ikke sender nye punkter
 function tick() {
-  if (!gameOn || cur || finishedShown || userLat === null) return;
+  if (!gameOn || cur || finishedShown) return;
+  for (const s of stops) {                              // nødkode brugt → åbn uden GPS
+    if (unlocked.has(s.id) && !isDone(s)) { openStop(s.id); return; }
+  }
+  if (userLat === null) { updateNextStop(); return; }   // ingen position endnu – hold tekst/knap frisk
   const now = Date.now();
   if (now - lastFixAt > MAX_FIX_AGE_MS) { nearSince = {}; return; }
   for (const s of stops) {
@@ -541,9 +578,44 @@ function updateNextStop() {
   }
   $('next-name').textContent = next.name;
   const d = distanceTo(next.lat, next.lng);
-  $('next-dist').textContent = d === null ? 'Finder position…' : fmtDist(d);
+  $('next-dist').textContent = manualMode ? 'Uden GPS – brug nødkode' : d === null ? 'Finder position…' : fmtDist(d);
   $('next-dist').className = d !== null && d <= next.radius_m ? 'near' : '';
+  $('next-dist').style.fontSize = manualMode ? '1rem' : '';
+  const noFix = userLat === null && gameStartAt && Date.now() - gameStartAt > 20000;
+  $('sos-link').classList.toggle('alert', !!(manualMode || noFix));
 }
+
+// ═════════ Nødudgang ═════════
+function openSos() {
+  const open = stops.filter(s => !isDone(s));
+  if (!open.length) return;
+  let next = open[0];
+  if (userLat !== null && team.stop_order !== 'laast') {
+    next = open.reduce((a, b) => (distanceTo(a.lat, a.lng) ?? 1e12) <= (distanceTo(b.lat, b.lng) ?? 1e12) ? a : b);
+  }
+  const sel = $('sos-stop');
+  sel.innerHTML = '';
+  open.forEach(s => sel.add(new Option((stops.indexOf(s) + 1) + '. ' + s.name, s.id)));   // Option = tekst, ikke HTML
+  sel.value = next.id;
+  $('sos-code').value = ''; $('sos-err').textContent = '';
+  showScreen('sos');
+  setTimeout(() => $('sos-code').focus(), 250);
+}
+function closeSos() { hideScreen('sos'); }
+
+async function submitSos() {
+  const stopId = $('sos-stop').value, code = $('sos-code').value.trim();
+  if (!stopId || !code) { $('sos-err').textContent = 'Skriv nødkoden fra jeres quizmaster.'; return; }
+  $('sos-go').disabled = true; $('sos-err').textContent = '';
+  const { data, error } = await sb.schema('quiz').rpc('unlock_stop', { p_token: token, p_stop_id: stopId, p_code: code });
+  $('sos-go').disabled = false;
+  if (error) { $('sos-err').textContent = error.message; return; }
+  if (data !== true) { $('sos-err').textContent = 'Forkert kode – tjek med jeres quizmaster.'; $('sos-code').select(); return; }
+  unlocked.add(stopId);
+  closeSos();
+  openStop(stopId);
+}
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && $('sos').classList.contains('show')) submitSos(); });
 
 // ═════════ Opgaver ═════════
 function openStop(stopId) {

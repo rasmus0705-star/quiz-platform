@@ -505,6 +505,15 @@ function renderStops() {
   updateReadinessUI();
 }
 
+async function newUnlockCode(stopId) {
+  const stop = stops.find(s => s.id === stopId); if (!stop) return;
+  const code = String(crypto.getRandomValues(new Uint32Array(1))[0] % 10000).padStart(4, '0');
+  const { error } = await sb.schema('quiz').from('stops').update({ unlock_code: code }).eq('id', stopId);
+  if (error) { alert(error.message); return; }
+  stop.unlock_code = code;
+  renderStops();
+}
+
 function stopDetail(stop) {
   const rows = stop.activities.map(a => `
     <div class="act-row">
@@ -521,6 +530,11 @@ function stopDetail(stop) {
 
   return `
     <div style="margin-top:.5rem;">
+      <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.1rem 0 .7rem;padding:.5rem .65rem;background:#fff8e6;border:1px solid #f3e1a8;border-radius:8px;font-size:.8rem;">
+        <span>🆘 Nødkode:</span><b style="font-size:1rem;letter-spacing:.15em;">${escHtml(stop.unlock_code ?? '–')}</b>
+        <button class="icon-btn" onclick="newUnlockCode('${stop.id}')" title="Lav en ny kode">↻</button>
+        <span style="color:#8a6d1a;font-size:.72rem;flex-basis:100%;">Giv koden til holdet, hvis GPS ikke virker ved stoppet.</span>
+      </div>
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem;">
         <label style="margin:0;white-space:nowrap;">GPS-radius (meter)</label>
         <input type="number" id="radius-${stop.id}" value="${stop.radius_m??15}"

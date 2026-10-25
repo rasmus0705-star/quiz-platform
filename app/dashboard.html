@@ -234,6 +234,8 @@ function renderGrid() {
       </a>
       <div style="display:flex;gap:.4rem;margin-top:.25rem;">
         <a class="btn btn-sm btn-outline" style="flex:1;text-align:center;text-decoration:none;" href="editor.html?q=${q.id}">✏️ Åbn</a>
+        <a class="btn btn-sm btn-outline" style="text-decoration:none;" href="results.html?q=${q.id}" title="Resultater, CSV og diplomer">📄</a>
+        <button class="btn btn-sm btn-outline" onclick="copyQuiz('${q.id}')" title="Kopiér løb">⧉</button>
         <button class="btn btn-sm btn-danger-ghost" onclick="deleteQuiz('${q.id}')" title="Slet quiz">🗑</button>
       </div>
     </div>`;
@@ -248,6 +250,16 @@ async function createQuiz() {
     .insert(insertRow).select('id').single();
   if (error) { alert('Kunne ikke oprette quiz: ' + error.message); return; }
   location.href = `editor.html?q=${data.id}`;
+}
+
+async function copyQuiz(quizId) {
+  const q = allQuizzes.find(x => x.id === quizId);
+  const def = (q?.title || 'Løb') + ' (kopi)';
+  const title = prompt('Navn på det nye løb:\n(stop, opgaver og fasit kopieres – hold gør ikke)', def);
+  if (title === null) return;
+  const { error } = await sb.schema('quiz').rpc('copy_quiz', { p_quiz_id: quizId, p_title: title.trim() || def });
+  if (error) { alert('Kunne ikke kopiere: ' + error.message); return; }
+  await loadQuizzes();
 }
 
 async function deleteQuiz(quizId) {

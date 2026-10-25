@@ -124,6 +124,15 @@
 
     .card-stat { font-size:.75rem; color:var(--ink-2); display:inline-flex; align-items:center; gap:3px; }
     .card-divider { border:none; border-top:1px solid #f0f1f5; margin:.6rem 0; }
+    .cl { background:#f8f9fc; border-radius:10px; padding:.65rem .7rem; margin:.1rem 0 .6rem; }
+    .cl-dots { display:flex; justify-content:space-between; gap:.25rem; margin-bottom:.55rem; }
+    .cl-step { flex:1; text-align:center; font-size:.62rem; color:var(--muted); }
+    .cl-step i { display:flex; width:22px; height:22px; border-radius:50%; margin:0 auto .15rem; background:#e2e8f0; color:#64748b; font-style:normal; font-weight:800; font-size:.7rem; align-items:center; justify-content:center; }
+    .cl-step.done i { background:#22c55e; color:#fff; }
+    .cl-step.cur { color:var(--ink); font-weight:700; }
+    .cl-step.cur i { background:var(--accent); color:#fff; box-shadow:0 0 0 3px rgba(108,99,255,.2); }
+    .cl-msg { font-size:.78rem; color:var(--ink-2); line-height:1.4; margin-bottom:.45rem; }
+    .cl-btn { background:var(--accent); color:#fff; border:none; border-radius:99px; padding:.4rem .9rem; font-size:.76rem; font-weight:700; cursor:pointer; }
     .card-section-label { font-size:.68rem; font-weight:700; color:var(--muted); letter-spacing:.04em; text-transform:uppercase; margin-bottom:.35rem; }
     .team-row-mini { display:flex; justify-content:space-between; align-items:center; padding:.3rem 0; border-bottom:1px solid #f5f5f5; font-size:.82rem; }
     .team-row-mini:last-child { border-bottom:none; }
@@ -283,7 +292,7 @@ async function init() {
 
 async function loadQuizzes() {
   const { data, error } = await sb.schema('quiz').from('quizzes')
-    .select('id, title, status, round_no, created_at, stops(id, activities(id)), teams(id, name, token)')
+    .select('id, title, status, round_no, created_at, stops(id, activities(id, type)), teams(id, name, token)')
     .eq('customer_id', customerId)
     .order('created_at', { ascending: false })
 
@@ -303,6 +312,18 @@ async function loadQuizzes() {
       </div>`
     return
   }
+
+  // Hvilke opgaver mangler fasit? (blokerer aktivering på serveren)
+  const needKey = ['mc', 'tekst', 'tal']
+  const ids = data.flatMap(q => (q.stops ?? []).flatMap(s => (s.activities ?? []).filter(a => needKey.includes(a.type)).map(a => a.id)))
+  const keyed = new Set()
+  for (let i = 0; i < ids.length; i += 80) {
+    const { data: keys } = await sb.schema('quiz').from('answer_keys').select('activity_id').in('activity_id', ids.slice(i, i + 80))
+    ;(keys ?? []).forEach(k => keyed.add(k.activity_id))
+  }
+  data.forEach(q => {
+    q.missingKeys = (q.stops ?? []).flatMap(s => s.activities ?? []).filter(a => needKey.includes(a.type) && !keyed.has(a.id)).length
+  })
 
   quizzes = data
   renderGrid()
@@ -347,6 +368,8 @@ function renderGrid() {
         <span class="card-stat">👥 ${teams.length} hold</span>
       </div>
 
+      ${checklist(q)}
+
       <hr class="card-divider">
       <div class="card-section-label">Hold</div>
       <div onclick="event.stopPropagation()">${teamRows}</div>
@@ -359,13 +382,13 @@ function renderGrid() {
 
       ${(q.status === 'aktiv' || q.status === 'arkiveret') ? `
       <div onclick="event.stopPropagation()" style="margin:.25rem 0 .6rem;">
-        <a href="${scoreUrl}" target="_blank" style="
+        <a href="${q.status === 'aktiv' ? scoreUrl : 'results.html?q=' + q.id}" ${q.status === 'aktiv' ? 'target="_blank"' : ''} style="
           display:flex;align-items:center;justify-content:center;gap:.5rem;
           background:linear-gradient(135deg,#166534,#22c55e);
           color:#fff;font-weight:700;font-size:.9rem;
           padding:.75rem;border-radius:10px;text-decoration:none;
           box-shadow:0 2px 8px rgba(34,197,94,.3);">
-          📊 ${q.status === 'aktiv' ? 'Gå til scoreboard' : 'Se resultater'}
+          ${q.status === 'aktiv' ? '📊 Gå til scoreboard' : '📄 Resultater &amp; diplomer'}
         </a>
       </div>` : ''}
 
@@ -374,6 +397,8 @@ function renderGrid() {
         <button class="btn-pill" onclick="copyText('${scoreUrl}')">📋 Scoreboard</button>
         <button class="btn-pill-gray" onclick="showScoreQR('${q.id}')">📱 QR</button>
         <button class="btn-pill-gray" onclick="printTeams('${q.id}')">🖨️ Print QR</button>
+        ${(q.status === 'aktiv' || q.status === 'arkiveret') ? `<button class="btn-pill-gray" onclick="openResults('${q.id}')">📄 Resultater</button>` : ''}
+        <button class="btn-pill-gray" onclick="copyQuiz('${q.id}')" title="Kopiér stop, opgaver og fasit til et nyt løb">⧉ Kopiér</button>
       </div>
     </div>`
   }).join('')
@@ -385,7 +410,8 @@ function newQuiz() {
   location.href = 'customer-editor.html'
 }
 
-function openQuiz(quizId) {
+function openQuiz(quizId, step) {
+  try { if (step) localStorage.setItem('ced_step', step) } catch (_) {}
   location.href = `customer-editor.html?q=${quizId}`
 }
 
@@ -434,14 +460,56 @@ function showQR(url, title) {
 }
 function closeQR() { document.getElementById('qr-modal').classList.remove('open') }
 
+function checklist(q) {
+  const stops = q.stops ?? [], teams = realTeams(q)
+  const hasAct = stops.some(s => (s.activities?.length ?? 0) > 0)
+  const noKeys = q.missingKeys ?? 0
+  const live = q.status === 'aktiv', ended = q.status === 'arkiveret'
+  const tested = (q.teams ?? []).some(t => t.name === '🧪 Testhold') || live || ended
+  const steps = [
+    ['Rute', hasAct], ['Hold', teams.length > 0], ['Fasit', hasAct && noKeys === 0],
+    ['Test', tested], ['Aktiv', live || ended], ['Afslut', ended]
+  ]
+  const cur = steps.findIndex(x => !x[1])
+  const btn = (label, onclick) => `<button class="cl-btn" onclick="${onclick}">${label}</button>`
+
+  let msg, act
+  if (!hasAct)            { msg = 'Tilføj mindst ét stop med en opgave.';                                   act = btn('✏️ Byg ruten', `openQuiz('${q.id}',2)`) }
+  else if (noKeys > 0)    { msg = `${noKeys} opgave${noKeys > 1 ? 'r' : ''} mangler fasit – ret dem, før du kan aktivere.`; act = btn('✏️ Ret opgaver', `openQuiz('${q.id}',2)`) }
+  else if (!teams.length) { msg = 'Opret mindst ét hold – hvert hold får sit eget link og QR-kode.';        act = btn('👥 Opret hold', `openQuiz('${q.id}',3)`) }
+  else if (!live && !ended && !tested) { msg = 'Prøv løbet som et testhold, før du aktiverer det.';          act = btn('🧪 Test løbet', `startTestRun('${q.id}')`) }
+  else if (!live && !ended) { msg = 'Alt er klart. Aktivér løbet, når deltagerne er klar.';                  act = btn('▶️ Aktivér løbet', `setQuizStatus('${q.id}','aktiv')`) }
+  else if (live)          { msg = 'Løbet er live. Del hold-links eller print QR-koderne, og følg scoreboardet. Afslut, når alle er færdige.'; act = '' }
+  else                    { msg = 'Løbet er afsluttet. Se resultater og print diplomer – eller start en ny runde, eller kopiér løbet til næste gang.'; act = btn('📄 Resultater', `openResults('${q.id}')`) }
+
+  return `<div class="cl" onclick="event.stopPropagation()">
+    <div class="cl-dots">${steps.map((x, i) => `<div class="cl-step ${x[1] ? 'done' : i === cur ? 'cur' : ''}"><i>${x[1] ? '✓' : i + 1}</i><span>${x[0]}</span></div>`).join('')}</div>
+    <div class="cl-msg">${msg}</div>${act}
+  </div>`
+}
+
+function openResults(quizId) { location.href = 'results.html?q=' + quizId }
+
+async function copyQuiz(quizId) {
+  const q = quizzes.find(x => x.id === quizId)
+  const def = (q?.title || 'Løb') + ' (kopi)'
+  const title = prompt('Navn på det nye løb:\n(stop, opgaver og fasit kopieres – hold gør ikke)', def)
+  if (title === null) return
+  const { error } = await sb.schema('quiz').rpc('copy_quiz', { p_quiz_id: quizId, p_title: title.trim() || def })
+  if (error) { alert('Kunne ikke kopiere: ' + error.message); return }
+  alert('✅ Kopien er oprettet som kladde.\nHusk at oprette nye hold, før du aktiverer den.')
+  await loadQuizzes()
+}
+
 function realTeams(q) { return (q.teams ?? []).filter(t => t.name !== '🧪 Testhold') }
 
 function quizStatusButtons(q) {
   const stops = q.stops ?? []
   const teams = realTeams(q)
   const hasAct = stops.some(s => (s.activities?.length ?? 0) > 0)
-  const ready = hasAct && teams.length > 0
-  const missing = [!hasAct ? 'mindst ét stop med en opgave' : '', !teams.length ? 'mindst ét hold' : ''].filter(Boolean).join(' og ')
+  const noKeys = q.missingKeys ?? 0
+  const ready = hasAct && teams.length > 0 && noKeys === 0
+  const missing = [!hasAct ? 'mindst ét stop med en opgave' : '', !teams.length ? 'mindst ét hold' : '', noKeys ? noKeys + ' opgave(r) uden fasit' : ''].filter(Boolean).join(' og ')
 
   const box = (inner, cols) => `<div onclick="event.stopPropagation()" style="display:grid;grid-template-columns:${cols};gap:.5rem;margin:.25rem 0;">${inner}</div>`
   const btn = (onclick, border, bg, emoji, title, color, sub, extra = '') => `
@@ -485,6 +553,7 @@ async function startTestRun(quizId) {
   const { data: token, error } = await sb.schema('quiz').rpc('create_test_team', { p_quiz_id: quizId })
   if (error) { alert('Kunne ikke starte test: ' + error.message); return }
   window.open(new URL('../play/quiz.html?t=' + token, location.href).href, '_blank')
+  await loadQuizzes()        // checklisten markerer "Test" som gjort
 }
 
 function copyText(text) {

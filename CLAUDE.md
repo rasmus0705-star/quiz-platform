@@ -1,6 +1,6 @@
 # CLAUDE.md – "Jagten" (GPS-quizplatform) projektkort
 
-> Indsæt i starten af en ny chat for hurtig kontekst. Opdateret 25. oktober 2026 (efter sikkerheds- og spilbarhedsrunden).
+> Indsæt i starten af en ny chat for hurtig kontekst. Opdateret 25. oktober 2026 (efter sikkerhed, runder, nødudgang, checkliste, resultater).
 
 ## Hvad er dette?
 Dansk selvbetjeningsplatform til GPS-quiz (escape room kommer senere), brandet **Jagten**.
@@ -23,6 +23,7 @@ hold-links/QR. Hold spiller i mobilbrowseren **uden login** (token i URL). Bygge
 | Login | `app/login.html` (admin) · `?c=<customer-id>` (kunde) | – |
 | Admin | `overview.html`, `customers.html`, `dashboard.html`, `editor.html?q=` | admin |
 | Kunde | `customer-overview.html`, `customer-editor.html[?q=]` | kunde |
+| Resultater | `app/results.html?q=<quiz-id>[&r=<runde>]` – rangliste, alle svar, CSV, diplomer, kopiér, ny runde | admin + kunde (ejer) |
 | Spil | `play/quiz.html?t=<hold-token>` | hold |
 | Scoreboard | `board/scoreboard.html?q=<quiz-id>[&r=<runde>][&tv=1]` | alle (+ quizmaster-bar) |
 | PWA | `sw.js`, `manifest.json` (relative stier!) | – |
@@ -42,7 +43,8 @@ hold-links/QR. Hold spiller i mobilbrowseren **uden login** (token i URL). Bygge
 
 ## Datamodel (kun det vigtige)
 - `quizzes`: `status` (kladde/testing/aktiv/arkiveret), `stop_order` (fri/laast), `round_no`, `description`, `customer_id`. (`mode` er gps/rum/hybrid – bruges ikke endnu. `pin_hash/pin_expires_at` er legacy og nullet.)
-- `stops`: `lat,lng,radius_m` (default 15, kun admin redigerer), `sort`, `qr_token`
+- `stops`: `lat,lng,radius_m` (default 15, kun admin redigerer), `sort`, `qr_token`, **`unlock_code`** (4 cifre, nødkode, tilfældig pr. stop)
+- `stop_unlocks` (hold har brugt nødkode på stop i runde) og `unlock_attempts` (forsøg → spærring efter 5 forkerte pr. hold+stop pr. 10 min) – kun via RPC
 - `activities`: `type` mc/tekst/tal/foto/info, `options`, `points`, `media_url`, `approval` auto/manuel/vis_kun
 - `submissions`: `status` ok/pending/rejected, **`round_no`**, unik (team_id, activity_id, round_no)
 - `team_runs`: starttid pr. hold pr. runde (via `start_team_run`)
@@ -52,6 +54,17 @@ hold-links/QR. Hold spiller i mobilbrowseren **uden login** (token i URL). Bygge
 Genaktivering af et afsluttet løb = **ny runde** (`round_no+1`): alle hold starter forfra, gamle resultater bevares og kan ses via
 rundevælgeren på scoreboardet. Aktivering kræver (håndhæves af `set_quiz_status`): ≥1 opgave, ≥1 rigtigt hold, fasit på alle mc/tekst/tal.
 Aktivering rydder testhold.
+
+## Nødudgang (GPS driller)
+Hvert stop har en 4-cifret **nødkode** (kunde/admin ser den i editoren, kan lave ny, og kunden kan printe et **quizmaster-ark** i trin 3).
+Holdet trykker "🆘 Problemer med GPS? Brug nødkode" → vælger stop → indtaster koden → RPC `unlock_stop` → opgaven åbner uden GPS.
+Hvis GPS er afvist/ikke findes kan holdet vælge **"Fortsæt uden GPS"** (hvert stop låses så op med nødkode). Oplåsninger huskes
+(`get_team_unlocks`) og vises i quizmasterens logbog på scoreboardet (`get_unlocks`). **Nødkoden forlader aldrig serveren til spillere.**
+
+## Kunde-checkliste, resultater, kopiér
+- Løbskortet viser en 6-trins checkliste (Rute · Hold · Fasit · Test · Aktiv · Afslut) med "næste skridt"-knap. Aktivering blokeres hvis opgaver mangler fasit.
+- `results.html` (RPC `get_results`, kun quizmaster/admin): rangliste, alle svar, **CSV** (semikolon + BOM til dansk Excel, formel-injektion neutraliseret), **diplomer** (top 3 / alle hold, A4 liggende), print, kopiér løb, start ny runde, rundevælger.
+- **Kopiér løb** (`copy_quiz`): kopierer stop, opgaver og fasit til en ny **kladde** (nye nødkoder). Hold og resultater kopieres ikke.
 
 ## Spillerflow (play/quiz.html)
 Velkomst (titel, beskrivelse, regler, **starttid**, GPS-tilladelse; advarsel i Messenger/Instagram-browsere) → fuldskærmskort →
@@ -65,7 +78,7 @@ Poller `get_scoreboard` hvert 5. sek (ingen realtime – submissions er fjernet 
 Quizmaster-bar (kun hvis session må styre løbet): afslut, start ny runde, godkend/afvis fotos. Offentligt vises kun godkendte fotos.
 
 ## Deploy-rækkefølge (vigtigt)
-1. SQL Editor → kør `supabase/migrations/001_sikkerhed_og_runder.sql` (kan genkøres). Vælg "Run and enable RLS" hvis spurgt.
+1. SQL Editor → kør `supabase/migrations/001_sikkerhed_og_runder.sql`, derefter `002_naodudgang_resultater_kopier.sql` (begge kan genkøres). Vælg "Run and enable RLS" hvis spurgt.
 2. Edge Functions (dashboard, ikke git): indsæt `quiz-check-answer` og `quiz-pin-auth` → Deploy. (pin-auth: Verify JWT = fra.)
 3. `git push`. Første gang efter push: hård genindlæsning (Ctrl+Shift+R) pga. ny service worker (`jagten-v3`).
 Edge Functions og SQL følger **ikke** med git push.
@@ -78,20 +91,21 @@ Edge Functions og SQL følger **ikke** med git push.
 
 ## Status
 **Færdigt:** auth pr. kunde, kunde-wizard (+ omdøb/flyt stop, kort-søgning), admin-editor, løbskort med hold-deling/QR/print,
-test via skjult testhold, spilside (se ovenfor), scoreboard (rangliste, tid, fremgang, fotos, vinder, runder, TV-tilstand),
-foto-godkendelse, låst/fri rækkefølge håndhævet server-side, sikkerhedslukning, runder.
+test via skjult testhold, spilside, scoreboard (rangliste, tid, fremgang, fotos, vinder, runder, TV-tilstand), foto-godkendelse,
+låst/fri rækkefølge server-side, sikkerhedslukning, runder, **nødudgang (nødkoder, uden-GPS-tilstand, logbog), kunde-checkliste,
+resultatside med CSV/diplomer, kopiér løb.**
 
-**Verificeret 25/10 (ikke mod rigtige Supabase):** migration kørt 2× på lokal Postgres med skema-stub (64 adgangs-/runde-/PIN-/foto-tests ok);
-Edge Functions kørt mod mock-DB; spil/scoreboard/kunde-oversigt kørt i jsdom. **Første rigtige test = en fuld kørsel med en telefon.**
+**Verificeret 25/10 (ikke mod rigtige Supabase):** migration 001+002 kørt 2× på lokal Postgres med skema-stub (64 + 37 adgangs-/runde-/PIN-/foto-/nødkode-/resultat-/kopi-tests ok);
+Edge Functions kørt mod mock-DB; spil/nødudgang/scoreboard/kunde-oversigt/resultater/editorer kørt i jsdom. **Første rigtige test = en fuld kørsel med en telefon.**
 
 ## Backlog (prioriteret)
-1. **Nødudgang ved GPS-problemer** (quizmaster-kode til manuel oplåsning) – ellers kan et hold sidde fast.
-2. **Kunde-checkliste på løbskortet** (Byg → Hold → Test → Aktivér → Del) + resultatside/CSV/diplom efter afslutning + "Kopiér løb".
-3. **GDPR:** privatlivspolitik, databehandleraftale, samtykketekst, auto-sletning (`delete_after` findes, bruges ikke), positioner/fotos.
-4. **Kort-licens:** OSM-tiles er ikke til kommerciel trafik → egen tile-udbyder før salg. Nominatim forbyder søg-mens-du-skriver → DAWA/Dataforsyningen.
-5. **"Find mit login" via mail** i stedet for at vise linket (kræver SMTP); i dag kan man via mail gætte et kunde-id (PIN beskytter stadig).
-6. Server-side GPS-tjek (i dag kan en snyder kalde `quiz-check-answer` direkte med et token); rate-limit på `quiz-check-answer`; `anon_insert_errors` kan spammes.
-7. Admin-PIN kan låses af 5 forkerte gæt (DoS) – tilføj IP/forsinkelse. Storage-SELECT-policy tillader listing af bucket.
-8. Versionering: dump hele det historiske skema (`supabase db dump`) til `supabase/schema.sql`.
-9. `overview.html`: ret redirect for ikke-admin (`editor.html?q=${session.quiz_id}` → `customer-overview.html`).
+1. **GDPR:** privatlivspolitik, databehandleraftale, samtykketekst, auto-sletning (`delete_after` findes, bruges ikke) af positioner/fotos/kundedata.
+2. **Kort-licens:** OSM-tiles er ikke til kommerciel trafik → egen tile-udbyder før salg. Nominatim forbyder søg-mens-du-skriver → DAWA/Dataforsyningen.
+3. **"Find mit login" via mail** i stedet for at vise linket (kræver SMTP); i dag kan man via mail gætte et kunde-id (PIN beskytter stadig).
+4. Server-side GPS-tjek (en snyder kan kalde `quiz-check-answer` direkte med et token – nødkoden håndhæves heller ikke server-side); rate-limit på `quiz-check-answer`; `anon_insert_errors` kan spammes.
+5. Admin-PIN kan låses af 5 forkerte gæt (DoS). Storage-SELECT-policy tillader listing af bucket.
+6. Versionering: dump hele det historiske skema (`supabase db dump`) til `supabase/schema.sql`.
+7. `overview.html`: ret redirect for ikke-admin (`editor.html?q=${session.quiz_id}` → `customer-overview.html`).
+8. Kunde kan ikke slette løb selv (kun admin). Overvej "Slet kladde" for kunder.
+9. Sjovere konkurrence: live-ticker på scoreboard, bonus for hurtigste hold, hints mod pointfradrag, holdfarver.
 10. Escape room/indendørs (qr_token på stops er klar), temaer (`themes/standard.json` ubrugt), Stripe, push (`teams.push_token`, `notifications` klar), eget domæne + separat Supabase, betalt Supabase-plan før drift.

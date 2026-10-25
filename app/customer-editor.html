@@ -377,6 +377,12 @@
     </div>
 
     <div class="card">
+      <div class="card-title">🆘 Nødudgang og quizmaster-ark</div>
+      <p style="font-size:.85rem;color:var(--ink-2);margin-bottom:.85rem;">Hvert stop har en 4-cifret nødkode. Hvis et holds GPS driller, kan du give dem koden i telefonen, så de kan låse stoppet op. Print arket og tag det med på dagen.</p>
+      <button class="btn btn-ghost btn-sm" onclick="printSheet()">🖨️ Print nødkoder &amp; holdliste</button>
+    </div>
+
+    <div class="card">
       <div class="card-title">📊 Scoreboard</div>
       <p style="font-size:.85rem;color:var(--ink-2);margin-bottom:.85rem;">Del scoreboard-linket med tilskuere eller vis det på en storskærm.</p>
       <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
@@ -643,6 +649,42 @@ function renderStops() {
     </div>`).join('')
 }
 
+async function newUnlockCode(stopId) {
+  const stop = stops.find(s => s.id === stopId); if (!stop) return
+  const code = String(crypto.getRandomValues(new Uint32Array(1))[0] % 10000).padStart(4, '0')
+  const { error } = await sb.schema('quiz').from('stops').update({ unlock_code: code }).eq('id', stopId)
+  if (error) { alert(error.message); return }
+  stop.unlock_code = code
+  renderStops()
+}
+
+// Ark til quizmasteren: nødkoder pr. stop, holdlinks og scoreboard – på papir ved dagens arrangement
+function printSheet() {
+  if (!stops.length) { alert('Tilføj mindst ét stop først.'); return }
+  const quizTitle = document.getElementById('title').value || 'Løb'
+  const stopRows = stops.map((s, i) => `<tr><td>${i + 1}</td><td>${escHtml(s.name)}</td><td class="c">${escHtml(s.unlock_code ?? '–')}</td></tr>`).join('')
+  const teamRows = teams.map(t => `<tr><td>${escHtml(t.name)}</td><td class="u">${escHtml(getBaseUrl() + '?t=' + t.token)}</td></tr>`).join('')
+  const win = window.open('', '_blank')
+  if (!win) { alert('Din browser blokerede pop-up-vinduet. Tillad pop-ups og prøv igen.'); return }
+  win.document.write(`<!DOCTYPE html><html lang="da"><head><meta charset="UTF-8"><title>Quizmaster-ark – ${escHtml(quizTitle)}</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 1.5rem; color: #1a1f36; }
+      h1 { font-size: 1.3rem; } h2 { font-size: 1rem; margin: 1.5rem 0 .5rem; }
+      table { border-collapse: collapse; width: 100%; } td, th { border: 1px solid #ccd; padding: .5rem .7rem; text-align: left; font-size: .9rem; }
+      .c { font-size: 1.4rem; font-weight: 800; letter-spacing: .2em; text-align: center; width: 9rem; } .u { font-size: .7rem; word-break: break-all; color: #555; }
+      p.n { font-size: .8rem; color: #666; }
+    </style></head><body>
+    <h1>🗺️ ${escHtml(quizTitle)} – quizmaster-ark</h1>
+    <h2>🆘 Nødkoder (giv dem kun til et hold, hvis GPS ikke virker)</h2>
+    <table><tr><th>#</th><th>Stop</th><th class="c">Nødkode</th></tr>${stopRows}</table>
+    <h2>👥 Hold</h2>
+    ${teams.length ? `<table><tr><th>Hold</th><th>Link</th></tr>${teamRows}</table>` : '<p class="n">Ingen hold oprettet endnu.</p>'}
+    <h2>📊 Scoreboard</h2><p class="u">${escHtml(getScoreboardUrl())}</p>
+    <p class="n">Opbevar arket privat – nødkoderne låser stop op uden GPS.</p>
+    <script>setTimeout(function(){window.print()},400)<\/script></body></html>`)
+  win.document.close()
+}
+
 function renderStopBody(stop) {
   const rows = stop.activities.map(a => `
     <div class="act-row">
@@ -658,6 +700,11 @@ function renderStopBody(stop) {
     </div>`).join('')
 
   return `<div class="stop-body">
+    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.1rem 0 .7rem;padding:.5rem .65rem;background:#fff8e6;border:1px solid #f3e1a8;border-radius:8px;font-size:.8rem;">
+        <span>🆘 Nødkode:</span><b style="font-size:1rem;letter-spacing:.15em;">${escHtml(stop.unlock_code ?? '–')}</b>
+        <button class="icon-btn" onclick="newUnlockCode('${stop.id}')" title="Lav en ny kode">↻</button>
+        <span style="color:#8a6d1a;font-size:.72rem;flex-basis:100%;">Giv koden til holdet, hvis GPS ikke virker ved stoppet.</span>
+      </div>
     ${rows || '<p style="color:var(--muted);font-size:.85rem;margin-bottom:.75rem;">Ingen opgaver endnu</p>'}
     <button class="btn btn-ghost btn-sm btn-full" style="margin-top:.5rem;"
       onclick="openActModal('${stop.id}','')">+ Tilføj opgave</button>

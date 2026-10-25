@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resultater – Jagten</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<style>
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  :root { --bg:#f5f7fa; --white:#fff; --ink:#1a1f36; --ink-2:#4a5568; --muted:#8a94a6; --accent:#6c63ff; --green:#16a34a; --gold:#b8962e; --line:#e8ebf0; --radius:14px; }
+  body { font-family:system-ui,-apple-system,'Segoe UI',sans-serif; background:var(--bg); color:var(--ink); min-height:100vh; }
+  button { font-family:inherit; }
+  header { background:var(--white); border-bottom:1px solid var(--line); padding:0 1.5rem; height:60px; display:flex; align-items:center; justify-content:space-between; gap:1rem; position:sticky; top:0; z-index:10; }
+  .back { color:var(--ink-2); text-decoration:none; font-size:.88rem; font-weight:600; }
+  .back:hover { color:var(--ink); }
+  main { max-width:900px; margin:0 auto; padding:2rem 1.25rem 4rem; }
+  h1 { font-size:1.6rem; font-weight:800; letter-spacing:-.02em; }
+  .sub { color:var(--ink-2); font-size:.9rem; margin:.25rem 0 1.5rem; }
+  .row-top { display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap; }
+  select { padding:.5rem .8rem; border:1.5px solid var(--line); border-radius:10px; background:#fff; font-size:.85rem; font-weight:600; }
+
+  .cards { display:grid; grid-template-columns:repeat(4,1fr); gap:.75rem; margin-bottom:1.5rem; }
+  .card { background:var(--white); border-radius:var(--radius); padding:1rem; box-shadow:0 2px 12px rgba(0,0,0,.06); }
+  .card b { display:block; font-size:1.4rem; } .card span { font-size:.75rem; color:var(--muted); }
+  .card.win b { font-size:1.05rem; }
+
+  .actions { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+  .btn { border:none; border-radius:10px; padding:.65rem 1rem; font-size:.85rem; font-weight:700; cursor:pointer; background:var(--white); color:var(--ink); border:1.5px solid var(--line); text-decoration:none; display:inline-flex; align-items:center; gap:.4rem; }
+  .btn:hover { border-color:var(--accent); }
+  .btn.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .btn.green { background:var(--green); color:#fff; border-color:var(--green); }
+
+  table { width:100%; border-collapse:collapse; background:var(--white); border-radius:var(--radius); overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.06); }
+  th { text-align:left; font-size:.7rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); padding:.7rem 1rem; background:#fafbfc; border-bottom:1px solid var(--line); }
+  td { padding:.75rem 1rem; border-bottom:1px solid var(--line); font-size:.9rem; }
+  tr:last-child td { border-bottom:none; }
+  td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+  .rank { font-weight:800; width:3rem; }
+  .gold { color:var(--gold); } .silver { color:#8a95a8; } .bronze { color:#a0632a; }
+
+  .sec { font-size:.72rem; font-weight:700; letter-spacing:.08em; color:var(--muted); margin:2rem 0 .7rem; }
+  details { background:var(--white); border-radius:12px; margin-bottom:.5rem; box-shadow:0 1px 6px rgba(0,0,0,.05); }
+  summary { cursor:pointer; padding:.85rem 1rem; font-weight:700; font-size:.92rem; display:flex; justify-content:space-between; gap:1rem; }
+  summary span { color:var(--muted); font-weight:600; font-size:.82rem; }
+  details table { box-shadow:none; border-radius:0; }
+  .ok { color:var(--green); } .no { color:#dc2626; } .pend { color:#b7791f; }
+  .empty { text-align:center; color:var(--muted); padding:2.5rem 1rem; background:var(--white); border-radius:var(--radius); }
+  #err { display:none; background:#fff1f2; border:1px solid #fecaca; color:#991b1b; border-radius:12px; padding:1rem; margin-bottom:1rem; }
+
+  @media (max-width:640px) { .cards { grid-template-columns:1fr 1fr; } th.hide-sm, td.hide-sm { display:none; } main { padding:1.25rem 1rem 3rem; } }
+  @media print {
+    body { background:#fff; } header, .actions, select, .noprint { display:none !important; }
+    main { max-width:none; padding:0; } .card, table, details { box-shadow:none; border:1px solid var(--line); }
+    details { break-inside:avoid; } details > summary { list-style:none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <a class="back noprint" id="back" href="customer-overview.html">← Mine løb</a>
+  <span style="font-weight:800">🗺️ Jagten</span>
+</header>
+
+<main>
+  <div id="err"></div>
+  <div id="loading" style="color:var(--muted);padding:3rem 0;text-align:center">Henter resultater…</div>
+
+  <div id="content" style="display:none">
+    <div class="row-top">
+      <div><h1 id="title"></h1><p class="sub" id="sub"></p></div>
+      <select id="round" title="Vælg runde" style="display:none"></select>
+    </div>
+
+    <div class="cards">
+      <div class="card"><b id="c-teams">–</b><span>Hold</span></div>
+      <div class="card"><b id="c-done">–</b><span>Færdige</span></div>
+      <div class="card"><b id="c-max">–</b><span>Mulige point</span></div>
+      <div class="card win"><b id="c-win">–</b><span>Vinder</span></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" onclick="csvRanking()">⬇️ Rangliste (CSV)</button>
+      <button class="btn primary" onclick="csvAnswers()">⬇️ Alle svar (CSV)</button>
+      <button class="btn" onclick="diplomas(3)">🖨️ Diplomer – top 3</button>
+      <button class="btn" onclick="diplomas(0)">🖨️ Diplomer – alle hold</button>
+      <button class="btn" onclick="window.print()">🖨️ Print resultatliste</button>
+      <a class="btn" id="board-link" href="#" target="_blank" rel="noopener">📊 Scoreboard</a>
+      <button class="btn" onclick="copyQuiz()">⧉ Kopiér løb til næste gang</button>
+      <button class="btn green" id="btn-reopen" style="display:none" onclick="newRound()">▶ Start ny runde</button>
+    </div>
+
+    <div id="ranking"></div>
+    <div class="sec">SVAR PR. HOLD</div>
+    <div id="teams"></div>
+  </div>
+</main>
+
+<script>
+const qs = new URLSearchParams(location.search);
+const quizId = qs.get('q');
+let round = Number(qs.get('r')) || null;
+let D = null, isAdmin = false;
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const fmtDur = s => { if (s == null) return '–'; const h = Math.floor(s/3600), m = Math.floor(s%3600/60), x = s%60; return h ? `${h}t ${m}m` : m ? `${m}m ${x}s` : `${x}s`; };
+const fmtTime = iso => iso ? new Date(iso).toLocaleTimeString('da-DK', { hour:'2-digit', minute:'2-digit' }) : '';
+const rankClass = i => i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+function fail(msg) { $('loading').style.display = 'none'; const e = $('err'); e.textContent = msg; e.style.display = 'block'; }
+
+async function init() {
+  const session = await getSession();
+  if (!session) { location.href = 'login.html'; return; }
+  if (session.type === 'pin') { activatePinClient(); isAdmin = !!session.is_admin; }
+  if (isAdmin) { $('back').href = 'dashboard.html'; $('back').textContent = '← Alle løb'; }
+  if (!quizId || !UUID.test(quizId)) return fail('Ugyldigt link – der mangler ?q=<quiz-id>.');
+  await load();
+}
+
+async function load() {
+  const { data, error } = await sb.schema('quiz').rpc('get_results', { p_quiz_id: quizId, p_round: round });
+  if (error) return fail('Kunne ikke hente resultater: ' + error.message);
+  D = data; round = D.round;
+  render();
+}
+
+function render() {
+  $('loading').style.display = 'none'; $('err').style.display = 'none'; $('content').style.display = 'block';
+  const q = D.quiz, teams = D.teams;
+  document.title = q.title + ' – Resultater';
+  $('title').textContent = q.title || '(uden titel)';
+  $('sub').textContent = [D.customer, D.rounds.length > 1 ? 'Runde ' + D.round : '', q.status === 'arkiveret' ? 'Afsluttet' : q.status === 'aktiv' ? 'Kører nu' : 'Ikke startet'].filter(Boolean).join(' · ');
+  $('board-link').href = new URL('../board/scoreboard.html?q=' + q.id + (D.rounds.length > 1 ? '&r=' + D.round : ''), location.href).href;
+  $('btn-reopen').style.display = q.status === 'arkiveret' ? '' : 'none';
+
+  const sel = $('round');
+  if (D.rounds.length > 1) {
+    sel.style.display = '';
+    sel.innerHTML = D.rounds.slice().reverse().map(r => `<option value="${r}" ${r === D.round ? 'selected' : ''}>Runde ${r}${r === q.round_no ? ' (nuværende)' : ''}</option>`).join('');
+  } else sel.style.display = 'none';
+
+  $('c-teams').textContent = teams.length;
+  $('c-done').textContent = teams.filter(t => t.finished).length;
+  $('c-max').textContent = D.max_points;
+  $('c-win').textContent = teams.length && teams[0].answered > 0 ? '🥇 ' + teams[0].name : '–';
+
+  $('ranking').innerHTML = teams.length ? `<table><thead><tr><th>#</th><th>Hold</th><th class="num">Point</th><th class="num hide-sm">Rigtige</th><th class="num hide-sm">Besvaret</th><th class="num">Tid</th></tr></thead><tbody>${
+    teams.map((t, i) => `<tr><td class="rank ${rankClass(i)}">${i + 1}</td><td><b>${esc(t.name)}</b>${t.finished ? '' : ' <span class="pend">(ikke færdig)</span>'}</td><td class="num"><b>${t.points}</b></td><td class="num hide-sm">${t.correct}</td><td class="num hide-sm">${t.answered}/${D.activities}</td><td class="num">${t.finished ? fmtDur(t.duration_s) : '–'}</td></tr>`).join('')
+  }</tbody></table>` : '<div class="empty">Ingen hold har spillet i denne runde endnu.</div>';
+
+  $('teams').innerHTML = teams.map((t, i) => `<details><summary>${i + 1}. ${esc(t.name)} <span>${t.points} point · ${t.answered} svar</span></summary>${
+    t.answers.length ? `<table><thead><tr><th>Stop</th><th>Opgave</th><th>Svar</th><th class="num">Point</th></tr></thead><tbody>${
+      t.answers.map(a => `<tr><td class="hide-sm">${a.stop_no}. ${esc(a.stop)}</td><td>${esc(a.question)}</td><td>${answerCell(a)}</td><td class="num">${a.points}</td></tr>`).join('')
+    }</tbody></table>` : '<div class="empty" style="box-shadow:none">Ingen besvarelser.</div>'
+  }</details>`).join('');
+}
+
+function answerCell(a) {
+  const mark = a.status === 'pending' ? '<span class="pend">⏳</span>' : a.status === 'rejected' ? '<span class="no">🚫</span>' : a.correct ? '<span class="ok">✅</span>' : '<span class="no">❌</span>';
+  const isPhoto = a.type === 'foto' && /^https:\/\//.test(a.answer || '');
+  return mark + ' ' + (isPhoto ? `<a href="${esc(a.answer)}" target="_blank" rel="noopener">📷 Se billede</a>` : esc(a.answer));
+}
+
+// ── CSV (semikolon + BOM, så dansk Excel åbner den korrekt) ──
+const csvCell = v => {
+  v = v == null ? '' : String(v);
+  if (/^[=+\-@\t\r]/.test(v)) v = "'" + v;                       // forhindrer formel-injektion fra holdnavne/svar
+  return /[";\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+};
+const toCsv = rows => '\ufeff' + rows.map(r => r.map(csvCell).join(';')).join('\r\n');
+const slug = s => String(s || 'løb').toLowerCase().replace(/æ/g,'ae').replace(/ø/g,'oe').replace(/å/g,'aa').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0, 40) || 'lob';
+function download(name, text) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' }));
+  a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+function csvRanking() {
+  const rows = [['Placering', 'Hold', 'Point', 'Rigtige', 'Besvaret', 'Antal opgaver', 'Færdig', 'Tid']];
+  D.teams.forEach((t, i) => rows.push([i + 1, t.name, t.points, t.correct, t.answered, D.activities, t.finished ? 'Ja' : 'Nej', t.finished ? fmtDur(t.duration_s) : '']));
+  download(`${slug(D.quiz.title)}-runde${D.round}-rangliste.csv`, toCsv(rows));
+}
+function csvAnswers() {
+  const rows = [['Hold', 'Stop nr.', 'Stop', 'Opgave', 'Type', 'Svar', 'Status', 'Rigtigt', 'Point', 'Tidspunkt']];
+  const stat = { ok: 'Registreret', pending: 'Afventer godkendelse', rejected: 'Afvist' };
+  D.teams.forEach(t => t.answers.forEach(a => rows.push([t.name, a.stop_no, a.stop, a.question, a.type, a.answer, stat[a.status] || a.status, a.correct ? 'Ja' : 'Nej', a.points, a.at ? new Date(a.at).toLocaleString('da-DK') : ''])));
+  download(`${slug(D.quiz.title)}-runde${D.round}-alle-svar.csv`, toCsv(rows));
+}
+
+// ── Diplomer ──
+function diplomas(top) {
+  const teams = (top ? D.teams.slice(0, top) : D.teams).filter(t => t.answered > 0);
+  if (!teams.length) { alert('Der er ingen hold med besvarelser at lave diplomer til.'); return; }
+  const date = new Date(D.generated_at).toLocaleDateString('da-DK', { day:'numeric', month:'long', year:'numeric' });
+  const place = i => i === 0 ? '🥇 1. plads' : i === 1 ? '🥈 2. plads' : i === 2 ? '🥉 3. plads' : `${i + 1}. plads af ${D.teams.length} hold`;
+  const pages = teams.map(t => {
+    const i = D.teams.indexOf(t), big = t.name.length > 26 ? '30pt' : t.name.length > 16 ? '40pt' : '52pt';
+    return `<section class="dip"><div class="frame">
+      <div class="k">DIPLOM</div>
+      <div class="s">tildeles</div>
+      <div class="n" style="font-size:${big}">${esc(t.name)}</div>
+      <div class="s">for flot deltagelse i</div>
+      <div class="t">${esc(D.quiz.title || '')}</div>
+      <div class="p">${place(i)}</div>
+      <div class="pt">${t.points} point${D.max_points ? ' af ' + D.max_points + ' mulige' : ''}${t.finished ? ' · tid ' + esc(fmtDur(t.duration_s)) : ''}</div>
+      <div class="f">${esc(date)}${D.customer ? ' · ' + esc(D.customer) : ''}</div>
+    </div></section>`;
+  }).join('');
+  const w = window.open('', '_blank');
+  if (!w) { alert('Din browser blokerede pop-up-vinduet. Tillad pop-ups for siden og prøv igen.'); return; }
+  w.document.write(`<!DOCTYPE html><html lang="da"><head><meta charset="utf-8"><title>Diplomer – ${esc(D.quiz.title)}</title><style>
+    @page { size: A4 landscape; margin: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Georgia, 'Times New Roman', serif; color: #2a2a2a; }
+    .dip { width: 297mm; height: 209mm; padding: 14mm; page-break-after: always; break-after: page; }
+    .frame { width: 100%; height: 100%; border: 3mm double #b8962e; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10mm; gap: 3.5mm; }
+    .k { font-size: 20pt; letter-spacing: .5em; color: #b8962e; font-weight: bold; margin-bottom: 4mm; }
+    .s { font-size: 14pt; color: #777; font-style: italic; }
+    .n { font-weight: bold; line-height: 1.15; max-width: 240mm; word-break: break-word; }
+    .t { font-size: 24pt; }
+    .p { font-size: 22pt; color: #b8962e; font-weight: bold; margin-top: 4mm; }
+    .pt { font-size: 14pt; color: #555; }
+    .f { font-size: 11pt; color: #888; margin-top: 8mm; }
+  </style></head><body>${pages}<script>setTimeout(function(){window.print()},400)<\/script></body></html>`);
+  w.document.close();
+}
+
+// ── Handlinger ──
+async function copyQuiz() {
+  const def = (D.quiz.title || 'Løb') + ' (kopi)';
+  const title = prompt('Navn på det nye løb:\n(stop, opgaver og fasit kopieres – hold gør ikke)', def);
+  if (title === null) return;
+  const { data, error } = await sb.schema('quiz').rpc('copy_quiz', { p_quiz_id: quizId, p_title: title.trim() || def });
+  if (error) { alert('Kunne ikke kopiere: ' + error.message); return; }
+  alert('✅ Kopien er oprettet som kladde.\nHusk at oprette nye hold, før du aktiverer den.');
+  location.href = (isAdmin ? 'editor.html' : 'customer-editor.html') + '?q=' + data;
+}
+
+async function newRound() {
+  if (!confirm('Start en NY runde?\n\nHoldene starter forfra med nul point. Denne runde gemmes og kan ses her.')) return;
+  const { error } = await sb.schema('quiz').rpc('set_quiz_status', { p_quiz_id: quizId, p_status: 'aktiv' });
+  if (error) { alert(error.message); return; }
+  round = null; await load();
+}
+
+$('round').onchange = e => { round = Number(e.target.value); load(); };
+window.onbeforeprint = () => document.querySelectorAll('details').forEach(d => d.open = true);
+init();
+</script>
+</body>
+</html>

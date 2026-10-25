@@ -96,7 +96,7 @@
   /* TV-visning */
   body.tv main { max-width:1100px; } body.tv .nm { font-size:1.5rem; } body.tv .pts { font-size:2rem; }
   body.tv .meta { font-size:1rem; } body.tv .row { padding:1.2rem 1.5rem; } body.tv .rk { font-size:1.6rem; width:3rem; }
-  body.tv .stats, body.tv #mgr, body.tv .attr { display:none; }
+  body.tv .stats, body.tv #mgr, body.tv #unlocks, body.tv .attr { display:none; }
 
   @media (max-width:600px) {
     header, #mgr { padding:.85rem 1rem; } main { padding:1.25rem 1rem 3rem; }
@@ -120,8 +120,10 @@
   <span>Quizmaster</span>
   <button class="mbtn red"   id="btn-end"    style="display:none">🏁 Afslut løbet</button>
   <button class="mbtn green" id="btn-reopen" style="display:none">▶ Start ny runde</button>
+  <a class="mbtn" id="res-link" href="#" style="background:#6c63ff;text-decoration:none" title="Rangliste, alle svar, CSV og diplomer">📄 Resultater &amp; diplomer</a>
   <span id="mgr-msg"></span>
 </div>
+<div id="unlocks" style="display:none;background:var(--panel);border-bottom:1px solid var(--border);padding:.6rem 1.75rem;font-size:.78rem;color:var(--muted)"></div>
 
 <main>
   <div id="notice"></div>
@@ -183,7 +185,7 @@ async function load() {
   if (error) { notice('Kunne ikke hente scoreboard: ' + error.message, true); return; }
   if (!data) { $('quiz-title').textContent = ''; $('body').style.display = 'none'; notice('Scoreboardet er ikke åbent endnu – det vises, når løbet er aktivt.'); return; }
   lastData = data; notice(''); render(data);
-  if (isManager) loadPending();
+  if (isManager) { loadPending(); loadUnlocks(); }
 }
 
 function fmtDur(s) { if (s == null) return '–'; const h = Math.floor(s/3600), m = Math.floor(s%3600/60), x = s%60; return h ? `${h}t ${m}m` : m ? `${m}m ${x}s` : `${x}s`; }
@@ -204,6 +206,7 @@ function render(d) {
     sel.innerHTML = d.rounds.slice().reverse().map(r => `<option value="${r}" ${r === d.round ? 'selected' : ''}>Runde ${r}${r === q.round_no ? ' (nuværende)' : ''}</option>`).join('');
   } else sel.style.display = 'none';
 
+  $('res-link').href = new URL('../app/results.html?q=' + q.id + '&r=' + d.round, location.href).href;
   $('btn-end').style.display    = isManager && q.status !== 'arkiveret' ? '' : 'none';
   $('btn-reopen').style.display = isManager && q.status === 'arkiveret' ? '' : 'none';
 
@@ -264,6 +267,16 @@ async function loadPending() {
       <div class="a"><button class="mbtn green" data-id="${esc(p.submission_id)}" data-ok="1">✓ Godkend</button>
       <button class="mbtn red" data-id="${esc(p.submission_id)}" data-ok="0">✕ Afvis</button></div></div>`).join('');
 }
+async function loadUnlocks() {
+  const { data, error } = await sbm.schema('quiz').rpc('get_unlocks', { p_quiz_id: quizId });
+  const box = $('unlocks');
+  if (error || !data?.length) { box.style.display = 'none'; return; }
+  box.style.display = 'block';
+  box.innerHTML = '🆘 <b>Nødkoder brugt</b> (uden GPS): ' + data.slice(0, 8).map(u =>
+    `${esc(u.team_name)} → ${esc(u.stop_name)} kl. ${new Date(u.unlocked_at).toLocaleTimeString('da-DK', { hour:'2-digit', minute:'2-digit' })}`).join(' · ')
+    + (data.length > 8 ? ` · … +${data.length - 8}` : '');
+}
+
 $('pending').addEventListener('click', async e => {
   const b = e.target.closest('button[data-id]'); if (!b) return;
   b.disabled = true;
