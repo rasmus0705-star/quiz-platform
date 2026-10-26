@@ -65,10 +65,12 @@ Holdet trykker "🆘 Problemer med GPS? Brug nødkode" → vælger stop → indt
 Hvis GPS er afvist/ikke findes kan holdet vælge **"Fortsæt uden GPS"** (hvert stop låses så op med nødkode). Oplåsninger huskes
 (`get_team_unlocks`) og vises i quizmasterens logbog på scoreboardet (`get_unlocks`). **Nødkoden forlader aldrig serveren til spillere.**
 
-## Kunde-checkliste, resultater, kopiér
-- Løbskortet viser en 6-trins checkliste (Rute · Hold · Fasit · Test · Aktiv · Afslut) med "næste skridt"-knap. Aktivering blokeres hvis opgaver mangler fasit.
-- `results.html` (RPC `get_results`, kun quizmaster/admin): rangliste, alle svar, **CSV** (semikolon + BOM til dansk Excel, formel-injektion neutraliseret), **diplomer** (top 3 / alle hold, A4 liggende), print, kopiér løb, start ny runde, rundevælger.
-- **Kopiér løb** (`copy_quiz`): kopierer stop, opgaver og fasit til en ny **kladde** (nye nødkoder). Hold og resultater kopieres ikke.
+## Kunde-oversigt, resultater, kopiér
+- `customer-overview.html` (redesign 26/10): SVG-ikoner (ingen emojis), filtre (Alle/Aktive/Kladder/Afsluttede), aktive øverst. Hvert løbskort har **ét** "næste skridt" (primær knap), trinrække kun for kladder, hold som foldbar liste (kopiér link / QR / mail), fem sekundære handlinger og "Afslut løbet…" som diskret tekstknap. Toasts i stedet for alert().
+- **Velkomstguide** (3 trin) til nye kunder: vises altid uden løb, ellers én gang (`localStorage jagten-guide-<kunde>`); (?)-knappen i headeren viser den igen.
+- Aktivering blokeres hvis opgaver mangler fasit. `results.html` (RPC `get_results`): rangliste, alle svar, **CSV** (semikolon + BOM, formel-injektion neutraliseret), **diplomer** (top 3/alle, i løbets tema), print, kopiér løb, ny runde, "Slet deltagerdata nu".
+- **Kopiér løb** (`copy_quiz`): stop, opgaver og fasit → ny **kladde** (nye nødkoder). Hold og resultater kopieres ikke.
+- Opgavebilleder uploades **automatisk** ved valg (komprimeret til max 1600 px i browseren; "Gem opgave" venter på igangværende upload). Leaflet-lag er isoleret (`#map{isolation:isolate}`), vinduer har z-index 2000.
 
 ## Temaer (pr. løb)
 - `quizzes.theme` (tekst-id, format `a-z0-9_-`) vælges af kunden i wizardens trin 1 (live-preview) / admin-editoren. Ukendt eller tomt id → `standard`.

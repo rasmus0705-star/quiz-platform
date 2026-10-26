@@ -45,12 +45,19 @@
     .screen p.lead { color:var(--muted); font-size:.95rem; line-height:1.6; max-width:330px; margin:0 auto 1.1rem; white-space:pre-line; }
     .big-icon { font-size:3.4rem; margin-bottom:.8rem; }
     .hero-emoji {
-      font-size:3.8rem; width:112px; height:112px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-      background:var(--tint); border:1px solid var(--border); box-shadow:0 0 0 10px var(--tint); margin:0 auto 1.4rem;
+      font-size:3rem; width:92px; height:92px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+      background:var(--tint); border:1px solid var(--border); box-shadow:0 0 0 8px var(--tint); margin:0 auto 1.1rem;
       animation:float 3.2s ease-in-out infinite;
     }
     .kicker { font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); font-weight:700; margin-bottom:.4rem; }
-    .rules { list-style:none; text-align:left; max-width:340px; width:100%; margin:0 auto 1rem; display:grid; gap:.5rem; }
+    .chips { display:flex; flex-wrap:wrap; justify-content:center; gap:.45rem; max-width:340px; margin:0 auto 1.1rem; }
+    .chips span { display:inline-flex; align-items:center; gap:.4rem; background:var(--tint); border:1px solid var(--border); border-radius:99px; padding:.45rem .8rem; font-size:.8rem; font-weight:600; }
+    details.how { max-width:340px; width:100%; margin:0 auto 1rem; text-align:left; }
+    details.how summary { cursor:pointer; color:var(--muted); font-size:.8rem; text-align:center; padding:.3rem; list-style:none; }
+    details.how summary::-webkit-details-marker { display:none; }
+    .clamp { display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; }
+    .more-btn { background:none; border:none; color:var(--accent); font-size:.82rem; font-weight:700; margin:-.6rem 0 1rem; padding:.3rem; }
+    .rules { list-style:none; text-align:left; width:100%; margin:.4rem auto 0; display:grid; gap:.5rem; }
     .rules li { display:flex; gap:.7rem; align-items:flex-start; background:var(--tint); border:1px solid var(--border); border-radius:calc(var(--radius) - 4px); padding:.6rem .8rem; font-size:.84rem; line-height:1.4; }
     .rules .ri { font-size:1.1rem; line-height:1.3; }
     .consent { display:flex; gap:.65rem; align-items:flex-start; text-align:left; font-size:.76rem; color:var(--muted); max-width:340px; margin:0 auto 1rem; line-height:1.45; cursor:pointer; }
@@ -75,18 +82,18 @@
     #topbar { position:fixed; top:0; left:0; right:0; z-index:500; display:none; justify-content:space-between; align-items:center; gap:.5rem; padding:calc(env(safe-area-inset-top,0px) + .6rem) .75rem .3rem; pointer-events:none; }
     #topbar > * { pointer-events:auto; }
     .top-right { display:flex; gap:.4rem; align-items:center; }
-    .pill { background:var(--glass); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border:1px solid var(--border); border-radius:99px; padding:.4rem .85rem; font-size:.8rem; font-weight:700; max-width:46vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .pill { background:var(--glass); border:1px solid var(--border); border-radius:99px; padding:.4rem .85rem; font-size:.8rem; font-weight:700; max-width:46vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
     .pill.pts { color:var(--accent); font-family:var(--font-display); font-size:.9rem; }
     .pill.pts.bump { animation:bump .5s; }
     .pill.test { color:var(--accent); } .pill.acc { font-size:.72rem; }
-    #progress { position:fixed; left:.75rem; right:.75rem; top:calc(env(safe-area-inset-top,0px) + 3.35rem); z-index:499; display:none; gap:4px; padding:6px 8px; background:var(--glass); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border:1px solid var(--border); border-radius:99px; }
+    #progress { position:fixed; left:.75rem; right:.75rem; top:calc(env(safe-area-inset-top,0px) + 3.35rem); z-index:499; display:none; gap:4px; padding:6px 8px; background:var(--glass); border:1px solid var(--border); border-radius:99px; }
     #progress .seg { flex:1; height:5px; border-radius:3px; background:var(--tint); transition:background .3s; }
     #progress .seg.done { background:var(--good); } #progress .seg.cur { background:var(--accent); animation:blink 1.6s infinite; }
 
     /* ── Bundpanel ── */
     #bottom-panel { position:fixed; left:0; right:0; bottom:0; z-index:500; display:none; align-items:flex-end; justify-content:space-between; gap:.6rem; padding:.75rem .75rem calc(env(safe-area-inset-bottom,0px) + .75rem); pointer-events:none; }
     #bottom-panel > * { pointer-events:auto; }
-    #next-card { display:none; flex:1; min-width:0; max-width:350px; gap:.8rem; align-items:center; background:var(--glass); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid var(--border); border-radius:var(--radius); padding:.7rem .85rem; box-shadow:0 8px 28px rgba(0,0,0,.25); }
+    #next-card { display:none; flex:1; min-width:0; max-width:350px; gap:.8rem; align-items:center; background:var(--glass); border:1px solid var(--border); border-radius:var(--radius); padding:.7rem .85rem; box-shadow:0 6px 20px rgba(0,0,0,.22); }
     #compass { width:54px; height:54px; flex-shrink:0; border-radius:50%; background:var(--tint); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; }
     #arrow { width:30px; height:30px; color:var(--accent); transition:transform .3s linear; }
     #arrow svg { width:100%; height:100%; display:block; }
@@ -101,14 +108,15 @@
     .sos-link { margin-top:.4rem; background:none; border:none; color:var(--muted); font-size:.7rem; text-decoration:underline; cursor:pointer; padding:0; text-align:left; }
     .sos-link.alert { color:var(--bad); font-weight:700; }
     .btns { display:flex; flex-direction:column; gap:.5rem; }
-    .map-btn { width:46px; height:46px; border-radius:50%; background:var(--glass); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border:1px solid var(--border); color:var(--text); font-size:1.15rem; cursor:pointer; }
+    .map-btn { width:46px; height:46px; border-radius:50%; background:var(--glass); border:1px solid var(--border); color:var(--text); font-size:1.15rem; cursor:pointer; }
     .map-btn.on { color:var(--accent); border-color:var(--accent); }
 
     /* ── Kort-elementer ── */
     .gps-dot { width:16px; height:16px; border-radius:50%; background:#4a9eff; border:2.5px solid #fff; box-shadow:0 0 0 6px rgba(74,158,255,.25); }
-    .stop-pin { width:34px; height:34px; border-radius:var(--pin-radius); display:flex; align-items:center; justify-content:center; font:800 .85rem var(--font-display); color:#fff; border:3px solid #fff; background:var(--bad); box-shadow:0 2px 8px rgba(0,0,0,.35); }
+    .stop-pin { position:relative; width:34px; height:34px; border-radius:var(--pin-radius); display:flex; align-items:center; justify-content:center; font:800 .85rem var(--font-display); color:#fff; border:3px solid #fff; background:var(--bad); box-shadow:0 2px 8px rgba(0,0,0,.35); }
     .stop-pin.done { background:var(--good); font-size:.95rem; }
-    .stop-pin.target { background:var(--accent); color:var(--accent-ink); transform:scale(1.22); animation:pulse-pin 1.6s infinite; }
+    .stop-pin.target { background:var(--accent); color:var(--accent-ink); transform:scale(1.22); }
+    .stop-pin.target::after { content:''; position:absolute; inset:-3px; border-radius:inherit; border:2px solid var(--accent); animation:ring 1.8s ease-out infinite; }
 
     /* ── Ankomst ── */
     #arrive { position:fixed; inset:0; z-index:850; display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:2rem; cursor:pointer;
@@ -173,7 +181,7 @@
     @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
     @keyframes fadein { from { opacity:0; } to { opacity:1; } }
     @keyframes ping { 0% { box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); } 100% { box-shadow:0 0 0 38px transparent; } }
-    @keyframes pulse-pin { 0% { box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 60%, transparent), 0 2px 8px rgba(0,0,0,.35); } 70% { box-shadow:0 0 0 18px transparent, 0 2px 8px rgba(0,0,0,.35); } 100% { box-shadow:0 0 0 0 transparent, 0 2px 8px rgba(0,0,0,.35); } }
+    @keyframes ring { from { transform:scale(1); opacity:.9; } to { transform:scale(2.1); opacity:0; } }
     @keyframes pop { 0% { transform:scale(0); } 60% { transform:scale(1.25); } 100% { transform:scale(1); } }
     @keyframes bump { 0% { transform:scale(1); } 40% { transform:scale(1.07); } 100% { transform:scale(1); } }
     @keyframes shake { 0%,100% { transform:translateX(0); } 20%,60% { transform:translateX(-7px); } 40%,80% { transform:translateX(7px); } }
@@ -203,20 +211,22 @@
   <div class="hero-emoji" id="welcome-emoji">🗺️</div>
   <div class="kicker" id="welcome-kicker">Velkommen til</div>
   <h1 id="welcome-title">Jagten</h1>
-  <p class="lead" id="welcome-desc"></p>
+  <p class="lead clamp" id="welcome-desc"></p>
+  <button class="more-btn" id="desc-more" style="display:none" onclick="toggleDesc()">Læs mere</button>
   <div id="inapp-warn" class="warn-box">
     <b>Åbn i Chrome eller Safari.</b> Du er i en app-browser (fx Messenger), og dér kan GPS ofte ikke bruges.
     <br><button onclick="copyLink()">Kopiér link</button>
   </div>
-  <ul class="rules" id="rules"></ul>
+  <div class="chips" id="chips"></div>
   <label class="consent" id="consent-box">
     <input type="checkbox" id="consent-chk">
-    <span>Jeg har læst <a href="../privatliv.html" target="_blank" rel="noopener">oplysningerne om databehandling</a> og er indforstået med, at jeres position, svar og billeder bruges under løbet, og at billeder kan blive vist på scoreboardet.</span>
+    <span>Jeg accepterer, at jeres position, svar og billeder bruges under løbet. <a href="../privatliv.html" target="_blank" rel="noopener">Læs mere</a></span>
   </label>
   <div id="welcome-err"></div>
   <button class="btn-gold" id="welcome-btn" onclick="startGame()">Start jagten</button>
   <button class="btn-ghost" id="skip-gps" style="margin-top:.75rem" onclick="startGame(true)">🧪 Test uden GPS</button>
   <button class="btn-ghost" id="nogps-btn" style="margin-top:.75rem" onclick="startGame(true)">Fortsæt uden GPS (kræver nødkode)</button>
+  <details class="how"><summary>Sådan virker det</summary><ul class="rules" id="rules"></ul></details>
   <div class="attr" id="map-attr"></div>
 </div>
 
@@ -405,6 +415,14 @@ function applyWords() {
     ['📡', 'Jeres position deles med quizmasteren, mens I spiller.']
   ];
   $('rules').innerHTML = rules.map(([i, t]) => `<li><span class="ri">${i}</span><span>${esc(t)}</span></li>`).join('');
+  // Kort version på selve startskærmen – detaljerne ligger under "Sådan virker det"
+  const chips = [['📍', `Gå til ${words.stopsDef}`], ['🔋', 'Hold GPS tændt'], ['☝️', 'Ét forsøg pr. opgave']];
+  $('chips').innerHTML = chips.map(([i, t]) => `<span>${i} ${esc(t)}</span>`).join('');
+}
+
+function toggleDesc() {
+  const d = $('welcome-desc'), open = d.classList.toggle('clamp');
+  $('desc-more').textContent = open ? 'Læs mere' : 'Vis mindre';
 }
 
 const consentKey = () => 'jagten-samtykke-' + token;
@@ -413,7 +431,9 @@ function consentStored() { try { return localStorage.getItem(consentKey()) === '
 function showWelcome() {
   $('welcome-title').textContent = team.quiz_title || 'Jagten';
   $('welcome-desc').textContent  = team.quiz_description || '';
-  $('welcome-desc').style.display = team.quiz_description ? 'block' : 'none';
+  $('welcome-desc').style.display = team.quiz_description ? '-webkit-box' : 'none';
+  $('welcome-desc').classList.add('clamp');
+  $('desc-more').style.display = (team.quiz_description || '').length > 150 ? 'inline-block' : 'none';
   $('welcome-btn').textContent = team.started_at ? words.resumeBtn : words.startBtn;
   $('skip-gps').style.display = team.is_test ? 'inline-flex' : 'none';
   $('nogps-btn').style.display = 'none';

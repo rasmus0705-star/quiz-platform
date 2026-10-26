@@ -118,7 +118,9 @@ function jagtenAddVector(L, map, spec, style, tint) {
   const toOsm = why => { done = true; out.layer = jagtenOsmFallback(L, map, style, tint, why) }
 
   const addGl = (styleName, native) => {
-    const layer = L.maplibreGL({ style: JAGTEN_OFM_STYLES + styleName }).addTo(map)
+    // Lettere rendering på telefoner: ingen fade-animation, højst 2x pixeltæthed, ingen gentagelse af verden
+    const layer = L.maplibreGL({ style: JAGTEN_OFM_STYLES + styleName, fadeDuration: 0, pixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+      refreshExpiredTiles: false, renderWorldCopies: false, updateInterval: 48 }).addTo(map)
     out.layer = layer
     const box = layer.getContainer && layer.getContainer()
     if (box && box.style) box.style.filter = jagtenTileFilter({ native }, style, tint)

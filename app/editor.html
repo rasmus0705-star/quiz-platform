@@ -636,7 +636,7 @@ function buildForm(stopId, act, mcCountOverride) {
     <div class="upload-row">
       <input type="file" id="af-img-${stopId}" accept="image/*"
         style="flex:1;font-size:.8rem;"
-        onchange="previewTaskImage('${stopId}')">
+        onchange="previewTaskImage('${stopId}'); uploadTaskImage('${stopId}')">
       <button class="btn btn-sm btn-ghost" type="button"
         onclick="uploadTaskImage('${stopId}')" style="white-space:nowrap;">
         ⬆ Upload
