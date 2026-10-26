@@ -6,226 +6,186 @@
   <title>Jagten</title>
   <link rel="manifest" href="../manifest.json">
   <meta name="theme-color" content="#0d0f14">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/nosleep.js@0.12.0/dist/NoSleep.min.js"></script>
+  <link rel="stylesheet" href="../fonts/fonts.css">
+  <link rel="stylesheet" href="../vendor/leaflet/leaflet.css">
+  <script src="../vendor/leaflet/leaflet.js"></script>
+  <script src="../vendor/supabase.js"></script>
+  <script src="../vendor/NoSleep.min.js"></script>
   <script src="../js/config.js"></script>
+  <script src="../js/map-config.js"></script>
+  <script src="../js/map.js"></script>
+  <script src="../js/themes.js"></script>
   <script src="../js/api.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* Standardtema som udgangspunkt – applyTheme() overskriver alle disse variabler */
     :root {
-      --night:#0d0f14; --deep:#13161e; --panel:#1a1e28; --border:rgba(255,255,255,.1);
-      --gold:#e8c84a; --coral:#e94560; --green:#22c55e; --muted:rgba(255,255,255,.5);
-      --text:#f0eeea; --radius:16px;
+      --night:#0d0f14; --deep:#13161e; --panel:#1a1e28; --border:rgba(255,255,255,.1); --tint:rgba(255,255,255,.07);
+      --glass:rgba(13,15,20,.88); --fade:rgba(13,15,20,.95); --accent:#e8c84a; --accent-ink:#0d0f14;
+      --bad:#e94560; --good:#22c55e; --muted:rgba(255,255,255,.5); --text:#f0eeea; --radius:16px; --pin-radius:50%;
+      --font-display:'Syne',system-ui,sans-serif; --font-body:'Inter',system-ui,sans-serif;
     }
-    html, body {
-      height:100%; width:100%; overflow:hidden; background:var(--night); color:var(--text);
-      font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
-    }
+    html, body { height:100%; width:100%; overflow:hidden; background:var(--night); color:var(--text); font-family:var(--font-body); }
+    h1, h2, .display { font-family:var(--font-display); }
     button { font-family:inherit; }
     #map { position:fixed; inset:0; z-index:1; }
+    .leaflet-container { background:var(--deep); font-family:var(--font-body); }
+    .leaflet-bottom.leaflet-right { bottom:calc(env(safe-area-inset-bottom,0px) + 118px); z-index:400; }
+    .leaflet-control-attribution { background:var(--glass) !important; color:var(--muted) !important; font-size:9px; }
+    .leaflet-control-attribution a { color:var(--muted) !important; }
 
     /* ── Fuldskærms-skærme ── */
     .screen {
-      position:fixed; inset:0; display:none; flex-direction:column; align-items:center;
-      justify-content:center; text-align:center; padding:2rem 1.5rem; background:var(--night);
-      overflow-y:auto; -webkit-overflow-scrolling:touch;
+      position:fixed; inset:0; z-index:900; display:none; flex-direction:column; align-items:center; justify-content:center;
+      text-align:center; padding:calc(env(safe-area-inset-top,0px) + 1.5rem) 1.5rem calc(env(safe-area-inset-bottom,0px) + 1.5rem);
+      overflow-y:auto; background:radial-gradient(120% 60% at 50% 0%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 62%), var(--night);
     }
     .screen.show { display:flex; }
-    #finished   { z-index:1000; }
-    #welcome    { z-index:9970; }
-    #msg-screen { z-index:9980; }
-    #loading    { z-index:9990; }
-    .big-icon { font-size:3.5rem; margin-bottom:1rem; }
-    .screen h1 { font-size:1.7rem; font-weight:800; letter-spacing:-.02em; margin-bottom:.5rem; }
-    .screen p.lead { color:var(--muted); font-size:.95rem; line-height:1.6; max-width:320px; margin:0 auto 1.25rem; white-space:pre-line; }
-    .btn-gold {
-      background:var(--gold); color:var(--night); border:none; border-radius:99px;
-      padding:1rem 2rem; font-size:1rem; font-weight:800; cursor:pointer;
-      width:100%; max-width:300px; display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
-      text-decoration:none;
+    .screen h1 { font-size:1.9rem; font-weight:800; letter-spacing:-.02em; line-height:1.15; margin-bottom:.6rem; }
+    .screen p.lead { color:var(--muted); font-size:.95rem; line-height:1.6; max-width:330px; margin:0 auto 1.1rem; white-space:pre-line; }
+    .big-icon { font-size:3.4rem; margin-bottom:.8rem; }
+    .hero-emoji {
+      font-size:3.8rem; width:112px; height:112px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+      background:var(--tint); border:1px solid var(--border); box-shadow:0 0 0 10px var(--tint); margin:0 auto 1.4rem;
+      animation:float 3.2s ease-in-out infinite;
     }
-    .btn-gold:disabled { opacity:.5; }
-    .btn-ghost {
-      background:rgba(232,200,74,.12); color:var(--gold); border:1px solid rgba(232,200,74,.3);
-      border-radius:99px; padding:.8rem 1.5rem; font-weight:700; font-size:.92rem; text-decoration:none;
-      display:none; align-items:center; justify-content:center; gap:.4rem; cursor:pointer;
+    .kicker { font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); font-weight:700; margin-bottom:.4rem; }
+    .rules { list-style:none; text-align:left; max-width:340px; width:100%; margin:0 auto 1rem; display:grid; gap:.5rem; }
+    .rules li { display:flex; gap:.7rem; align-items:flex-start; background:var(--tint); border:1px solid var(--border); border-radius:calc(var(--radius) - 4px); padding:.6rem .8rem; font-size:.84rem; line-height:1.4; }
+    .rules .ri { font-size:1.1rem; line-height:1.3; }
+    .consent { display:flex; gap:.65rem; align-items:flex-start; text-align:left; font-size:.76rem; color:var(--muted); max-width:340px; margin:0 auto 1rem; line-height:1.45; cursor:pointer; }
+    .consent input { width:20px; height:20px; flex-shrink:0; accent-color:var(--accent); margin-top:1px; }
+    .consent a { color:var(--accent); }
+    #welcome-err { color:var(--bad); font-size:.85rem; min-height:1.2rem; margin-bottom:.7rem; max-width:320px; }
+    .warn-box { display:none; background:color-mix(in srgb, var(--bad) 16%, transparent); border:1px solid var(--bad); border-radius:12px; padding:.8rem 1rem; font-size:.82rem; line-height:1.5; max-width:330px; margin-bottom:1rem; text-align:left; }
+    .warn-box button { margin-top:.5rem; background:var(--tint); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:.35rem .8rem; cursor:pointer; }
+    .btn-gold, .btn-ghost, .send-btn, .alt-btn {
+      display:inline-flex; align-items:center; justify-content:center; text-decoration:none; cursor:pointer; border-radius:calc(var(--radius) - 2px);
+      font-weight:800; font-size:1rem; padding:1rem 1.6rem; width:100%; max-width:340px; border:none;
     }
-    .spinner {
-      width:36px; height:36px; border:3px solid var(--border); border-top-color:var(--gold);
-      border-radius:50%; animation:spin .8s linear infinite; margin-bottom:1rem;
-    }
-    @keyframes spin { to { transform:rotate(360deg); } }
+    .btn-gold, .send-btn { background:var(--accent); color:var(--accent-ink); font-family:var(--font-display); box-shadow:0 6px 22px color-mix(in srgb, var(--accent) 35%, transparent); }
+    .btn-gold:disabled, .send-btn:disabled { opacity:.4; box-shadow:none; cursor:not-allowed; }
+    .btn-ghost, .alt-btn { background:var(--tint); color:var(--text); border:1px solid var(--border); font-size:.9rem; font-weight:700; padding:.8rem 1.2rem; }
+    .alt-btn { margin-top:.6rem; width:100%; }
+    #skip-gps, #nogps-btn { display:none; }
+    .attr { margin-top:1.4rem; font-size:.68rem; color:var(--muted); opacity:.7; max-width:320px; }
+    .spinner { width:38px; height:38px; border:3px solid var(--tint); border-top-color:var(--accent); border-radius:50%; animation:spin 1s linear infinite; margin-bottom:1rem; }
 
-    .rules { text-align:left; list-style:none; max-width:320px; margin:0 auto 1.5rem; }
-    .rules li { font-size:.85rem; color:var(--muted); line-height:1.5; padding:.3rem 0 .3rem 1.6rem; position:relative; }
-    .rules li::before { content:'•'; position:absolute; left:.5rem; color:var(--gold); }
-    .warn-box {
-      background:rgba(233,69,96,.12); border:1px solid rgba(233,69,96,.35); color:#ffb3c0;
-      border-radius:12px; padding:.85rem 1rem; font-size:.82rem; line-height:1.5;
-      max-width:320px; margin:0 auto 1.25rem; display:none;
-    }
-    .warn-box button {
-      margin-top:.5rem; background:var(--coral); color:#fff; border:none; border-radius:99px;
-      padding:.4rem .9rem; font-size:.78rem; font-weight:700; cursor:pointer;
-    }
-    #welcome-err { color:#ffb3c0; font-size:.85rem; min-height:1.2rem; margin-bottom:.75rem; max-width:320px; }
-    .attr { margin-top:1.5rem; font-size:.7rem; color:rgba(255,255,255,.3); }
-
-    .sos-link { margin-top:.45rem; background:none; border:none; color:var(--muted); font-size:.74rem; text-decoration:underline; cursor:pointer; padding:0; }
-    .sos-link.alert { color:#ffb3c0; font-weight:700; }
-    #sos { z-index:700; }
-    #sos select.txt-input { appearance:none; -webkit-appearance:none; }
-
-    /* ── Topbar ── */
-    #topbar {
-      position:fixed; top:0; left:0; right:0; z-index:500; display:none;
-      align-items:center; justify-content:space-between; gap:.5rem;
-      padding:calc(env(safe-area-inset-top,0px) + .75rem) 1rem 1rem;
-      background:linear-gradient(to bottom, rgba(13,15,20,.95), rgba(13,15,20,0));
-      pointer-events:none;
-    }
+    /* ── Topbar + fremgang ── */
+    #topbar { position:fixed; top:0; left:0; right:0; z-index:500; display:none; justify-content:space-between; align-items:center; gap:.5rem; padding:calc(env(safe-area-inset-top,0px) + .6rem) .75rem .3rem; pointer-events:none; }
     #topbar > * { pointer-events:auto; }
-    .pill {
-      background:rgba(13,15,20,.85); backdrop-filter:blur(8px); border:1px solid var(--border);
-      border-radius:99px; padding:.4rem .9rem; font-size:.85rem; font-weight:600;
-      white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:42vw;
-    }
-    .pill.pts { background:var(--gold); color:var(--night); font-weight:800; border-color:var(--gold); }
-    .pill.acc { font-size:.75rem; color:var(--muted); }
-    .pill.test { color:var(--gold); border-color:rgba(232,200,74,.4); font-size:.75rem; }
-    .top-right { display:flex; align-items:center; gap:.4rem; }
+    .top-right { display:flex; gap:.4rem; align-items:center; }
+    .pill { background:var(--glass); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border:1px solid var(--border); border-radius:99px; padding:.4rem .85rem; font-size:.8rem; font-weight:700; max-width:46vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .pill.pts { color:var(--accent); font-family:var(--font-display); font-size:.9rem; }
+    .pill.pts.bump { animation:bump .5s; }
+    .pill.test { color:var(--accent); } .pill.acc { font-size:.72rem; }
+    #progress { position:fixed; left:.75rem; right:.75rem; top:calc(env(safe-area-inset-top,0px) + 3.35rem); z-index:499; display:none; gap:4px; padding:6px 8px; background:var(--glass); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border:1px solid var(--border); border-radius:99px; }
+    #progress .seg { flex:1; height:5px; border-radius:3px; background:var(--tint); transition:background .3s; }
+    #progress .seg.done { background:var(--good); } #progress .seg.cur { background:var(--accent); animation:blink 1.6s infinite; }
 
     /* ── Bundpanel ── */
-    #bottom-panel {
-      position:fixed; left:0; right:0; bottom:0; z-index:500; display:none;
-      align-items:flex-end; justify-content:space-between; gap:.75rem;
-      padding:1rem 1rem calc(env(safe-area-inset-bottom,0px) + .75rem);
-      background:linear-gradient(to top, rgba(13,15,20,.95), rgba(13,15,20,0));
-      pointer-events:none;
-    }
+    #bottom-panel { position:fixed; left:0; right:0; bottom:0; z-index:500; display:none; align-items:flex-end; justify-content:space-between; gap:.6rem; padding:.75rem .75rem calc(env(safe-area-inset-bottom,0px) + .75rem); pointer-events:none; }
     #bottom-panel > * { pointer-events:auto; }
-    #next-card {
-      flex:1; min-width:0; background:rgba(13,15,20,.88); backdrop-filter:blur(10px);
-      border:1px solid var(--border); border-radius:var(--radius); padding:.7rem 1rem; display:none;
-    }
-    #next-name { font-size:.78rem; color:var(--muted); margin-bottom:.15rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    #next-dist { font-size:1.6rem; font-weight:800; color:var(--gold); line-height:1; }
-    #next-dist.near { color:var(--green); }
-    .btns { display:flex; gap:.5rem; }
-    .map-btn {
-      width:48px; height:48px; border-radius:50%; background:rgba(13,15,20,.88);
-      backdrop-filter:blur(10px); border:1px solid var(--border); color:var(--text);
-      font-size:1.2rem; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
-    }
-    .map-btn.on { color:var(--gold); background:rgba(232,200,74,.15); border-color:rgba(232,200,74,.4); }
+    #next-card { display:none; flex:1; min-width:0; max-width:350px; gap:.8rem; align-items:center; background:var(--glass); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid var(--border); border-radius:var(--radius); padding:.7rem .85rem; box-shadow:0 8px 28px rgba(0,0,0,.25); }
+    #compass { width:54px; height:54px; flex-shrink:0; border-radius:50%; background:var(--tint); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; }
+    #arrow { width:30px; height:30px; color:var(--accent); transition:transform .3s linear; }
+    #arrow svg { width:100%; height:100%; display:block; }
+    .nx-body { min-width:0; flex:1; text-align:left; }
+    #next-label { font-size:.62rem; letter-spacing:.14em; color:var(--muted); font-weight:700; }
+    #next-name { font-family:var(--font-display); font-weight:800; font-size:1rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    #next-dist { font-size:1.35rem; font-weight:800; font-family:var(--font-display); color:var(--accent); line-height:1.15; }
+    #next-dist.near { color:var(--good); }
+    #heat { display:flex; align-items:center; gap:.35rem; font-size:.75rem; font-weight:700; margin-top:.15rem; }
+    #heat-bar { height:5px; border-radius:3px; background:var(--tint); overflow:hidden; margin-top:.3rem; }
+    #heat-fill { display:block; height:100%; width:0; border-radius:3px; transition:width .5s, background .5s; }
+    .sos-link { margin-top:.4rem; background:none; border:none; color:var(--muted); font-size:.7rem; text-decoration:underline; cursor:pointer; padding:0; text-align:left; }
+    .sos-link.alert { color:var(--bad); font-weight:700; }
+    .btns { display:flex; flex-direction:column; gap:.5rem; }
+    .map-btn { width:46px; height:46px; border-radius:50%; background:var(--glass); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border:1px solid var(--border); color:var(--text); font-size:1.15rem; cursor:pointer; }
+    .map-btn.on { color:var(--accent); border-color:var(--accent); }
 
-    /* Kort-elementer */
+    /* ── Kort-elementer ── */
     .gps-dot { width:16px; height:16px; border-radius:50%; background:#4a9eff; border:2.5px solid #fff; box-shadow:0 0 0 6px rgba(74,158,255,.25); }
-    .stop-pin {
-      width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-      font-size:.8rem; font-weight:800; color:#fff; border:2.5px solid rgba(255,255,255,.4);
-    }
-    .stop-pin.available { background:var(--coral); border-color:var(--coral); animation:pulse-pin 1.8s infinite; }
-    .stop-pin.done { background:var(--green); border-color:var(--green); }
-    @keyframes pulse-pin { 0%,100%{box-shadow:0 0 0 0 rgba(233,69,96,.5)} 50%{box-shadow:0 0 0 10px rgba(233,69,96,0)} }
-    .leaflet-control-zoom { display:none !important; }
-    .leaflet-bottom.leaflet-right { bottom:calc(env(safe-area-inset-bottom,0px) + 84px); z-index:400; }
-    .leaflet-control-attribution { background:rgba(13,15,20,.7) !important; color:#9aa !important; font-size:10px !important; }
-    .leaflet-control-attribution a { color:#bcd !important; }
+    .stop-pin { width:34px; height:34px; border-radius:var(--pin-radius); display:flex; align-items:center; justify-content:center; font:800 .85rem var(--font-display); color:#fff; border:3px solid #fff; background:var(--bad); box-shadow:0 2px 8px rgba(0,0,0,.35); }
+    .stop-pin.done { background:var(--good); font-size:.95rem; }
+    .stop-pin.target { background:var(--accent); color:var(--accent-ink); transform:scale(1.22); animation:pulse-pin 1.6s infinite; }
 
-    /* ── Opgave-overlay ── */
-    #activity-overlay {
-      position:fixed; inset:0; z-index:800; background:var(--night); display:flex; flex-direction:column;
-      transform:translateY(100%); visibility:hidden;
-      transition:transform .35s cubic-bezier(.32,.72,0,1), visibility 0s linear .35s;
-    }
+    /* ── Ankomst ── */
+    #arrive { position:fixed; inset:0; z-index:850; display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:2rem; cursor:pointer;
+      background:radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--accent) 30%, var(--night)), var(--night) 72%); }
+    #arrive.show { display:flex; animation:fadein .25s; }
+    .arr-ring { font-size:4.4rem; width:150px; height:150px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:var(--tint); border:2px solid var(--accent); animation:ping 1.3s ease-out infinite; margin-bottom:1.5rem; }
+    #arrive h1 { font-size:2rem; }
+
+    /* ── Opgave ── */
+    #activity-overlay { position:fixed; inset:0; z-index:800; background:var(--night); display:flex; flex-direction:column; transform:translateY(100%); visibility:hidden; }
     #activity-overlay.open { transform:none; visibility:visible; transition:transform .35s cubic-bezier(.32,.72,0,1); }
-    #act-header {
-      padding:calc(env(safe-area-inset-top,0px) + 1rem) 1.25rem 1rem; background:var(--deep);
-      border-bottom:1px solid var(--border); flex-shrink:0;
-    }
-    #act-stop { font-size:1.05rem; font-weight:700; }
-    #act-count { font-size:.78rem; color:var(--muted); margin-top:.15rem; }
-    #act-body { flex:1; overflow-y:auto; padding:1.25rem; -webkit-overflow-scrolling:touch; }
-    #act-media { display:none; width:100%; border-radius:var(--radius); margin-bottom:1.25rem; }
-    #act-question { font-size:1.05rem; line-height:1.6; margin-bottom:1.25rem; white-space:pre-line; }
-    .opt-btn {
-      display:flex; align-items:center; gap:.75rem; width:100%; text-align:left; background:var(--panel);
-      border:1.5px solid var(--border); color:var(--text); padding:.9rem 1rem; border-radius:var(--radius);
-      font-size:.95rem; margin-bottom:.6rem; cursor:pointer;
-    }
+    #act-header { padding:calc(env(safe-area-inset-top,0px) + 1rem) 1.25rem 1rem; background:var(--deep); border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:1rem; }
+    #act-stop { font-family:var(--font-display); font-weight:800; font-size:1rem; }
+    #act-count { font-size:.78rem; color:var(--muted); white-space:nowrap; }
+    #act-body { flex:1; overflow-y:auto; padding:1.4rem 1.25rem calc(env(safe-area-inset-bottom,0px) + 1.5rem); max-width:580px; width:100%; margin:0 auto; }
+    #act-media { display:none; width:100%; max-height:36vh; object-fit:cover; border-radius:var(--radius); margin-bottom:1rem; }
+    #act-question { font-family:var(--font-display); font-size:1.3rem; font-weight:700; line-height:1.35; margin-bottom:1.3rem; white-space:pre-line; }
+    .opt-btn { display:flex; align-items:center; gap:.8rem; width:100%; text-align:left; padding:.95rem 1rem; margin-bottom:.6rem; border-radius:calc(var(--radius) - 2px); border:1.5px solid var(--border); background:var(--panel); color:var(--text); font-size:1rem; cursor:pointer; transition:transform .08s; }
+    .opt-btn:active { transform:scale(.98); }
     .opt-btn:disabled { opacity:.9; }
-    .opt-letter { width:26px; height:26px; border-radius:50%; background:rgba(255,255,255,.08); display:inline-flex; align-items:center; justify-content:center; font-size:.8rem; font-weight:700; flex-shrink:0; }
-    .opt-btn.correct { background:rgba(34,197,94,.15); border-color:var(--green); color:var(--green); }
-    .opt-btn.wrong   { background:rgba(233,69,96,.15); border-color:var(--coral); color:var(--coral); }
-    .txt-input {
-      width:100%; background:var(--panel); border:1.5px solid var(--border); color:var(--text);
-      padding:.9rem 1rem; border-radius:var(--radius); font-size:1rem; margin-bottom:.75rem;
-    }
-    .txt-input:focus { outline:none; border-color:var(--gold); }
-    .send-btn {
-      width:100%; background:var(--gold); color:var(--night); border:none; padding:1rem;
-      border-radius:var(--radius); font-size:1rem; font-weight:800; cursor:pointer;
-    }
-    .send-btn:disabled { opacity:.5; }
-    .alt-btn {
-      width:100%; background:var(--panel); border:1px solid var(--border); color:var(--text);
-      padding:.9rem; border-radius:var(--radius); font-size:.92rem; font-weight:600; cursor:pointer; margin-top:.6rem;
-    }
-    .result-box { text-align:center; padding:1.5rem; border-radius:var(--radius); margin-bottom:1rem; }
-    .result-box.correct { background:rgba(34,197,94,.15); }
-    .result-box.wrong   { background:rgba(233,69,96,.15); }
-    .result-box.pending { background:rgba(232,200,74,.12); }
-    .result-emoji { font-size:2.5rem; margin-bottom:.4rem; }
-    .result-label { font-size:1.15rem; font-weight:800; margin-bottom:.2rem; }
-    .result-sub { color:var(--muted); font-size:.88rem; }
-    .info-box { background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:1rem 1.1rem; margin-bottom:1rem; color:var(--muted); font-size:.88rem; }
-    .photo-label {
-      display:block; width:100%; background:var(--panel); border:2px dashed var(--border); color:var(--muted);
-      text-align:center; padding:2rem 1rem; border-radius:var(--radius); font-size:.95rem; cursor:pointer; margin-bottom:.75rem;
-    }
-    #photo-preview { display:none; width:100%; border-radius:var(--radius); margin-bottom:.75rem; }
-    .inline-err { color:#ffb3c0; font-size:.85rem; margin-top:.6rem; text-align:center; min-height:1.1rem; }
+    .opt-letter { width:30px; height:30px; border-radius:50%; background:var(--tint); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.8rem; flex-shrink:0; }
+    .opt-btn.correct { border-color:var(--good); background:color-mix(in srgb, var(--good) 16%, var(--panel)); animation:bump .4s; }
+    .opt-btn.wrong { border-color:var(--bad); background:color-mix(in srgb, var(--bad) 14%, var(--panel)); animation:shake .4s; }
+    .txt-input { width:100%; padding:.95rem 1rem; border-radius:calc(var(--radius) - 2px); border:1.5px solid var(--border); background:var(--panel); color:var(--text); font-size:1rem; margin-bottom:.7rem; font-family:inherit; }
+    .txt-input:focus { outline:none; border-color:var(--accent); }
+    select.txt-input { appearance:none; -webkit-appearance:none; }
+    .send-btn { max-width:none; }
+    .photo-label { display:flex; align-items:center; justify-content:center; padding:1.6rem 1rem; border-radius:var(--radius); border:2px dashed var(--border); background:var(--tint); cursor:pointer; font-weight:700; margin-bottom:.8rem; }
+    #photo-preview { display:none; width:100%; max-height:40vh; object-fit:cover; border-radius:var(--radius); margin-bottom:.8rem; }
+    .inline-err { color:var(--bad); font-size:.85rem; min-height:1.2rem; margin:.4rem 0; }
+    .info-box { background:var(--tint); border:1px solid var(--border); border-radius:12px; padding:.85rem 1rem; font-size:.88rem; color:var(--muted); margin-bottom:.8rem; }
+    .result-box { text-align:center; padding:1.6rem 1rem; border-radius:var(--radius); border:1.5px solid var(--border); background:var(--panel); margin-bottom:1rem; }
+    .result-box.correct { border-color:var(--good); } .result-box.wrong { border-color:var(--bad); } .result-box.pending { border-color:var(--accent); }
+    .result-emoji { font-size:3.4rem; animation:pop .45s ease-out; }
+    .result-label { font-family:var(--font-display); font-size:1.35rem; font-weight:800; margin-top:.3rem; }
+    .result-pts { font-family:var(--font-display); font-size:2.4rem; font-weight:800; color:var(--accent); line-height:1.1; margin-top:.2rem; }
+    .result-sub { color:var(--muted); font-size:.9rem; margin-top:.2rem; }
 
     /* ── Stop-liste ── */
-    #stops-overlay { position:fixed; inset:0; z-index:600; background:var(--night); display:none; flex-direction:column; }
-    #stops-overlay.open { display:flex; }
-    #stops-head {
-      padding:calc(env(safe-area-inset-top,0px) + 1rem) 1.25rem 1rem; background:var(--deep);
-      border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;
-    }
-    #stops-head h2 { font-size:1rem; }
+    #stops-overlay { position:fixed; inset:0; z-index:600; background:var(--night); display:flex; flex-direction:column; transform:translateY(100%); visibility:hidden; }
+    #stops-overlay.open { transform:none; visibility:visible; transition:transform .3s cubic-bezier(.32,.72,0,1); }
+    #stops-head { padding:calc(env(safe-area-inset-top,0px) + 1rem) 1.25rem 1rem; background:var(--deep); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    #stops-head h2 { font-size:1.05rem; }
     .close-btn { background:none; border:none; color:var(--muted); font-size:1.8rem; line-height:1; cursor:pointer; }
     #stops-body { flex:1; overflow-y:auto; padding:1rem; }
-    .stop-item {
-      background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
-      padding:.9rem 1.1rem; margin-bottom:.7rem; display:flex; align-items:center; gap:.85rem; cursor:pointer;
-    }
-    .stop-num { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.8rem; font-weight:800; flex-shrink:0; background:var(--coral); color:#fff; }
-    .stop-num.done { background:var(--green); }
+    .stop-item { background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:.9rem 1.1rem; margin-bottom:.7rem; display:flex; align-items:center; gap:.85rem; cursor:pointer; }
+    .stop-num { width:34px; height:34px; border-radius:var(--pin-radius); display:flex; align-items:center; justify-content:center; font:800 .85rem var(--font-display); flex-shrink:0; background:var(--bad); color:#fff; }
+    .stop-num.done { background:var(--good); }
     .stop-info { flex:1; min-width:0; text-align:left; }
-    .stop-name { font-weight:700; font-size:.92rem; }
-    .stop-meta { font-size:.75rem; color:var(--muted); margin-top:.1rem; }
-    .stop-dist { font-size:.78rem; color:var(--gold); font-weight:700; }
-    .stop-dist.near { color:var(--green); }
-    .stops-foot { text-align:center; font-size:.7rem; color:rgba(255,255,255,.3); padding:1rem 0 2rem; }
+    .stop-name { font-weight:700; font-size:.93rem; } .stop-meta { font-size:.75rem; color:var(--muted); margin-top:.1rem; }
+    .stop-dist { font-size:.8rem; color:var(--accent); font-weight:700; } .stop-dist.near { color:var(--good); }
+    .stops-foot { text-align:center; font-size:.68rem; color:var(--muted); padding:1rem 0 2rem; }
 
     /* ── Færdig ── */
-    #confetti { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
-    .score-card {
-      background:linear-gradient(135deg, rgba(232,200,74,.15), rgba(232,200,74,.05));
-      border:1px solid rgba(232,200,74,.3); border-radius:20px; padding:1.5rem 2rem; margin:1rem auto 1.25rem; width:100%; max-width:320px;
-    }
-    #final-points { font-size:3.4rem; font-weight:800; color:var(--gold); line-height:1; }
-    @keyframes fall { 0%{transform:translateY(-20px) rotate(0)} 100%{transform:translateY(110vh) rotate(720deg); opacity:0} }
-    @keyframes pop { 0%{transform:scale(0)} 60%{transform:scale(1.2)} 100%{transform:scale(1)} }
+    #confetti, #fx { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+    #fx { position:fixed; z-index:1000; }
+    .score-card { background:linear-gradient(135deg, color-mix(in srgb, var(--accent) 18%, transparent), color-mix(in srgb, var(--accent) 5%, transparent)); border:1px solid color-mix(in srgb, var(--accent) 40%, transparent); border-radius:22px; padding:1.5rem 2rem; margin:1rem auto 1.25rem; width:100%; max-width:330px; }
+    #final-points { font-family:var(--font-display); font-size:3.6rem; font-weight:800; color:var(--accent); line-height:1; }
+
+    /* ── Animationer ── */
+    @keyframes spin { to { transform:rotate(360deg); } }
+    @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
+    @keyframes fadein { from { opacity:0; } to { opacity:1; } }
+    @keyframes ping { 0% { box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); } 100% { box-shadow:0 0 0 38px transparent; } }
+    @keyframes pulse-pin { 0% { box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 60%, transparent), 0 2px 8px rgba(0,0,0,.35); } 70% { box-shadow:0 0 0 18px transparent, 0 2px 8px rgba(0,0,0,.35); } 100% { box-shadow:0 0 0 0 transparent, 0 2px 8px rgba(0,0,0,.35); } }
+    @keyframes pop { 0% { transform:scale(0); } 60% { transform:scale(1.25); } 100% { transform:scale(1); } }
+    @keyframes bump { 0% { transform:scale(1); } 40% { transform:scale(1.07); } 100% { transform:scale(1); } }
+    @keyframes shake { 0%,100% { transform:translateX(0); } 20%,60% { transform:translateX(-7px); } 40%,80% { transform:translateX(7px); } }
+    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:.45; } }
+    @keyframes fall { 0% { transform:translateY(-20px) rotate(0); } 100% { transform:translateY(110vh) rotate(720deg); opacity:0; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration:.001s !important; animation-iteration-count:1 !important; transition-duration:.001s !important; } }
   </style>
 </head>
 <body>
 
 <div id="map"></div>
+<div id="fx"></div>
 
 <!-- Indlæser -->
 <div id="loading" class="screen show"><div class="spinner"></div><p style="color:var(--muted)">Indlæser løbet…</p></div>
@@ -240,27 +200,27 @@
 
 <!-- Velkomst / start -->
 <div id="welcome" class="screen">
-  <div class="big-icon">🗺️</div>
+  <div class="hero-emoji" id="welcome-emoji">🗺️</div>
+  <div class="kicker" id="welcome-kicker">Velkommen til</div>
   <h1 id="welcome-title">Jagten</h1>
   <p class="lead" id="welcome-desc"></p>
   <div id="inapp-warn" class="warn-box">
     <b>Åbn i Chrome eller Safari.</b> Du er i en app-browser (fx Messenger), og dér kan GPS ofte ikke bruges.
     <br><button onclick="copyLink()">Kopiér link</button>
   </div>
-  <ul class="rules">
-    <li>Gå rundt til stopene – opgaven åbner automatisk, når I er tæt nok på.</li>
-    <li>Hold telefonen tændt og lad GPS være slået til.</li>
-    <li>I har ét forsøg pr. opgave.</li>
-    <li>Jeres position deles med quizmasteren, mens I spiller.</li>
-  </ul>
+  <ul class="rules" id="rules"></ul>
+  <label class="consent" id="consent-box">
+    <input type="checkbox" id="consent-chk">
+    <span>Jeg har læst <a href="../privatliv.html" target="_blank" rel="noopener">oplysningerne om databehandling</a> og er indforstået med, at jeres position, svar og billeder bruges under løbet, og at billeder kan blive vist på scoreboardet.</span>
+  </label>
   <div id="welcome-err"></div>
   <button class="btn-gold" id="welcome-btn" onclick="startGame()">Start jagten</button>
   <button class="btn-ghost" id="skip-gps" style="margin-top:.75rem" onclick="startGame(true)">🧪 Test uden GPS</button>
   <button class="btn-ghost" id="nogps-btn" style="margin-top:.75rem" onclick="startGame(true)">Fortsæt uden GPS (kræver nødkode)</button>
-  <div class="attr">Kort: © OpenStreetMap-bidragydere</div>
+  <div class="attr" id="map-attr"></div>
 </div>
 
-<!-- Topbar / bundpanel -->
+<!-- Topbar / fremgang / bundpanel -->
 <div id="topbar">
   <div class="pill" id="team-name">–</div>
   <div class="top-right">
@@ -269,8 +229,19 @@
     <div class="pill pts" id="points">0 p</div>
   </div>
 </div>
+<div id="progress"></div>
 <div id="bottom-panel">
-  <div id="next-card"><div id="next-name">Næste stop</div><div id="next-dist">–</div><button class="sos-link" id="sos-link" onclick="openSos()">🆘 Problemer med GPS? Brug nødkode</button></div>
+  <div id="next-card">
+    <div id="compass" aria-hidden="true"><div id="arrow"><svg viewBox="0 0 24 24"><path d="M12 2 L19.5 21 L12 16.8 L4.5 21 Z" fill="currentColor"/></svg></div></div>
+    <div class="nx-body">
+      <div id="next-label">NÆSTE STOP</div>
+      <div id="next-name">–</div>
+      <div id="next-dist">–</div>
+      <div id="heat"><span id="heat-emoji"></span><span id="heat-text"></span></div>
+      <div id="heat-bar"><i id="heat-fill"></i></div>
+      <button class="sos-link" id="sos-link" onclick="openSos()">🆘 Problemer med GPS? Brug nødkode</button>
+    </div>
+  </div>
   <div class="btns">
     <button class="map-btn" id="btn-list"   onclick="openStops()"     title="Alle stop">☰</button>
     <button class="map-btn" id="btn-locate" onclick="centerOnUser()"  title="Find mig">◎</button>
@@ -278,8 +249,16 @@
   </div>
 </div>
 
+<!-- Ankomst -->
+<div id="arrive">
+  <div class="arr-ring" id="arr-emoji">📍</div>
+  <div class="kicker" id="arr-title">Fremme!</div>
+  <h1 id="arr-sub"></h1>
+  <p class="lead" style="margin-top:.5rem">Tryk for at fortsætte</p>
+</div>
+
 <!-- Nødkode (hvis GPS driller) -->
-<div id="sos" class="screen">
+<div id="sos" class="screen" style="z-index:700">
   <div style="width:100%;max-width:340px">
     <div class="big-icon">🆘</div>
     <h1 style="font-size:1.4rem">Problemer med GPS?</h1>
@@ -294,7 +273,7 @@
 
 <!-- Stop-liste -->
 <div id="stops-overlay">
-  <div id="stops-head"><h2>Alle stop</h2><button class="close-btn" onclick="closeStops()">×</button></div>
+  <div id="stops-head"><h2 id="stops-title">Alle stop</h2><button class="close-btn" onclick="closeStops()">×</button></div>
   <div id="stops-body"></div>
 </div>
 
@@ -311,19 +290,20 @@
 <!-- Færdig -->
 <div id="finished" class="screen">
   <div id="confetti"></div>
-  <div style="position:relative;z-index:1;width:100%;max-width:340px">
-    <div style="font-size:5rem;animation:pop .5s ease-out">🏆</div>
-    <h1>Tillykke!</h1>
-    <p class="lead">I har gennemført alle stop på jagten.<br>Godt gået!</p>
+  <div style="position:relative;z-index:1;width:100%;max-width:350px">
+    <div style="font-size:5rem;animation:pop .5s ease-out" id="final-emoji">🏆</div>
+    <h1 id="final-title">Tillykke!</h1>
+    <p class="lead" id="final-text">I har gennemført alle stop på jagten.</p>
     <div class="score-card">
-      <div style="font-size:.75rem;color:var(--muted);letter-spacing:.06em;margin-bottom:.3rem">JERES SCORE</div>
+      <div style="font-size:.72rem;color:var(--muted);letter-spacing:.1em;margin-bottom:.3rem">JERES SCORE</div>
       <div id="final-points">0</div>
       <div style="font-size:.85rem;color:var(--muted)">point</div>
       <div id="final-team" style="margin-top:.7rem;font-weight:700"></div>
-      <div id="final-rank" style="margin-top:.35rem;color:var(--gold);font-weight:800"></div>
+      <div id="final-rank" style="margin-top:.35rem;color:var(--accent);font-weight:800"></div>
     </div>
     <p id="final-wait" class="lead" style="font-size:.82rem;margin-bottom:1rem"></p>
     <a id="final-link" class="btn-gold" href="#" target="_blank" rel="noopener">📊 Se live scoreboard</a>
+    <button id="share-btn" class="btn-ghost" style="display:none;margin-top:.7rem" onclick="shareResult()">📤 Del jeres resultat</button>
   </div>
 </div>
 
@@ -333,13 +313,17 @@ const NEAR_MS        = 4000;    // hvor længe man skal være inden for radius f
 const ACC_FLOOR_M    = 20;      // GPS-nøjagtighed der kræves (mindst; stigende med stoppets radius)
 const MAX_FIX_AGE_MS = 20000;   // ignorér hvis seneste position er ældre
 const POS_SEND_MS    = 5000;    // max hvor tit position sendes til serveren
+let   ARRIVAL_MS     = 1100;    // "Fremme!"-skærmen før opgaven
+let   ANIM_MS        = 700;     // tæl-op-animationer (0 = ingen)
+const HEAT_EMOJI     = ['🥶', '❄️', '😐', '😊', '🔥', '🎯'];
 
 // ═════════ State ═════════
 const token = getTeamToken();
 let team = null, stops = [], subs = {};
-let userLat = null, userLng = null, userAcc = null, lastFixAt = 0;
-let map, userMarker, pinMarkers = {}, didFit = false;
-let gpsWatch = null, gameOn = false, cur = null, busy = false, backTimer = null;
+let theme = jagtenTheme('standard'), words = jagtenWords(theme);
+let userLat = null, userLng = null, userAcc = null, lastFixAt = 0, heading = null;
+let map, userMarker, accCircle, targetCircle, routeLine, pinMarkers = {}, didFit = false, lastTargetId = null;
+let gpsWatch = null, gameOn = false, cur = null, arriving = false, busy = false, backTimer = null;
 let nearSince = {}, lastSent = { t: 0, lat: null, lng: null };
 let unlocked = new Set(), manualMode = false, gameStartAt = 0;
 let finishedShown = false;
@@ -349,6 +333,8 @@ const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 const showScreen = id => $(id).classList.add('show');
 const hideScreen = id => $(id).classList.remove('show');
 const scoreboardUrl = () => new URL('../board/scoreboard.html?q=' + team.quiz_id, location.href).href;
+const vibrate = p => { try { navigator.vibrate && navigator.vibrate(p); } catch (_) {} };
+const accent = () => getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#e8c84a';
 
 function showMessage(icon, title, text, href, linkText) {
   hideScreen('loading');
@@ -358,6 +344,18 @@ function showMessage(icon, title, text, href, linkText) {
   showScreen('msg-screen');
 }
 
+// Tæl op til et tal (ANIM_MS = 0 → sæt det direkte)
+function animateNumber(el, to, { prefix = '', suffix = '', ms = ANIM_MS } = {}) {
+  const from = 0, t0 = performance.now();
+  if (!ms) { el.textContent = prefix + to + suffix; return; }
+  const step = now => {
+    const k = Math.min(1, (now - t0) / ms), e = 1 - Math.pow(1 - k, 3);
+    el.textContent = prefix + Math.round(from + (to - from) * e) + suffix;
+    if (k < 1) requestAnimationFrame(step); else el.textContent = prefix + to + suffix;
+  };
+  requestAnimationFrame(step);
+}
+
 // ═════════ Start ═════════
 async function init() {
   if (!token) return showMessage('❌', 'Ugyldigt link', 'Scan QR-koden igen eller kontakt din quizmaster.');
@@ -365,6 +363,11 @@ async function init() {
   const { data: t, error } = await sb.schema('quiz').rpc('get_team_by_token', { p_token: token });
   if (error || !t?.length) return showMessage('❌', 'Ugyldigt link', 'Scan QR-koden igen eller kontakt din quizmaster.');
   team = t[0];
+
+  const ap = applyTheme(team.quiz_theme, team.quiz_theme_texts);          // farver, skrifttyper og ord for dette løb
+  theme = ap.theme; words = ap.words;
+  document.title = team.quiz_title || 'Jagten';
+  applyWords();
 
   if (team.quiz_status === 'arkiveret') {
     return showMessage('🔒', 'Løbet er afsluttet', 'Dette løb er ikke længere aktivt. Spørg din quizmaster, hvis I vil spille igen.', scoreboardUrl(), '📊 Se scoreboard');
@@ -388,13 +391,40 @@ async function init() {
   setInterval(pollStatus, 30000);
 }
 
+// Temaets ord ind i siden
+function applyWords() {
+  $('next-label').textContent  = words.nextLabel;
+  $('stops-title').textContent = words.allLabel;
+  $('welcome-emoji').textContent = theme.emoji;
+  $('welcome-kicker').textContent = words.welcomeKicker;
+  $('map-attr').textContent = jagtenAttributionText();
+  const rules = [
+    ['📍', `Gå rundt til ${words.stopsDef} – opgaven åbner automatisk, når I er tæt nok på.`],
+    ['🔋', 'Hold telefonen tændt og lad GPS være slået til.'],
+    ['☝️', 'I har ét forsøg pr. opgave.'],
+    ['📡', 'Jeres position deles med quizmasteren, mens I spiller.']
+  ];
+  $('rules').innerHTML = rules.map(([i, t]) => `<li><span class="ri">${i}</span><span>${esc(t)}</span></li>`).join('');
+}
+
+const consentKey = () => 'jagten-samtykke-' + token;
+function consentStored() { try { return localStorage.getItem(consentKey()) === '1'; } catch (_) { return false; } }
+
 function showWelcome() {
   $('welcome-title').textContent = team.quiz_title || 'Jagten';
   $('welcome-desc').textContent  = team.quiz_description || '';
   $('welcome-desc').style.display = team.quiz_description ? 'block' : 'none';
-  $('welcome-btn').textContent = team.started_at ? 'Fortsæt jagten' : 'Start jagten';
+  $('welcome-btn').textContent = team.started_at ? words.resumeBtn : words.startBtn;
   $('skip-gps').style.display = team.is_test ? 'inline-flex' : 'none';
   $('nogps-btn').style.display = 'none';
+  // Testhold (kunden der afprøver løbet) behøver ikke samtykke
+  $('consent-box').style.display = team.is_test ? 'none' : 'flex';
+  $('consent-chk').checked = team.is_test || consentStored();
+  $('welcome-btn').disabled = !$('consent-chk').checked;
+  $('consent-chk').onchange = () => {
+    $('welcome-btn').disabled = !$('consent-chk').checked;
+    try { $('consent-chk').checked ? localStorage.setItem(consentKey(), '1') : localStorage.removeItem(consentKey()); } catch (_) {}
+  };
   if (/FBAN|FBAV|FB_IAB|Messenger|Instagram|Snapchat|Line\//i.test(navigator.userAgent)) {
     $('inapp-warn').style.display = 'block';
   }
@@ -429,42 +459,79 @@ async function loadSubs() {
   const { data } = await sb.schema('quiz').rpc('get_team_submissions', { p_token: token });
   subs = {};
   (data ?? []).forEach(s => { subs[s.activity_id] = s; });
-  recomputePoints();
+  recomputePoints(true);
 }
 
-function recomputePoints() {
+function recomputePoints(silent) {
+  const before = team.points ?? 0;
   team.points = Object.values(subs).reduce((sum, s) => sum + (s.status === 'ok' && s.is_correct ? (s.points || 0) : 0), 0);
   $('points').textContent = team.points + ' p';
+  if (!silent && team.points > before) { $('points').classList.remove('bump'); void $('points').offsetWidth; $('points').classList.add('bump'); }
 }
 
 const isDone  = s => s.activities.length === 0 || s.activities.every(a => subs[a.id]);
 const allDone = () => stops.some(s => s.activities.length > 0) && stops.every(isDone);
 
+// Det stop holdet skal hen til nu (låst rækkefølge: det næste; ellers det nærmeste)
+function pickNext() {
+  const open = stops.filter(s => !isDone(s));
+  if (!open.length) return null;
+  if (userLat !== null && team.stop_order !== 'laast') {
+    return open.reduce((a, b) => (distanceTo(a.lat, a.lng) ?? 1e12) <= (distanceTo(b.lat, b.lng) ?? 1e12) ? a : b);
+  }
+  return open[0];
+}
+
 // ═════════ Kort ═════════
 function initMap() {
   map = L.map('map', { zoomControl: false, attributionControl: false });
   L.control.attribution({ prefix: false, position: 'bottomright' }).addTo(map);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19, attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
-  }).addTo(map);
+  jagtenAddTiles(L, map, theme.map.style, theme.map.tint);        // kortudbyder + stil følger temaet (se js/map-config.js)
   map.setView([56.26, 9.5], 7);
   renderPins();
 }
 
 function renderPins() {
+  if (!map) return;
   Object.values(pinMarkers).forEach(m => m.remove());
   pinMarkers = {};
+  const next = pickNext();
+  lastTargetId = next?.id ?? null;
   stops.forEach((s, i) => {
     if (s.lat == null || s.lng == null) return;
+    const done = isDone(s), isTarget = next && next.id === s.id;
     const icon = L.divIcon({
-      html: `<div class="stop-pin ${isDone(s) ? 'done' : 'available'}">${i + 1}</div>`,
-      iconSize: [32, 32], iconAnchor: [16, 16], className: ''
+      html: `<div class="stop-pin ${done ? 'done' : isTarget ? 'target' : 'available'}">${done ? esc(theme.pinDone) : i + 1}</div>`,
+      iconSize: [34, 34], iconAnchor: [17, 17], className: ''
     });
     pinMarkers[s.id] = L.marker([s.lat, s.lng], { icon }).addTo(map).on('click', () => onPinClick(s));
   });
+  renderProgress();
   if (!didFit) {
     const pts = stops.filter(s => s.lat != null).map(s => [s.lat, s.lng]);
-    if (pts.length) { map.fitBounds(pts, { padding: [60, 60], maxZoom: 17 }); didFit = true; }
+    if (pts.length) { map.fitBounds(pts, { padding: [70, 70], maxZoom: 17 }); didFit = true; }
+  }
+}
+
+function renderProgress() {
+  const next = pickNext();
+  $('progress').innerHTML = stops.map(s => `<div class="seg ${isDone(s) ? 'done' : next && next.id === s.id ? 'cur' : ''}"></div>`).join('');
+}
+
+// Målcirkel (hvor tæt man skal være) + stiplet rute fra holdet til målet + GPS-nøjagtighed
+function updateOverlays(next) {
+  if (!map) return;
+  const col = accent();
+  if (!next || next.lat == null) {
+    targetCircle?.remove(); targetCircle = null; routeLine?.remove(); routeLine = null; return;
+  }
+  if (!targetCircle) {
+    targetCircle = L.circle([next.lat, next.lng], { radius: next.radius_m, color: col, weight: 2, dashArray: '5 7', fillColor: col, fillOpacity: .13, interactive: false }).addTo(map);
+  } else { targetCircle.setLatLng([next.lat, next.lng]); targetCircle.setRadius(next.radius_m); }
+  if (userLat !== null && !manualMode) {
+    const pts = [[userLat, userLng], [next.lat, next.lng]];
+    if (!routeLine) routeLine = L.polyline(pts, { color: col, weight: 3, opacity: .75, dashArray: '2 9', lineCap: 'round', interactive: false }).addTo(map);
+    else routeLine.setLatLngs(pts);
   }
 }
 
@@ -482,13 +549,21 @@ function updateUserMarker() {
     const icon = L.divIcon({ html: '<div class="gps-dot"></div>', iconSize: [16, 16], iconAnchor: [8, 8], className: '' });
     userMarker = L.marker([userLat, userLng], { icon, zIndexOffset: 1000, interactive: false }).addTo(map);
   } else userMarker.setLatLng([userLat, userLng]);
+  if (userAcc !== null && userAcc < 150) {
+    if (!accCircle) accCircle = L.circle([userLat, userLng], { radius: userAcc, color: '#4a9eff', weight: 1, fillColor: '#4a9eff', fillOpacity: .1, interactive: false }).addTo(map);
+    else { accCircle.setLatLng([userLat, userLng]); accCircle.setRadius(userAcc); }
+  }
 }
 
 function centerOnUser() { if (userLat !== null) map.setView([userLat, userLng], 17, { animate: true }); }
 
-// ═════════ GPS ═════════
+// ═════════ GPS + kompas ═════════
 async function startGame(skipGps) {
   $('welcome-err').textContent = '';
+  if (!team.is_test && !$('consent-chk').checked) {
+    $('welcome-err').textContent = 'Sæt kryds ved, at du har læst oplysningerne, for at starte.';
+    return;
+  }
   if (!skipGps && !navigator.geolocation) {
     $('welcome-err').textContent = 'GPS er ikke tilgængeligt i denne browser. Prøv Chrome eller Safari – eller fortsæt uden GPS med nødkoder.';
     if (!team.is_test) $('nogps-btn').style.display = 'inline-flex';
@@ -502,23 +577,60 @@ async function startGame(skipGps) {
   if (!skipGps) {
     if (gpsWatch !== null) navigator.geolocation.clearWatch(gpsWatch);
     gpsWatch = navigator.geolocation.watchPosition(onPos, onPosErr, { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 });
+    startHeading();
   }
   manualMode = !!skipGps && !team.is_test;       // uden GPS: hvert stop låses op med nødkode
   gameStartAt = Date.now();
-  if (manualMode) { $('acc-pill').style.display = 'block'; $('acc-text').textContent = 'uden GPS'; $('acc-pill').style.color = 'var(--coral)'; }
+  if (manualMode) { $('acc-pill').style.display = 'block'; $('acc-text').textContent = 'uden GPS'; $('acc-pill').style.color = 'var(--bad)'; }
   gameOn = true;
   hideScreen('welcome');
   $('topbar').style.display = 'flex';
+  $('progress').style.display = 'flex';
   $('bottom-panel').style.display = 'flex';
-  $('next-card').style.display = 'block';
   updateNextStop();
   $('welcome-btn').disabled = false;
+}
+
+// Kompas: iOS giver webkitCompassHeading (kræver tilladelse efter et tryk); Android giver absolut orientering
+function startHeading() {
+  const onOrient = e => {
+    let h = null;
+    if (typeof e.webkitCompassHeading === 'number') h = e.webkitCompassHeading;
+    else if (e.absolute && typeof e.alpha === 'number') h = (360 - e.alpha) % 360;
+    if (h === null || !isFinite(h)) return;
+    if (heading === null) heading = h;
+    else { let dlt = ((h - heading + 540) % 360) - 180; heading = (heading + dlt * 0.25 + 360) % 360; }   // glat bevægelse
+    updateCompass();
+  };
+  const listen = () => {
+    window.addEventListener('deviceorientationabsolute', onOrient, true);
+    window.addEventListener('deviceorientation', onOrient, true);
+  };
+  try {
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+      DeviceOrientationEvent.requestPermission().then(r => { if (r === 'granted') listen(); }).catch(() => {});
+    } else listen();
+  } catch (_) {}
+}
+
+function bearingTo(la1, ln1, la2, ln2) {
+  const r = Math.PI / 180, dLn = (ln2 - ln1) * r;
+  const y = Math.sin(dLn) * Math.cos(la2 * r);
+  const x = Math.cos(la1 * r) * Math.sin(la2 * r) - Math.sin(la1 * r) * Math.cos(la2 * r) * Math.cos(dLn);
+  return (Math.atan2(y, x) / r + 360) % 360;
+}
+
+function updateCompass() {
+  const next = pickNext();
+  if (!next || userLat === null || next.lat == null || manualMode) return;
+  const b = bearingTo(userLat, userLng, next.lat, next.lng);
+  $('arrow').style.transform = `rotate(${Math.round(b - (heading ?? 0))}deg)`;    // uden kompas: peger i forhold til nord (kortet)
 }
 
 function onPosErr(err) {
   if (err.code === 1) {                               // afvist
     gameOn = false;
-    $('topbar').style.display = 'none';
+    $('topbar').style.display = 'none'; $('progress').style.display = 'none';
     $('bottom-panel').style.display = 'none';
     $('welcome-err').textContent = 'GPS er afvist. Tillad placering for denne side i browserens indstillinger og tryk igen – eller fortsæt uden GPS.';
     if (!team.is_test) $('nogps-btn').style.display = 'inline-flex';
@@ -531,7 +643,7 @@ function onPos(pos) {
   updateUserMarker();
   $('acc-pill').style.display = 'block';
   $('acc-text').textContent = '±' + Math.round(userAcc) + ' m';
-  $('acc-pill').style.color = userAcc <= ACC_FLOOR_M ? 'var(--green)' : 'var(--coral)';
+  $('acc-pill').style.color = userAcc <= ACC_FLOOR_M ? 'var(--good)' : 'var(--bad)';
   updateNextStop();
   maybeSendPosition();
 }
@@ -549,7 +661,7 @@ function maybeSendPosition() {
 
 // Tidsbaseret nærhedstjek – virker også når man står stille og GPS'en ikke sender nye punkter
 function tick() {
-  if (!gameOn || cur || finishedShown) return;
+  if (!gameOn || cur || arriving || finishedShown) return;
   for (const s of stops) {                              // nødkode brugt → åbn uden GPS
     if (unlocked.has(s.id) && !isDone(s)) { openStop(s.id); return; }
   }
@@ -567,32 +679,47 @@ function tick() {
   }
 }
 
+// Varm/kold: 0 iskoldt … 4 brændende, 5 = fremme
+function heatLevel(d, r) { return d <= r ? 5 : d <= 40 ? 4 : d <= 150 ? 3 : d <= 500 ? 2 : d <= 1500 ? 1 : 0; }
+
 function updateNextStop() {
-  const open = stops.filter(s => !isDone(s));
+  const next = pickNext();
   const card = $('next-card');
-  if (!open.length) { card.style.display = 'none'; return; }
-  card.style.display = 'block';
-  let next = open[0];
-  if (userLat !== null && team.stop_order !== 'laast') {
-    next = open.reduce((a, b) => (distanceTo(a.lat, a.lng) ?? 1e12) <= (distanceTo(b.lat, b.lng) ?? 1e12) ? a : b);
-  }
+  if (!next) { card.style.display = 'none'; updateOverlays(null); renderProgress(); return; }
+  card.style.display = 'flex';
+  if (lastTargetId !== next.id) renderPins();            // nyt mål → fremhæv det på kortet
   $('next-name').textContent = next.name;
   const d = distanceTo(next.lat, next.lng);
-  $('next-dist').textContent = manualMode ? 'Uden GPS – brug nødkode' : d === null ? 'Finder position…' : fmtDist(d);
+  const heat = $('heat'), bar = $('heat-bar'), compass = $('compass');
+
+  if (manualMode) {
+    $('next-dist').textContent = 'Uden GPS – brug nødkode'; $('next-dist').style.fontSize = '.95rem';
+    heat.style.display = bar.style.display = compass.style.display = 'none';
+  } else {
+    $('next-dist').style.fontSize = '';
+    $('next-dist').textContent = d === null ? 'Finder position…' : fmtDist(d);
+    compass.style.display = d === null ? 'none' : 'flex';
+    heat.style.display = bar.style.display = d === null ? 'none' : '';
+    if (d !== null) {
+      const lvl = heatLevel(d, next.radius_m), pct = d <= next.radius_m ? 100 : Math.max(4, Math.round(100 * (1 - Math.min(d, 1500) / 1500)));
+      $('heat-emoji').textContent = HEAT_EMOJI[lvl];
+      $('heat-text').textContent  = words.heat[lvl];
+      $('heat-fill').style.width = pct + '%';
+      $('heat-fill').style.background = `hsl(${Math.round(210 - 200 * pct / 100)} 85% 55%)`;
+      updateCompass();
+    }
+  }
   $('next-dist').className = d !== null && d <= next.radius_m ? 'near' : '';
-  $('next-dist').style.fontSize = manualMode ? '1rem' : '';
   const noFix = userLat === null && gameStartAt && Date.now() - gameStartAt > 20000;
   $('sos-link').classList.toggle('alert', !!(manualMode || noFix));
+  updateOverlays(next);
 }
 
 // ═════════ Nødudgang ═════════
 function openSos() {
   const open = stops.filter(s => !isDone(s));
   if (!open.length) return;
-  let next = open[0];
-  if (userLat !== null && team.stop_order !== 'laast') {
-    next = open.reduce((a, b) => (distanceTo(a.lat, a.lng) ?? 1e12) <= (distanceTo(b.lat, b.lng) ?? 1e12) ? a : b);
-  }
+  const next = pickNext();
   const sel = $('sos-stop');
   sel.innerHTML = '';
   open.forEach(s => sel.add(new Option((stops.indexOf(s) + 1) + '. ' + s.name, s.id)));   // Option = tekst, ikke HTML
@@ -618,11 +745,24 @@ async function submitSos() {
 document.addEventListener('keydown', e => { if (e.key === 'Enter' && $('sos').classList.contains('show')) submitSos(); });
 
 // ═════════ Opgaver ═════════
+// Først "Fremme!"-øjeblikket, så opgaven
 function openStop(stopId) {
   const stop = stops.find(s => s.id === stopId);
-  if (!stop || cur) return;
+  if (!stop || cur || arriving) return;
   const act = stop.activities.find(a => !subs[a.id]);
-  if (act) showActivity(stop, act);
+  if (!act) return;
+  arriving = true;
+  vibrate([80, 40, 80]);
+  $('arr-emoji').textContent = theme.emoji;
+  $('arr-title').textContent = words.arrive;
+  $('arr-sub').textContent   = stop.name;
+  showScreen('arrive');
+  const go = () => {
+    if (!arriving) return;
+    arriving = false; hideScreen('arrive'); showActivity(stop, act);
+  };
+  $('arrive').onclick = go;
+  setTimeout(go, ARRIVAL_MS);
 }
 
 function showActivity(stop, act) {
@@ -630,7 +770,7 @@ function showActivity(stop, act) {
   closeStops();
   const idx = stop.activities.findIndex(a => a.id === act.id) + 1;
   $('act-stop').textContent  = stop.name;
-  $('act-count').textContent = stop.activities.length > 1 ? `Opgave ${idx} af ${stop.activities.length}` : '';
+  $('act-count').textContent = stop.activities.length > 1 ? `${words.taskWord} ${idx} af ${stop.activities.length}` : '';
   $('act-question').textContent = act.question ?? '';
   const img = $('act-media');
   if (act.media_url) { img.src = act.media_url; img.style.display = 'block'; } else img.style.display = 'none';
@@ -702,6 +842,7 @@ async function submitMC(i, opts) {
   const res = await submit(String(opts[i]));
   if (!res) { btns.forEach(b => b.disabled = false); return; }
   btns[i].classList.add(res.is_correct ? 'correct' : 'wrong');
+  vibrate(res.is_correct ? 40 : [120, 60, 120]);
   setTimeout(() => showResult(res), 700);
 }
 
@@ -735,7 +876,7 @@ async function compressImage(file, maxDim = 1600, quality = 0.8) {
     const k = Math.min(1, maxDim / Math.max(bmp.width, bmp.height));
     const c = document.createElement('canvas');
     c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
-    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);   // gentegning fjerner også EXIF (bl.a. GPS-position i billedet)
     const blob = await new Promise(res => c.toBlob(res, 'image/jpeg', quality));
     if (blob) return blob;
   } catch (_) { /* falder tilbage til original */ }
@@ -757,22 +898,39 @@ async function submitPhoto() {
   showResult(res);
 }
 
+// Lille konfetti-udbrud ved rigtigt svar
+function miniConfetti() {
+  const box = $('fx'), cols = theme.confetti;
+  for (let i = 0; i < 26; i++) {
+    const el = document.createElement('div'), size = 5 + Math.random() * 7, ang = Math.random() * Math.PI * 2, dist = 90 + Math.random() * 160;
+    el.style.cssText = `position:absolute;left:50%;top:38%;width:${size}px;height:${size}px;background:${cols[i % cols.length]};border-radius:${Math.random() > .5 ? '50%' : '2px'};
+      transition:transform 1s cubic-bezier(.15,.7,.3,1), opacity 1s;`;
+    box.appendChild(el);
+    requestAnimationFrame(() => { el.style.transform = `translate(${Math.cos(ang) * dist}px, ${Math.sin(ang) * dist + 120}px) rotate(${Math.random() * 720}deg)`; el.style.opacity = '0'; });
+    setTimeout(() => el.remove(), 1100);
+  }
+}
+
 function showResult(res) {
   const { stop, act } = cur;
-  let cls, emoji, label, sub;
+  let cls, emoji, label, sub, pts = null;
   if (res.status === 'pending')        { cls = 'pending'; emoji = '📸'; label = 'Billede sendt'; sub = 'Afventer godkendelse fra quizmaster'; }
-  else if (act.type === 'foto' && act.approval === 'vis_kun') { cls = 'correct'; emoji = '📸'; label = 'Tak for billedet!'; sub = 'Det vises på scoreboardet'; }
-  else if (res.is_correct)             { cls = 'correct'; emoji = '✅'; label = act.type === 'foto' ? 'Billede modtaget' : 'Korrekt!'; sub = '+' + (res.points ?? 0) + ' point'; }
-  else                                 { cls = 'wrong';   emoji = '❌'; label = 'Forkert svar'; sub = 'Ingen point denne gang'; }
+  else if (act.type === 'foto' && act.approval === 'vis_kun') { cls = 'correct'; emoji = '📸'; label = words.photoThanks; sub = 'Det vises på scoreboardet'; }
+  else if (res.is_correct)             { cls = 'correct'; emoji = '✅'; label = act.type === 'foto' ? words.photoOk : words.correct; sub = 'point'; pts = res.points ?? 0; }
+  else                                 { cls = 'wrong';   emoji = '❌'; label = words.wrong; sub = 'Ingen point denne gang'; }
 
   const next = stop.activities.find(a => !subs[a.id]);
   $('act-inputs').onclick = null;
   $('act-inputs').innerHTML = `
     <div class="result-box ${cls}"><div class="result-emoji">${emoji}</div>
-      <div class="result-label">${esc(label)}</div><div class="result-sub">${esc(sub)}</div></div>
+      <div class="result-label">${esc(label)}</div>
+      ${pts !== null ? '<div class="result-pts" id="rpts">+0</div>' : ''}
+      <div class="result-sub">${esc(sub)}</div></div>
     ${next
       ? '<button class="send-btn" id="go">Næste opgave →</button>'
       : '<div class="result-sub" style="text-align:center;margin-bottom:.4rem">Tilbage til kortet om <span id="cd">3</span> sek…</div><button class="alt-btn" id="go">← Tilbage til kortet nu</button>'}`;
+  if (pts !== null) animateNumber($('rpts'), pts, { prefix: '+' });
+  if (cls === 'correct') { vibrate(60); miniConfetti(); }
   $('go').onclick = afterAnswer;
   if (!next) {
     let n = 3;
@@ -801,14 +959,14 @@ async function closeActivity() {
 // ═════════ Stop-liste ═════════
 function openStops() {
   $('stops-body').innerHTML = stops.map((s, i) => {
-    const d = distanceTo(s.lat, s.lng);
+    const d = distanceTo(s.lat, s.lng), done = isDone(s);
     return `<div class="stop-item" data-id="${esc(s.id)}">
-      <div class="stop-num ${isDone(s) ? 'done' : ''}">${i + 1}</div>
+      <div class="stop-num ${done ? 'done' : ''}">${done ? esc(theme.pinDone) : i + 1}</div>
       <div class="stop-info"><div class="stop-name">${esc(s.name)}</div>
-        <div class="stop-meta">${s.activities.length} opgave${s.activities.length !== 1 ? 'r' : ''}${isDone(s) ? ' · ✅ Besvaret' : ''}</div></div>
-      ${d !== null && !isDone(s) ? `<div class="stop-dist ${d <= s.radius_m ? 'near' : ''}">${fmtDist(d)}</div>` : ''}
+        <div class="stop-meta">${s.activities.length} opgave${s.activities.length !== 1 ? 'r' : ''}${done ? ' · ✅ Besvaret' : ''}</div></div>
+      ${d !== null && !done ? `<div class="stop-dist ${d <= s.radius_m ? 'near' : ''}">${fmtDist(d)}</div>` : ''}
     </div>`;
-  }).join('') + '<div class="stops-foot">Kort: © OpenStreetMap-bidragydere</div>';
+  }).join('') + `<div class="stops-foot">${esc(jagtenAttributionText())}</div>`;
   $('stops-body').onclick = e => {
     const it = e.target.closest('.stop-item'); if (!it) return;
     const s = stops.find(x => x.id === it.dataset.id);
@@ -825,14 +983,27 @@ function showFinished() {
   if (finishedShown) return;
   finishedShown = true; gameOn = false;
   if (gpsWatch !== null) navigator.geolocation.clearWatch(gpsWatch);
-  $('topbar').style.display = 'none'; $('bottom-panel').style.display = 'none';
+  $('topbar').style.display = 'none'; $('progress').style.display = 'none'; $('bottom-panel').style.display = 'none';
   hideScreen('welcome');
-  $('final-points').textContent = team.points ?? 0;
+  $('final-emoji').textContent = theme.trophy;
+  $('final-title').textContent = words.finishTitle;
+  $('final-text').textContent  = words.finishText;
+  animateNumber($('final-points'), team.points ?? 0);
   $('final-team').textContent = team.team_name ?? '';
   $('final-link').href = scoreboardUrl();
+  if (navigator.share) $('share-btn').style.display = 'inline-flex';
   showScreen('finished');
+  vibrate([100, 60, 100, 60, 200]);
   confetti(); refreshRank();
   setInterval(refreshRank, 10000);
+}
+
+function shareResult() {
+  navigator.share?.({
+    title: team.quiz_title || 'Jagten',
+    text: `${team.team_name} fik ${team.points ?? 0} point i ${team.quiz_title || 'Jagten'}!`,
+    url: scoreboardUrl()
+  }).catch(() => {});
 }
 
 async function refreshRank() {
@@ -848,7 +1019,7 @@ async function refreshRank() {
 }
 
 function confetti() {
-  const box = $('confetti'), colors = ['#e8c84a', '#22c55e', '#e94560', '#a78bfa', '#60a5fa'];
+  const box = $('confetti'), colors = theme.confetti;
   for (let i = 0; i < 60; i++) {
     const el = document.createElement('div'), size = 6 + Math.random() * 8;
     el.style.cssText = `position:absolute;top:-20px;left:${Math.random() * 100}%;width:${size}px;height:${size}px;
@@ -864,7 +1035,7 @@ async function pollStatus() {
   const t = data?.[0]; if (!t) return;
   if (t.round_no !== team.round_no) { location.reload(); return; }
   if (t.quiz_status === 'arkiveret' && !finishedShown) {
-    $('activity-overlay').classList.remove('open'); cur = null; gameOn = false;
+    $('activity-overlay').classList.remove('open'); cur = null; gameOn = false; arriving = false; hideScreen('arrive');
     showMessage('🔒', 'Løbet er afsluttet', 'Quizmasteren har afsluttet løbet. Tak fordi I var med!', scoreboardUrl(), '📊 Se scoreboard');
   }
 }

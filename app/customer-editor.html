@@ -4,11 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Byg dit løb – Quiz Platform</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link rel="stylesheet" href="../fonts/fonts.css">
+  <link rel="stylesheet" href="../vendor/leaflet/leaflet.css">
+  <script src="../vendor/leaflet/leaflet.js"></script>
+  <script src="../vendor/supabase.js"></script>
+  <script src="../vendor/qrcode.min.js"></script>
   <script src="../js/config.js"></script>
+  <script src="../js/map-config.js"></script>
+  <script src="../js/map.js"></script>
+  <script src="../js/themes.js"></script>
   <script src="../js/api.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -94,6 +98,16 @@
 
     .pane-title { font-size: 1.4rem; font-weight: 800; margin-bottom: .3rem; }
     .pane-lead { color: var(--ink-2); font-size: .9rem; margin-bottom: 1.75rem; }
+    .theme-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:.6rem; margin-top:.4rem; }
+    .theme-card { border:2px solid #e2e8f0; border-radius:12px; padding:.6rem .65rem; cursor:pointer; text-align:left; background:var(--white); font-family:inherit; }
+    .theme-card:hover { border-color:#c7cbe0; }
+    .theme-card.sel { border-color:var(--accent); box-shadow:0 0 0 3px rgba(108,99,255,.16); }
+    .theme-card .sw { display:flex; gap:3px; margin-bottom:.4rem; } .theme-card .sw i { flex:1; height:12px; border-radius:4px; border:1px solid rgba(0,0,0,.08); }
+    .theme-card .tn { font-weight:700; font-size:.82rem; color:var(--ink); } .theme-card .tb { font-size:.7rem; color:var(--muted); margin-top:.15rem; line-height:1.3; }
+    #theme-preview { margin-top:.9rem; border-radius:14px; padding:1.1rem 1rem; text-align:center; border:1px solid rgba(0,0,0,.12); }
+    #theme-preview .pv-emoji { font-size:2rem; } #theme-preview .pv-kick { font-size:.62rem; letter-spacing:.16em; text-transform:uppercase; font-weight:700; margin-top:.2rem; }
+    #theme-preview .pv-title { font-size:1.25rem; font-weight:800; margin:.15rem 0 .7rem; } #theme-preview .pv-btn { display:inline-block; padding:.55rem 1.2rem; border-radius:10px; font-weight:800; font-size:.85rem; }
+    #theme-preview .pv-heat { margin-top:.7rem; font-size:.72rem; opacity:.85; }
 
     /* ── Cards ── */
     .card {
@@ -292,6 +306,11 @@
       <p style="font-size:.75rem;color:var(--muted);margin-top:.35rem;">
         Fri: hold vælger selv rækkefølge. Låst: næste stop låses op når forrige er besvaret.
       </p>
+
+      <label style="margin-top:1.2rem;">Stil og tema</label>
+      <p style="font-size:.75rem;color:var(--muted);margin:.1rem 0 .3rem;">Vælg udseendet efter typen af løb. Deltagerne ser farver, skrifttype, ord og kortstil i den valgte stil.</p>
+      <div id="theme-grid" class="theme-grid"></div>
+      <div id="theme-preview"></div>
     </div>
 
     <button class="btn-next" onclick="saveAndNext(2)">
@@ -433,10 +452,13 @@
 </div>
 
 <script>
+// Print-vinduer er nye sider: de skal have en ABSOLUT sti til QR-biblioteket
+const QR_SRC = new URL('../vendor/qrcode.min.js', location.href).href
 const params   = new URLSearchParams(location.search)
 let quizId     = params.get('q')
 let quizStatus = 'kladde'
 let quizMode   = 'fri'
+let quizTheme  = 'standard'
 let stops      = []
 let teams      = []
 let map, markers = []
@@ -490,8 +512,11 @@ async function loadAll() {
   if (!q) return
   quizStatus = q.status
   quizMode   = q.stop_order ?? 'fri'
+  quizTheme  = (typeof JAGTEN_THEMES !== 'undefined' && JAGTEN_THEMES[q.theme]) ? q.theme : 'standard'
+  renderThemes()
   document.getElementById('title').value = q.title ?? ''
   document.getElementById('description').value = q.description ?? ''
+  renderThemePreview()                      // titlen er først sat nu
   document.getElementById('quiz-title-display').textContent = q.title || 'Nyt løb'
   updateModeUI(quizMode)
 
@@ -526,7 +551,7 @@ async function saveQuiz(redirectAfter = false) {
   const description = document.getElementById('description').value.trim()
   if (!title) { flash('⚠️ Titel mangler'); return; }
 
-  const payload = { title, description: description || null, stop_order: quizMode }
+  const payload = { title, description: description || null, stop_order: quizMode, theme: quizTheme }
   let error
   if (quizId) {
     ({ error } = await sb.schema('quiz').from('quizzes').update(payload).eq('id', quizId))
@@ -541,7 +566,7 @@ async function saveQuiz(redirectAfter = false) {
       quizId = newId
       history.replaceState(null, '', '?q=' + quizId)
       const r = await sb.schema('quiz').from('quizzes')
-        .update({ description: payload.description, stop_order: payload.stop_order }).eq('id', quizId)
+        .update({ description: payload.description, stop_order: payload.stop_order, theme: payload.theme }).eq('id', quizId)
       error = r.error
     }
   }
@@ -564,8 +589,7 @@ function flash(txt, ms=3000) {
 function initMap() {
   if (map) return
   map = L.map('map').setView([56.3, 10.0], 7)
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    { attribution: '© OpenStreetMap' }).addTo(map)
+  jagtenAddTiles(L, map, 'light', '')          // kortudbyder: se js/map-config.js
   map.on('click', onMapClick)
 }
 
@@ -1129,7 +1153,7 @@ function printAllTeams() {
       .hold p { font-size: .7rem; color: #666; word-break: break-all; margin-top: .5rem; }
       @media print { body { padding: 0; } }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
+    <script src="${QR_SRC}"><\/script>
   </head><body>
     <h1>🗺️ ${escHtml(quizTitle)} — Hold</h1>
     <div class="grid">
@@ -1168,54 +1192,100 @@ function showQR(url, title) {
 }
 function closeQR() { document.getElementById('qr-modal').classList.remove('open') }
 
-// ── Kortsøgning (Nominatim) ───────────────────────────────────
-let searchTimer = null
+// ── Kortsøgning (udbyderen vælges i js/map-config.js) ─────────
+let searchTimer = null, searchHits = []
+
+function searchMsg(txt) {
+  const res = document.getElementById('search-results')
+  res.style.display = 'block'
+  res.innerHTML = `<div style="padding:.6rem 1rem;color:var(--muted);font-size:.85rem;">${escHtml(txt)}</div>`
+}
 
 function onSearchInput() {
   clearTimeout(searchTimer)
   const q = document.getElementById('map-search').value.trim()
-  if (q.length < 2) { hideSearchResults(); return; }
-  searchTimer = setTimeout(doSearch, 400)
+  if (q.length < 2) { hideSearchResults(); return }
+  // Gratis OSM-søgning (Nominatim) må ikke bruges som "søg mens du skriver" – kun når brugeren trykker Enter/pil
+  if (jagtenGeocodeMode() === 'autocomplete') searchTimer = setTimeout(doSearch, 350)
+  else searchMsg('Tryk Enter for at søge')
 }
 
 async function doSearch() {
   const q = document.getElementById('map-search').value.trim()
-  if (!q) return
-  const res = document.getElementById('search-results')
-  res.style.display = 'block'
-  res.innerHTML = '<div style="padding:.6rem 1rem;color:var(--muted);font-size:.85rem;">Søger…</div>'
+  if (q.length < 2) return
+  searchMsg('Søger…')
   try {
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&countrycodes=dk&format=json&limit=6&addressdetails=1`
-    const resp = await fetch(url, { headers: { 'Accept-Language': 'da' } })
-    const data = await resp.json()
-    if (!data.length) {
-      res.innerHTML = '<div style="padding:.6rem 1rem;color:var(--muted);font-size:.85rem;">Ingen resultater</div>'
-      return
-    }
-    res.innerHTML = data.map((r,i) => `
-      <div onclick="selectSearchResult(${r.lat},${r.lon},'${escHtml(r.display_name)}')"
-        style="padding:.55rem 1rem;cursor:pointer;font-size:.85rem;border-bottom:1px solid #f0f0f0;"
-        onmouseover="this.style.background='#f5f7fa'" onmouseout="this.style.background=''">
-        <div style="font-weight:600;">${escHtml(shortDisplay(r))}</div>
-        <div style="font-size:.74rem;color:var(--muted);">${escHtml(r.display_name)}</div>
+    searchHits = await jagtenGeocode(q)
+    if (!searchHits.length) { searchMsg('Ingen resultater'); return }
+    const res = document.getElementById('search-results')
+    // data-attributter + delegering: ingen stednavne i inline JavaScript
+    res.innerHTML = searchHits.map((r, i) => `
+      <div class="sr-item" data-i="${i}" style="padding:.55rem 1rem;cursor:pointer;font-size:.85rem;border-bottom:1px solid #f0f0f0;">
+        <div style="font-weight:600;">${escHtml(r.label.split(',')[0])}</div>
+        <div style="font-size:.74rem;color:var(--muted);">${escHtml(r.label)}</div>
       </div>`).join('')
-  } catch {
-    res.innerHTML = '<div style="padding:.6rem 1rem;color:var(--muted);font-size:.85rem;">Søgning fejlede</div>'
+  } catch (e) {
+    searchMsg('Søgning fejlede – prøv igen')
   }
 }
 
-function shortDisplay(r) {
-  const a = r.address
-  return [a.city || a.town || a.village || a.municipality, a.postcode]
-    .filter(Boolean).join(' · ') || r.display_name.split(',')[0]
-}
+document.getElementById('search-results').addEventListener('click', e => {
+  const el = e.target.closest('.sr-item'); if (!el) return
+  const r = searchHits[Number(el.dataset.i)]
+  if (r) selectSearchResult(r.lat, r.lng)
+})
+document.getElementById('search-results').addEventListener('mouseover', e => {
+  const el = e.target.closest('.sr-item'); if (el) el.style.background = '#f5f7fa'
+})
+document.getElementById('search-results').addEventListener('mouseout', e => {
+  const el = e.target.closest('.sr-item'); if (el) el.style.background = ''
+})
 
-function selectSearchResult(lat, lon, name) {
+function selectSearchResult(lat, lng) {
   hideSearchResults()
   document.getElementById('map-search').value = ''
   if (!map) return
-  map.setView([lat, lon], 14)
+  map.setView([lat, lng], 14)
 }
+
+// ── Stil og tema ──────────────────────────────────────────────
+function renderThemes() {
+  const grid = document.getElementById('theme-grid')
+  grid.innerHTML = jagtenThemeList().map(([id, t]) => `
+    <button type="button" class="theme-card ${id === quizTheme ? 'sel' : ''}" data-theme="${id}">
+      <div class="sw"><i style="background:${t.vars['--night']}"></i><i style="background:${t.vars['--panel']}"></i><i style="background:${t.vars['--accent']}"></i></div>
+      <div class="tn">${t.emoji} ${escHtml(t.name)}</div><div class="tb">${escHtml(t.blurb)}</div>
+    </button>`).join('')
+  renderThemePreview()
+}
+
+function renderThemePreview() {
+  const t = jagtenTheme(quizTheme), w = jagtenWords(t), v = t.vars
+  const title = document.getElementById('title').value.trim() || 'Navn på dit løb'
+  const box = document.getElementById('theme-preview')
+  box.style.background = v['--night']; box.style.color = v['--text']; box.style.fontFamily = t.fonts.body
+  box.innerHTML = `<div class="pv-emoji">${t.emoji}</div>
+    <div class="pv-kick" style="color:${v['--accent']}">${escHtml(w.welcomeKicker)}</div>
+    <div class="pv-title" style="font-family:${t.fonts.display}">${escHtml(title)}</div>
+    <div class="pv-btn" style="background:${v['--accent']};color:${v['--accent-ink']};font-family:${t.fonts.display}">${escHtml(w.startBtn)}</div>
+    <div class="pv-heat">${escHtml(w.nextLabel)} · ${escHtml(w.heat[3])} 😊</div>`
+}
+
+async function selectTheme(id) {
+  if (!JAGTEN_THEMES[id]) return
+  quizTheme = id
+  renderThemes()
+  if (quizId) {                                   // gem med det samme på eksisterende løb
+    const { error } = await sb.schema('quiz').from('quizzes').update({ theme: id }).eq('id', quizId)
+    flash(error ? '❌ ' + error.message : '✅ Stil gemt')
+  }
+}
+
+document.getElementById('theme-grid').addEventListener('click', e => {
+  const b = e.target.closest('[data-theme]'); if (b) selectTheme(b.dataset.theme)
+})
+document.getElementById('title').addEventListener('input', renderThemePreview)
+renderThemes()
 
 function hideSearchResults() {
   const el = document.getElementById('search-results')

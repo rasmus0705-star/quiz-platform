@@ -1,0 +1,11 @@
+/* Selvhostede skrifttyper (ingen kald til Google → ingen IP-adresser sendt til tredjepart).
+   Kilde: Fontsource (SIL Open Font License 1.1). Kun 'latin' – dækker æ, ø, å. */
+@font-face { font-family:'Syne';             font-weight:700; font-style:normal; font-display:swap; src:url('./syne-latin-700-normal.woff2') format('woff2'); }
+@font-face { font-family:'Syne';             font-weight:800; font-style:normal; font-display:swap; src:url('./syne-latin-800-normal.woff2') format('woff2'); }
+@font-face { font-family:'Inter';            font-weight:400; font-style:normal; font-display:swap; src:url('./inter-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family:'Inter';            font-weight:600; font-style:normal; font-display:swap; src:url('./inter-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family:'Inter';            font-weight:700; font-style:normal; font-display:swap; src:url('./inter-latin-700-normal.woff2') format('woff2'); }
+@font-face { font-family:'Fredoka';          font-weight:500; font-style:normal; font-display:swap; src:url('./fredoka-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family:'Fredoka';          font-weight:600; font-style:normal; font-display:swap; src:url('./fredoka-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family:'Playfair Display'; font-weight:700; font-style:normal; font-display:swap; src:url('./playfair-display-latin-700-normal.woff2') format('woff2'); }
+@font-face { font-family:'Special Elite';    font-weight:400; font-style:normal; font-display:swap; src:url('./special-elite-latin-400-normal.woff2') format('woff2'); }

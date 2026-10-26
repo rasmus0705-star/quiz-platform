@@ -89,3 +89,18 @@ async function logError(page, message) {
 window.addEventListener('error', e => {
   logError(location.pathname, e.message)
 })
+
+// Sletter et løbs deltagerdata (hold, svar, positioner og FOTOS i Storage) via Edge Function 'purge-data'.
+// Kun quizmaster/admin må (serveren tjekker sessionen), og løbet må ikke køre.
+async function purgeQuizData(quizId, includeTaskImages = false) {
+  const s = getPinSession()
+  const { data, error } = await sb.functions.invoke('purge-data', {
+    body: { quiz_id: quizId, session_id: s?.session_id, include_task_images: includeTaskImages }
+  })
+  if (error) {
+    let msg = 'Sletningen fejlede – prøv igen.'
+    try { const b = await error.context.json(); msg = b.error || msg } catch (_) {}
+    throw new Error(msg)
+  }
+  return data
+}

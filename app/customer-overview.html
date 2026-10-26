@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mine løb – Quiz Platform</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="../vendor/supabase.js"></script>
+  <script src="../vendor/qrcode.min.js"></script>
   <script src="../js/config.js"></script>
   <script src="../js/api.js"></script>
   <style>
@@ -270,6 +270,8 @@
 </div>
 
 <script>
+// Print-vinduer er nye sider: de skal have en ABSOLUT sti til QR-biblioteket
+const QR_SRC = new URL('../vendor/qrcode.min.js', location.href).href
 let customerId = null
 let quizzes    = []
 let shareQuiz  = null
@@ -602,7 +604,7 @@ function printTeams(quizId) {
       .hold p { font-size: .65rem; color: #666; word-break: break-all; margin-top: .5rem; }
       @media print { body { padding: 0; } }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
+    <script src="${QR_SRC}"><\/script>
   </head><body>
     <h1>🗺️ ${escHtml(quizTitle)}</h1>
     <div class="grid">
@@ -631,5 +633,6 @@ function escHtml(s) {
 
 init()
 </script>
+<div style="text-align:center;margin:2rem 0 1.5rem;font-size:.78rem;color:var(--muted)"><a href="../privatliv.html" style="color:inherit">Privatlivspolitik</a> · <a href="../databehandleraftale.html" style="color:inherit">Databehandleraftale (til underskrift)</a></div>
 </body>
 </html>

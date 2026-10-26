@@ -1,0 +1,32 @@
+# Dagligt job der sletter udløbne deltagerdata (GDPR). Kalder Edge Function 'purge-data'.
+#
+# Opsætning (én gang):
+#   1. Supabase → Edge Functions → Secrets: tilføj  PURGE_SECRET = en lang tilfældig tekst
+#   2. GitHub → repo → Settings → Secrets and variables → Actions → New repository secret:
+#        PURGE_SECRET   (samme tekst som ovenfor)
+#        SUPABASE_URL   (fx https://qmdqzdatlanyhewjwpzc.supabase.co)
+#        SUPABASE_ANON  (anon-nøglen fra js/config.js)
+#   3. Actions-fanen → "Slet udløbne deltagerdata" → Run workflow (test) – svaret skal være {"mode":"cron",…}
+#
+# OBS: GitHub slår planlagte jobs fra i offentlige repos efter 60 dages uden aktivitet.
+# Ved lange pauser: kør jobbet manuelt ("Run workflow") eller brug pg_cron (se CLAUDE.md).
+name: Slet udløbne deltagerdata
+on:
+  schedule:
+    - cron: '23 3 * * *'      # hver nat kl. ca. 03:23 UTC
+  workflow_dispatch: {}
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kald purge-data
+        env:
+          PURGE_SECRET: ${{ secrets.PURGE_SECRET }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON: ${{ secrets.SUPABASE_ANON }}
+        run: |
+          set -euo pipefail
+          test -n "$PURGE_SECRET" && test -n "$SUPABASE_URL" && test -n "$SUPABASE_ANON" || { echo "Mangler secrets – se kommentarerne øverst i filen"; exit 1; }
+          curl --fail-with-body -sS -X POST "$SUPABASE_URL/functions/v1/purge-data" \
+            -H "Authorization: Bearer $SUPABASE_ANON" -H "apikey: $SUPABASE_ANON" \
+            -H "x-purge-secret: $PURGE_SECRET" -H "Content-Type: application/json" -d '{}'

@@ -4,9 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Resultater – Jagten</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<script src="../vendor/supabase.js"></script>
 <script src="../js/config.js"></script>
 <script src="../js/api.js"></script>
+<script src="../js/themes.js"></script>
 <style>
   *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
   :root { --bg:#f5f7fa; --white:#fff; --ink:#1a1f36; --ink-2:#4a5568; --muted:#8a94a6; --accent:#6c63ff; --green:#16a34a; --gold:#b8962e; --line:#e8ebf0; --radius:14px; }
@@ -46,6 +48,9 @@
   summary span { color:var(--muted); font-weight:600; font-size:.82rem; }
   details table { box-shadow:none; border-radius:0; }
   .ok { color:var(--green); } .no { color:#dc2626; } .pend { color:#b7791f; }
+  .ret { background:var(--white); border-radius:12px; padding:.85rem 1rem; margin-bottom:1.25rem; display:flex; gap:.75rem; align-items:center; justify-content:space-between; flex-wrap:wrap; font-size:.82rem; color:var(--ink-2); box-shadow:0 2px 12px rgba(0,0,0,.05); }
+  .ret b { color:var(--ink); }
+  .btn.danger { color:#b91c1c; border-color:#fecaca; } .btn.danger:hover { border-color:#b91c1c; } .btn:disabled { opacity:.45; cursor:not-allowed; }
   .empty { text-align:center; color:var(--muted); padding:2.5rem 1rem; background:var(--white); border-radius:var(--radius); }
   #err { display:none; background:#fff1f2; border:1px solid #fecaca; color:#991b1b; border-radius:12px; padding:1rem; margin-bottom:1rem; }
 
@@ -91,9 +96,12 @@
       <button class="btn green" id="btn-reopen" style="display:none" onclick="newRound()">▶ Start ny runde</button>
     </div>
 
+    <div class="ret noprint" id="retention"></div>
+
     <div id="ranking"></div>
     <div class="sec">SVAR PR. HOLD</div>
     <div id="teams"></div>
+    <p class="noprint" style="text-align:center;margin-top:2.5rem;font-size:.75rem;color:var(--muted)"><a href="../privatliv.html" style="color:inherit">Privatlivspolitik</a></p>
   </div>
 </main>
 
@@ -142,6 +150,7 @@ function render() {
     sel.innerHTML = D.rounds.slice().reverse().map(r => `<option value="${r}" ${r === D.round ? 'selected' : ''}>Runde ${r}${r === q.round_no ? ' (nuværende)' : ''}</option>`).join('');
   } else sel.style.display = 'none';
 
+  renderRetention();
   $('c-teams').textContent = teams.length;
   $('c-done').textContent = teams.filter(t => t.finished).length;
   $('c-max').textContent = D.max_points;
@@ -162,6 +171,26 @@ function answerCell(a) {
   const mark = a.status === 'pending' ? '<span class="pend">⏳</span>' : a.status === 'rejected' ? '<span class="no">🚫</span>' : a.correct ? '<span class="ok">✅</span>' : '<span class="no">❌</span>';
   const isPhoto = a.type === 'foto' && /^https:\/\//.test(a.answer || '');
   return mark + ' ' + (isPhoto ? `<a href="${esc(a.answer)}" target="_blank" rel="noopener">📷 Se billede</a>` : esc(a.answer));
+}
+
+// GDPR: hvornår slettes deltagerdata? + mulighed for at slette med det samme (inkl. fotos)
+function renderRetention() {
+  const q = D.quiz, box = $('retention');
+  const fmt = iso => new Date(iso).toLocaleDateString('da-DK', { day:'numeric', month:'long', year:'numeric' });
+  let msg;
+  if (D.data_purged_at && D.teams.length === 0) msg = `🗑 Deltagerdata (hold, svar og billeder) blev slettet den <b>${esc(fmt(D.data_purged_at))}</b>.`;
+  else if (q.status === 'arkiveret' && D.delete_after) msg = `🔒 Deltagerdata (hold, svar, positioner og billeder) slettes automatisk den <b>${esc(fmt(D.delete_after))}</b>. Hent CSV og diplomer, før det sker.`;
+  else if (q.status === 'aktiv') msg = 'Løbet kører. Når du afslutter det, slettes deltagerdata automatisk efter 90 dage.';
+  else msg = 'Deltagerdata slettes automatisk 90 dage efter, at løbet er afsluttet.';
+  box.innerHTML = `<span>${msg}</span><button class="btn danger" id="btn-purge" ${q.status === 'aktiv' || !D.teams.length ? 'disabled' : ''} title="${q.status === 'aktiv' ? 'Afslut løbet først' : ''}">🗑 Slet deltagerdata nu</button>`;
+  $('btn-purge').onclick = purgeNow;
+}
+
+async function purgeNow() {
+  if (!confirm('Slet ALLE deltagerdata for dette løb nu?\n\nHold, svar, positioner og uploadede billeder fjernes for alle runder – også resultaterne her og på scoreboardet.\nSelve løbet (stop og opgaver) beholdes.\n\nDet kan ikke fortrydes.')) return;
+  const b = $('btn-purge'); b.disabled = true; b.textContent = 'Sletter…';
+  try { await purgeQuizData(quizId, false); round = null; await load(); }
+  catch (e) { alert(e.message); renderRetention(); }
 }
 
 // ── CSV (semikolon + BOM, så dansk Excel åbner den korrekt) ──
@@ -196,9 +225,11 @@ function diplomas(top) {
   if (!teams.length) { alert('Der er ingen hold med besvarelser at lave diplomer til.'); return; }
   const date = new Date(D.generated_at).toLocaleDateString('da-DK', { day:'numeric', month:'long', year:'numeric' });
   const place = i => i === 0 ? '🥇 1. plads' : i === 1 ? '🥈 2. plads' : i === 2 ? '🥉 3. plads' : `${i + 1}. plads af ${D.teams.length} hold`;
+  const th = jagtenTheme(D.theme), acc = th.vars['--accent'], fontCss = new URL('../fonts/fonts.css', location.href).href;
   const pages = teams.map(t => {
     const i = D.teams.indexOf(t), big = t.name.length > 26 ? '30pt' : t.name.length > 16 ? '40pt' : '52pt';
     return `<section class="dip"><div class="frame">
+      <div class="em">${esc(th.trophy)}</div>
       <div class="k">DIPLOM</div>
       <div class="s">tildeles</div>
       <div class="n" style="font-size:${big}">${esc(t.name)}</div>
@@ -211,20 +242,21 @@ function diplomas(top) {
   }).join('');
   const w = window.open('', '_blank');
   if (!w) { alert('Din browser blokerede pop-up-vinduet. Tillad pop-ups for siden og prøv igen.'); return; }
-  w.document.write(`<!DOCTYPE html><html lang="da"><head><meta charset="utf-8"><title>Diplomer – ${esc(D.quiz.title)}</title><style>
+  w.document.write(`<!DOCTYPE html><html lang="da"><head><meta charset="utf-8"><title>Diplomer – ${esc(D.quiz.title)}</title><link rel="stylesheet" href="${esc(fontCss)}"><style>
+    :root { --acc: ${esc(acc)}; --acc-d: color-mix(in srgb, ${esc(acc)} 62%, #000); }
     @page { size: A4 landscape; margin: 0; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: Georgia, 'Times New Roman', serif; color: #2a2a2a; }
+    body { font-family: ${th.fonts.body.replace(/"/g, "'")}; color: #2a2a2a; }
     .dip { width: 297mm; height: 209mm; padding: 14mm; page-break-after: always; break-after: page; }
-    .frame { width: 100%; height: 100%; border: 3mm double #b8962e; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10mm; gap: 3.5mm; }
-    .k { font-size: 20pt; letter-spacing: .5em; color: #b8962e; font-weight: bold; margin-bottom: 4mm; }
+    .frame { width: 100%; height: 100%; border: 3mm double var(--acc); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10mm; gap: 3.5mm; }
+    .em { font-size: 34pt; line-height: 1; } .k { font-family: ${th.fonts.display.replace(/"/g, "'")}; font-size: 20pt; letter-spacing: .5em; color: var(--acc-d); font-weight: bold; margin-bottom: 4mm; }
     .s { font-size: 14pt; color: #777; font-style: italic; }
-    .n { font-weight: bold; line-height: 1.15; max-width: 240mm; word-break: break-word; }
+    .n { font-family: ${th.fonts.display.replace(/"/g, "'")}; font-weight: bold; line-height: 1.15; max-width: 240mm; word-break: break-word; }
     .t { font-size: 24pt; }
-    .p { font-size: 22pt; color: #b8962e; font-weight: bold; margin-top: 4mm; }
+    .p { font-size: 22pt; color: var(--acc-d); font-weight: bold; margin-top: 4mm; }
     .pt { font-size: 14pt; color: #555; }
     .f { font-size: 11pt; color: #888; margin-top: 8mm; }
-  </style></head><body>${pages}<script>setTimeout(function(){window.print()},400)<\/script></body></html>`);
+  </style></head><body>${pages}<script>(document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function(){ setTimeout(function(){ window.print() }, 300) })<\/script></body></html>`);
   w.document.close();
 }
 

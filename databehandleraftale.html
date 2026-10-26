@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Databehandleraftale – Jagten</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Inter',system-ui,sans-serif; color:#1a1f36; background:#f5f7fa; line-height:1.65; }
+  main { max-width:780px; margin:0 auto; padding:2rem 1.25rem 4rem; }
+  h1 { font-family:'Syne',system-ui,sans-serif; font-size:1.9rem; font-weight:800; letter-spacing:-.02em; margin-bottom:.4rem; }
+  h2 { font-family:'Syne',system-ui,sans-serif; font-size:1.1rem; margin:2rem 0 .5rem; }
+  p, li { font-size:.94rem; margin-bottom:.6rem; } ul { padding-left:1.3rem; }
+  .meta { color:#6b7385; font-size:.85rem; margin-bottom:1.5rem; }
+  .draft { background:#fff4d6; border:1.5px solid #f0c24b; border-radius:12px; padding:.85rem 1rem; font-size:.88rem; margin-bottom:1.5rem; }
+  .udfyld { background:#fff1a8; border-radius:4px; padding:0 .25rem; font-weight:600; }
+  table { width:100%; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 1px 8px rgba(0,0,0,.06); margin:.6rem 0 1rem; }
+  th, td { text-align:left; padding:.6rem .8rem; border-bottom:1px solid #eceff4; font-size:.86rem; vertical-align:top; } th { background:#fafbfc; font-size:.72rem; letter-spacing:.05em; text-transform:uppercase; color:#6b7385; }
+  a { color:#4f46e5; } .back { display:inline-block; margin-bottom:1.2rem; font-size:.85rem; text-decoration:none; }
+  .sign { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:1.5rem; } .sign div { border-top:1.5px solid #1a1f36; padding-top:.4rem; font-size:.82rem; min-height:4.5rem; }
+  @media print { body { background:#fff; } .back, .draft { display:none; } main { padding:0; } }
+  @media (max-width:560px) { .sign { grid-template-columns:1fr; } }
+</style>
+
+</head>
+<body>
+<main>
+<a class="back" href="javascript:history.back()">← Tilbage</a>
+<div class="draft"><b>UDKAST / SKABELON.</b> Udfyld de gule felter, og få aftalen gennemlæst af en jurist. Datatilsynet udgiver standardbestemmelser til databehandleraftaler (GDPR art. 28) – overvej at bruge dem som grundlag og lægge bilagene herunder ind i dem. Print siden eller gem som PDF for at få den underskrevet.</div>
+
+<h1>Databehandleraftale</h1>
+<p class="meta">Version 1 · <span class="udfyld">[dato]</span></p>
+
+<h2>Parter</h2>
+<table>
+<tr><th>Dataansvarlig (arrangøren)</th><th>Databehandler (Jagten)</th></tr>
+<tr><td><span class="udfyld">[Foreningens/virksomhedens navn]</span><br>CVR/foreningsnr. <span class="udfyld">[nr.]</span><br><span class="udfyld">[adresse]</span><br>Kontakt: <span class="udfyld">[navn, e-mail]</span></td>
+    <td><span class="udfyld">[Virksomhedsnavn]</span><br>CVR <span class="udfyld">[nr.]</span><br><span class="udfyld">[adresse]</span><br>Kontakt: <span class="udfyld">[navn, e-mail]</span></td></tr>
+</table>
+
+<h2>1. Formål og rammer</h2>
+<p>Databehandleren leverer en online platform til GPS-quiz og lignende løb (“Jagten”). Når den dataansvarlige afholder et løb, behandler databehandleren personoplysninger på den dataansvarliges vegne. Aftalen gælder for denne behandling og supplerer <span class="udfyld">[hovedaftale/handelsbetingelser]</span>.</p>
+
+<h2>2. Instruks</h2>
+<p>Databehandleren behandler kun oplysninger efter den dataansvarliges dokumenterede instruks – dvs. det, den dataansvarlige gør i platformen (opretter løb, hold og opgaver, afslutter eller sletter data) samt denne aftale. Mener databehandleren, at en instruks strider mod databeskyttelsesreglerne, underretter vedkommende den dataansvarlige.</p>
+
+<h2>3. Hvilke oplysninger og hvem handler det om?</h2>
+<table>
+<tr><th>Registrerede</th><th>Kategorier af personoplysninger</th></tr>
+<tr><td>Deltagere i løb (herunder børn, hvis arrangøren inviterer dem)</td><td>Holdnavn (kan indeholde navne), svar, point og tidspunkter, uploadede billeder (kan vise personer), seneste GPS-position med nøjagtighed, forsøg på nødkode, IP-adresse (tekniske logs)</td></tr>
+<tr><td>Den dataansvarliges medarbejdere/frivillige (quizmastere)</td><td>Login-PIN (hash), loginforsøg, kontaktoplysninger</td></tr>
+</table>
+<p>Der behandles <b>ikke</b> bevidst følsomme oplysninger (art. 9). Billeder kan ved et uheld vise sådanne forhold – den dataansvarlige instruerer deltagerne i ikke at uploade dem.</p>
+
+<h2>4. Sikkerhedsforanstaltninger (art. 32)</h2>
+<ul>
+<li>Krypteret transport (HTTPS); adgangskontrol på serveren – kun løbets ejer/administrator kan se svar, billeder og positioner.</li>
+<li>Svarnøgler og nødkoder forlader aldrig serveren til deltagere. PIN gemmes som hash; forsøgsgrænse mod gætteri.</li>
+<li>Kun seneste position pr. hold gemmes (ingen rutehistorik).</li>
+<li>Automatisk sletning af deltagerdata 90 dage efter afslutning (se pkt. 10) og løbende oprydning af logs.</li>
+<li>Selvhostede biblioteker og skrifttyper – ingen sporing eller tredjepartsscripts.</li>
+<li>Databehandleren vurderer løbende sikkerheden og opdaterer afhængigheder.</li>
+</ul>
+
+<h2>5. Fortrolighed</h2>
+<p>Personer hos databehandleren, der har adgang, er underlagt tavshedspligt.</p>
+
+<h2>6. Underdatabehandlere</h2>
+<p>Den dataansvarlige giver generel godkendelse til følgende. Databehandleren varsler ændringer med mindst 30 dage, så den dataansvarlige kan gøre indsigelse. Underdatabehandlere pålægges samme forpligtelser som i denne aftale.</p>
+<table>
+<tr><th>Underdatabehandler</th><th>Opgave</th><th>Land/region</th></tr>
+<tr><td>Supabase</td><td>Database, filopbevaring, serverfunktioner</td><td><span class="udfyld">[region]</span></td></tr>
+<tr><td>GitHub (Microsoft)</td><td>Hosting af hjemmesiden</td><td><span class="udfyld">[land]</span></td></tr>
+<tr><td>OpenFreeMap (eller den udbyder, der er valgt i opsætningen) <span class="udfyld">[ret ved skift]</span></td><td>Kortfliser (modtager IP og kortudsnit)</td><td><span class="udfyld">[land]</span></td></tr>
+</table>
+
+<h2>7. Tredjelande</h2>
+<p>Overførsel til lande uden for EU/EØS sker kun på et gyldigt overførselsgrundlag (fx Data Privacy Framework eller standardkontraktbestemmelser): <span class="udfyld">[angiv]</span>.</p>
+
+<h2>8. Bistand til den dataansvarlige</h2>
+<p>Databehandleren hjælper – under hensyn til behandlingens karakter – med at besvare anmodninger fra registrerede (indsigt, sletning m.m.), med sikkerhed, brudhåndtering og konsekvensanalyser. Den dataansvarlige kan selv slette et løbs deltagerdata til enhver tid i platformen (“Slet deltagerdata nu” på resultatsiden).</p>
+
+<h2>9. Brud på persondatasikkerheden</h2>
+<p>Databehandleren underretter den dataansvarlige uden unødig forsinkelse og senest inden for 48 timer efter at være blevet opmærksom på et brud, med de oplysninger der er tilgængelige (art. 33).</p>
+
+<h2>10. Sletning og tilbagelevering</h2>
+<p>Deltagerdata slettes automatisk 90 dage efter, at et løb er afsluttet – eller tidligere, hvis den dataansvarlige beder om det. Resultater kan hentes som CSV og diplomer, inden de slettes. Ved aftalens ophør slettes øvrige oplysninger inden for 30 dage, medmindre lov kræver opbevaring.</p>
+
+<h2>11. Revision</h2>
+<p>Databehandleren stiller de oplysninger til rådighed, der er nødvendige for at påvise overholdelse af aftalen, og giver mulighed for kontrol – efter rimeligt varsel og uden at forstyrre driften.</p>
+
+<h2>12. Ansvar</h2>
+<p>Ansvar følger <span class="udfyld">[hovedaftalen / dansk rets almindelige regler]</span>.</p>
+
+<h2>13. Varighed</h2>
+<p>Aftalen træder i kraft ved underskrift og gælder, så længe databehandleren behandler oplysninger for den dataansvarlige. Dansk ret gælder; tvister afgøres ved <span class="udfyld">[værneting]</span>.</p>
+
+<div class="sign">
+  <div>Dato og underskrift – dataansvarlig</div>
+  <div>Dato og underskrift – databehandler</div>
+</div>
+</main>
+</body>
+</html>

@@ -1,17 +1,39 @@
 // =============================================================
 // sw.js – Service Worker (PWA offline-grundlag)
-// v3: relative stier (virker på GitHub Pages under /quiz-platform/),
-//     cacher KUN egne filer – aldrig Supabase-kald eller kort-tiles.
+// v4: biblioteker og skrifttyper ligger nu på egen server (vendor/, fonts/) og forhåndscaches,
+//     så spillesiden stadig kan åbne ved dårlig dækning. Cacher KUN egne filer –
+//     aldrig Supabase-kald eller kort-tiles. Netværk først, cache som nødløsning.
 // =============================================================
 
-const CACHE = 'jagten-v3';
+const CACHE = 'jagten-v4';
 const FILES = [
   'index.html',
+  'privatliv.html',
   'js/config.js',
   'js/api.js',
+  'js/map-config.js',
+  'js/map.js',
+  'js/themes.js',
   'play/quiz.html',
   'board/scoreboard.html',
   'app/login.html',
+  'vendor/supabase.js',
+  'vendor/NoSleep.min.js',
+  'vendor/leaflet/leaflet.js',
+  'vendor/leaflet/leaflet.css',
+  'vendor/maplibre/maplibre-gl.js',
+  'vendor/maplibre/maplibre-gl.css',
+  'vendor/maplibre/leaflet-maplibre-gl.js',
+  'fonts/fonts.css',
+  'fonts/syne-latin-700-normal.woff2',
+  'fonts/syne-latin-800-normal.woff2',
+  'fonts/inter-latin-400-normal.woff2',
+  'fonts/inter-latin-600-normal.woff2',
+  'fonts/inter-latin-700-normal.woff2',
+  'fonts/fredoka-latin-500-normal.woff2',
+  'fonts/fredoka-latin-600-normal.woff2',
+  'fonts/playfair-display-latin-700-normal.woff2',
+  'fonts/special-elite-latin-400-normal.woff2',
   'manifest.json',
 ];
 

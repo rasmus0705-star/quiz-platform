@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Alle løb – Quiz Platform</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../vendor/supabase.js"></script>
 <script src="../js/config.js"></script>
 <script src="../js/api.js"></script>
 <style>
@@ -265,6 +265,10 @@ async function copyQuiz(quizId) {
 async function deleteQuiz(quizId) {
   const title = allQuizzes.find(q => q.id === quizId)?.title || '(uden titel)';
   if (!confirm(`Slet "${title}" permanent? Alle stop, hold og besvarelser slettes også. Dette kan ikke fortrydes.`)) return;
+  // Først fotos og deltagerdata i Storage (databasen kan ikke slette filer) – ellers bliver billederne liggende
+  try { await purgeQuizData(quizId, true); } catch (e) {
+    if (!confirm('Billeder og deltagerdata kunne ikke slettes først: ' + e.message + '\n\nSlet løbet alligevel? Billederne kan så blive liggende i lageret.')) return;
+  }
   const { error } = await sb.schema('quiz').rpc('delete_quiz_cascade', { p_quiz_id: quizId });
   if (error) { alert('Kunne ikke slette: ' + error.message); return; }
   await loadQuizzes();

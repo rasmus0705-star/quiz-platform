@@ -5,11 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Editor – Quiz Platform</title>
   <link rel="stylesheet" href="../themes/standard.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link rel="stylesheet" href="../fonts/fonts.css">
+  <link rel="stylesheet" href="../vendor/leaflet/leaflet.css">
+  <script src="../vendor/leaflet/leaflet.js"></script>
+  <script src="../vendor/supabase.js"></script>
+  <script src="../vendor/qrcode.min.js"></script>
   <script src="../js/config.js"></script>
+  <script src="../js/map-config.js"></script>
+  <script src="../js/map.js"></script>
+  <script src="../js/themes.js"></script>
   <script src="../js/api.js"></script>
   <style>
     #map { height:260px; border-radius:var(--radius); margin-bottom:.75rem; }
@@ -137,6 +141,10 @@
       <label>Titel</label>
       <input id="title" placeholder="Fx: Auning Historiske Byvandring">
 
+      <label style="margin-top:.75rem;">Stil og tema</label>
+      <select id="theme"></select>
+      <div id="theme-hint" class="muted" style="margin-top:.25rem;font-size:.75rem;"></div>
+
       <label style="margin-top:.75rem;">Stop-rækkefølge</label>
       <div class="row2" style="margin-top:.25rem;gap:.5rem;">
         <button id="mode-fri" class="btn btn-sm btn-ghost" onclick="setMode('fri')"
@@ -161,6 +169,7 @@
   <!-- TAB: Stop & Kort -->
   <div id="pane-stop" class="tab-pane" style="display:none;">
     <div class="card">
+      <div id="map-notice" style="display:none;background:#fff8e6;border:1px solid #f3e1a8;color:#8a6d1a;border-radius:8px;padding:.5rem .75rem;font-size:.78rem;margin-bottom:.5rem;"></div>
       <div id="map"></div>
       <p class="muted" style="margin:.5rem 0 .75rem;">Klik på kortet for at tilføje et stop.</p>
       <div id="stop-list"></div>
@@ -203,6 +212,7 @@ const params   = new URLSearchParams(location.search);
 let quizId     = params.get('q');
 let quizStatus = 'kladde';
 let quizMode   = 'fri';
+let quizTheme  = 'standard';
 let stops      = [];
 let teams      = [];
 let map, markers = [];
@@ -219,8 +229,10 @@ async function init() {
   }
 
   map = L.map('map').setView([56.3, 10.0], 7);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    { attribution: '© OpenStreetMap' }).addTo(map);
+  jagtenAddTiles(L, map, 'light', '');                // kortudbyder: se js/map-config.js
+  const notice = jagtenMapNotice();                  // advarsel hvis kortet kun er til test (OSM)
+  if (notice) { const el = document.getElementById('map-notice'); el.textContent = notice; el.style.display = 'block'; }
+  initThemeSelect();
   map.on('click', onMapClick);
 
   if (quizId) await loadAll();
@@ -247,6 +259,8 @@ async function loadAll() {
   if (!q) return;
   quizStatus = q.status;
   quizMode   = q.stop_order ?? 'fri';
+  quizTheme  = JAGTEN_THEMES[q.theme] ? q.theme : 'standard';
+  document.getElementById('theme').value = quizTheme; showThemeHint();
   document.getElementById('title').value = q.title;
   document.getElementById('quiz-title-display').textContent = q.title;
   setStatusPill(q.status);
@@ -290,12 +304,25 @@ async function loadAll() {
 const TEST_TEAM_NAME = '🧪 Testhold';
 
 // ── Quiz gem / status ─────────────────────────────────────────
+function initThemeSelect() {
+  const sel = document.getElementById('theme');
+  sel.innerHTML = '';
+  jagtenThemeList().forEach(([id, t]) => sel.add(new Option(t.emoji + ' ' + t.name, id)));    // Option = tekst, ikke HTML
+  sel.value = quizTheme;
+  sel.onchange = async () => {
+    quizTheme = sel.value; showThemeHint();
+    if (quizId) { const { error } = await sb.schema('quiz').from('quizzes').update({ theme: quizTheme }).eq('id', quizId); flash(error ? '❌ ' + error.message : '✅ Stil gemt'); }
+  };
+  showThemeHint();
+}
+function showThemeHint() { document.getElementById('theme-hint').textContent = jagtenTheme(quizTheme).blurb; }
+
 async function saveQuiz() {
   const session = await getSession();
   const title   = document.getElementById('title').value.trim();
   if (!title) { flash('⚠️ Titel mangler'); return; }
 
-  const payload = { title, stop_order: quizMode };
+  const payload = { title, stop_order: quizMode, theme: quizTheme };
   if (session?.user?.id) payload.owner_id = session.user.id;
   let error;
 
