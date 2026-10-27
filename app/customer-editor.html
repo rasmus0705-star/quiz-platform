@@ -280,6 +280,11 @@
     .act-img { width:100%; max-height:180px; object-fit:cover; border-radius:10px; border:1px solid var(--line); display:block; }
 
     /* ── Trin: vejledning, poster, opgaver ── */
+    .need-save { background:#fff4de; border:1.5px solid #f3d9a4; border-radius:14px; padding:16px 18px; margin-bottom:16px; }
+    .need-save b { display:block; font-family:'Syne','Inter',sans-serif; font-size:1rem; margin-bottom:4px; }
+    .need-save p { font-size:.88rem; color:#8a5a00; line-height:1.5; margin-bottom:10px; }
+    #map.locked { opacity:.55; pointer-events:none; }
+    .hint.warn { color:#b45309; font-weight:600; }
     .help { background:var(--white); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:12px; padding:14px 16px; margin-bottom:16px; }
     .help-title { font-family:'Syne','Inter',sans-serif; font-weight:800; font-size:.9rem; margin-bottom:4px; }
     .help p { font-size:.86rem; color:var(--ink-2); line-height:1.55; margin-bottom:8px; }
@@ -437,6 +442,7 @@
 <div class="pane" id="pane-2">
 <div class="pane-inner">
 <div class="pane-title">📍 Placér dine poster</div>
+<div class="need-save" id="need-save-2" style="display:none"></div>
 <div class="help" id="help-2"></div>
 
 <div class="p2-grid">
@@ -487,6 +493,7 @@ oninput="onSearchInput()" onkeydown="searchKey(event)">
 <div class="pane" id="pane-3">
 <div class="pane-inner">
 <div class="pane-title">❓ Tilføj opgaver</div>
+<div class="need-save" id="need-save-3" style="display:none"></div>
 <div class="help" id="help-3"></div>
 <div id="task-list"></div>
 <button class="btn-next" onclick="goStep(4)">Næste: Opret hold →</button>
@@ -498,6 +505,7 @@ oninput="onSearchInput()" onkeydown="searchKey(event)">
   <div class="pane-inner">
     <div class="pane-title">👥 Hold & deling</div>
     <p class="pane-lead">Opret hold og del links med deltagerne. Test og aktivér løbet fra oversigten når du er klar.</p>
+<div class="need-save" id="need-save-4" style="display:none"></div>
 <div class="help" id="help-4"></div>
 <p class="hint" style="margin:-6px 0 14px"><a href="../tjekliste.html" target="_blank" rel="noopener" style="color:var(--accent);font-weight:700">🖨️ Print tjekliste til dagen</a></p>
 
@@ -631,6 +639,7 @@ function goStep(n, save = false) {
     renderStops()
   }
   if (n === 4) renderTeams()
+  updateNeedSave()
   renderHelp()
   try { localStorage.setItem('ced_step', n); } catch {}
   window.scrollTo(0,0)
@@ -657,6 +666,7 @@ async function loadAll() {
   document.getElementById('quiz-title-display').textContent = q.title || 'Nyt løb'
   updateModeUI(quizMode)
   quizHide = !!q.hide_results; updateHideUI()
+  updateNeedSave()
   document.getElementById('opens-at').value  = toLocalInput(q.opens_at)
   document.getElementById('closes-at').value = toLocalInput(q.closes_at)
 
@@ -718,6 +728,7 @@ async function saveQuiz(redirectAfter = false) {
     return
   }
   document.getElementById('quiz-title-display').textContent = title
+  updateNeedSave()
   flash('✅ Gemt')
   if (redirectAfter) {
     setTimeout(() => { location.href = 'customer-overview.html' }, 800)
@@ -757,7 +768,16 @@ function initMap() {
 function onMapClick(e) { startNewPost(e.latlng) }
 
 async function startNewPost(latlng) {
-  if (!quizId) { await saveQuiz(); if (!quizId) { flash('⚠️ Gem løbet først – gå til trin 1 og giv det et navn'); return } }
+  if (!quizId) {
+    await saveQuiz()
+    if (!quizId) {                         // mangler stadig navn → sig det tydeligt, hvor man kigger
+      updateNeedSave()
+      document.getElementById('need-save-2')?.scrollIntoView?.({ behavior: 'smooth', block: 'center' })
+      flash('⚠️ Giv først løbet et navn i trin 1')
+      return
+    }
+    updateNeedSave()
+  }
   document.getElementById('np-done').style.display = 'none'
   if (pendingMarker) pendingMarker.setLatLng(latlng)
   else pendingMarker = L.marker(latlng, { draggable: true, icon: L.divIcon({ html: '<div class="pin-n new">+</div>', iconSize: [30,30], iconAnchor: [15,15], className: '' }) }).addTo(map)
@@ -913,6 +933,24 @@ function renderCodes() {
 function renderStops() { renderPosts(); renderTasks(); renderCodes(); renderHelp() }
 
 // Fast vejledning øverst i hvert trin: hvad skal gøres, og hvornår er trinnet færdigt
+// Løbet oprettes først, når det har et navn. Uden navn kan man hverken placere poster, lave opgaver eller oprette hold,
+// så her siger vi det tydeligt i stedet for at lade klik på kortet gøre ingenting.
+function updateNeedSave() {
+  const missing = !quizId
+  for (const n of [2, 3, 4]) {
+    const el = document.getElementById('need-save-' + n); if (!el) continue
+    el.style.display = missing ? 'block' : 'none'
+    if (missing && !el.innerHTML) {
+      el.innerHTML = '<b>Giv først løbet et navn</b><p>Løbet bliver oprettet, når det har et navn. Derefter kan du placere poster, tilføje opgaver og oprette hold.</p>' +
+        '<button class="btn btn-primary btn-sm" onclick="goStep(1); setTimeout(() => { const t = document.getElementById(\'title\'); t.focus(); t.select(); }, 60)">Gå til trin 1</button>'
+    }
+  }
+  const mapEl = document.getElementById('map')
+  if (mapEl) mapEl.classList.toggle('locked', missing)
+  const hint = document.getElementById('map-hint')
+  if (hint) { hint.classList.toggle('warn', missing); if (missing) hint.textContent = 'Giv løbet et navn i trin 1, før du placerer poster.' }
+}
+
 function renderHelp() {
   const title = (document.getElementById('title')?.value || '').trim()
   const themeName = jagtenTheme(quizTheme).name

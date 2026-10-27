@@ -165,6 +165,12 @@ Edge Functions og SQL følger **ikke** med git push. GitHub slår planlagte jobs
 - Ny test `smoke_click.js` klikker med RIGTIG Leaflet på kortet og går hele vejen gennem at gemme en post – fanger den slags regression fremover.
 - Forsiden er skrevet om: hvad systemet kan nu (GPS-løb + foto-jagt, 12 funktioner), og et klart adskilt afsnit "På tegnebrættet" (escape room, mordgåde, løb uden svar, deltag med kode) med besked om at det ikke er klar.
 
+## Rettet 30/10 (2) – "kan ikke klikke på kortet"
+To uafhængige årsager, begge rettet:
+1. **Løbet var ikke gemt.** Et nyt løb oprettes først, når det har et navn (`create_quiz_for_customer`). Gik man direkte til trin 2 via trinbjælken, kaldte kortklik `saveQuiz()`, som kun gav et lille "⚠️ Titel mangler" i headeren → det lignede et dødt kort. Nu: gult banner i trin 2/3/4 ("Giv først løbet et navn" + knap til trin 1), kortet tones ned og hjælpeteksten advarer.
+2. **Vektorkortets lærred sluger Leaflets klik** (kun med WebGL – derfor fangede jsdom-testen det ikke, da den falder tilbage til raster). Begge editorer har nu et sikkerhedsnet: en lytter direkte på `#map` der regner klikket om med `mouseEventToLatLng`, springes over hvis Leaflet allerede klarede det (500 ms), ignorerer træk (>6 px) og klik på markører/kontroller.
+`smoke_click.js` dækker nu begge dele med rigtig Leaflet.
+
 ## Status og hvad der mangler
 **Alt er testet i jsdom/lokal Postgres (236 DB-tests, 427 side-tests i 18 suiter, edge functions) – IKKE på rigtige telefoner/Supabase.**
 
