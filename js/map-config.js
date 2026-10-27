@@ -31,7 +31,9 @@ const MAP_CONFIG = {
   // Stilnavne pr. udbyder. Ret dem her, hvis en udbyder omdøber en stil.
   // En stil der ikke findes her bruger udbyderens 'light' + et farvefilter i browseren.
   styles: {
-    openfreemap: { light: 'liberty', outdoor: 'liberty', dark: 'dark' },   // 'dark' er ikke officielt reklameret – falder automatisk tilbage til liberty + mørkt filter
+    // 'bright' har tydelige veje (liberty er cremefarvet med hvide veje – svært at læse udendørs). Er 'bright' stadig svær at læse, så prøv 'positron' her.
+    // 'dark' er ikke officielt reklameret – falder automatisk tilbage til liberty + mørkt filter.
+    openfreemap: { light: 'bright', outdoor: 'liberty', dark: 'dark' },
     maptiler:    { light: 'streets-v2', dark: 'dataviz-dark', outdoor: 'outdoor-v2', winter: 'winter-v2' },
     stadia:      { light: 'alidade_smooth', dark: 'alidade_smooth_dark', outdoor: 'outdoors', watercolor: 'stamen_watercolor' }
   }

@@ -8,13 +8,14 @@
 const JAGTEN_MAP_FILTERS = {
   light: '',
   dark: 'invert(1) hue-rotate(180deg) brightness(1.15) contrast(1.15) saturate(.8)',     // lysere end før: veje og navne skal kunne ses
-  winter: 'saturate(.55) brightness(1.08) hue-rotate(185deg)',
+  winter: 'saturate(.8) brightness(1.05) contrast(1.12) hue-rotate(185deg)',
   outdoor: 'saturate(1.2) contrast(1.02)',
-  watercolor: 'saturate(.85) contrast(.92) brightness(1.04) sepia(.18)'
+  watercolor: 'saturate(.95) contrast(1.06) brightness(1.02) sepia(.15)'
 }
 
 const JAGTEN_OSM_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
 const JAGTEN_OFM_STYLES = 'https://tiles.openfreemap.org/styles/'
+const JAGTEN_OFM_STABLE = 'liberty'          // den officielle, afprøvede stil – bruges som reserve, hvis ønsket stil ikke kan hentes
 let   JAGTEN_GL_TIMEOUT_MS = 12000          // vektorkort der ikke er klar efter så lang tid → reserve
 
 // Her ligger map.js → find rod-mappen, så MapLibre kan hentes fra vendor/ uanset hvilken side der kalder
@@ -112,7 +113,7 @@ function jagtenOsmFallback(L, map, style, tint, why) {
 // Vektorkort via MapLibre inde i Leaflet. Reserve-kæde: ønsket stil → stabil lys stil + farvefilter → OSM-fliser.
 function jagtenAddVector(L, map, spec, style, tint) {
   const out = { layer: null, spec, pending: null }
-  const lightName = jagtenTileSpec('light').styleName
+  const stable = JAGTEN_OFM_STABLE
   let done = false
 
   const toOsm = why => { done = true; out.layer = jagtenOsmFallback(L, map, style, tint, why) }
@@ -129,7 +130,7 @@ function jagtenAddVector(L, map, spec, style, tint) {
       if (ok || failed || done) return
       failed = true
       try { map.removeLayer(layer) } catch (_) {}
-      if (styleName !== lightName) addGl(lightName, false)           // fx 'dark' findes ikke → lys stil + mørkt filter
+      if (styleName !== stable) addGl(stable, false)                  // fx 'dark'/'bright' kan ikke hentes → stabil stil + farvefilter
       else toOsm('OpenFreeMap leverer ikke kort')
     }
     const gl = layer.getMaplibreMap && layer.getMaplibreMap()

@@ -307,6 +307,43 @@
     .tp-text { font-size:.86rem; margin-bottom:6px; } .tp-bar { height:6px; border-radius:3px; background:var(--line); overflow:hidden; } .tp-bar i { display:block; height:100%; background:#16a34a; border-radius:3px; transition:width .3s; }
     .tbadge { display:inline-block; font-size:.72rem; font-weight:700; padding:2px 8px; border-radius:99px; }
     .tbadge.ok { background:#e8f7ee; color:#166534; } .tbadge.warn { background:#fff4de; color:#b45309; } .tbadge.bad { background:#fdecec; color:#b91c1c; }
+
+    /* ── Større poster (tydeligt at de er der) ── */
+    .post-row { padding:14px 16px; border:1.5px solid var(--line); border-radius:14px; margin-bottom:10px; background:#fff; border-bottom:1.5px solid var(--line); }
+    .post-row:last-child { margin-bottom:0; } .post-row:hover { border-color:#c9c4ff; background:#fbfbff; }
+    .post-n { width:38px; height:38px; font-size:1rem; }
+    .post-name { font-size:1.08rem; white-space:normal; }
+    .post-sub { font-size:.8rem; color:var(--muted); font-weight:500; margin-top:1px; }
+    .post-row .icon-btn { width:36px; height:36px; font-size:1rem; }
+    .post-row.just-added { animation:justAdded 2.2s ease-out; }
+    @keyframes justAdded { 0% { background:var(--accent-soft); box-shadow:0 0 0 4px rgba(108,99,255,.35); } 100% { background:#fff; box-shadow:none; } }
+    .stop-header { padding:16px 18px; } .stop-name { font-size:1.08rem; }
+    .code-row { display:flex; align-items:center; gap:12px; padding:9px 0; border-bottom:1px solid var(--line); } .code-row:last-child { border-bottom:none; }
+    .code-name { flex:1; font-weight:600; font-size:.92rem; } .code-val { font-size:1.15rem; letter-spacing:.18em; }
+    details.codes { margin:6px 0 12px; } details.codes summary { cursor:pointer; font-weight:700; font-size:.88rem; color:var(--accent); padding:6px 0; }
+
+    /* ── Bred skærm: brug pladsen ── */
+    #map { height:clamp(300px, 52vh, 520px); }
+    .p2-grid { display:grid; grid-template-columns:1fr; gap:18px; align-items:start; }
+    @media (min-width:1000px) {
+      #pane-2 .pane-inner, #pane-4 .pane-inner { max-width:1260px; }
+      #pane-1 .pane-inner, #pane-3 .pane-inner { max-width:1100px; }
+      .p2-grid { grid-template-columns:minmax(0,1.7fr) minmax(340px,1fr); }
+      #map { height:clamp(420px, 68vh, 820px); }
+      .p2-side { max-height:calc(68vh + 110px); overflow:auto; position:sticky; top:84px; }
+      #pane-1 .pane-inner { display:grid; grid-template-columns:1.15fr 1fr; gap:0 22px; align-items:start; }
+      #pane-1 .pane-inner > .pane-title, #pane-1 .pane-inner > .pane-lead, #pane-1 .pane-inner > .help, #pane-1 .pane-inner > .btn-next { grid-column:1 / -1; }
+      #pane-1 .c-left { grid-column:1; grid-row:span 2; } #pane-1 .c-right { grid-column:2; }
+      #pane-4 .pane-inner { display:grid; grid-template-columns:1fr 1fr; gap:0 22px; align-items:start; }
+      #pane-4 .pane-inner > .pane-title, #pane-4 .pane-inner > .pane-lead, #pane-4 .pane-inner > .help, #pane-4 .pane-inner > p.hint, #pane-4 .pane-inner > .btn-next { grid-column:1 / -1; }
+    }
+    @media (min-width:1300px) {
+      #task-list { display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:start; }
+      #task-list > .task-progress { grid-column:1 / -1; margin-bottom:0; } #task-list > .stop-card { margin-bottom:0; }
+      #pane-3 .pane-inner { max-width:1260px; }
+    }
+    @media (min-width:1500px) { html { font-size:17.5px; } }
+    @media (min-width:1900px) { html { font-size:19px; } }
   </style>
 </head>
 <body>
@@ -342,7 +379,7 @@
     <p class="pane-lead">Giv dit GPS-quizforløb et navn og en beskrivelse, som dine deltagere ser.</p>
 <div class="help" id="help-1"></div>
 
-    <div class="card">
+    <div class="card c-left">
       <label>Navn på løbet *</label>
       <input type="text" id="title" placeholder="Fx: Historisk byvandring i Auning" maxlength="100">
 
@@ -374,7 +411,7 @@
       <div id="theme-preview"></div>
     </div>
 
-<div class="card">
+<div class="card c-right">
 <div class="card-title">Når løbet er slut</div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;">
 <button id="chide-on" onclick="setHide(true)" class="opt-toggle">🎉 Skjul placeringer<small>Vinderen afsløres, når du trykker</small></button>
@@ -383,7 +420,7 @@
 <p class="hint">Mens placeringerne er skjult, ser deltagerne kun fremdrift – ikke point eller placering. Du afslører vinderen fra scoreboardet med et podie.</p>
 </div>
 
-<div class="card">
+<div class="card c-right">
 <div class="card-title">Tidsrum (valgfrit)</div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
 <div><label for="opens-at">Åbner</label><input type="datetime-local" id="opens-at"></div>
@@ -402,7 +439,8 @@
 <div class="pane-title">📍 Placér dine poster</div>
 <div class="help" id="help-2"></div>
 
-<div class="card">
+<div class="p2-grid">
+<div class="card p2-map">
 <div style="position:relative;margin-bottom:.75rem;">
 <input type="text" id="map-search" placeholder="🔍  Søg på by eller adresse…" style="padding-right:2.5rem;"
 oninput="onSearchInput()" onkeydown="if(event.key==='Enter')doSearch()">
@@ -413,6 +451,10 @@ oninput="onSearchInput()" onkeydown="if(event.key==='Enter')doSearch()">
 <div id="map"></div>
 <p class="hint" id="map-hint">Klik på kortet, hvor en post skal ligge. Du kan trække i nålene bagefter for at justere.</p>
 
+</div>
+
+<div class="card p2-side">
+<div class="card-title">Dine poster</div>
 <div id="newpost" class="newpost" style="display:none">
 <div class="np-title">📍 Ny post</div>
 <input type="text" id="np-name" maxlength="80" placeholder="Navn på posten, fx Kirken" onkeydown="if(event.key==='Enter')saveNewPost()">
@@ -433,6 +475,7 @@ oninput="onSearchInput()" onkeydown="if(event.key==='Enter')doSearch()">
 </div>
 
 <div id="stop-list"></div>
+</div>
 </div>
 
 <button class="btn-next" onclick="goStep(3)">Næste: Tilføj opgaver →</button>
@@ -478,6 +521,7 @@ oninput="onSearchInput()" onkeydown="if(event.key==='Enter')doSearch()">
     <div class="card">
       <div class="card-title">🆘 Nødudgang og quizmaster-ark</div>
       <p style="font-size:.85rem;color:var(--ink-2);margin-bottom:.85rem;">Hvert stop har en 4-cifret nødkode. Hvis et holds GPS driller, kan du give dem koden i telefonen, så de kan låse stoppet op. Print arket og tag det med på dagen.</p>
+      <details class="codes"><summary>Vis nødkoder</summary><div id="code-list"></div></details>
       <button class="btn btn-ghost btn-sm" onclick="printSheet()">🖨️ Print nødkoder &amp; holdliste</button>
     </div>
 
@@ -546,6 +590,7 @@ let openStopId = null
 let currentStep = 1
 let quizHide   = true                    // nye løb: skjul placeringer til afsløringen (kan ændres i trin 1)
 let pendingMarker = null
+let lastAddedId = null
 let shareTeam  = null
 let editActId  = null
 let editStopId = null
@@ -687,6 +732,7 @@ function flash(txt, ms=3000) {
 // ── Map ───────────────────────────────────────────────────────
 function initMap() {
   if (map) return
+  window.addEventListener('resize', () => { if (map) map.invalidateSize() })   // kortet fylder pladsen, når vinduet ændrer størrelse
   map = L.map('map').setView([56.3, 10.0], 7)
   jagtenAddTiles(L, map, 'light', '')          // kortudbyder: se js/map-config.js
   map.on('click', onMapClick)
@@ -715,6 +761,7 @@ async function saveNewPost() {
   }).select().single()
   if (error) { alert(error.message); return }
   stops.push({ ...data, activities: [] })
+  lastAddedId = data.id
   map.removeLayer(pendingMarker); pendingMarker = null
   document.getElementById('newpost').style.display = 'none'
   document.getElementById('np-done-title').textContent = '✅ "' + name + '" er gemt (post ' + stops.length + ')'
@@ -794,9 +841,9 @@ function renderPosts() {
   const el = document.getElementById('stop-list')
   if (!stops.length) { el.innerHTML = '<div class="empty-posts">Klik på kortet for at placere din første post.</div>'; return }
   el.innerHTML = stops.map((st, i) => `
-    <div class="post-row" data-id="${st.id}">
+    <div class="post-row${st.id === lastAddedId ? ' just-added' : ''}" data-id="${st.id}">
       <span class="post-n">${i + 1}</span>
-      <div class="post-name">${escHtml(st.name)}</div>
+      <div style="flex:1;min-width:0"><div class="post-name">${escHtml(st.name)}</div><div class="post-sub">${st.activities.length ? st.activities.length + (st.activities.length === 1 ? ' opgave' : ' opgaver') : 'Ingen opgaver endnu'}</div></div>
       <div class="stop-actions">
         <button class="icon-btn" onclick="moveStop('${st.id}',-1)" title="Flyt op i rækkefølgen" aria-label="Flyt op">↑</button>
         <button class="icon-btn" onclick="moveStop('${st.id}',1)" title="Flyt ned i rækkefølgen" aria-label="Flyt ned">↓</button>
@@ -805,6 +852,7 @@ function renderPosts() {
       </div>
     </div>`).join('')
   el.onclick = ev => { const row = ev.target.closest('.post-row'); if (row && !ev.target.closest('button')) focusPost(row.dataset.id) }
+  if (lastAddedId) { const row = el.querySelector('.post-row.just-added'); row?.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' }); setTimeout(() => { lastAddedId = null }, 2300) }
 }
 
 // Opgaver pr. post (trin 3): hvilke poster mangler opgaver, og hvilke opgaver mangler et rigtigt svar
@@ -829,7 +877,14 @@ function renderTasks() {
     }).join('')
 }
 
-function renderStops() { renderPosts(); renderTasks(); renderHelp() }
+// Nødkoder (samlet i trin 4 – ikke i opgave-trinnet): hvert stop har en 4-cifret kode som quizmasteren kan give et hold ved GPS-problemer
+function renderCodes() {
+  const el = document.getElementById('code-list'); if (!el) return
+  if (!stops.length) { el.innerHTML = '<p class="hint">Ingen poster endnu.</p>'; return }
+  el.innerHTML = stops.map((st, i) => `<div class="code-row"><span class="post-n">${i + 1}</span><span class="code-name">${escHtml(st.name)}</span><b class="code-val">${escHtml(st.unlock_code ?? '–')}</b><button class="icon-btn" onclick="newUnlockCode('${st.id}')" title="Lav en ny kode" aria-label="Ny kode">↻</button></div>`).join('')
+}
+
+function renderStops() { renderPosts(); renderTasks(); renderCodes(); renderHelp() }
 
 // Fast vejledning øverst i hvert trin: hvad skal gøres, og hvornår er trinnet færdigt
 function renderHelp() {
@@ -906,11 +961,6 @@ function renderStopBody(stop) {
     </div>`).join('')
 
   return `<div class="stop-body">
-    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.1rem 0 .7rem;padding:.5rem .65rem;background:#fff8e6;border:1px solid #f3e1a8;border-radius:8px;font-size:.8rem;">
-        <span>🆘 Nødkode:</span><b style="font-size:1rem;letter-spacing:.15em;">${escHtml(stop.unlock_code ?? '–')}</b>
-        <button class="icon-btn" onclick="newUnlockCode('${stop.id}')" title="Lav en ny kode">↻</button>
-        <span style="color:#8a6d1a;font-size:.72rem;flex-basis:100%;">Giv koden til holdet, hvis GPS ikke virker ved stoppet.</span>
-      </div>
     ${rows || '<p style="color:var(--muted);font-size:.85rem;margin-bottom:.75rem;">Ingen opgaver endnu</p>'}
     <button class="btn btn-ghost btn-sm btn-full" style="margin-top:.5rem;"
       onclick="openActModal('${stop.id}','')">+ Tilføj opgave</button>

@@ -40,22 +40,22 @@
     .btn-logout { border:1px solid var(--line); background:var(--white); color:var(--ink-2); border-radius:10px; padding:0 12px; height:36px; font-size:.82rem; font-weight:600; }
     .btn-logout:hover { background:var(--bg); }
 
-    main { max-width:1100px; margin:0 auto; padding:28px 20px 56px; }
+    main { max-width:1400px; margin:0 auto; padding:32px 24px 60px; }
     .page-header { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:20px; }
-    .page-header h1 { font-size:1.8rem; font-weight:800; line-height:1.15; }
-    .page-header p { color:var(--ink-2); font-size:.92rem; margin-top:2px; }
+    .page-header h1 { font-size:clamp(1.9rem,3.2vw,2.5rem); font-weight:800; line-height:1.12; }
+    .page-header p { color:var(--ink-2); font-size:1.08rem; margin-top:4px; }
     .btn-primary { display:inline-flex; align-items:center; justify-content:center; gap:8px; border:none; background:var(--accent); color:#fff; border-radius:12px; padding:0 18px; height:44px; font-weight:700; font-size:.92rem; box-shadow:0 4px 14px rgba(91,82,245,.28); transition:transform .1s, box-shadow .15s; }
     .btn-primary:hover { box-shadow:0 6px 18px rgba(91,82,245,.36); } .btn-primary:active { transform:scale(.98); }
 
     /* ── Velkomstguide ── */
     #guide { background:linear-gradient(135deg,#25215c,#4338ca 60%,#6d5df6); color:#fff; border-radius:20px; padding:24px; margin-bottom:24px; position:relative; overflow:hidden; box-shadow:0 10px 30px rgba(67,56,202,.25); }
     #guide::after { content:''; position:absolute; right:-60px; top:-60px; width:220px; height:220px; border-radius:50%; background:rgba(255,255,255,.07); }
-    #guide h2 { font-size:1.35rem; font-weight:800; margin-bottom:4px; position:relative; }
+    #guide h2 { font-size:1.8rem; font-weight:800; margin-bottom:4px; position:relative; }
     #guide .sub { color:rgba(255,255,255,.8); font-size:.92rem; margin-bottom:18px; position:relative; }
     .g-steps { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px; position:relative; }
     .g-step { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.16); border-radius:14px; padding:14px; }
     .g-num { width:26px; height:26px; border-radius:50%; background:#fff; color:#4338ca; font-weight:800; font-size:.82rem; display:grid; place-items:center; margin-bottom:8px; }
-    .g-step b { display:block; font-size:.95rem; margin-bottom:2px; } .g-step span { font-size:.82rem; color:rgba(255,255,255,.78); }
+    .g-step b { display:block; font-size:1.15rem; margin-bottom:3px; } .g-step span { font-size:.95rem; color:rgba(255,255,255,.78); }
     .g-actions { display:flex; align-items:center; gap:12px; flex-wrap:wrap; position:relative; }
     .g-btn { background:#fff; color:#3730a3; border:none; border-radius:12px; height:42px; padding:0 18px; font-weight:800; font-size:.9rem; }
     .g-link { background:none; border:none; color:rgba(255,255,255,.85); font-size:.85rem; text-decoration:underline; padding:6px; }
@@ -71,23 +71,29 @@
     .field input:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 4px var(--accent-soft); }
     #pin-msg { min-height:1.3em; font-size:.84rem; margin-bottom:10px; text-align:left; } #pin-msg.err { color:var(--red); } #pin-msg.ok { color:var(--green); }
 
+    .testbox { display:flex; align-items:center; justify-content:space-between; gap:10px 14px; flex-wrap:wrap; background:#fffaf0; border:1px solid #f3d9a4; border-radius:12px; padding:11px 14px; margin-bottom:14px; }
+    .testbox .tb-text b { display:block; font-size:1rem; } .testbox .tb-text span { font-size:.86rem; color:var(--ink-2); }
+    .testbox .tb-actions { display:flex; gap:8px; flex-wrap:wrap; }
+    .next-alt { background:none; border:none; color:var(--accent); font-weight:700; font-size:.9rem; text-decoration:underline; padding:6px 2px; margin-top:2px; cursor:pointer; }
+    @media (min-width:1500px) { html { font-size:17.5px; } } @media (min-width:1900px) { html { font-size:19px; } }
+
     /* ── Filtre ── */
     .tabs { display:inline-flex; background:var(--white); border:1px solid var(--line); border-radius:12px; padding:4px; gap:2px; margin-bottom:18px; max-width:100%; overflow-x:auto; }
-    .tabs button { border:none; background:none; color:var(--ink-2); font-weight:600; font-size:.85rem; padding:7px 14px; border-radius:9px; white-space:nowrap; }
+    .tabs button { border:none; background:none; color:var(--ink-2); font-weight:600; font-size:1rem; padding:9px 18px; border-radius:9px; white-space:nowrap; }
     .tabs button .n { margin-left:6px; font-size:.75rem; color:var(--muted); font-weight:700; }
     .tabs button.on { background:var(--ink); color:#fff; } .tabs button.on .n { color:rgba(255,255,255,.65); }
 
     /* ── Løbskort ── */
-    .quiz-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:18px; align-items:start; }
+    .quiz-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(400px,1fr)); gap:22px; align-items:start; }
     .quiz-card { background:var(--white); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:20px; position:relative; overflow:hidden; }
     .quiz-card::before { content:''; position:absolute; left:0; right:0; top:0; height:4px; background:var(--slate); }
     .quiz-card[data-status="aktiv"]::before { background:linear-gradient(90deg,#16a34a,#4ade80); }
     .quiz-card[data-status="kladde"]::before, .quiz-card[data-status="testing"]::before { background:linear-gradient(90deg,#f59e0b,#fbbf24); }
     .card-top { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:4px; }
-    .card-title { font-family:'Syne',sans-serif; font-weight:800; font-size:1.12rem; line-height:1.25; word-break:break-word; }
-    .card-sub { display:flex; flex-wrap:wrap; align-items:center; gap:4px 10px; color:var(--muted); font-size:.78rem; margin-bottom:16px; }
+    .card-title { font-family:'Syne',sans-serif; font-weight:800; font-size:1.45rem; line-height:1.2; word-break:break-word; }
+    .card-sub { display:flex; flex-wrap:wrap; align-items:center; gap:4px 10px; color:var(--muted); font-size:.9rem; margin-bottom:16px; }
     .chip { display:inline-flex; align-items:center; gap:4px; background:var(--bg); border-radius:99px; padding:2px 9px; color:var(--ink-2); font-weight:600; }
-    .badge { display:inline-flex; align-items:center; gap:6px; font-size:.74rem; font-weight:700; padding:4px 10px; border-radius:99px; white-space:nowrap; }
+    .badge { display:inline-flex; align-items:center; gap:6px; font-size:.84rem; font-weight:700; padding:4px 10px; border-radius:99px; white-space:nowrap; }
     .badge::before { content:''; width:7px; height:7px; border-radius:50%; background:currentColor; }
     .badge.aktiv { background:var(--green-soft); color:var(--green); } .badge.aktiv::before { animation:pulse 1.8s infinite; }
     .badge.kladde, .badge.testing { background:var(--amber-soft); color:var(--amber); }
@@ -97,12 +103,12 @@
     .metrics { display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line-2); border-radius:12px; margin-bottom:16px; overflow:hidden; }
     .metric { padding:10px 12px; display:flex; flex-direction:column; gap:2px; border-right:1px solid var(--line-2); }
     .metric:last-child { border-right:none; }
-    .metric b { font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:800; line-height:1.1; }
-    .metric span { display:flex; align-items:center; gap:5px; color:var(--muted); font-size:.74rem; font-weight:600; }
+    .metric b { font-family:'Syne',sans-serif; font-size:1.8rem; font-weight:800; line-height:1.1; }
+    .metric span { display:flex; align-items:center; gap:5px; color:var(--muted); font-size:.86rem; font-weight:600; }
 
     /* trin-for-trin (kun kladder) */
     .cl { display:flex; margin-bottom:14px; }
-    .cl-step { flex:1; text-align:center; position:relative; font-size:.66rem; color:var(--muted); font-weight:600; }
+    .cl-step { flex:1; text-align:center; position:relative; font-size:.8rem; color:var(--muted); font-weight:600; }
     .cl-step::before { content:''; position:absolute; top:10px; right:50%; width:100%; height:2px; background:var(--line); z-index:0; }
     .cl-step:first-child::before { display:none; }
     .cl-step.done::before { background:var(--green); }
@@ -113,21 +119,21 @@
     /* næste skridt */
     .next { display:flex; gap:12px; align-items:center; background:var(--accent-soft); border-radius:12px; padding:12px; margin-bottom:14px; }
     .next.live { background:var(--green-soft); } .next.ended { background:var(--slate-soft); }
-    .next-ic { width:38px; height:38px; border-radius:11px; background:var(--white); display:grid; place-items:center; color:var(--accent); flex-shrink:0; }
+    .next-ic { width:46px; height:46px; border-radius:11px; background:var(--white); display:grid; place-items:center; color:var(--accent); flex-shrink:0; }
     .next.live .next-ic { color:var(--green); } .next.ended .next-ic { color:var(--slate); }
     .next-body { flex:1; min-width:0; }
-    .next-title { font-weight:700; font-size:.92rem; line-height:1.25; } .next-text { color:var(--ink-2); font-size:.8rem; line-height:1.4; margin-top:1px; }
+    .next-title { font-weight:800; font-size:1.12rem; line-height:1.25; } .next-text { color:var(--ink-2); font-size:.92rem; line-height:1.45; margin-top:2px; }
     .next .btn-primary { height:38px; padding:0 14px; font-size:.84rem; box-shadow:none; white-space:nowrap; }
     .next.live .btn-primary { background:var(--green); } .next.ended .btn-primary { background:var(--slate); }
     .next .btn-primary:disabled { opacity:.5; cursor:not-allowed; }
 
     /* hold */
     details.teams { border:1px solid var(--line-2); border-radius:12px; margin-bottom:14px; }
-    details.teams summary { list-style:none; display:flex; align-items:center; justify-content:space-between; padding:10px 12px; font-weight:700; font-size:.85rem; cursor:pointer; }
+    details.teams summary { list-style:none; display:flex; align-items:center; justify-content:space-between; padding:10px 12px; font-weight:700; font-size:1.02rem; cursor:pointer; }
     details.teams summary::-webkit-details-marker { display:none; }
     details.teams summary .ch { transition:transform .2s; color:var(--muted); } details.teams[open] summary .ch { transform:rotate(180deg); }
     .team-row { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:7px 12px; border-top:1px solid var(--line-2); }
-    .tname { font-size:.86rem; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .tname { font-size:1rem; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
     .team-btns { display:flex; gap:4px; }
     .tbtn { width:32px; height:32px; border-radius:9px; border:1px solid var(--line); background:var(--white); color:var(--ink-2); display:grid; place-items:center; }
     .tbtn:hover { background:var(--accent-soft); color:var(--accent); border-color:#d9d6ff; }
@@ -136,7 +142,7 @@
 
     /* handlinger */
     .actions { display:grid; grid-template-columns:repeat(auto-fit,minmax(96px,1fr)); gap:8px; }
-    .act { display:flex; align-items:center; justify-content:center; gap:7px; border:1px solid var(--line); background:var(--white); color:var(--ink); border-radius:10px; padding:9px 8px; font-size:.8rem; font-weight:600; transition:background .12s, border-color .12s; }
+    .act { display:flex; align-items:center; justify-content:center; gap:7px; border:1px solid var(--line); background:var(--white); color:var(--ink); border-radius:10px; padding:11px 10px; font-size:.92rem; font-weight:600; transition:background .12s, border-color .12s; }
     .act:hover { background:var(--bg); border-color:#d5dae6; }
     .act.good { background:var(--green-soft); border-color:#bfe6cc; color:#166534; }
     .danger-link { display:inline-flex; align-items:center; gap:6px; background:none; border:none; color:var(--red); font-size:.8rem; font-weight:600; margin-top:12px; padding:4px 2px; }
@@ -376,7 +382,7 @@ function nextStep(q) {
   if (!s.hasAct)  return { ic: 'help', title: 'Tilføj opgaver', text: 'Giv hver post mindst én opgave.', label: 'Tilføj opgaver', click: `openQuiz('${id}',3)` }
   if (s.noKeys)   return { ic: 'alert', title: 'Mangler fasit', text: `${s.noKeys} opgave${s.noKeys > 1 ? 'r' : ''} mangler rigtigt svar, før du kan aktivere.`, label: 'Ret opgaver', click: `openQuiz('${id}',3)` }
   if (!s.teams.length) return { ic: 'users', title: 'Opret hold', text: 'Hvert hold får sit eget link og QR-kode.', label: 'Opret hold', click: `openQuiz('${id}',4)` }
-  if (!s.tested)  return { ic: 'flask', title: 'Test løbet', text: 'Prøv det som testhold, før du går live.', label: 'Test løbet', click: `startTestRun('${id}')` }
+  if (!s.tested)  return { ic: 'flask', title: 'Test løbet', text: 'Prøv det som testhold, før du går live – eller aktivér direkte.', label: 'Test løbet', click: `startTestRun('${id}')`, alt: { label: 'Aktivér uden test', click: `setQuizStatus('${id}','aktiv')` } }
   return { ic: 'play', title: 'Klar til start', text: 'Aktivér løbet, når deltagerne er klar.', label: 'Aktivér løbet', click: `setQuizStatus('${id}','aktiv')` }
 }
 
@@ -453,8 +459,9 @@ function card(q) {
     <div class="next ${next.tone || ''}">
       <div class="next-ic">${ico(next.ic, 'lg')}</div>
       <div class="next-body"><div class="next-title">${escHtml(next.title)}</div><div class="next-text">${escHtml(next.text)}</div></div>
-      <button class="btn-primary" onclick="${next.click}">${escHtml(next.label)}</button>
+      <div style="display:flex;flex-direction:column;align-items:flex-start"><button class="btn-primary" onclick="${next.click}">${escHtml(next.label)}</button>${next.alt ? `<button class="next-alt" onclick="${next.alt.click}">${escHtml(next.alt.label)}</button>` : ''}</div>
     </div>
+    ${testBox(q, s)}
 
     <details class="teams" ${s.teams.length <= 3 ? 'open' : ''}>
       <summary><span>Hold · ${s.teams.length}</span><span class="ch">${ico('down', 'sm')}</span></summary>
@@ -464,6 +471,26 @@ function card(q) {
     <div class="actions">${secondary}</div>
     ${s.live ? `<button class="danger-link" onclick="setQuizStatus('${q.id}','arkiveret')">${ico('stop', 'sm')}Afslut løbet…</button>` : ''}
   </article>`
+}
+
+// Testen: genoptag (åbn samme testhold igen) eller afbryd (testholdet og dets svar slettes)
+const testTeam = q => (q?.teams ?? []).find(t => t.name === '🧪 Testhold')
+function testBox(q, s) {
+  const t = testTeam(q)
+  if (!t || s.live || s.ended) return ''
+  return `<div class="testbox"><div class="tb-text"><b>Test i gang</b><span>Testholdet tæller ikke med i resultaterne.</span></div>
+    <div class="tb-actions"><button class="act" onclick="resumeTest('${q.id}')">${ico('play', 'sm')}Genoptag test</button><button class="act" onclick="endTest('${q.id}')">${ico('stop', 'sm')}Afbryd test</button></div></div>`
+}
+function resumeTest(quizId) {
+  const t = testTeam(quizzes.find(x => x.id === quizId))
+  if (!t) return startTestRun(quizId)
+  window.open(new URL('../play/quiz.html?t=' + t.token, location.href).href, '_blank')
+}
+async function endTest(quizId) {
+  if (!confirm('Afbryd testen?\n\nTestholdets svar og point slettes. Du kan starte en ny test bagefter.')) return
+  const { error } = await sb.schema('quiz').rpc('end_test_team', { p_quiz_id: quizId })
+  if (error) { toast('Kunne ikke afbryde testen: ' + error.message, true); return }
+  toast('Testen er afbrudt'); await loadQuizzes()
 }
 
 // ── Handlinger ────────────────────────────────────────────────
@@ -507,6 +534,7 @@ async function startTestRun(quizId) {
   if (!(q?.stops ?? []).some(s => (s.activities?.length ?? 0) > 0)) {
     alert('Tilføj mindst ét stop med en opgave, før du kan teste.'); return
   }
+  if (testTeam(q) && !confirm('Start en NY test?\n\nDen nuværende test nulstilles. (Vil du fortsætte den, så brug "Genoptag test".)')) return
   const { data: token, error } = await sb.schema('quiz').rpc('create_test_team', { p_quiz_id: quizId })
   if (error) { toast('Kunne ikke starte test: ' + error.message, true); return }
   window.open(new URL('../play/quiz.html?t=' + token, location.href).href, '_blank')

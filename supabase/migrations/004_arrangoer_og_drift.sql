@@ -14,10 +14,25 @@
 -- ---------------------------------------------------------------------
 -- DEL 0: nye kolonner
 -- ---------------------------------------------------------------------
+-- Oprettes også i 003; her igen, så 004 kan køres alene, og "column data_purged_at does not exist" aldrig opstår
+ALTER TABLE quiz.quizzes ADD COLUMN IF NOT EXISTS data_purged_at      timestamptz;
+ALTER TABLE quiz.quizzes ADD COLUMN IF NOT EXISTS delete_after        timestamptz;
 ALTER TABLE quiz.quizzes ADD COLUMN IF NOT EXISTS hide_results        boolean NOT NULL DEFAULT false;
 ALTER TABLE quiz.quizzes ADD COLUMN IF NOT EXISTS results_revealed_at timestamptz;
 ALTER TABLE quiz.quizzes ADD COLUMN IF NOT EXISTS opens_at            timestamptz;
 ALTER TABLE quiz.quizzes ADD COLUMN IF NOT EXISTS closes_at           timestamptz;
+
+-- Afbryd test: fjerner testholdet og alt dets data (genoptag = åbn testholdets link igen; "Test løbet" starter altid forfra)
+CREATE OR REPLACE FUNCTION quiz.end_test_team(p_quiz_id uuid) RETURNS void
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = quiz, public AS $$
+DECLARE v_ids uuid[];
+BEGIN
+  IF NOT (quiz.check_session(p_quiz_id) OR auth.role() = 'authenticated') THEN RAISE EXCEPTION 'Adgang nægtet'; END IF;
+  SELECT COALESCE(array_agg(id), '{}'::uuid[]) INTO v_ids FROM quiz.teams WHERE quiz_id = p_quiz_id AND name = '🧪 Testhold';
+  DELETE FROM quiz.team_positions WHERE team_id = ANY (v_ids);
+  DELETE FROM quiz.submissions    WHERE team_id = ANY (v_ids);
+  DELETE FROM quiz.teams          WHERE id      = ANY (v_ids);
+END $$;
 
 -- ---------------------------------------------------------------------
 -- DEL 1: Live-kort (kun quizmaster/admin) – seneste position pr. hold

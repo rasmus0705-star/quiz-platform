@@ -31,7 +31,7 @@ const JAGTEN_THEMES = {
             '--glass': 'rgba(13,15,20,.88)', '--fade': 'rgba(13,15,20,.95)', '--accent': '#e8c84a', '--accent-ink': '#0d0f14',
             '--bad': '#e94560', '--good': '#22c55e', '--muted': 'rgba(255,255,255,.5)', '--text': '#f0eeea', '--radius': '16px', '--pin-radius': '50%' },
     fonts: { display: "'Syne', system-ui, sans-serif", body: "'Inter', system-ui, sans-serif" },
-    map: { style: 'light', tint: '' },        // lyst kort: vejene er nemme at se udendørs i dagslys
+    map: { style: 'light', tint: 'contrast(1.05) saturate(1.1)' },        // lyst kort: vejene er nemme at se udendørs i dagslys
     confetti: ['#e8c84a', '#22c55e', '#e94560', '#a78bfa', '#60a5fa'],
     words: {}
   },
@@ -95,7 +95,7 @@ const JAGTEN_THEMES = {
             '--glass': 'rgba(251,245,230,.95)', '--fade': 'rgba(241,231,208,.97)', '--accent': '#8c2f1b', '--accent-ink': '#fbf5e6',
             '--bad': '#a32a1e', '--good': '#3f6b34', '--muted': 'rgba(58,46,28,.65)', '--text': '#3a2e1c', '--radius': '10px', '--pin-radius': '50%' },
     fonts: { display: "'Playfair Display', Georgia, serif", body: "'Inter', system-ui, sans-serif" },
-    map: { style: 'light', tint: 'sepia(.55) saturate(1.1) contrast(.95)' },
+    map: { style: 'light', tint: 'sepia(.28) saturate(1.05) contrast(1.15)' },     // mindre sepia + mere kontrast: veje og navne skal kunne læses
     confetti: ['#8c2f1b', '#b8962e', '#3f6b34', '#3a2e1c'],
     words: {
       welcomeKicker: 'Byvandring:', startBtn: 'Start vandringen', resumeBtn: 'Fortsæt vandringen',
@@ -127,7 +127,7 @@ const JAGTEN_THEMES = {
             '--glass': 'rgba(11,18,32,.9)', '--fade': 'rgba(11,18,32,.95)', '--accent': '#38bdf8', '--accent-ink': '#06121f',
             '--bad': '#f87171', '--good': '#34d399', '--muted': 'rgba(255,255,255,.55)', '--text': '#eaf1ff', '--radius': '12px', '--pin-radius': '50%' },
     fonts: { display: "'Syne', system-ui, sans-serif", body: "'Inter', system-ui, sans-serif" },
-    map: { style: 'light', tint: '' },
+    map: { style: 'light', tint: 'contrast(1.05) saturate(1.1)' },
     confetti: ['#38bdf8', '#34d399', '#f87171', '#fbbf24', '#a78bfa'],
     words: {
       welcomeKicker: 'Teambuilding:', startBtn: 'Start udfordringen', resumeBtn: 'Fortsæt udfordringen',
