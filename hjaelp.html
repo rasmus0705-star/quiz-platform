@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>Hjælp – GPS Jagten</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Inter',system-ui,sans-serif; color:#1a1f36; background:#f5f7fa; line-height:1.65; }
+  main { max-width:780px; margin:0 auto; padding:2rem 1.25rem 4rem; }
+  h1 { font-family:'Syne',system-ui,sans-serif; font-size:1.9rem; font-weight:800; letter-spacing:-.02em; margin-bottom:.4rem; }
+  h2 { font-family:'Syne',system-ui,sans-serif; font-size:1.1rem; margin:2rem 0 .5rem; }
+  p, li { font-size:.94rem; margin-bottom:.6rem; } ul { padding-left:1.3rem; }
+  .meta { color:#6b7385; font-size:.85rem; margin-bottom:1.5rem; }
+  .draft { background:#fff4d6; border:1.5px solid #f0c24b; border-radius:12px; padding:.85rem 1rem; font-size:.88rem; margin-bottom:1.5rem; }
+  .udfyld { background:#fff1a8; border-radius:4px; padding:0 .25rem; font-weight:600; }
+  table { width:100%; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 1px 8px rgba(0,0,0,.06); margin:.6rem 0 1rem; }
+  th, td { text-align:left; padding:.6rem .8rem; border-bottom:1px solid #eceff4; font-size:.86rem; vertical-align:top; } th { background:#fafbfc; font-size:.72rem; letter-spacing:.05em; text-transform:uppercase; color:#6b7385; }
+  a { color:#4f46e5; } .back { display:inline-block; margin-bottom:1.2rem; font-size:.85rem; text-decoration:none; }
+  .sign { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:1.5rem; } .sign div { border-top:1.5px solid #1a1f36; padding-top:.4rem; font-size:.82rem; min-height:4.5rem; }
+  @media print { body { background:#fff; } .back, .draft { display:none; } main { padding:0; } }
+  @media (max-width:560px) { .sign { grid-template-columns:1fr; } }
+  details { background:#fff; border-radius:12px; box-shadow:0 1px 6px rgba(0,0,0,.05); margin-bottom:.5rem; }
+  summary { cursor:pointer; padding:.85rem 1rem; font-weight:700; font-size:.92rem; list-style:none; display:flex; justify-content:space-between; gap:1rem; }
+  summary::-webkit-details-marker { display:none; } summary::after { content:'+'; color:#6b7385; font-weight:700; } details[open] summary::after { content:'–'; }
+  details .a { padding:0 1rem 1rem; } details .a p:last-child { margin-bottom:0; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:.75rem; margin:.8rem 0 1rem; }
+  .card { background:#fff; border-radius:14px; padding:1rem; box-shadow:0 1px 8px rgba(0,0,0,.06); } .card b { display:block; margin-bottom:.2rem; } .card span { font-size:.85rem; color:#4b5468; }
+  .num { display:inline-grid; place-items:center; width:24px; height:24px; border-radius:50%; background:#eeedff; color:#4f46e5; font-weight:800; font-size:.8rem; margin-bottom:.4rem; }
+  .box { width:15px; height:15px; border:1.8px solid #1a1f36; border-radius:3px; display:inline-block; margin-right:.6rem; vertical-align:-2px; flex-shrink:0; }
+  ul.check { list-style:none; padding:0; } ul.check li { display:flex; align-items:flex-start; padding:.25rem 0; margin:0; }
+  .btnrow { display:flex; gap:.6rem; flex-wrap:wrap; margin:1rem 0; } .btn { display:inline-block; background:#5b52f5; color:#fff; padding:.65rem 1.1rem; border-radius:10px; text-decoration:none; font-weight:700; font-size:.88rem; border:none; cursor:pointer; font-family:inherit; }
+  .btn.o { background:#fff; color:#1a1f36; border:1.5px solid #dadfe8; }
+  @media print { .btnrow { display:none; } details { box-shadow:none; border:1px solid #ddd; } details > .a { display:block; } }
+</style>
+
+</head>
+<body>
+<main>
+<a class="back" href="javascript:history.back()">← Tilbage</a>
+<h1>Hjælp og vejledning</h1>
+<p class="meta">Alt du skal bruge for at få et løb op at køre.</p>
+
+<h2>Kom i gang på 10 minutter</h2>
+<div class="cards">
+<div class="card"><div class="num">1</div><b>Opret løbet</b><span>Giv det et navn og en kort beskrivelse, og vælg en stil. Bestem også, om placeringerne skal skjules til afsløringen.</span></div>
+<div class="card"><div class="num">2</div><b>Placér poster</b><span>Klik på kortet, hvor en post skal ligge, giv den et navn, og gem. Du kan altid trække i nålene bagefter.</span></div>
+<div class="card"><div class="num">3</div><b>Tilføj opgaver</b><span>Giv hver post mindst én opgave. Opgaver med rigtigt svar skal have svaret udfyldt.</span></div>
+<div class="card"><div class="num">4</div><b>Hold og deling</b><span>Opret et hold til hver gruppe. Hvert hold får sit eget link og sin egen QR-kode.</span></div>
+<div class="card"><div class="num">5</div><b>Test og aktivér</b><span>Prøv løbet som testhold fra oversigten. Når alt virker, trykker du Aktivér.</span></div>
+</div>
+<div class="btnrow"><a class="btn" href="tjekliste.html" target="_blank" rel="noopener">🖨️ Tjekliste til dagen</a><a class="btn o" href="mailto:rasmus0705@gmail.com">Skriv til os</a></div>
+
+<h2>Til deltagerne</h2>
+<ul>
+<li>Åbn holdets link på telefonen i <b>Chrome eller Safari</b> (ikke inde i Messenger eller andre apps).</li>
+<li>Tillad placering, når telefonen spørger. Hold GPS tændt, og lad skærmen være tændt.</li>
+<li>Gå hen til en post. Opgaven åbner af sig selv, når I er tæt nok på.</li>
+<li>Hvert spørgsmål har ét forsøg. Vinderen afsløres til sidst.</li>
+</ul>
+
+<h2>Ofte stillede spørgsmål</h2>
+<details><summary>GPS'en virker ikke ved en post. Hvad gør vi?</summary><div class="a"><p>Hold telefonen under åben himmel i et halvt minut. Hjælper det ikke, kan holdet trykke <b>"Problemer med GPS?"</b> og indtaste <b>nødkoden</b> til posten. Du finder nødkoderne under trin 3 (Opgaver) ved hver post, og du kan printe dem på quizmaster-arket i trin 4.</p></div></details>
+<details><summary>Et hold har dårlig dækning. Mister de deres svar?</summary><div class="a"><p>Nej. Svar og fotos prøves automatisk igen, indtil der igen er forbindelse. Holdet ser en besked om, at de skal blive, hvor de er. Kortet kan stadig ses.</p></div></details>
+<details><summary>Hvordan afslører jeg vinderen?</summary><div class="a"><p>Åbn scoreboardet fra oversigten, mens du er logget ind. Når løbet er slut, trykker du <b>"Afslør vinderen"</b>. Podiet vises med 3., 2. og 1. plads. Skærmen skjuler placeringerne, indtil du trykker, så den kan stå på en storskærm uden at røbe noget. Vil du selv se stillingen først, trykker du <b>"Se placeringer (kun mig)"</b>.</p></div></details>
+<details><summary>Hvordan ser jeg, hvor holdene er?</summary><div class="a"><p>Tryk <b>"Live-kort"</b> på scoreboardet, mens du er logget ind. Du ser hvert holds seneste position. Hold, der ikke er set i 6 minutter, markeres med rødt, så du hurtigt kan hjælpe dem.</p></div></details>
+<details><summary>Kan jeg rette i løbet, efter det er aktivt?</summary><div class="a"><p>Ja, men det rammer holdene med det samme. Editoren viser en gul advarsel, og sletning kræver ekstra bekræftelse. Undgå at slette poster og hold, mens løbet kører.</p></div></details>
+<details><summary>Kan vi åbne og lukke løbet automatisk?</summary><div class="a"><p>Ja. Under trin 1 kan du sætte en åbnings- og lukketid. Før start ser holdene en nedtælling, og svar afvises uden for tidsrummet.</p></div></details>
+<details><summary>Hvad hvis jeg vil bruge løbet igen næste år?</summary><div class="a"><p>Brug <b>"Kopiér"</b> på løbskortet. Så får du en ny kladde med de samme poster og opgaver, men uden hold og resultater.</p></div></details>
+<details><summary>Hvor længe gemmes deltagernes data?</summary><div class="a"><p>90 dage efter, at løbet er afsluttet, slettes hold, svar, positioner og billeder automatisk. Du kan slette dem før fra resultatsiden. Hent resultaterne som CSV eller diplomer, inden de slettes. Se <a href="privatliv.html">privatlivspolitikken</a>.</p></div></details>
+<details><summary>Kan børn deltage?</summary><div class="a"><p>Ja, men børn under 13 år skal have forældrenes accept. Det er arrangørens ansvar at sikre det. Brug ikke børns fulde navne som holdnavne.</p></div></details>
+<details><summary>Jeg har glemt min PIN</summary><div class="a"><p>Skriv til <a href="mailto:rasmus0705@gmail.com">rasmus0705@gmail.com</a>, så nulstiller vi den. Er du logget ind, kan du selv skifte PIN med knappen <b>"Skift PIN"</b> øverst i oversigten.</p></div></details>
+<details><summary>Hvad koster det?</summary><div class="a"><p>I opstartsperioden er det gratis. Vi giver besked i god tid, før noget begynder at koste penge.</p></div></details>
+<details><summary>Hvilke telefoner virker det på?</summary><div class="a"><p>Nyere Android- og iPhone-telefoner med Chrome eller Safari. Telefonen skal have GPS og et kamera, hvis der er foto-opgaver.</p></div></details>
+
+<h2>Kan du ikke finde svar?</h2>
+<p>Skriv til <a href="mailto:rasmus0705@gmail.com">rasmus0705@gmail.com</a>, så hjælper vi dig.</p>
+
+</main>
+</body>
+</html>

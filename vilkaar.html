@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>Vilkår – GPS Jagten</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Inter',system-ui,sans-serif; color:#1a1f36; background:#f5f7fa; line-height:1.65; }
+  main { max-width:780px; margin:0 auto; padding:2rem 1.25rem 4rem; }
+  h1 { font-family:'Syne',system-ui,sans-serif; font-size:1.9rem; font-weight:800; letter-spacing:-.02em; margin-bottom:.4rem; }
+  h2 { font-family:'Syne',system-ui,sans-serif; font-size:1.1rem; margin:2rem 0 .5rem; }
+  p, li { font-size:.94rem; margin-bottom:.6rem; } ul { padding-left:1.3rem; }
+  .meta { color:#6b7385; font-size:.85rem; margin-bottom:1.5rem; }
+  .draft { background:#fff4d6; border:1.5px solid #f0c24b; border-radius:12px; padding:.85rem 1rem; font-size:.88rem; margin-bottom:1.5rem; }
+  .udfyld { background:#fff1a8; border-radius:4px; padding:0 .25rem; font-weight:600; }
+  table { width:100%; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 1px 8px rgba(0,0,0,.06); margin:.6rem 0 1rem; }
+  th, td { text-align:left; padding:.6rem .8rem; border-bottom:1px solid #eceff4; font-size:.86rem; vertical-align:top; } th { background:#fafbfc; font-size:.72rem; letter-spacing:.05em; text-transform:uppercase; color:#6b7385; }
+  a { color:#4f46e5; } .back { display:inline-block; margin-bottom:1.2rem; font-size:.85rem; text-decoration:none; }
+  .sign { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:1.5rem; } .sign div { border-top:1.5px solid #1a1f36; padding-top:.4rem; font-size:.82rem; min-height:4.5rem; }
+  @media print { body { background:#fff; } .back, .draft { display:none; } main { padding:0; } }
+  @media (max-width:560px) { .sign { grid-template-columns:1fr; } }
+  details { background:#fff; border-radius:12px; box-shadow:0 1px 6px rgba(0,0,0,.05); margin-bottom:.5rem; }
+  summary { cursor:pointer; padding:.85rem 1rem; font-weight:700; font-size:.92rem; list-style:none; display:flex; justify-content:space-between; gap:1rem; }
+  summary::-webkit-details-marker { display:none; } summary::after { content:'+'; color:#6b7385; font-weight:700; } details[open] summary::after { content:'–'; }
+  details .a { padding:0 1rem 1rem; } details .a p:last-child { margin-bottom:0; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:.75rem; margin:.8rem 0 1rem; }
+  .card { background:#fff; border-radius:14px; padding:1rem; box-shadow:0 1px 8px rgba(0,0,0,.06); } .card b { display:block; margin-bottom:.2rem; } .card span { font-size:.85rem; color:#4b5468; }
+  .num { display:inline-grid; place-items:center; width:24px; height:24px; border-radius:50%; background:#eeedff; color:#4f46e5; font-weight:800; font-size:.8rem; margin-bottom:.4rem; }
+  .box { width:15px; height:15px; border:1.8px solid #1a1f36; border-radius:3px; display:inline-block; margin-right:.6rem; vertical-align:-2px; flex-shrink:0; }
+  ul.check { list-style:none; padding:0; } ul.check li { display:flex; align-items:flex-start; padding:.25rem 0; margin:0; }
+  .btnrow { display:flex; gap:.6rem; flex-wrap:wrap; margin:1rem 0; } .btn { display:inline-block; background:#5b52f5; color:#fff; padding:.65rem 1.1rem; border-radius:10px; text-decoration:none; font-weight:700; font-size:.88rem; border:none; cursor:pointer; font-family:inherit; }
+  .btn.o { background:#fff; color:#1a1f36; border:1.5px solid #dadfe8; }
+  @media print { .btnrow { display:none; } details { box-shadow:none; border:1px solid #ddd; } details > .a { display:block; } }
+</style>
+
+</head>
+<body>
+<main>
+<a class="back" href="javascript:history.back()">← Tilbage</a>
+<div class="draft"><b>UDKAST.</b> Udfyld de gule felter, og få vilkårene gennemlæst af en jurist, før du tager imod betaling. Ret teksten, så den passer til det, du faktisk tilbyder.</div>
+<h1>Vilkår for brug af GPS Jagten</h1>
+<p class="meta">Version 1 · <span class="udfyld">[dato]</span></p>
+
+<h2>1. Hvem er vi?</h2>
+<p>GPS Jagten drives af <span class="udfyld">[virksomhedsnavn]</span> (CVR <span class="udfyld">[nr.]</span>), <span class="udfyld">[adresse]</span>. Kontakt: <a href="mailto:rasmus0705@gmail.com">rasmus0705@gmail.com</a>.</p>
+
+<h2>2. Hvad får du?</h2>
+<p>Adgang til en online platform, hvor du kan oprette GPS-løb med poster og opgaver, oprette hold, følge løbet på et scoreboard og hente resultater. Platformen leveres, som den er beskrevet på hjemmesiden på bestillingstidspunktet.</p>
+
+<h2>3. Pris og betaling</h2>
+<p>I opstartsperioden er platformen <b>gratis</b>. Vi varsler mindst <span class="udfyld">[antal]</span> dage, før noget begynder at koste penge, så du kan sige fra. Priser angives i danske kroner <span class="udfyld">[inkl./ekskl.]</span> moms. <span class="udfyld">[betalingsvilkår, når betaling indføres]</span></p>
+
+<h2>4. Dit ansvar som arrangør</h2>
+<ul>
+<li>Du er ansvarlig for indholdet i dine løb og for, at det ikke krænker andres rettigheder.</li>
+<li>Du er <b>dataansvarlig</b> for deltagernes oplysninger. Vi er databehandler. Du skal have gyldigt grundlag til at behandle dem (fx samtykke fra forældre til børn under 13 år). Se <a href="databehandleraftale.html">databehandleraftalen</a> og <a href="privatliv.html">privatlivspolitikken</a>.</li>
+<li>Du er ansvarlig for deltagernes sikkerhed under løbet. Brug sund fornuft ved planlægning af ruter, fx trafik, vejr og tidspunkter. Løb ikke ad private arealer uden tilladelse.</li>
+<li>Du må ikke give andre adgang til dit login, og du skal holde din PIN hemmelig.</li>
+<li>Du må ikke misbruge platformen, fx til ulovligt indhold, spam eller forsøg på at skaffe dig adgang til andres data.</li>
+</ul>
+
+<h2>5. Tilgængelighed og ændringer</h2>
+<p>Vi arbejder på at holde platformen kørende, men kan ikke love, at den altid er tilgængelig. Den bygger på eksterne tjenester (fx database, hosting og kort), og afbrydelser kan forekomme. Planlæg derfor en plan B til vigtige arrangementer, og hent resultaterne i tide. Vi kan ændre platformen og disse vilkår med rimeligt varsel.</p>
+
+<h2>6. Ansvar</h2>
+<p><span class="udfyld">[ansvarsbegrænsning – få juridisk rådgivning. Fx: Vores samlede ansvar over for dig er begrænset til det beløb, du har betalt for den seneste periode. Vi hæfter ikke for driftstab, tabt fortjeneste eller følgeskader, medmindre skaden skyldes grov uagtsomhed eller forsæt.]</span></p>
+
+<h2>7. Dine data og sletning</h2>
+<p>Deltagerdata slettes automatisk 90 dage efter, at et løb er afsluttet, eller før, hvis du beder om det. Dine løb (poster, opgaver og svar) bevares, indtil du sletter dem, eller aftalen ophører. Ved ophør sletter vi dine data inden for 30 dage, medmindre loven kræver andet.</p>
+
+<h2>8. Opsigelse</h2>
+<p>Du kan til enhver tid stoppe med at bruge platformen og bede os slette din konto. Vi kan lukke din adgang, hvis vilkårene overtrædes.</p>
+
+<h2>9. Lovvalg</h2>
+<p>Dansk ret gælder. Tvister afgøres ved <span class="udfyld">[værneting]</span>.</p>
+
+</main>
+</body>
+</html>

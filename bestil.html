@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="fonts/fonts.css">
+<title>Bestil login – GPS Jagten</title>
+<meta name="description" content="Bestil et login til GPS Jagten. Gratis i opstartsperioden.">
+<script src="vendor/supabase.js"></script>
+<script src="js/config.js"></script>
+<style>
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  :root { --night:#0d0f14; --deep:#13161e; --panel:#1a1e28; --border:rgba(255,255,255,.1); --gold:#e8c84a; --text:#f0eeea; --muted:rgba(255,255,255,.6); --bad:#ff7b8f; --good:#4ade80; }
+  body { font-family:'Inter',system-ui,sans-serif; background:var(--night); color:var(--text); min-height:100vh; line-height:1.55; -webkit-font-smoothing:antialiased; }
+  h1, h2, h3 { font-family:'Syne','Inter',sans-serif; letter-spacing:-.01em; }
+  header { display:flex; align-items:center; justify-content:space-between; padding:18px 24px; max-width:1000px; margin:0 auto; }
+  header a.logo { display:flex; align-items:center; gap:10px; color:var(--text); text-decoration:none; font-family:'Syne',sans-serif; font-weight:800; }
+  .mark { width:32px; height:32px; border-radius:9px; background:linear-gradient(135deg,#5b52f5,#8b5cf6); display:grid; place-items:center; }
+  header a.back { color:var(--muted); text-decoration:none; font-size:.88rem; }
+  main { max-width:1000px; margin:0 auto; padding:10px 24px 70px; display:grid; grid-template-columns:1fr 1.15fr; gap:36px; align-items:start; }
+  @media (max-width:820px) { main { grid-template-columns:1fr; gap:24px; } }
+  .kicker { color:var(--gold); font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; font-weight:700; }
+  h1 { font-size:clamp(1.9rem,4vw,2.7rem); line-height:1.1; margin:8px 0 14px; }
+  .lead { color:var(--muted); margin-bottom:22px; }
+  .plan { background:linear-gradient(135deg,rgba(232,200,74,.14),rgba(232,200,74,.04)); border:1px solid rgba(232,200,74,.35); border-radius:20px; padding:22px; }
+  .plan .price { font-family:'Syne',sans-serif; font-size:2.2rem; font-weight:800; color:var(--gold); line-height:1; }
+  .plan .price small { font-size:.9rem; color:var(--muted); font-weight:600; }
+  .plan ul { list-style:none; margin:14px 0 4px; display:grid; gap:8px; }
+  .plan li { display:flex; gap:10px; font-size:.92rem; } .plan li::before { content:'✓'; color:var(--good); font-weight:800; }
+  .note { font-size:.8rem; color:var(--muted); margin-top:12px; }
+  form, #done { background:var(--panel); border:1px solid var(--border); border-radius:22px; padding:24px; }
+  label { display:block; font-size:.82rem; font-weight:600; margin:14px 0 5px; } label:first-of-type { margin-top:0; }
+  label .opt { color:var(--muted); font-weight:400; }
+  input, select, textarea { width:100%; min-height:46px; background:var(--deep); color:var(--text); border:1.5px solid var(--border); border-radius:12px; padding:11px 14px; font-size:1rem; font-family:inherit; }
+  textarea { min-height:92px; resize:vertical; }
+  input:focus, select:focus, textarea:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 4px rgba(232,200,74,.15); }
+  .row2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; } @media (max-width:520px) { .row2 { grid-template-columns:1fr; } }
+  .consent { display:flex; gap:10px; align-items:flex-start; margin-top:18px; font-size:.8rem; color:var(--muted); font-weight:400; }
+  .consent input { width:20px; min-height:20px; height:20px; flex-shrink:0; accent-color:var(--gold); margin-top:2px; }
+  .consent a { color:var(--gold); }
+  .hp { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+  #err { min-height:1.3em; color:var(--bad); font-size:.88rem; margin-top:12px; }
+  button.go { width:100%; margin-top:10px; min-height:52px; background:var(--gold); color:#0d0f14; border:none; border-radius:14px; font-family:'Syne',sans-serif; font-weight:800; font-size:1rem; cursor:pointer; }
+  button.go:disabled { opacity:.55; cursor:not-allowed; }
+  #done { display:none; } #done h2 { font-size:1.6rem; margin-bottom:6px; }
+  .steps { list-style:none; counter-reset:s; margin:18px 0; display:grid; gap:12px; }
+  .steps li { counter-increment:s; display:flex; gap:12px; align-items:flex-start; background:var(--deep); border:1px solid var(--border); border-radius:14px; padding:12px 14px; font-size:.92rem; }
+  .steps li::before { content:counter(s); width:26px; height:26px; border-radius:50%; background:var(--gold); color:#0d0f14; font-weight:800; display:grid; place-items:center; flex-shrink:0; font-size:.85rem; }
+  .steps b { display:block; } .steps span { color:var(--muted); font-size:.85rem; }
+  .links { display:flex; gap:14px; flex-wrap:wrap; font-size:.88rem; margin-top:6px; } .links a { color:var(--gold); }
+  footer { text-align:center; color:var(--muted); font-size:.78rem; padding:0 24px 40px; } footer a { color:inherit; }
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="./"><span class="mark"><svg width="18" height="18" viewBox="0 0 64 64"><path d="M32 8c-9 0-16 7-16 15.5C16 36 32 56 32 56s16-20 16-32.5C48 15 41 8 32 8Z" fill="#fff"/><circle cx="32" cy="23.5" r="6" fill="#6e5af5"/></svg></span>GPS Jagten</a>
+  <a class="back" href="./">← Til forsiden</a>
+</header>
+
+<main>
+  <section>
+    <div class="kicker">Bestil login</div>
+    <h1>Kom i gang med dit eget GPS-løb</h1>
+    <p class="lead">Fortæl lidt om jer, så opretter vi et login til jer. Det tager under et minut.</p>
+    <div class="plan">
+      <div class="price">0 kr. <small>i opstartsperioden</small></div>
+      <ul>
+        <li>Opret løb, poster og opgaver selv</li>
+        <li>Hold med eget link og QR-kode</li>
+        <li>Live scoreboard og afsløring af vinderen</li>
+        <li>Resultater, CSV og diplomer</li>
+        <li>Hjælp på mail</li>
+      </ul>
+      <p class="note">Vi giver besked i god tid, før noget begynder at koste penge. Du forpligter dig ikke til noget ved at bestille.</p>
+    </div>
+  </section>
+
+  <section>
+    <form id="form" novalidate>
+      <label for="org">Forening eller virksomhed *</label>
+      <input id="org" autocomplete="organization" maxlength="120" required>
+      <div class="row2">
+        <div><label for="name">Dit navn *</label><input id="name" autocomplete="name" maxlength="120" required></div>
+        <div><label for="email">E-mail *</label><input id="email" type="email" autocomplete="email" maxlength="200" required></div>
+      </div>
+      <div class="row2">
+        <div><label for="phone">Telefon <span class="opt">(valgfri)</span></label><input id="phone" type="tel" autocomplete="tel" maxlength="40"></div>
+        <div><label for="date">Forventet dato <span class="opt">(valgfri)</span></label><input id="date" type="date"></div>
+      </div>
+      <label for="type">Hvad skal I bruge det til? <span class="opt">(valgfri)</span></label>
+      <select id="type">
+        <option value="">Vælg…</option>
+        <option>Byvandring / historisk quiz</option>
+        <option>Julemarch eller juleløb</option>
+        <option>Foreningsarrangement</option>
+        <option>Teambuilding / firmaarrangement</option>
+        <option>Skattejagt for børn</option>
+        <option>Naturløb / friluft</option>
+        <option>Andet</option>
+      </select>
+      <label for="msg">Besked <span class="opt">(valgfri)</span></label>
+      <textarea id="msg" maxlength="2000" placeholder="Fortæl gerne kort om arrangementet og hvor mange deltagere I regner med."></textarea>
+
+      <div class="hp" aria-hidden="true"><label for="website">Lad dette felt stå tomt</label><input id="website" tabindex="-1" autocomplete="off"></div>
+
+      <label class="consent"><input type="checkbox" id="consent"><span>Jeg accepterer, at I gemmer mine oplysninger for at behandle bestillingen og kontakte mig. Læs <a href="privatliv.html" target="_blank" rel="noopener">privatlivspolitikken</a>.</span></label>
+      <div id="err" role="alert"></div>
+      <button type="submit" class="go" id="go">Send bestilling</button>
+    </form>
+
+    <div id="done" aria-live="polite">
+      <h2>Tak, <span id="done-name"></span>!</h2>
+      <p class="lead" style="margin-bottom:0">Vi har modtaget jeres bestilling. Her er hvad der sker nu:</p>
+      <ol class="steps">
+        <li><div><b>Vi opretter jeres login</b><span>Det sker som regel inden for 1–2 hverdage. Vi skriver til <b style="display:inline" id="done-mail"></b>.</span></div></li>
+        <li><div><b>I får et link og en PIN-kode</b><span>Gem dem et sikkert sted. PIN'en kan I selv skifte, når I er logget ind.</span></div></li>
+        <li><div><b>Log ind, og følg guiden</b><span>Placér poster på kortet, tilføj opgaver, opret hold, test løbet, og aktivér det. En kort guide viser vej.</span></div></li>
+      </ol>
+      <p class="note" style="margin-top:0">Hører I ikke fra os, så kig i spam-mappen, eller skriv til <a href="mailto:rasmus0705@gmail.com" style="color:var(--gold)">rasmus0705@gmail.com</a>.</p>
+      <div class="links"><a href="hjaelp.html">Se hvordan det virker →</a><a href="./">Til forsiden</a></div>
+    </div>
+  </section>
+</main>
+<footer><a href="privatliv.html">Privatlivspolitik</a> · <a href="vilkaar.html">Vilkår</a> · <a href="hjaelp.html">Hjælp</a></footer>
+
+<script>
+const { createClient } = supabase
+const sbPublic = createClient(SUPABASE_URL, SUPABASE_ANON)
+const $ = id => document.getElementById(id)
+let sending = false
+
+$('form').addEventListener('submit', async e => {
+  e.preventDefault()
+  if (sending) return
+  const err = msg => { $('err').textContent = msg || '' }
+  err('')
+  const org = $('org').value.trim(), name = $('name').value.trim(), email = $('email').value.trim()
+  if (org.length < 2) return err('Skriv navnet på foreningen eller virksomheden.')
+  if (name.length < 2) return err('Skriv dit navn.')
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email)) return err('Skriv en gyldig e-mailadresse.')
+  if (!$('consent').checked) return err('Sæt kryds ved, at vi må gemme dine oplysninger.')
+  sending = true; $('go').disabled = true; $('go').textContent = 'Sender…'
+  const { data, error } = await sbPublic.schema('quiz').rpc('submit_order', {
+    p_org: org, p_name: name, p_email: email, p_phone: $('phone').value.trim() || null, p_event_type: $('type').value || null,
+    p_expected: $('date').value || null, p_message: $('msg').value.trim() || null, p_consent: true, p_website: $('website').value
+  })
+  sending = false; $('go').disabled = false; $('go').textContent = 'Send bestilling'
+  if (error) return err(error.message || 'Noget gik galt – prøv igen om lidt.')
+  $('done-name').textContent = name.split(' ')[0]; $('done-mail').textContent = email
+  $('form').style.display = 'none'; $('done').style.display = 'block'
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+})
+</script>
+</body>
+</html>

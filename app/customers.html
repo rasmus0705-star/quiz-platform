@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kunder – Quiz Platform</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../icons/favicon-48.png" sizes="48x48" type="image/png">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <meta name="robots" content="noindex, nofollow">
+<title>Kunder – GPS Jagten</title>
 <script src="../vendor/supabase.js"></script>
 <script src="../vendor/qrcode.min.js"></script>
 <script src="../js/config.js"></script>
@@ -168,7 +172,7 @@
 <body>
 
 <div id="sidebar">
-  <div class="logo">🗺️ Quiz Platform</div>
+  <div class="logo">🗺️ GPS Jagten</div>
   <nav class="route">
     <a href="overview.html" class="route-item"><span class="dot"></span> Oversigt</a>
     <a href="customers.html" class="route-item active"><span class="dot"></span> Kunder</a>
@@ -178,7 +182,7 @@
 </div>
 
 <div id="mobile-topbar">
-  <span class="logo">🗺️ Quiz Platform</span>
+  <span class="logo">🗺️ GPS Jagten</span>
   <nav>
     <a href="overview.html">Oversigt</a>
     <a href="customers.html" class="active">Kunder</a>
@@ -210,7 +214,7 @@
         <!-- Navn + redigér -->
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem;">
           <h2 id="detail-name" style="font-size:1.15rem;"></h2>
-          <button class="btn btn-sm btn-outline" onclick="editCustomer()">✏️ Redigér</button>
+          <div style="display:flex;gap:.4rem;flex-wrap:wrap;justify-content:flex-end"><button class="btn btn-sm btn-outline" onclick="editCustomer()">✏️ Redigér</button><button class="btn btn-sm btn-outline" id="btn-del-customer" style="color:#b91c1c;border-color:#fecaca" onclick="deleteCustomer()">🗑 Slet kunde</button></div>
         </div>
         <p id="detail-email" style="font-size:.85rem;color:#5b6476;margin-bottom:.15rem;"></p>
         <p id="detail-phone" style="font-size:.85rem;color:#5b6476;margin-bottom:.15rem;"></p>
@@ -322,6 +326,8 @@ async function loadCustomers() {
   }
   customers = data ?? []
   renderList()
+  const want = new URLSearchParams(location.search).get('c')       // fra Bestillinger/Oversigt: åbn kunden direkte
+  if (want && customers.some(c => c.id === want)) selectCustomer(want)
 }
 
 function renderList() {
@@ -431,11 +437,11 @@ function mailLoginLink() {
   if (!activeId) return
   const c = customers.find(x => x.id === activeId)
   const url = getLoginUrl(activeId)
-  const subject = encodeURIComponent('Adgang til Quiz Platform')
+  const subject = encodeURIComponent('Adgang til GPS Jagten')
   const body = encodeURIComponent(
     'Hej ' + (c?.name || '') + ',\n\n' +
-    'Her er dit login-link til Quiz Platform:\n' + url +
-    '\n\nBrug din PIN-kode for at logge ind.\n\nMvh. Quiz Platform'
+    'Her er dit login-link til GPS Jagten:\n' + url +
+    '\n\nBrug din PIN-kode for at logge ind.\n\nMvh. GPS Jagten'
   )
   window.open('mailto:' + (c?.email || '') + '?subject=' + subject + '&body=' + body)
 }
@@ -460,7 +466,7 @@ function mailQuizLinks(quizId) {
     'Hej ' + (c?.name || '') + ',\n\n' +
     'Her er links til dit løb "' + title + '":\n\n' +
     '✏️ Editor (redigér løbet):\n' + editorUrl + '\n\n' +
-    '📊 Scoreboard (vis til deltagere):\n' + scoreUrl + '\n\nMvh. Quiz Platform'
+    '📊 Scoreboard (vis til deltagere):\n' + scoreUrl + '\n\nMvh. GPS Jagten'
   )
   window.open('mailto:' + (c?.email || '') + '?subject=' + subject + '&body=' + body)
 }
@@ -497,6 +503,34 @@ async function deleteQuiz(quizId) {
   const { error } = await sb.schema('quiz').rpc('delete_quiz_cascade', { p_quiz_id: quizId })
   if (error) { alert('Kunne ikke slette: ' + error.message); return; }
   if (activeId) loadCustomerQuizzes(activeId)
+}
+
+// ── Slet kunde (GDPR: alle løb, hold, svar og fotos) ─────────
+async function deleteCustomer() {
+  const c = customers.find(x => x.id === activeId); if (!c) return
+  const { data: qs } = await sb.schema('quiz').from('quizzes').select('id, title, status').eq('customer_id', activeId)
+  const list = qs ?? []
+  if (list.some(q => q.status === 'aktiv')) { alert('Kunden har et løb der kører lige nu. Afslut det først.'); return }
+  const typed = prompt(`Slet kunden "${c.name}" og ALLE kundens data?\n\n` +
+    `• ${list.length} løb med stop, opgaver, hold, svar og uploadede billeder\n• login og bestillinger\n\nDet kan IKKE fortrydes. Skriv SLET for at bekræfte:`)
+  if (typed === null) return
+  if (typed.trim() !== 'SLET') { alert('Ikke slettet – du skrev ikke SLET.'); return }
+  const btn = document.getElementById('btn-del-customer'); btn.disabled = true; btn.textContent = 'Sletter…'
+  const failed = []
+  for (const q of list) {                                       // først fotos i Storage (databasen kan ikke slette filer)
+    try { await purgeQuizData(q.id, true) } catch (e) { failed.push((q.title || '(uden titel)') + ': ' + e.message) }
+  }
+  if (failed.length && !confirm('Billeder kunne ikke slettes for:\n' + failed.join('\n') + '\n\nSlet kunden alligevel? Billederne kan så blive liggende i lageret.')) {
+    btn.disabled = false; btn.textContent = '🗑 Slet kunde'; return
+  }
+  const { error } = await sb.schema('quiz').rpc('delete_customer_cascade', { p_customer_id: activeId })
+  btn.disabled = false; btn.textContent = '🗑 Slet kunde'
+  if (error) { alert('Kunne ikke slette kunden: ' + error.message); return }
+  activeId = null
+  try { history.replaceState(null, '', location.pathname) } catch (_) {}          // fjern ?c=… så en genindlæsning ikke leder efter den slettede kunde
+  document.getElementById('detail-content').style.display = 'none'
+  document.getElementById('detail-empty').style.display = 'block'
+  await loadCustomers()
 }
 
 // ── Noter ─────────────────────────────────────────────────────

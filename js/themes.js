@@ -31,7 +31,7 @@ const JAGTEN_THEMES = {
             '--glass': 'rgba(13,15,20,.88)', '--fade': 'rgba(13,15,20,.95)', '--accent': '#e8c84a', '--accent-ink': '#0d0f14',
             '--bad': '#e94560', '--good': '#22c55e', '--muted': 'rgba(255,255,255,.5)', '--text': '#f0eeea', '--radius': '16px', '--pin-radius': '50%' },
     fonts: { display: "'Syne', system-ui, sans-serif", body: "'Inter', system-ui, sans-serif" },
-    map: { style: 'dark', tint: '' },
+    map: { style: 'light', tint: '' },        // lyst kort: vejene er nemme at se udendørs i dagslys
     confetti: ['#e8c84a', '#22c55e', '#e94560', '#a78bfa', '#60a5fa'],
     words: {}
   },
@@ -77,7 +77,7 @@ const JAGTEN_THEMES = {
             '--glass': 'rgba(20,17,13,.9)', '--fade': 'rgba(20,17,13,.95)', '--accent': '#d8b36a', '--accent-ink': '#1a140a',
             '--bad': '#c2453a', '--good': '#7aa862', '--muted': 'rgba(240,226,200,.58)', '--text': '#f0e2c8', '--radius': '6px', '--pin-radius': '28%' },
     fonts: { display: "'Special Elite', 'Courier New', monospace", body: "'Inter', system-ui, sans-serif" },
-    map: { style: 'dark', tint: 'sepia(.45) saturate(.85) contrast(1.05)' },
+    map: { style: 'dark', tint: 'sepia(.35) saturate(.9) contrast(1.1) brightness(1.1)' },
     confetti: ['#d8b36a', '#c2453a', '#7aa862', '#f0e2c8'],
     words: {
       welcomeKicker: 'Ny sag:', startBtn: 'Åbn sagen', resumeBtn: 'Genoptag efterforskningen',
@@ -127,7 +127,7 @@ const JAGTEN_THEMES = {
             '--glass': 'rgba(11,18,32,.9)', '--fade': 'rgba(11,18,32,.95)', '--accent': '#38bdf8', '--accent-ink': '#06121f',
             '--bad': '#f87171', '--good': '#34d399', '--muted': 'rgba(255,255,255,.55)', '--text': '#eaf1ff', '--radius': '12px', '--pin-radius': '50%' },
     fonts: { display: "'Syne', system-ui, sans-serif", body: "'Inter', system-ui, sans-serif" },
-    map: { style: 'dark', tint: '' },
+    map: { style: 'light', tint: '' },
     confetti: ['#38bdf8', '#34d399', '#f87171', '#fbbf24', '#a78bfa'],
     words: {
       welcomeKicker: 'Teambuilding:', startBtn: 'Start udfordringen', resumeBtn: 'Fortsæt udfordringen',

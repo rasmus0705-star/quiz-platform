@@ -7,7 +7,7 @@
 // Farvefiltre der gør ét lyst kort til et mørkt/vinter/sepia-kort, når udbyderen ikke har stilen selv.
 const JAGTEN_MAP_FILTERS = {
   light: '',
-  dark: 'invert(1) hue-rotate(180deg) brightness(.88) contrast(.92) saturate(.55)',
+  dark: 'invert(1) hue-rotate(180deg) brightness(1.15) contrast(1.15) saturate(.8)',     // lysere end før: veje og navne skal kunne ses
   winter: 'saturate(.55) brightness(1.08) hue-rotate(185deg)',
   outdoor: 'saturate(1.2) contrast(1.02)',
   watercolor: 'saturate(.85) contrast(.92) brightness(1.04) sepia(.18)'

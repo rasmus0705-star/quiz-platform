@@ -17,7 +17,7 @@ on:
   workflow_dispatch: {}
 jobs:
   purge:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04          # fast version, så GitHubs skift af 'latest' ikke ændrer noget uventet
     steps:
       - name: Kald purge-data
         env:
@@ -26,7 +26,19 @@ jobs:
           SUPABASE_ANON: ${{ secrets.SUPABASE_ANON }}
         run: |
           set -euo pipefail
-          test -n "$PURGE_SECRET" && test -n "$SUPABASE_URL" && test -n "$SUPABASE_ANON" || { echo "Mangler secrets – se kommentarerne øverst i filen"; exit 1; }
-          curl --fail-with-body -sS -X POST "$SUPABASE_URL/functions/v1/purge-data" \
+          missing=""
+          [ -n "$PURGE_SECRET" ] || missing="$missing PURGE_SECRET"
+          [ -n "$SUPABASE_URL" ]  || missing="$missing SUPABASE_URL"
+          [ -n "$SUPABASE_ANON" ] || missing="$missing SUPABASE_ANON"
+          if [ -n "$missing" ]; then echo "::error::Mangler GitHub-secrets:$missing (Settings > Secrets and variables > Actions)"; exit 1; fi
+          code=$(curl -sS -o /tmp/svar.txt -w '%{http_code}' -X POST "$SUPABASE_URL/functions/v1/purge-data" \
             -H "Authorization: Bearer $SUPABASE_ANON" -H "apikey: $SUPABASE_ANON" \
-            -H "x-purge-secret: $PURGE_SECRET" -H "Content-Type: application/json" -d '{}'
+            -H "x-purge-secret: $PURGE_SECRET" -H "Content-Type: application/json" -d '{}')
+          echo "HTTP $code"; cat /tmp/svar.txt; echo
+          case "$code" in
+            200) ;;
+            207) echo "::warning::Nogle løb kunne ikke slettes – se svaret ovenfor"; ;;
+            401|403) echo "::error::Afvist ($code): tjek at PURGE_SECRET er ens i Supabase og GitHub, og at SUPABASE_ANON er anon-nøglen"; exit 1 ;;
+            404) echo "::error::Funktionen 'purge-data' findes ikke i Supabase (tjek navnet og SUPABASE_URL)"; exit 1 ;;
+            *) echo "::error::Uventet svar ($code)"; exit 1 ;;
+          esac

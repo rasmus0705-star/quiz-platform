@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Privatlivspolitik – Jagten</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="icons/favicon-48.png" sizes="48x48" type="image/png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>Privatlivspolitik – GPS Jagten</title>
 <link rel="stylesheet" href="fonts/fonts.css">
 <style>
   *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
@@ -27,14 +30,14 @@
 <body>
 <main>
 <a class="back" href="javascript:history.back()">← Tilbage</a>
-<div class="draft"><b>UDKAST.</b> Udfyld de gule felter, og få teksten gennemlæst af en jurist, før Jagten bruges kommercielt. Fjern denne boks bagefter. Teksten beskriver, hvad systemet faktisk gør (oktober 2026) – ret den, hvis systemet ændres.</div>
+<div class="draft"><b>UDKAST.</b> Udfyld de gule felter, og få teksten gennemlæst af en jurist, før GPS Jagten bruges kommercielt. Fjern denne boks bagefter. Teksten beskriver, hvad systemet faktisk gør (oktober 2026) – ret den, hvis systemet ændres.</div>
 
 <h1>Privatlivspolitik</h1>
 <p class="meta">Sidst opdateret: 26. oktober 2026</p>
 
 <h2>1. Hvem er ansvarlig for dine oplysninger?</h2>
-<p><b>Når du deltager i et løb:</b> Det er den forening eller virksomhed, der har oprettet løbet (arrangøren), der bestemmer, hvorfor og hvordan oplysningerne bruges – arrangøren er <i>dataansvarlig</i>. Jagten leverer platformen og er <i>databehandler</i> for arrangøren.</p>
-<p><b>For arrangørers kontaktoplysninger, login og drift af platformen</b> er Jagten selv dataansvarlig:<br><span class="udfyld">[Virksomhedsnavn]</span> · CVR <span class="udfyld">[CVR]</span> · <span class="udfyld">[adresse]</span> · rasmus0705@gmail.com</p>
+<p><b>Når du deltager i et løb:</b> Det er den forening eller virksomhed, der har oprettet løbet (arrangøren), der bestemmer, hvorfor og hvordan oplysningerne bruges – arrangøren er <i>dataansvarlig</i>. GPS Jagten leverer platformen og er <i>databehandler</i> for arrangøren.</p>
+<p><b>For arrangørers kontaktoplysninger, login og drift af platformen</b> er GPS Jagten selv dataansvarlig:<br><span class="udfyld">[Virksomhedsnavn]</span> · CVR <span class="udfyld">[CVR]</span> · <span class="udfyld">[adresse]</span> · rasmus0705@gmail.com</p>
 
 <h2>2. Hvilke oplysninger behandler vi?</h2>
 <table>
@@ -42,10 +45,11 @@
 <tr><td>Holdnavn</td><td>Vise holdet i løbet og på scoreboardet</td><td>Vælges af arrangøren – undgå fulde navne på børn.</td></tr>
 <tr><td>Svar, point og tidspunkter</td><td>Rette opgaver, lave rangliste og resultater</td><td>Vises på scoreboardet (holdnavn, point, tid).</td></tr>
 <tr><td>Billeder, holdet selv sender</td><td>Besvare foto-opgaver</td><td>Godkendte billeder kan vises på scoreboardet. Tag ikke billeder af personer uden at spørge dem. Billedet gentegnes i din browser, hvilket så vidt muligt fjerner skjulte data (fx EXIF/placering).</td></tr>
-<tr><td>Position (GPS) og nøjagtighed</td><td>Åbne opgaver ved stopperne og hjælpe quizmasteren</td><td>Kun den <b>seneste</b> position pr. hold gemmes og overskrives løbende – ingen rutehistorik. Vises ikke for andre hold.</td></tr>
+<tr><td>Position (GPS) og nøjagtighed</td><td>Åbne opgaver ved stopperne og hjælpe quizmasteren</td><td>Kun den <b>seneste</b> position pr. hold gemmes og overskrives løbende – ingen rutehistorik. Arrangøren kan se den på et live-kort, mens løbet kører. Vises ikke for andre hold.</td></tr>
 <tr><td>Forsøg på at bruge nødkode</td><td>Hjælpe hold uden GPS og forhindre gætteri</td><td>Hold, stop og tidspunkt. Slettes efter 30 dage.</td></tr>
 <tr><td>Tekniske data (IP-adresse)</td><td>Levere og beskytte tjenesten</td><td>Behandles af vores underleverandører (pkt. 5).</td></tr>
 <tr><td>Arrangører: navn, e-mail, telefon, virksomhed, PIN (gemmes som hash), loginforsøg</td><td>Aftale, login og support</td><td>Loginforsøg slettes efter 7 dage.</td></tr>
+<tr><td>Bestilling af login: forening, navn, e-mail, telefon, forventet dato, besked og tidspunkt for samtykke</td><td>Behandle bestillingen og kontakte dig</td><td>Afviste bestillinger slettes efter 90 dage. Oprettede kunder gemmes, så længe aftalen består.</td></tr>
 </table>
 <p>Vi sælger ikke oplysninger, viser ingen reklamer og bruger ingen analyse- eller sporingsværktøjer.</p>
 
@@ -55,7 +59,8 @@
 <h2>4. Hvem kan se hvad?</h2>
 <ul>
 <li><b>Alle med scoreboard-linket:</b> holdnavne, point, tid og godkendte billeder.</li>
-<li><b>Arrangøren/quizmasteren:</b> desuden alle svar, billeder og holdenes seneste position.</li>
+<li><b>Arrangøren/quizmasteren:</b> desuden alle svar, billeder og holdenes seneste position på et live-kort.</li>
+<li><b>Placeringer:</b> arrangøren kan vælge at skjule point og placeringer for deltagerne, indtil vinderen afsløres. Mens de er skjult, sendes de ikke til deltagernes enheder.</li>
 <li><b>Andre hold:</b> kun scoreboardet.</li>
 </ul>
 
@@ -76,6 +81,7 @@
 <li><b>Afsluttede løb:</b> hold, svar, positioner og billeder slettes automatisk <b>90 dage</b> efter afslutning. Arrangøren kan slette dem før.</li>
 <li><b>Løb der aldrig afsluttes:</b> slettes 12 måneder efter sidste aktivitet.</li>
 <li><b>Loginforsøg:</b> 7 dage. <b>Fejllogs og nødkodeforsøg:</b> 30 dage.</li>
+<li><b>Bestillinger:</b> afviste slettes efter 90 dage; oprettede følger kundens oplysninger.</li>
 <li><b>Arrangørers oplysninger:</b> så længe aftalen består og i op til <span class="udfyld">[antal]</span> år efter, hvis bogføringsloven kræver det.</li>
 </ul>
 

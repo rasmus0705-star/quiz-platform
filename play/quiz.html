@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Jagten</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../icons/favicon-48.png" sizes="48x48" type="image/png">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <meta name="robots" content="noindex, nofollow">
+  <title>GPS Jagten</title>
   <link rel="manifest" href="../manifest.json">
   <meta name="theme-color" content="#0d0f14">
   <link rel="stylesheet" href="../fonts/fonts.css">
@@ -177,6 +181,10 @@
     #final-points { font-family:var(--font-display); font-size:3.6rem; font-weight:800; color:var(--accent); line-height:1; }
 
     /* ── Animationer ── */
+    #net-banner { position:fixed; top:0; left:0; right:0; z-index:1100; display:none; padding:calc(env(safe-area-inset-top,0px) + .55rem) 1rem .55rem; background:#b45309; color:#fff; font-size:.82rem; font-weight:700; text-align:center; }
+    #net-banner.show { display:block; }
+    .pill.time { font-variant-numeric:tabular-nums; } .pill.time.warn { color:#fff; background:var(--bad); border-color:var(--bad); }
+    #wait-count { font-family:var(--font-display); font-size:3rem; font-weight:800; color:var(--accent); font-variant-numeric:tabular-nums; margin:.4rem 0 1rem; }
     @keyframes spin { to { transform:rotate(360deg); } }
     @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
     @keyframes fadein { from { opacity:0; } to { opacity:1; } }
@@ -194,6 +202,7 @@
 
 <div id="map"></div>
 <div id="fx"></div>
+<div id="net-banner" role="status" aria-live="polite"></div>
 
 <!-- Indlæser -->
 <div id="loading" class="screen show"><div class="spinner"></div><p style="color:var(--muted)">Indlæser løbet…</p></div>
@@ -206,11 +215,20 @@
   <a id="msg-link" class="btn-ghost" href="#" target="_blank" rel="noopener"></a>
 </div>
 
+<!-- Løbet er ikke åbnet endnu (planlagt start) -->
+<div id="wait-screen" class="screen">
+  <div class="hero-emoji">⏳</div>
+  <div class="kicker" id="wait-kicker">Løbet åbner</div>
+  <h1 id="wait-title">Snart…</h1>
+  <div id="wait-count">--:--</div>
+  <p class="lead" id="wait-text">Siden åbner af sig selv, når det er tid. I behøver ikke gøre noget.</p>
+</div>
+
 <!-- Velkomst / start -->
 <div id="welcome" class="screen">
   <div class="hero-emoji" id="welcome-emoji">🗺️</div>
   <div class="kicker" id="welcome-kicker">Velkommen til</div>
-  <h1 id="welcome-title">Jagten</h1>
+  <h1 id="welcome-title">GPS Jagten</h1>
   <p class="lead clamp" id="welcome-desc"></p>
   <button class="more-btn" id="desc-more" style="display:none" onclick="toggleDesc()">Læs mere</button>
   <div id="inapp-warn" class="warn-box">
@@ -235,6 +253,7 @@
   <div class="pill" id="team-name">–</div>
   <div class="top-right">
     <div class="pill test" id="test-pill" style="display:none">🧪 Test</div>
+    <div class="pill time" id="time-pill" style="display:none">⏱ --:--</div>
     <div class="pill acc" id="acc-pill" style="display:none">📡 <span id="acc-text">–</span></div>
     <div class="pill pts" id="points">0 p</div>
   </div>
@@ -309,17 +328,16 @@
       <div id="final-points">0</div>
       <div style="font-size:.85rem;color:var(--muted)">point</div>
       <div id="final-team" style="margin-top:.7rem;font-weight:700"></div>
-      <div id="final-rank" style="margin-top:.35rem;color:var(--accent);font-weight:800"></div>
     </div>
-    <p id="final-wait" class="lead" style="font-size:.82rem;margin-bottom:1rem"></p>
-    <a id="final-link" class="btn-gold" href="#" target="_blank" rel="noopener">📊 Se live scoreboard</a>
-    <button id="share-btn" class="btn-ghost" style="display:none;margin-top:.7rem" onclick="shareResult()">📤 Del jeres resultat</button>
+    <p id="final-wait" class="lead" style="font-size:.9rem">Tak for jeres deltagelse! Vinderen afsløres til sidst – følg med, når arrangøren fortæller, hvordan det gik.</p>
   </div>
 </div>
 
 <script>
 // ═════════ Indstillinger ═════════
-const NEAR_MS        = 4000;    // hvor længe man skal være inden for radius før opgaven åbner
+const NEAR_MS        = 2500;    // hvor længe man skal være inden for radius før opgaven åbner
+const NEAR_INNER     = 0.6;     // inden for 60 % af radius (tæt på midten) åbner den næsten med det samme
+const NEAR_INNER_MS  = 800;
 const ACC_FLOOR_M    = 20;      // GPS-nøjagtighed der kræves (mindst; stigende med stoppets radius)
 const MAX_FIX_AGE_MS = 20000;   // ignorér hvis seneste position er ældre
 const POS_SEND_MS    = 5000;    // max hvor tit position sendes til serveren
@@ -337,14 +355,53 @@ let gpsWatch = null, gameOn = false, cur = null, arriving = false, busy = false,
 let nearSince = {}, lastSent = { t: 0, lat: null, lng: null };
 let unlocked = new Set(), manualMode = false, gameStartAt = 0;
 let finishedShown = false;
+let clockSkew = 0, opensAt = null, closesAt = null, stopsDirty = false;
+let RETRY_UNIT_MS = 1000;      // 1 sek. mellem nedtællingstrin ved genforsøg (kan sættes lavere i tests)
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 const showScreen = id => $(id).classList.add('show');
 const hideScreen = id => $(id).classList.remove('show');
 const scoreboardUrl = () => new URL('../board/scoreboard.html?q=' + team.quiz_id, location.href).href;
+const serverNow = () => Date.now() + clockSkew;          // serverens ur – holdets mobil kan gå forkert
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const fmtClock = ms => { const s = Math.max(0, Math.round(ms / 1000)), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
+  return (h ? h + ':' + String(m).padStart(2, '0') : String(m).padStart(2, '0')) + ':' + String(x).padStart(2, '0'); };
 const vibrate = p => { try { navigator.vibrate && navigator.vibrate(p); } catch (_) {} };
 const accent = () => getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#e8c84a';
+
+// Planlagt start: viser nedtælling og genindlæser siden, når tiden er inde
+function showWaitScreen() {
+  hideScreen('loading');
+  const when = new Date(opensAt);
+  $('wait-title').textContent = (team.quiz_title || 'GPS Jagten');
+  $('wait-kicker').textContent = 'Åbner ' + when.toLocaleString('da-DK', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
+  showScreen('wait-screen');
+  const tickWait = () => {
+    const left = opensAt - serverNow();
+    if (left <= 0) { location.reload(); return; }
+    $('wait-count').textContent = fmtClock(left);
+  };
+  tickWait(); setInterval(tickWait, 1000);
+}
+
+// Tid tilbage (hvis løbet har en sluttid): vises i topbaren, bliver rød sidste 5 min.; ved 0 lukkes løbet
+function updateTimePill() {
+  if (!closesAt || team.is_test) return;
+  const left = closesAt - serverNow(), pill = $('time-pill');
+  if (left <= 0) { endByTime(); return; }
+  pill.style.display = left <= 2 * 3600 * 1000 ? 'block' : 'none';
+  pill.textContent = '⏱ ' + fmtClock(left);
+  pill.classList.toggle('warn', left <= 5 * 60 * 1000);
+}
+function endByTime() {
+  if (finishedShown) return;
+  gameOn = false; arriving = false; cur = null;
+  ['activity-overlay'].forEach(id => $(id).classList.remove('open'));
+  hideScreen('arrive'); hideScreen('sos'); closeStops();
+  $('topbar').style.display = 'none'; $('progress').style.display = 'none'; $('bottom-panel').style.display = 'none';
+  showMessage('⏱', 'Tiden er gået', 'Løbet er lukket. Tak fordi I var med – vinderen afsløres til sidst!');
+}
 
 function showMessage(icon, title, text, href, linkText) {
   hideScreen('loading');
@@ -376,8 +433,17 @@ async function init() {
 
   const ap = applyTheme(team.quiz_theme, team.quiz_theme_texts);          // farver, skrifttyper og ord for dette løb
   theme = ap.theme; words = ap.words;
-  document.title = team.quiz_title || 'Jagten';
+  document.title = team.quiz_title || 'GPS Jagten';
   applyWords();
+
+  if (team.server_now) clockSkew = Date.parse(team.server_now) - Date.now();
+  opensAt  = team.quiz_opens_at  ? Date.parse(team.quiz_opens_at)  : null;
+  closesAt = team.quiz_closes_at ? Date.parse(team.quiz_closes_at) : null;
+
+  if (!team.is_test && opensAt && serverNow() < opensAt) return showWaitScreen();     // planlagt start: nedtælling, åbner af sig selv
+  if (!team.is_test && closesAt && serverNow() > closesAt) {
+    return showMessage('🔒', 'Løbet er lukket', 'Tiden er gået, og løbet er ikke længere åbent. Tak fordi I var med!');
+  }
 
   if (team.quiz_status === 'arkiveret') {
     return showMessage('🔒', 'Løbet er afsluttet', 'Dette løb er ikke længere aktivt. Spørg din quizmaster, hvis I vil spille igen.', scoreboardUrl(), '📊 Se scoreboard');
@@ -398,6 +464,7 @@ async function init() {
   if (allDone()) return showFinished();
   showWelcome();
   setInterval(tick, 1000);
+  setInterval(updateTimePill, 1000); updateTimePill();
   setInterval(pollStatus, 30000);
 }
 
@@ -429,7 +496,7 @@ const consentKey = () => 'jagten-samtykke-' + token;
 function consentStored() { try { return localStorage.getItem(consentKey()) === '1'; } catch (_) { return false; } }
 
 function showWelcome() {
-  $('welcome-title').textContent = team.quiz_title || 'Jagten';
+  $('welcome-title').textContent = team.quiz_title || 'GPS Jagten';
   $('welcome-desc').textContent  = team.quiz_description || '';
   $('welcome-desc').style.display = team.quiz_description ? '-webkit-box' : 'none';
   $('welcome-desc').classList.add('clamp');
@@ -458,7 +525,8 @@ function copyLink() {
 // ═════════ Data ═════════
 async function loadStops() {
   const { data, error } = await sb.schema('quiz').rpc('get_quiz_stops', { p_token: token });
-  if (error || !data) return;                       // behold gamle stop ved netværksfejl
+  if (error || !data) { stopsDirty = true; return false; }     // behold gamle stop ved netværksfejl – hentes igen når der er dækning
+  stopsDirty = false;
   const m = {};
   data.forEach(r => {
     if (!m[r.stop_id]) m[r.stop_id] = { id: r.stop_id, name: r.stop_name, sort: r.sort, lat: r.lat, lng: r.lng, radius_m: r.radius_m ?? 15, activities: [] };
@@ -468,6 +536,7 @@ async function loadStops() {
     });
   });
   stops = Object.values(m).sort((a, b) => a.sort - b.sort);
+  return true;
 }
 
 async function loadUnlocks() {
@@ -694,7 +763,10 @@ function tick() {
     const accOk = userAcc !== null && userAcc <= Math.max(ACC_FLOOR_M, s.radius_m);
     if (d !== null && d <= s.radius_m && accOk) {
       nearSince[s.id] = nearSince[s.id] ?? now;
-      if (now - nearSince[s.id] >= NEAR_MS) { nearSince = {}; openStop(s.id); return; }
+      const need = d <= s.radius_m * NEAR_INNER ? NEAR_INNER_MS : NEAR_MS;
+      if (now - nearSince[s.id] >= need) { nearSince = {}; openStop(s.id); return; }
+      const left = Math.max(1, Math.ceil((need - (now - nearSince[s.id])) / 1000));
+      if (pickNext()?.id === s.id) { $('next-dist').textContent = 'Åbner om ' + left + ' sek…'; $('next-dist').className = 'near'; }
     } else delete nearSince[s.id];
   }
 }
@@ -763,6 +835,24 @@ async function submitSos() {
   openStop(stopId);
 }
 document.addEventListener('keydown', e => { if (e.key === 'Enter' && $('sos').classList.contains('show')) submitSos(); });
+
+// ═════════ Dårlig dækning ═════════
+// Svar og fotos prøves automatisk igen, så et hold i en skov ikke mister noget. Serveren tåler dubletter (samme svar to gange).
+function setNet(text) { const b = $('net-banner'); b.textContent = text || ''; b.classList.toggle('show', !!text); }
+function isNetErr(e) { return !!(e && (e.isNet || e.name === 'FunctionsFetchError' || e.name === 'TypeError' || /Failed to fetch|NetworkError|Load failed|fetch/i.test(String(e.message)))); }
+async function retryNet(fn, { tries = 10, label = '' } = {}) {
+  for (let n = 1; ; n++) {
+    try { const r = await fn(); setNet(navigator.onLine === false ? 'Ingen forbindelse – I kan stadig se kortet' : ''); return r; }
+    catch (e) {
+      if (!isNetErr(e) || n >= tries) { setNet(''); throw e; }
+      const wait = Math.min(15, 2 + n * 2);
+      for (let sec = wait; sec > 0; sec--) { setNet((label ? label + ': ' : '') + 'Ingen forbindelse – prøver igen om ' + sec + ' sek. Bliv, hvor I er.'); await sleep(RETRY_UNIT_MS); }
+    }
+  }
+}
+window.addEventListener('offline', () => setNet('Ingen forbindelse – I kan stadig se kortet'));
+window.addEventListener('online',  () => { setNet(''); if (stopsDirty) closeActivityReload(); pollStatus(); });
+async function closeActivityReload() { await loadStops(); if (stops.length) { stopsDirty = false; renderPins(); updateNextStop(); } }
 
 // ═════════ Opgaver ═════════
 // Først "Fremme!"-øjeblikket, så opgaven
@@ -841,18 +931,21 @@ async function submit(answer) {
   if (busy || !cur) return null;
   busy = true; inlineErr('');
   try {
-    const { data, error } = await sb.functions.invoke('quiz-check-answer', {
-      body: { token, activity_id: cur.act.id, answer }
-    });
-    if (error) {
-      let msg = 'Noget gik galt – tjek forbindelsen og prøv igen.';
-      try { const b = await error.context.json(); msg = b.error || msg; } catch (_) {}
-      throw new Error(msg);
-    }
+    const data = await retryNet(async () => {
+      const { data, error } = await sb.functions.invoke('quiz-check-answer', { body: { token, activity_id: cur.act.id, answer } });
+      if (error) {
+        const status = error.context && error.context.status;
+        if (!status || status === 502 || status === 503 || status === 504) { const ne = new Error('netværk'); ne.isNet = true; throw ne; }
+        let msg = 'Noget gik galt – prøv igen.';
+        try { const b = await error.context.json(); msg = b.error || msg; } catch (_) {}
+        throw new Error(msg);
+      }
+      return data;
+    }, { label: 'Svar' });
     subs[cur.act.id] = { activity_id: cur.act.id, is_correct: data.is_correct, points: data.points ?? 0, status: data.status ?? 'ok' };
     recomputePoints();
     return data;
-  } catch (e) { inlineErr(e.message); return null; }
+  } catch (e) { inlineErr(isNetErr(e) ? 'Ingen forbindelse – svaret er ikke sendt endnu. Tryk igen, når I har dækning.' : e.message); return null; }
   finally { busy = false; }
 }
 
@@ -910,8 +1003,14 @@ async function submitPhoto() {
   const blob = await compressImage(f);
   if (blob.size > 5 * 1024 * 1024) { inlineErr('Billedet er for stort – tag et nyt.'); $('send').disabled = false; $('send').textContent = 'Send foto'; return; }
   const path = `answers/${team.team_id}/${cur.act.id}-${Date.now()}.jpg`;
-  const { error: upErr } = await sb.storage.from('quiz-uploads').upload(path, blob, { contentType: blob.type || 'image/jpeg', upsert: false });
-  if (upErr) { inlineErr('Upload fejlede: ' + upErr.message); $('send').disabled = false; $('send').textContent = 'Send foto'; return; }
+  let upErr = null;
+  try {
+    await retryNet(async () => {
+      const { error } = await sb.storage.from('quiz-uploads').upload(path, blob, { contentType: blob.type || 'image/jpeg', upsert: true });   // upsert: genforsøg må ikke fejle på en halvt uploadet fil
+      if (error) { const ne = new Error(error.message); ne.isNet = /fetch|network|load failed|timeout/i.test(error.message) || !error.statusCode; throw ne; }
+    }, { label: 'Foto' });
+  } catch (e) { upErr = e; }
+  if (upErr) { inlineErr('Upload fejlede: ' + upErr.message + ' – tryk "Send foto" igen, når I har dækning.'); $('send').disabled = false; $('send').textContent = 'Send foto'; return; }
   const url = sb.storage.from('quiz-uploads').getPublicUrl(path).data.publicUrl;
   const res = await submit(url);
   if (!res) { $('send').disabled = false; $('send').textContent = 'Send foto'; return; }
@@ -1010,32 +1109,9 @@ function showFinished() {
   $('final-text').textContent  = words.finishText;
   animateNumber($('final-points'), team.points ?? 0);
   $('final-team').textContent = team.team_name ?? '';
-  $('final-link').href = scoreboardUrl();
-  if (navigator.share) $('share-btn').style.display = 'inline-flex';
   showScreen('finished');
   vibrate([100, 60, 100, 60, 200]);
-  confetti(); refreshRank();
-  setInterval(refreshRank, 10000);
-}
-
-function shareResult() {
-  navigator.share?.({
-    title: team.quiz_title || 'Jagten',
-    text: `${team.team_name} fik ${team.points ?? 0} point i ${team.quiz_title || 'Jagten'}!`,
-    url: scoreboardUrl()
-  }).catch(() => {});
-}
-
-async function refreshRank() {
-  const { data } = await sb.schema('quiz').rpc('get_scoreboard', { p_quiz_id: team.quiz_id });
-  if (!data) return;
-  const teams = data.teams ?? [];
-  const idx = teams.findIndex(t => t.name === team.team_name);
-  const done = teams.filter(t => t.finished).length;
-  $('final-rank').textContent = idx >= 0 ? `Nr. ${idx + 1} af ${teams.length}` : '';
-  $('final-wait').textContent = done < teams.length
-    ? `${teams.length - done} hold er stadig på vej – placeringen kan ændre sig`
-    : 'Alle hold er færdige – dette er den endelige placering';
+  confetti();                      // placeringen vises bevidst IKKE her – kun arrangørens scoreboard afslører vinderen
 }
 
 function confetti() {
@@ -1051,9 +1127,12 @@ function confetti() {
 
 // ═════════ Status-polling (quizmaster afslutter / starter ny runde) ═════════
 async function pollStatus() {
+  if (stopsDirty) closeActivityReload();
   const { data } = await sb.schema('quiz').rpc('get_team_by_token', { p_token: token });
   const t = data?.[0]; if (!t) return;
   if (t.round_no !== team.round_no) { location.reload(); return; }
+  if (t.server_now) clockSkew = Date.parse(t.server_now) - Date.now();                      // arrangøren kan ændre tidsrummet mens løbet kører
+  opensAt = t.quiz_opens_at ? Date.parse(t.quiz_opens_at) : null; closesAt = t.quiz_closes_at ? Date.parse(t.quiz_closes_at) : null; updateTimePill();
   if (t.quiz_status === 'arkiveret' && !finishedShown) {
     $('activity-overlay').classList.remove('open'); cur = null; gameOn = false; arriving = false; hideScreen('arrive');
     showMessage('🔒', 'Løbet er afsluttet', 'Quizmasteren har afsluttet løbet. Tak fordi I var med!', scoreboardUrl(), '📊 Se scoreboard');

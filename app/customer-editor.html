@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Byg dit løb – Quiz Platform</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../icons/favicon-48.png" sizes="48x48" type="image/png">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Byg dit løb – GPS Jagten</title>
   <link rel="stylesheet" href="../fonts/fonts.css">
   <link rel="stylesheet" href="../vendor/leaflet/leaflet.css">
   <script src="../vendor/leaflet/leaflet.js"></script>
@@ -274,6 +278,35 @@
     .img-pick { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:4px; }
     .img-status { font-size:.78rem; color:var(--muted); }
     .act-img { width:100%; max-height:180px; object-fit:cover; border-radius:10px; border:1px solid var(--line); display:block; }
+
+    /* ── Trin: vejledning, poster, opgaver ── */
+    .help { background:var(--white); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:12px; padding:14px 16px; margin-bottom:16px; }
+    .help-title { font-family:'Syne','Inter',sans-serif; font-weight:800; font-size:.9rem; margin-bottom:4px; }
+    .help p { font-size:.86rem; color:var(--ink-2); line-height:1.55; margin-bottom:8px; }
+    .help-checks { list-style:none; display:grid; gap:4px; }
+    .help-checks li { display:flex; align-items:center; gap:8px; font-size:.82rem; color:var(--muted); font-weight:600; }
+    .help-checks li span { width:20px; height:20px; border-radius:50%; border:1.5px solid var(--line); display:grid; place-items:center; font-size:.7rem; flex-shrink:0; }
+    .help-checks li.ok { color:#166534; } .help-checks li.ok span { background:#16a34a; border-color:#16a34a; color:#fff; }
+    .hint { font-size:.78rem; color:var(--muted); margin-top:.5rem; line-height:1.5; }
+    .opt-toggle { text-align:left; padding:.75rem .9rem; border-radius:12px; border:1.5px solid var(--line); background:var(--white); color:var(--ink-2); cursor:pointer; font-weight:700; font-size:.85rem; font-family:inherit; }
+    .opt-toggle small { display:block; font-weight:500; font-size:.72rem; margin-top:2px; opacity:.85; }
+    .opt-toggle.on { border-color:var(--accent); background:var(--accent-soft); color:var(--accent); }
+    .newpost { border:1.5px solid var(--accent); background:var(--accent-soft); border-radius:12px; padding:14px; margin:12px 0; }
+    .newpost.done { border-color:#86d3a1; background:#eaf8ef; }
+    .np-title { font-family:'Syne','Inter',sans-serif; font-weight:800; margin-bottom:8px; }
+    .np-actions { display:flex; gap:8px; flex-wrap:wrap; }
+    .pin-n { width:30px; height:30px; border-radius:50%; background:var(--accent); color:#fff; display:grid; place-items:center; font:800 .82rem 'Syne',sans-serif; border:3px solid #fff; box-shadow:0 2px 8px rgba(0,0,0,.35); cursor:grab; }
+    .pin-n.new { background:#f59e0b; }
+    #map.placing { cursor:crosshair; }
+    .post-row { display:flex; align-items:center; gap:10px; padding:9px 4px; border-bottom:1px solid var(--line); cursor:pointer; }
+    .post-row:last-child { border-bottom:none; } .post-row:hover { background:#fafbfe; }
+    .post-n { width:26px; height:26px; border-radius:50%; background:var(--accent-soft); color:var(--accent); display:grid; place-items:center; font-weight:800; font-size:.78rem; flex-shrink:0; }
+    .post-name { flex:1; font-weight:700; font-size:.9rem; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .empty-posts { text-align:center; color:var(--muted); padding:18px 8px; font-size:.88rem; }
+    .task-progress { background:var(--white); border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:14px; }
+    .tp-text { font-size:.86rem; margin-bottom:6px; } .tp-bar { height:6px; border-radius:3px; background:var(--line); overflow:hidden; } .tp-bar i { display:block; height:100%; background:#16a34a; border-radius:3px; transition:width .3s; }
+    .tbadge { display:inline-block; font-size:.72rem; font-weight:700; padding:2px 8px; border-radius:99px; }
+    .tbadge.ok { background:#e8f7ee; color:#166534; } .tbadge.warn { background:#fff4de; color:#b45309; } .tbadge.bad { background:#fdecec; color:#b91c1c; }
   </style>
 </head>
 <body>
@@ -282,24 +315,24 @@
   <button class="back-btn" onclick="location.href='customer-overview.html'">← Mine løb</button>
   <span id="quiz-title-display">Nyt løb</span>
   <div class="save-area">
+    <a href="../hjaelp.html" target="_blank" rel="noopener" style="color:var(--ink-2);font-size:.82rem;font-weight:600;text-decoration:none;margin-right:6px">Hjælp</a>
     <span id="save-msg"></span>
     <button class="btn-save" onclick="saveQuiz(true)">Gem</button>
   </div>
 </header>
 
 <!-- Steps -->
+<div id="live-banner" style="display:none;background:#fff4de;border-bottom:1px solid #f3d9a4;color:#8a5a00;padding:10px 20px;font-size:.84rem;line-height:1.45;">
+  <b>Løbet er live.</b> Holdene spiller lige nu, så alt, du ændrer her, rammer dem med det samme. Undgå at slette eller flytte poster og hold, mens løbet kører.
+</div>
 <div class="steps-bar">
-  <div class="step active" id="step-btn-1" onclick="goStep(1)">
-    <div class="step-num">1</div> Løbet
-  </div>
-  <span class="step-sep">›</span>
-  <div class="step" id="step-btn-2" onclick="goStep(2)">
-    <div class="step-num">2</div> Ruten & opgaver
-  </div>
-  <span class="step-sep">›</span>
-  <div class="step" id="step-btn-3" onclick="goStep(3)">
-    <div class="step-num">3</div> Hold & deling
-  </div>
+<div class="step active" id="step-btn-1" onclick="goStep(1)"><div class="step-num">1</div> Løbet</div>
+<span class="step-sep">›</span>
+<div class="step" id="step-btn-2" onclick="goStep(2)"><div class="step-num">2</div> Poster</div>
+<span class="step-sep">›</span>
+<div class="step" id="step-btn-3" onclick="goStep(3)"><div class="step-num">3</div> Opgaver</div>
+<span class="step-sep">›</span>
+<div class="step" id="step-btn-4" onclick="goStep(4)"><div class="step-num">4</div> Hold & deling</div>
 </div>
 
 <!-- ══ TRIN 1: Løbet ══ -->
@@ -307,6 +340,7 @@
   <div class="pane-inner">
     <div class="pane-title">🗺️ Fortæl om dit løb</div>
     <p class="pane-lead">Giv dit GPS-quizforløb et navn og en beskrivelse, som dine deltagere ser.</p>
+<div class="help" id="help-1"></div>
 
     <div class="card">
       <label>Navn på løbet *</label>
@@ -340,81 +374,100 @@
       <div id="theme-preview"></div>
     </div>
 
-    <button class="btn-next" onclick="saveAndNext(2)">
-      Næste: Byg ruten →
-    </button>
+<div class="card">
+<div class="card-title">Når løbet er slut</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;">
+<button id="chide-on" onclick="setHide(true)" class="opt-toggle">🎉 Skjul placeringer<small>Vinderen afsløres, når du trykker</small></button>
+<button id="chide-off" onclick="setHide(false)" class="opt-toggle">📊 Vis live<small>Scoreboardet viser placeringer hele tiden</small></button>
+</div>
+<p class="hint">Mens placeringerne er skjult, ser deltagerne kun fremdrift – ikke point eller placering. Du afslører vinderen fra scoreboardet med et podie.</p>
+</div>
+
+<div class="card">
+<div class="card-title">Tidsrum (valgfrit)</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
+<div><label for="opens-at">Åbner</label><input type="datetime-local" id="opens-at"></div>
+<div><label for="closes-at">Lukker</label><input type="datetime-local" id="closes-at"></div>
+</div>
+<p class="hint">Deltagerne ser en nedtælling før start, og svar afvises uden for tidsrummet. Lad felterne stå tomme, hvis du selv trykker aktivér og afslut.</p>
+</div>
+
+<button class="btn-next" onclick="saveAndNext(2)">Næste: Placér poster →</button>
   </div>
 </div>
 
-<!-- ══ TRIN 2: Rute & opgaver ══ -->
+<!-- ══ TRIN 2: Poster ══ -->
 <div class="pane" id="pane-2">
-  <div class="pane-inner">
-    <div class="pane-title">📍 Byg din rute</div>
+<div class="pane-inner">
+<div class="pane-title">📍 Placér dine poster</div>
+<div class="help" id="help-2"></div>
 
-    <!-- Vejledning -->
-    <div style="display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;">
-      <div style="flex:1;min-width:160px;background:var(--white);border-radius:var(--radius-sm);padding:.85rem;box-shadow:var(--shadow);display:flex;gap:.6rem;align-items:flex-start;">
-        <span style="font-size:1.3rem;">🔍</span>
-        <div>
-          <div style="font-weight:700;font-size:.85rem;margin-bottom:.2rem;">1. Find stedet</div>
-          <div style="font-size:.78rem;color:var(--ink-2);">Søg på by eller postnummer for at zoome ind</div>
-        </div>
-      </div>
-      <div style="flex:1;min-width:160px;background:var(--white);border-radius:var(--radius-sm);padding:.85rem;box-shadow:var(--shadow);display:flex;gap:.6rem;align-items:flex-start;">
-        <span style="font-size:1.3rem;">📍</span>
-        <div>
-          <div style="font-weight:700;font-size:.85rem;margin-bottom:.2rem;">2. Placer stop</div>
-          <div style="font-size:.78rem;color:var(--ink-2);">Klik på kortet der hvor et stop skal ligge</div>
-        </div>
-      </div>
-      <div style="flex:1;min-width:160px;background:var(--white);border-radius:var(--radius-sm);padding:.85rem;box-shadow:var(--shadow);display:flex;gap:.6rem;align-items:flex-start;">
-        <span style="font-size:1.3rem;">❓</span>
-        <div>
-          <div style="font-weight:700;font-size:.85rem;margin-bottom:.2rem;">3. Tilføj opgaver</div>
-          <div style="font-size:.78rem;color:var(--ink-2);">Åbn hvert stop og tilføj spørgsmål til deltagerne</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <!-- Søgefelt -->
-      <div style="position:relative;margin-bottom:.75rem;">
-        <input type="text" id="map-search" placeholder="🔍  Søg på by eller postnummer…"
-          style="padding-right:2.5rem;"
-          oninput="onSearchInput()" onkeydown="if(event.key==='Enter')doSearch()">
-        <button onclick="doSearch()" style="position:absolute;right:.5rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1rem;color:var(--muted);">→</button>
-        <div id="search-results" style="
-          display:none;position:absolute;top:100%;left:0;right:0;z-index:1000;
-          background:var(--white);border:1.5px solid #e2e8f0;border-top:none;
-          border-radius:0 0 var(--radius-sm) var(--radius-sm);
-          box-shadow:var(--shadow);max-height:220px;overflow-y:auto;">
-        </div>
-      </div>
-
-      <div id="map"></div>
-      <p style="font-size:.78rem;color:var(--muted);margin-top:.5rem;margin-bottom:.75rem;">
-        Klik på kortet for at placere et nyt stop
-      </p>
-      <div id="stop-list"></div>
-    </div>
-
-    <button class="btn-next" onclick="goStep(3)">
-      Næste: Opret hold →
-    </button>
-  </div>
+<div class="card">
+<div style="position:relative;margin-bottom:.75rem;">
+<input type="text" id="map-search" placeholder="🔍  Søg på by eller adresse…" style="padding-right:2.5rem;"
+oninput="onSearchInput()" onkeydown="if(event.key==='Enter')doSearch()">
+<button onclick="doSearch()" aria-label="Søg" style="position:absolute;right:.5rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1rem;">🔍</button>
+<div id="search-results" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:1000;background:var(--white);border:1.5px solid #e2e8f0;border-top:none;border-radius:0 0 var(--radius-sm) var(--radius-sm);box-shadow:var(--shadow);max-height:220px;overflow-y:auto;"></div>
 </div>
 
-<!-- ══ TRIN 3: Hold & deling ══ -->
+<div id="map"></div>
+<p class="hint" id="map-hint">Klik på kortet, hvor en post skal ligge. Du kan trække i nålene bagefter for at justere.</p>
+
+<div id="newpost" class="newpost" style="display:none">
+<div class="np-title">📍 Ny post</div>
+<input type="text" id="np-name" maxlength="80" placeholder="Navn på posten, fx Kirken" onkeydown="if(event.key==='Enter')saveNewPost()">
+<p class="hint" style="margin:.4rem 0 .7rem">Træk i den nye nål for at flytte den, hvis den ikke sidder helt rigtigt.</p>
+<div class="np-actions">
+<button class="btn btn-primary" onclick="saveNewPost()">✅ Gem post</button>
+<button class="btn btn-outline" onclick="cancelNewPost()">Annullér</button>
+</div>
+</div>
+
+<div id="np-done" class="newpost done" style="display:none">
+<div class="np-title" id="np-done-title">✅ Posten er gemt</div>
+<p class="hint" style="margin:.2rem 0 .7rem">Hvad nu? Du kan altid rette, flytte eller slette posten senere.</p>
+<div class="np-actions">
+<button class="btn btn-primary" onclick="placeNext()">➕ Placér næste post</button>
+<button class="btn btn-outline" onclick="goStep(3)">✔ Færdig med poster → Opgaver</button>
+</div>
+</div>
+
+<div id="stop-list"></div>
+</div>
+
+<button class="btn-next" onclick="goStep(3)">Næste: Tilføj opgaver →</button>
+</div>
+</div>
+
+<!-- ══ TRIN 3: Opgaver ══ -->
 <div class="pane" id="pane-3">
+<div class="pane-inner">
+<div class="pane-title">❓ Tilføj opgaver</div>
+<div class="help" id="help-3"></div>
+<div id="task-list"></div>
+<button class="btn-next" onclick="goStep(4)">Næste: Opret hold →</button>
+</div>
+</div>
+
+<!-- ══ TRIN 4: Hold & deling ══ -->
+<div class="pane" id="pane-4">
   <div class="pane-inner">
     <div class="pane-title">👥 Hold & deling</div>
     <p class="pane-lead">Opret hold og del links med deltagerne. Test og aktivér løbet fra oversigten når du er klar.</p>
+<div class="help" id="help-4"></div>
+<p class="hint" style="margin:-6px 0 14px"><a href="../tjekliste.html" target="_blank" rel="noopener" style="color:var(--accent);font-weight:700">🖨️ Print tjekliste til dagen</a></p>
 
     <div class="card">
       <div class="card-title">Opret hold</div>
       <div style="display:flex;gap:.5rem;">
-        <input type="text" id="new-team-name" placeholder="Holdnavn…" style="flex:1;">
+        <input type="text" id="new-team-name" placeholder="Holdnavn – eller flere adskilt med komma" style="flex:1;" onkeydown="if(event.key==='Enter')addTeam()">
         <button class="btn btn-primary" onclick="addTeam()" style="white-space:nowrap;">+ Tilføj</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-top:.75rem;padding-top:.75rem;border-top:1px dashed var(--line);font-size:.84rem;color:var(--ink-2);">
+        <span>Eller opret</span>
+        <input type="number" id="bulk-count" value="5" min="1" max="50" style="width:78px;min-height:38px;">
+        <span>hold på én gang</span>
+        <button class="btn btn-outline btn-sm" onclick="addNumberedTeams()">Opret Hold 1, Hold 2 …</button>
       </div>
       <div id="team-list" style="margin-top:1rem;"></div>
       <div id="team-actions-bar" style="display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid #f0f0f0;">
@@ -491,6 +544,8 @@ let teams      = []
 let map, markers = []
 let openStopId = null
 let currentStep = 1
+let quizHide   = true                    // nye løb: skjul placeringer til afsløringen (kan ændres i trin 1)
+let pendingMarker = null
 let shareTeam  = null
 let editActId  = null
 let editStopId = null
@@ -505,7 +560,7 @@ async function init() {
   }
   if (quizId) {
     await loadAll()
-    try { const t = parseInt(localStorage.getItem('ced_step')); if (t >= 1 && t <= 3) goStep(t, false); } catch {}
+    try { const t = parseInt(localStorage.getItem('ced_step')); if (t >= 1 && t <= 4) goStep(t, false); } catch {}
   } else {
     try { localStorage.removeItem('ced_step') } catch {}
   }
@@ -515,14 +570,21 @@ async function init() {
 function goStep(n, save = false) {
   if (save) saveQuiz()
   currentStep = n
-  ;[1,2,3].forEach(i => {
+  ;[1,2,3,4].forEach(i => {
     document.getElementById('pane-'+i).classList.toggle('active', i === n)
     const btn = document.getElementById('step-btn-'+i)
     btn.classList.remove('active','done')
     if (i === n) btn.classList.add('active')
     else if (i < n) btn.classList.add('done')
   })
-  if (n === 2) setTimeout(() => { if (!map) initMap(); else map.invalidateSize(); renderStops(); }, 100)
+  if (n === 2) setTimeout(() => { if (!map) initMap(); else map.invalidateSize(); renderStops() }, 100)
+  if (n === 3) {
+    // åbn den første post der mangler en opgave (ellers den første)
+    if (!stops.some(s => s.id === openStopId)) openStopId = (stops.find(s => !s.activities.length) || stops[0] || {}).id ?? null
+    renderStops()
+  }
+  if (n === 4) renderTeams()
+  renderHelp()
   try { localStorage.setItem('ced_step', n); } catch {}
   window.scrollTo(0,0)
 }
@@ -538,6 +600,7 @@ async function loadAll() {
     .select('*').eq('id', quizId).single()
   if (!q) return
   quizStatus = q.status
+  updateLiveBanner()
   quizMode   = q.stop_order ?? 'fri'
   quizTheme  = (typeof JAGTEN_THEMES !== 'undefined' && JAGTEN_THEMES[q.theme]) ? q.theme : 'standard'
   renderThemes()
@@ -546,6 +609,9 @@ async function loadAll() {
   renderThemePreview()                      // titlen er først sat nu
   document.getElementById('quiz-title-display').textContent = q.title || 'Nyt løb'
   updateModeUI(quizMode)
+  quizHide = !!q.hide_results; updateHideUI()
+  document.getElementById('opens-at').value  = toLocalInput(q.opens_at)
+  document.getElementById('closes-at').value = toLocalInput(q.closes_at)
 
   // Stops + activities
   const { data: stopRows } = await sb.schema('quiz').from('stops')
@@ -578,7 +644,9 @@ async function saveQuiz(redirectAfter = false) {
   const description = document.getElementById('description').value.trim()
   if (!title) { flash('⚠️ Titel mangler'); return; }
 
-  const payload = { title, description: description || null, stop_order: quizMode, theme: quizTheme }
+  const opens = fromLocalInput(document.getElementById('opens-at').value), closes = fromLocalInput(document.getElementById('closes-at').value)
+  if (opens && closes && new Date(closes) <= new Date(opens)) { flash('⚠️ Lukketid skal ligge efter åbningstid'); return; }
+  const payload = { title, description: description || null, stop_order: quizMode, theme: quizTheme, hide_results: quizHide, opens_at: opens, closes_at: closes }
   let error
   if (quizId) {
     ({ error } = await sb.schema('quiz').from('quizzes').update(payload).eq('id', quizId))
@@ -593,11 +661,15 @@ async function saveQuiz(redirectAfter = false) {
       quizId = newId
       history.replaceState(null, '', '?q=' + quizId)
       const r = await sb.schema('quiz').from('quizzes')
-        .update({ description: payload.description, stop_order: payload.stop_order, theme: payload.theme }).eq('id', quizId)
+        .update({ description: payload.description, stop_order: payload.stop_order, theme: payload.theme, hide_results: payload.hide_results, opens_at: payload.opens_at, closes_at: payload.closes_at }).eq('id', quizId)
       error = r.error
     }
   }
-  if (error) { flash('❌ ' + error.message); return; }
+  if (error) {
+    const missing = /hide_results|opens_at|closes_at|column .* does not exist|schema cache/i.test(error.message || '')
+    flash(missing ? '❌ Databasen mangler opdateringen (migration 004). Kør den i Supabase SQL Editor først.' : '❌ ' + error.message)
+    return
+  }
   document.getElementById('quiz-title-display').textContent = title
   flash('✅ Gemt')
   if (redirectAfter) {
@@ -620,18 +692,61 @@ function initMap() {
   map.on('click', onMapClick)
 }
 
-async function onMapClick(e) {
-  if (!quizId) { await saveQuiz(); if (!quizId) return; }
-  const name = (prompt('Navn på dette stop:') || '').trim().slice(0, 80)
-  if (!name) return
+function onMapClick(e) { startNewPost(e.latlng) }
+
+async function startNewPost(latlng) {
+  if (!quizId) { await saveQuiz(); if (!quizId) return }
+  document.getElementById('np-done').style.display = 'none'
+  if (pendingMarker) pendingMarker.setLatLng(latlng)
+  else pendingMarker = L.marker(latlng, { draggable: true, icon: L.divIcon({ html: '<div class="pin-n new">+</div>', iconSize: [30,30], iconAnchor: [15,15], className: '' }) }).addTo(map)
+  const box = document.getElementById('newpost'), inp = document.getElementById('np-name')
+  box.style.display = 'block'; inp.value = ''
+  setTimeout(() => inp.focus(), 50)
+  box.scrollIntoView?.({ behavior: 'smooth', block: 'nearest' })
+}
+
+async function saveNewPost() {
+  const inp = document.getElementById('np-name'), name = inp.value.trim().slice(0, 80)
+  if (!name) { inp.focus(); flash('⚠️ Giv posten et navn'); return }
+  if (!pendingMarker) return
+  const ll = pendingMarker.getLatLng()
   const { data, error } = await sb.schema('quiz').from('stops').insert({
-    quiz_id: quizId, name, lat: e.latlng.lat, lng: e.latlng.lng,
-    sort: nextSort(stops), radius_m: 15
+    quiz_id: quizId, name, lat: ll.lat, lng: ll.lng, sort: nextSort(stops), radius_m: 15
   }).select().single()
-  if (error) { alert(error.message); return; }
+  if (error) { alert(error.message); return }
   stops.push({ ...data, activities: [] })
-  openStopId = data.id
+  map.removeLayer(pendingMarker); pendingMarker = null
+  document.getElementById('newpost').style.display = 'none'
+  document.getElementById('np-done-title').textContent = '✅ "' + name + '" er gemt (post ' + stops.length + ')'
+  document.getElementById('np-done').style.display = 'block'
   renderStops()
+}
+
+function cancelNewPost() {
+  if (pendingMarker) { map.removeLayer(pendingMarker); pendingMarker = null }
+  document.getElementById('newpost').style.display = 'none'
+}
+
+// "Placér næste post": kortet gøres klar (markør = trådkors), og feltet med forrige post lukkes
+function placeNext() {
+  document.getElementById('np-done').style.display = 'none'
+  document.getElementById('map').classList.add('placing')
+  document.getElementById('map-hint').textContent = 'Klik på kortet, hvor næste post skal ligge.'
+  document.getElementById('map').scrollIntoView?.({ behavior: 'smooth', block: 'center' })
+}
+
+async function movePin(stopId, ll) {
+  const stop = stops.find(s => s.id === stopId); if (!stop) return
+  const { error } = await sb.schema('quiz').from('stops').update({ lat: ll.lat, lng: ll.lng }).eq('id', stopId)
+  if (error) { alert(error.message); await loadAll(); return }
+  stop.lat = ll.lat; stop.lng = ll.lng
+  flash('✅ Placeringen er ændret')
+}
+
+function focusPost(stopId) {
+  const i = stops.findIndex(s => s.id === stopId); if (i < 0 || !map) return
+  map.setView([stops[i].lat, stops[i].lng], 17)
+  if (markers[i] && markers[i].openPopup) markers[i].openPopup()
 }
 
 let didFit = false
@@ -662,42 +777,82 @@ async function moveStop(stopId, dir) {
   renderStops()
 }
 
-function renderStops() {
+function renderPosts() {
+  if (!map) return
   markers.forEach(m => m.remove()); markers = []
   const bounds = []
-  stops.forEach((s,i) => {
-    if (s.lat && s.lng) {
-      const m = L.marker([s.lat, s.lng]).addTo(map)
-      const box = document.createElement('b'); box.textContent = (i+1) + '. ' + s.name   // tekst, ikke HTML
-      m.bindPopup(box)
-      markers.push(m); bounds.push([s.lat, s.lng])
-    }
+  stops.forEach((st, i) => {
+    if (st.lat == null || st.lng == null) return
+    const m = L.marker([st.lat, st.lng], { draggable: true, icon: L.divIcon({ html: '<div class="pin-n">' + (i + 1) + '</div>', iconSize: [30,30], iconAnchor: [15,15], className: '' }) }).addTo(map)
+    const box = document.createElement('b'); box.textContent = (i + 1) + '. ' + st.name   // tekst, ikke HTML
+    m.bindPopup(box)
+    m.on('dragend', () => movePin(st.id, m.getLatLng()))
+    markers.push(m); bounds.push([st.lat, st.lng])
   })
-  if (bounds.length && !didFit) { map.fitBounds(bounds, { padding:[40,40] }); didFit = true }
+  if (bounds.length && !didFit) { map.fitBounds(bounds, { padding: [40,40] }); didFit = true }
 
   const el = document.getElementById('stop-list')
-  if (!stops.length) {
-    el.innerHTML = '<p style="text-align:center;color:var(--muted);padding:1rem;">Klik på kortet for at tilføje dit første stop</p>'
-    return
-  }
-
-  el.innerHTML = stops.map((s,i) => `
-    <div class="stop-card">
-      <div class="stop-header" onclick="toggleStop('${s.id}')">
-        <div>
-          <div class="stop-name">${i+1}. ${escHtml(s.name)}</div>
-          <div class="stop-meta">${s.activities.length} opgave${s.activities.length!==1?'r':''}</div>
-        </div>
-        <div class="stop-actions" onclick="event.stopPropagation()">
-          <button class="icon-btn" onclick="moveStop('${s.id}',-1)" title="Flyt op i rækkefølgen">↑</button>
-          <button class="icon-btn" onclick="moveStop('${s.id}',1)" title="Flyt ned i rækkefølgen">↓</button>
-          <button class="icon-btn" onclick="renameStop('${s.id}')" title="Omdøb stop">✏️</button>
-          <button class="icon-btn" onclick="toggleStop('${s.id}')">${openStopId===s.id?'▲':'▼'}</button>
-          <button class="icon-btn" onclick="deleteStop('${s.id}')" title="Slet stop">🗑</button>
-        </div>
+  if (!stops.length) { el.innerHTML = '<div class="empty-posts">Klik på kortet for at placere din første post.</div>'; return }
+  el.innerHTML = stops.map((st, i) => `
+    <div class="post-row" data-id="${st.id}">
+      <span class="post-n">${i + 1}</span>
+      <div class="post-name">${escHtml(st.name)}</div>
+      <div class="stop-actions">
+        <button class="icon-btn" onclick="moveStop('${st.id}',-1)" title="Flyt op i rækkefølgen" aria-label="Flyt op">↑</button>
+        <button class="icon-btn" onclick="moveStop('${st.id}',1)" title="Flyt ned i rækkefølgen" aria-label="Flyt ned">↓</button>
+        <button class="icon-btn" onclick="renameStop('${st.id}')" title="Omdøb posten" aria-label="Omdøb">✏️</button>
+        <button class="icon-btn" onclick="deleteStop('${st.id}')" title="Slet posten" aria-label="Slet">🗑</button>
       </div>
-      ${openStopId===s.id ? renderStopBody(s) : ''}
     </div>`).join('')
+  el.onclick = ev => { const row = ev.target.closest('.post-row'); if (row && !ev.target.closest('button')) focusPost(row.dataset.id) }
+}
+
+// Opgaver pr. post (trin 3): hvilke poster mangler opgaver, og hvilke opgaver mangler et rigtigt svar
+function renderTasks() {
+  const el = document.getElementById('task-list'); if (!el) return
+  if (!stops.length) { el.innerHTML = '<div class="empty-posts">Du har ingen poster endnu.<br><button class="btn btn-outline btn-sm" style="margin-top:10px" onclick="goStep(2)">Gå til Poster</button></div>'; return }
+  const withAct = stops.filter(st => st.activities.length).length
+  el.innerHTML = `<div class="task-progress"><div class="tp-text"><b>${withAct} af ${stops.length}</b> poster har en opgave</div><div class="tp-bar"><i style="width:${withAct / stops.length * 100}%"></i></div></div>` +
+    stops.map((st, i) => {
+      const noKey = st.activities.filter(a => ['mc','tekst','tal'].includes(a.type) && !a.answerKey).length
+      const badge = !st.activities.length ? '<span class="tbadge warn">Mangler opgave</span>'
+        : noKey ? `<span class="tbadge bad">${noKey} uden rigtigt svar</span>`
+        : `<span class="tbadge ok">✓ ${st.activities.length} opgave${st.activities.length !== 1 ? 'r' : ''}</span>`
+      return `
+      <div class="stop-card">
+        <div class="stop-header" onclick="toggleStop('${st.id}')">
+          <div><div class="stop-name">${i + 1}. ${escHtml(st.name)}</div><div class="stop-meta">${badge}</div></div>
+          <div class="stop-actions" onclick="event.stopPropagation()"><button class="icon-btn" onclick="toggleStop('${st.id}')" aria-label="Åbn eller luk">${openStopId === st.id ? '▲' : '▼'}</button></div>
+        </div>
+        ${openStopId === st.id ? renderStopBody(st) : ''}
+      </div>`
+    }).join('')
+}
+
+function renderStops() { renderPosts(); renderTasks(); renderHelp() }
+
+// Fast vejledning øverst i hvert trin: hvad skal gøres, og hvornår er trinnet færdigt
+function renderHelp() {
+  const title = (document.getElementById('title')?.value || '').trim()
+  const themeName = jagtenTheme(quizTheme).name
+  const n = stops.length, withAct = stops.filter(st => st.activities.length).length
+  const noKey = stops.flatMap(st => st.activities).filter(a => ['mc','tekst','tal'].includes(a.type) && !a.answerKey).length
+  const opens = document.getElementById('opens-at')?.value, closes = document.getElementById('closes-at')?.value
+  const H = {
+    1: { text: 'Giv løbet et navn og en kort beskrivelse, vælg en stil, og bestem hvad deltagerne ser, når løbet er slut.',
+         checks: [[!!title, 'Løbet har et navn'], [true, 'Stil: ' + themeName], [true, quizHide ? 'Placeringer skjules, til du afslører vinderen' : 'Placeringer vises live'], [true, opens || closes ? 'Tidsrum er sat' : 'Intet tidsrum – du starter og stopper selv']] },
+    2: { text: 'Klik på kortet, hvor en post skal ligge, giv den et navn, og gem. Gentag for alle poster. Du kan altid trække i nålene, omdøbe og flytte rundt senere. Spørgsmålene laver du i næste trin.',
+         checks: [[n > 0, n + (n === 1 ? ' post placeret' : ' poster placeret')]] },
+    3: { text: 'Åbn hver post, og tilføj mindst én opgave. Opgaver med et rigtigt svar (multiple choice, tekst, tal) skal have svaret udfyldt, ellers kan løbet ikke aktiveres.',
+         checks: [[n > 0 && withAct === n, withAct + ' af ' + n + ' poster har en opgave'], [n > 0 && noKey === 0, noKey ? noKey + (noKey === 1 ? ' opgave mangler rigtigt svar' : ' opgaver mangler rigtigt svar') : 'Alle opgaver har et rigtigt svar']] },
+    4: { text: 'Opret et hold til hver gruppe af deltagere. Hvert hold får sit eget link og sin egen QR-kode. Bagefter tester og aktiverer du løbet fra oversigten.',
+         checks: [[teams.length > 0, teams.length + (teams.length === 1 ? ' hold oprettet' : ' hold oprettet')]] }
+  }
+  for (const k of [1, 2, 3, 4]) {
+    const el = document.getElementById('help-' + k); if (!el) continue
+    el.innerHTML = '<div class="help-title">Sådan gør du</div><p>' + escHtml(H[k].text) + '</p><ul class="help-checks">' +
+      H[k].checks.map(([ok, label]) => '<li class="' + (ok ? 'ok' : '') + '"><span>' + (ok ? '✓' : '○') + '</span>' + escHtml(label) + '</li>').join('') + '</ul>'
+  }
 }
 
 async function newUnlockCode(stopId) {
@@ -767,8 +922,18 @@ function toggleStop(stopId) {
   renderStops()
 }
 
+function updateLiveBanner() {
+  const b = document.getElementById('live-banner'); if (b) b.style.display = quizStatus === 'aktiv' ? 'block' : 'none'
+}
+
+// Sletning: ekstra tydelig advarsel hvis løbet er live (holdene spiller lige nu)
+function askDelete(msg, liveInfo) {
+  if (quizStatus === 'aktiv') return confirm('LØBET ER LIVE – holdene spiller lige nu.\n\n' + msg + '\n' + liveInfo + '\n\nVil du alligevel fortsætte?')
+  return confirm(msg)
+}
+
 async function deleteStop(stopId) {
-  if (!confirm('Slet dette stop og alle dets opgaver?')) return
+  if (!askDelete('Slet dette stop og alle dets opgaver?', 'Holdene mister adgang til stoppet og opgaverne med det samme.')) return
   const { error } = await sb.schema('quiz').from('stops').delete().eq('id', stopId)
   if (error) { alert(error.message); return; }
   stops = stops.filter(s => s.id !== stopId)
@@ -1039,7 +1204,7 @@ function getCorrectVal(type, options) {
 }
 
 async function deleteActivity(stopId, actId) {
-  if (!confirm('Slet denne opgave?')) return
+  if (!askDelete('Slet denne opgave?', 'Hold, der allerede har svaret, beholder deres point, men opgaven forsvinder for dem, der mangler den.')) return
   const { error } = await sb.schema('quiz').from('activities').delete().eq('id', actId)
   if (error) { alert(error.message); return; }
   const stop = stops.find(s => s.id === stopId)
@@ -1055,23 +1220,48 @@ function getScoreboardUrl() {
   return location.origin + location.pathname.replace('app/customer-editor.html','board/scoreboard.html') + '?q=' + quizId
 }
 
-async function addTeam() {
-  if (!quizId) { await saveQuiz(); if (!quizId) return; }
-  const name = document.getElementById('new-team-name').value.trim()
-  if (!name) return
-  const token = name.toLowerCase()
-    .replace(/æ/g,'ae').replace(/ø/g,'oe').replace(/å/g,'aa')
+const RESERVED_TEAM = '🧪 Testhold'
+function makeToken(name) {
+  return name.toLowerCase().replace(/æ/g,'ae').replace(/ø/g,'oe').replace(/å/g,'aa')
     .replace(/[^a-z0-9]/g,'-').slice(0, 24) + '-' + crypto.randomUUID().replace(/-/g,'').slice(0, 16)
-  const { data, error } = await sb.schema('quiz').from('teams')
-    .insert({ quiz_id: quizId, name, token }).select().single()
-  if (error) { alert(error.message); return; }
-  teams.push(data)
-  document.getElementById('new-team-name').value = ''
+}
+
+// Opretter ét eller flere hold i ét kald. Dubletter og det reserverede testhold-navn springes over.
+async function createTeams(names) {
+  if (!quizId) { await saveQuiz(); if (!quizId) return 0; }
+  const have = new Set(teams.map(t => t.name.trim().toLowerCase()))
+  const rows = []
+  for (const raw of names) {
+    const name = raw.trim().slice(0, 40)
+    if (!name || name === RESERVED_TEAM || have.has(name.toLowerCase())) continue
+    have.add(name.toLowerCase()); rows.push({ quiz_id: quizId, name, token: makeToken(name) })
+  }
+  if (!rows.length) { flash('Ingen nye hold – navnene findes allerede'); return 0 }
+  if (rows.length > 50) { flash('Højst 50 hold ad gangen'); return 0 }
+  const { data, error } = await sb.schema('quiz').from('teams').insert(rows).select()
+  if (error) { alert(error.message); return 0 }
+  teams.push(...(data ?? []))
   renderTeams()
+  flash('✅ ' + rows.length + (rows.length === 1 ? ' hold oprettet' : ' hold oprettet'))
+  return rows.length
+}
+
+async function addTeam() {
+  const el = document.getElementById('new-team-name')
+  const names = el.value.split(/[,;\n]+/)
+  if (!names.some(n => n.trim())) return
+  if (await createTeams(names)) el.value = ''
+}
+
+async function addNumberedTeams() {
+  const n = Math.max(1, Math.min(50, parseInt(document.getElementById('bulk-count').value) || 0))
+  const used = teams.map(t => (/^Hold (\d+)$/.exec(t.name.trim()) || [])[1]).filter(Boolean).map(Number)
+  let next = (used.length ? Math.max(...used) : 0) + 1
+  await createTeams(Array.from({ length: n }, () => 'Hold ' + (next++)))
 }
 
 async function deleteTeam(teamId) {
-  if (!confirm('Slet holdet?')) return
+  if (!askDelete('Slet holdet?', 'Holdets point og svar slettes, og holdet kan ikke spille videre.')) return
   const { error } = await sb.schema('quiz').from('teams').delete().eq('id', teamId)
   if (error) { alert(error.message); return; }
   teams = teams.filter(t => t.id !== teamId)
@@ -1106,7 +1296,19 @@ function renderTeams() {
   }).join('')
 }
 
+const _renderTeamsBase = renderTeams
+renderTeams = function () { _renderTeamsBase(); renderHelp() }
+
 // ── Mode ──────────────────────────────────────────────────────
+function updateHideUI() {
+  const on = document.getElementById('chide-on'), off = document.getElementById('chide-off')
+  if (!on || !off) return
+  on.classList.toggle('on', quizHide); off.classList.toggle('on', !quizHide)
+}
+function setHide(v) { quizHide = !!v; updateHideUI(); renderHelp() }
+const toLocalInput = iso => { if (!iso) return ''; const d = new Date(iso), p = n => String(n).padStart(2, '0'); return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}` }
+const fromLocalInput = v => v ? new Date(v).toISOString() : null
+
 function setQuizMode(mode) {
   quizMode = mode
   updateModeUI(mode)
@@ -1345,7 +1547,9 @@ async function selectTheme(id) {
 document.getElementById('theme-grid').addEventListener('click', e => {
   const b = e.target.closest('[data-theme]'); if (b) selectTheme(b.dataset.theme)
 })
-document.getElementById('title').addEventListener('input', renderThemePreview)
+document.getElementById('title').addEventListener('input', () => { renderThemePreview(); renderHelp() })
+;['opens-at', 'closes-at'].forEach(id => document.getElementById(id).addEventListener('input', renderHelp))
+updateHideUI(); renderHelp()
 renderThemes()
 
 function hideSearchResults() {

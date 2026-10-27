@@ -1,14 +1,16 @@
 // =============================================================
 // sw.js – Service Worker (PWA offline-grundlag)
-// v4: biblioteker og skrifttyper ligger nu på egen server (vendor/, fonts/) og forhåndscaches,
+// v5 (hjælp + tjekliste kan åbnes uden dækning; v4: biblioteker og skrifttyper ligger nu på egen server (vendor/, fonts/) og forhåndscaches,
 //     så spillesiden stadig kan åbne ved dårlig dækning. Cacher KUN egne filer –
 //     aldrig Supabase-kald eller kort-tiles. Netværk først, cache som nødløsning.
 // =============================================================
 
-const CACHE = 'jagten-v4';
+const CACHE = 'jagten-v5';
 const FILES = [
   'index.html',
   'privatliv.html',
+  'hjaelp.html',
+  'tjekliste.html',
   'js/config.js',
   'js/api.js',
   'js/map-config.js',
@@ -35,6 +37,10 @@ const FILES = [
   'fonts/playfair-display-latin-700-normal.woff2',
   'fonts/special-elite-latin-400-normal.woff2',
   'manifest.json',
+  'favicon.svg',
+  'icons/icon-192.png',
+  'icons/apple-touch-icon.png',
+  '404.html',
 ];
 
 self.addEventListener('install', e => {

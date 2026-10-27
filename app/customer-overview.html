@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mine løb – Jagten</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../icons/favicon-48.png" sizes="48x48" type="image/png">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Mine løb – GPS Jagten</title>
   <link rel="stylesheet" href="../fonts/fonts.css">
   <script src="../vendor/supabase.js"></script>
   <script src="../vendor/qrcode.min.js"></script>
@@ -56,6 +60,16 @@
     .g-btn { background:#fff; color:#3730a3; border:none; border-radius:12px; height:42px; padding:0 18px; font-weight:800; font-size:.9rem; }
     .g-link { background:none; border:none; color:rgba(255,255,255,.85); font-size:.85rem; text-decoration:underline; padding:6px; }
     .g-help { color:rgba(255,255,255,.7); font-size:.78rem; margin-left:auto; } .g-help a { color:inherit; }
+
+    .howto { display:flex; align-items:center; gap:14px 18px; flex-wrap:wrap; background:var(--white); border:1px solid var(--line); border-radius:14px; padding:10px 16px; margin-bottom:18px; font-size:.84rem; }
+    .howto .ht-title { font-family:'Syne',sans-serif; font-weight:800; }
+    .howto ol { display:flex; gap:6px 18px; flex-wrap:wrap; list-style:none; counter-reset:h; flex:1; }
+    .howto li { counter-increment:h; color:var(--ink-2); } .howto li::before { content:counter(h); display:inline-grid; place-items:center; width:20px; height:20px; border-radius:50%; background:var(--accent-soft); color:var(--accent); font-weight:800; font-size:.72rem; margin-right:7px; }
+    .howto a { color:var(--accent); font-weight:700; text-decoration:none; white-space:nowrap; }
+    .field { margin-bottom:12px; text-align:left; } .field label { display:block; font-size:.8rem; font-weight:600; margin-bottom:4px; }
+    .field input { width:100%; min-height:44px; border:1.5px solid var(--line); border-radius:10px; padding:0 12px; font-size:1rem; font-family:inherit; letter-spacing:.2em; }
+    .field input:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 4px var(--accent-soft); }
+    #pin-msg { min-height:1.3em; font-size:.84rem; margin-bottom:10px; text-align:left; } #pin-msg.err { color:var(--red); } #pin-msg.ok { color:var(--green); }
 
     /* ── Filtre ── */
     .tabs { display:inline-flex; background:var(--white); border:1px solid var(--line); border-radius:12px; padding:4px; gap:2px; margin-bottom:18px; max-width:100%; overflow-x:auto; }
@@ -188,10 +202,12 @@
 </svg>
 
 <header>
-  <div class="logo"><div class="logo-mark"><svg class="ic sm" style="stroke-width:2.2"><use href="#i-pin"/></svg></div>Jagten</div>
+  <div class="logo"><div class="logo-mark"><svg class="ic sm" style="stroke-width:2.2"><use href="#i-pin"/></svg></div>GPS Jagten</div>
   <div class="top-right">
     <span id="customer-badge">Indlæser…</span>
-    <button class="icon-btn" id="btn-help" onclick="openGuide()" title="Vis guide" aria-label="Vis guide"><svg class="ic"><use href="#i-help"/></svg></button>
+    <a class="btn-logout" href="../hjaelp.html" style="text-decoration:none;display:inline-flex;align-items:center" target="_blank" rel="noopener">Hjælp</a>
+    <button class="icon-btn" id="btn-help" onclick="openGuide()" title="Vis velkomstguiden" aria-label="Vis velkomstguiden"><svg class="ic"><use href="#i-help"/></svg></button>
+    <button class="btn-logout" onclick="openPinModal()">Skift PIN</button>
     <button class="btn-logout" onclick="signOut()">Log ud</button>
   </div>
 </header>
@@ -206,6 +222,15 @@
   </div>
 
   <section id="guide" style="display:none"></section>
+  <div id="howto" class="howto" style="display:none">
+    <span class="ht-title">Sådan gør du</span>
+    <ol>
+      <li><b>Placér poster</b> på kortet</li>
+      <li><b>Tilføj opgaver</b> til hver post</li>
+      <li><b>Opret hold</b>, test, og aktivér</li>
+    </ol>
+    <a href="../hjaelp.html" target="_blank" rel="noopener">Få hjælp →</a>
+  </div>
 
   <div id="tabs" class="tabs" style="display:none"></div>
 
@@ -220,6 +245,19 @@
 </main>
 
 <div id="toast" role="status" aria-live="polite"></div>
+
+<!-- Skift PIN -->
+<div id="pin-modal" class="modal-overlay" onclick="if(event.target===this)closePinModal()">
+  <div class="modal-box" style="text-align:left">
+    <h3>Skift din PIN</h3>
+    <p style="font-size:.84rem;color:var(--ink-2);margin-bottom:14px">PIN'en er 6–8 cifre. Når du skifter, bliver andre enheder logget ud.</p>
+    <div class="field"><label for="pin-old">Nuværende PIN</label><input id="pin-old" type="password" inputmode="numeric" autocomplete="current-password" maxlength="8"></div>
+    <div class="field"><label for="pin-new">Ny PIN (6–8 cifre)</label><input id="pin-new" type="password" inputmode="numeric" autocomplete="new-password" maxlength="8"></div>
+    <div class="field"><label for="pin-new2">Gentag ny PIN</label><input id="pin-new2" type="password" inputmode="numeric" autocomplete="new-password" maxlength="8"></div>
+    <div id="pin-msg"></div>
+    <div style="display:flex;gap:8px"><button class="btn-primary" style="flex:1" id="pin-save" onclick="changePin()">Gem ny PIN</button><button class="btn-close-modal" style="flex:1" onclick="closePinModal()">Annullér</button></div>
+  </div>
+</div>
 
 <!-- QR modal -->
 <div id="qr-modal" class="modal-overlay" onclick="if(event.target===this)closeQR()">
@@ -297,11 +335,13 @@ function openGuide() { try { localStorage.removeItem(guideKey()) } catch (_) {};
 function renderGuide(force) {
   const box = document.getElementById('guide')
   const first = quizzes.length === 0
-  if (!force && !first && guideDismissed()) { box.style.display = 'none'; return }
+  const howto = document.getElementById('howto')
+  if (!force && !first && guideDismissed()) { box.style.display = 'none'; howto.style.display = 'flex'; return }
+  howto.style.display = 'none'
   const name = customerName ? ', ' + escHtml(customerName) : ''
   box.style.display = 'block'
   box.innerHTML = `
-    <h2>Velkommen til Jagten${name}!</h2>
+    <h2>Velkommen til GPS Jagten${name}!</h2>
     <p class="sub">Sådan kommer du fra idé til live løb på tre trin:</p>
     <div class="g-steps">
       <div class="g-step"><div class="g-num">1</div><b>Opret løbet</b><span>Giv det et navn, skriv en kort velkomsttekst og vælg stil.</span></div>
@@ -332,9 +372,10 @@ function nextStep(q) {
   const s = stepsOf(q), id = q.id
   if (s.ended) return { tone: 'ended', ic: 'flag', title: 'Løbet er afsluttet', text: 'Se resultater og diplomer – eller start en ny runde.', label: 'Se resultater', click: `openResults('${id}')` }
   if (s.live)  return { tone: 'live', ic: 'play', title: 'Løbet er live', text: 'Del hold-links eller QR-koder, og følg scoreboardet.', label: 'Åbn scoreboard', click: `openScoreboard('${id}')` }
-  if (!s.hasAct)  return { ic: 'route', title: 'Byg ruten', text: 'Tilføj mindst ét stop med en opgave.', label: 'Byg ruten', click: `openQuiz('${id}',2)` }
-  if (s.noKeys)   return { ic: 'alert', title: 'Mangler fasit', text: `${s.noKeys} opgave${s.noKeys > 1 ? 'r' : ''} mangler fasit, før du kan aktivere.`, label: 'Ret opgaver', click: `openQuiz('${id}',2)` }
-  if (!s.teams.length) return { ic: 'users', title: 'Opret hold', text: 'Hvert hold får sit eget link og QR-kode.', label: 'Opret hold', click: `openQuiz('${id}',3)` }
+  if (!(q.stops ?? []).length) return { ic: 'route', title: 'Placér poster', text: 'Sæt dine poster på kortet – opgaverne laver du bagefter.', label: 'Placér poster', click: `openQuiz('${id}',2)` }
+  if (!s.hasAct)  return { ic: 'help', title: 'Tilføj opgaver', text: 'Giv hver post mindst én opgave.', label: 'Tilføj opgaver', click: `openQuiz('${id}',3)` }
+  if (s.noKeys)   return { ic: 'alert', title: 'Mangler fasit', text: `${s.noKeys} opgave${s.noKeys > 1 ? 'r' : ''} mangler rigtigt svar, før du kan aktivere.`, label: 'Ret opgaver', click: `openQuiz('${id}',3)` }
+  if (!s.teams.length) return { ic: 'users', title: 'Opret hold', text: 'Hvert hold får sit eget link og QR-kode.', label: 'Opret hold', click: `openQuiz('${id}',4)` }
   if (!s.tested)  return { ic: 'flask', title: 'Test løbet', text: 'Prøv det som testhold, før du går live.', label: 'Test løbet', click: `startTestRun('${id}')` }
   return { ic: 'play', title: 'Klar til start', text: 'Aktivér løbet, når deltagerne er klar.', label: 'Aktivér løbet', click: `setQuizStatus('${id}','aktiv')` }
 }
@@ -538,6 +579,30 @@ function printTeams(quizId) {
     <\/script>
   </body></html>`)
   win.document.close()
+}
+
+// ── Skift PIN ─────────────────────────────────────────────────
+function openPinModal() {
+  ;['pin-old', 'pin-new', 'pin-new2'].forEach(id => { document.getElementById(id).value = '' })
+  const m = document.getElementById('pin-msg'); m.textContent = ''; m.className = ''
+  document.getElementById('pin-modal').classList.add('open')
+  setTimeout(() => document.getElementById('pin-old').focus(), 50)
+}
+function closePinModal() { document.getElementById('pin-modal').classList.remove('open') }
+
+async function changePin() {
+  const old = document.getElementById('pin-old').value.trim(), nw = document.getElementById('pin-new').value.trim(), nw2 = document.getElementById('pin-new2').value.trim()
+  const msg = document.getElementById('pin-msg'), say = (t, cls) => { msg.textContent = t; msg.className = cls || '' }
+  if (!old) return say('Skriv din nuværende PIN', 'err')
+  if (!/^\d{6,8}$/.test(nw)) return say('Den nye PIN skal være 6–8 cifre (kun tal)', 'err')
+  if (nw !== nw2) return say('De to nye PIN-koder er ikke ens', 'err')
+  if (nw === old) return say('Den nye PIN skal være en anden end den gamle', 'err')
+  const btn = document.getElementById('pin-save'); btn.disabled = true
+  const { data, error } = await sb.schema('quiz').rpc('change_my_pin', { p_old: old, p_new: nw })
+  btn.disabled = false
+  if (error) return say(error.message, 'err')
+  if (data !== true) return say('Din nuværende PIN er forkert', 'err')
+  closePinModal(); toast('PIN er skiftet')
 }
 
 // ── Små hjælpere ──────────────────────────────────────────────

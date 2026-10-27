@@ -3,168 +3,87 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Oversigt – Quiz Platform</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<meta name="robots" content="noindex, nofollow">
+<title>Oversigt – GPS Jagten</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<script src="../vendor/supabase.js"></script>
 <script src="../js/config.js"></script>
 <script src="../js/api.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --bg:#eef1f6; --ink:#16213e; --ink-2:#0f3460; --accent:#e94560; --text-ink:#eaeaea; --text-dim:#8892a4; --radius-lg:18px; --radius-sm:8px; --green:#16a34a; --amber:#d97706; }
+  body { font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif; background:var(--bg); color:var(--ink); min-height:100vh; display:flex; -webkit-font-smoothing:antialiased; }
+  h1, h2, .stat-num { font-family:'Syne','Inter',sans-serif; }
 
-  :root {
-    --bg:        #eef1f6;
-    --ink:       #16213e;
-    --ink-2:     #0f3460;
-    --accent:    #e94560;
-    --text-ink:  #eaeaea;
-    --text-dim:  #8892a4;
-    --radius-lg: 18px;
-    --radius-sm: 8px;
-  }
-
-  body {
-    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-    background: var(--bg);
-    color: var(--ink);
-    min-height: 100vh;
-    display: flex;
-  }
-
-  /* ── Sidebar ─────────────────────────────────────────────── */
-  #sidebar {
-    width: 230px; flex-shrink: 0;
-    background: var(--ink); color: var(--text-ink);
-    display: flex; flex-direction: column;
-    padding: 1.5rem 0;
-    position: sticky; top: 0; height: 100vh;
-  }
-  #sidebar .logo {
-    font-size: 1.05rem; font-weight: 700;
-    padding: 0 1.5rem 1.75rem;
-    display: flex; align-items: center; gap: .5rem;
-  }
-  nav.route { padding: 0 0 0 1.5rem; flex: 1; position: relative; }
-  nav.route::before {
-    content: ''; position: absolute; left: 1.95rem; top: .6rem; bottom: .6rem;
-    width: 2px; background: rgba(255,255,255,.12);
-  }
-  .route-item {
-    display: flex; align-items: center; gap: .75rem;
-    padding: .65rem .75rem .65rem 0;
-    color: var(--text-dim); text-decoration: none;
-    font-size: .92rem; font-weight: 600;
-    position: relative;
-  }
-  .route-item .dot {
-    width: 9px; height: 9px; border-radius: 50%;
-    background: var(--text-dim); flex-shrink: 0;
-    position: relative; z-index: 1;
-    border: 3px solid var(--ink);
-  }
-  .route-item.active { color: #fff; }
-  .route-item.active .dot { background: var(--accent); }
-  .route-item:hover:not(.active) { color: #cfd6e4; }
-  #sidebar .signout {
-    padding: 0 1.5rem; margin-top: auto;
-  }
-  #sidebar .signout button {
-    width: 100%; padding: .6rem; border-radius: var(--radius-sm);
-    background: rgba(255,255,255,.08); color: var(--text-ink);
-    border: none; font-size: .85rem; cursor: pointer;
-  }
-  #sidebar .signout button:hover { background: rgba(255,255,255,.15); }
-
-  /* Mobil: sidebar bliver til en top-bjælke */
-  #mobile-topbar { display: none; }
-
-  @media (max-width: 760px) {
-    body { flex-direction: column; }
-    #sidebar { display: none; }
-    #mobile-topbar {
-      display: flex; align-items: center; justify-content: space-between;
-      background: var(--ink); color: #fff;
-      padding: .85rem 1rem;
-    }
-    #mobile-topbar .logo { font-weight: 700; font-size: 1rem; }
-    #mobile-topbar nav { display: flex; gap: 1rem; font-size: .85rem; }
-    #mobile-topbar nav a { color: var(--text-dim); text-decoration: none; }
-    #mobile-topbar nav a.active { color: #fff; }
+  #sidebar { width:230px; flex-shrink:0; background:var(--ink); color:var(--text-ink); display:flex; flex-direction:column; padding:1.5rem 0; position:sticky; top:0; height:100vh; }
+  #sidebar .logo { font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:800; padding:0 1.5rem 1.75rem; display:flex; align-items:center; gap:.5rem; }
+  nav.route { padding:0 0 0 1.5rem; flex:1; position:relative; }
+  nav.route::before { content:''; position:absolute; left:1.95rem; top:.6rem; bottom:.6rem; width:2px; background:rgba(255,255,255,.12); }
+  .route-item { display:flex; align-items:center; gap:.75rem; padding:.65rem .75rem .65rem 0; color:var(--text-dim); text-decoration:none; font-size:.92rem; font-weight:600; position:relative; }
+  .route-item .dot { width:9px; height:9px; border-radius:50%; background:var(--text-dim); flex-shrink:0; position:relative; z-index:1; border:3px solid var(--ink); }
+  .route-item.active { color:#fff; } .route-item.active .dot { background:var(--accent); } .route-item:hover:not(.active) { color:#cfd6e4; }
+  #sidebar .signout { padding:0 1.5rem; margin-top:auto; }
+  #sidebar .signout button { width:100%; padding:.6rem; border-radius:var(--radius-sm); background:rgba(255,255,255,.08); color:var(--text-ink); border:none; font-size:.85rem; cursor:pointer; }
+  #sidebar .signout button:hover { background:rgba(255,255,255,.15); }
+  #mobile-topbar { display:none; }
+  @media (max-width:760px) {
+    body { flex-direction:column; } #sidebar { display:none; }
+    #mobile-topbar { display:flex; align-items:center; justify-content:space-between; background:var(--ink); color:#fff; padding:.85rem 1rem; }
+    #mobile-topbar .logo { font-weight:700; font-size:1rem; } #mobile-topbar nav { display:flex; gap:1rem; font-size:.85rem; }
+    #mobile-topbar nav a { color:var(--text-dim); text-decoration:none; } #mobile-topbar nav a.active { color:#fff; }
   }
 
-  /* ── Main content ───────────────────────────────────────── */
-  main { flex: 1; padding: 2.25rem 2.5rem; max-width: 1100px; }
-  @media (max-width: 760px) { main { padding: 1.25rem; } }
+  main { flex:1; padding:2.25rem 2.5rem; max-width:1100px; }
+  @media (max-width:760px) { main { padding:1.25rem; } }
+  h1 { font-size:1.6rem; font-weight:800; letter-spacing:-.02em; }
+  .lead { color:#5b6476; font-size:.95rem; margin-top:.25rem; margin-bottom:1.75rem; }
 
-  h1 { font-size: 1.6rem; font-weight: 800; letter-spacing: -.02em; }
-  .lead { color: #5b6476; font-size: .95rem; margin-top: .25rem; margin-bottom: 1.75rem; }
+  .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1rem; }
+  @media (max-width:900px) { .stats-row { grid-template-columns:1fr 1fr; } }
+  .stat-card { background:var(--ink); color:var(--text-ink); border-radius:var(--radius-lg); padding:1.1rem 1.3rem; border-top:3px solid var(--ink-2); }
+  .stat-card.hot { border-top-color:var(--accent); }
+  .stat-num { font-size:1.9rem; font-weight:800; line-height:1; } .stat-label { font-size:.8rem; color:var(--text-dim); margin-top:.4rem; }
+  .stat-card.warn .stat-num { color:#fbbf24; }
 
-  /* Stat-rig: én fremhævet + tre sekundære */
-  .stats-row {
-    display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr;
-    gap: 1rem; margin-bottom: 2rem;
-  }
-  @media (max-width: 760px) { .stats-row { grid-template-columns: 1fr 1fr; } }
+  .cols { display:grid; grid-template-columns:1.3fr 1fr; gap:1.5rem; margin-top:1.5rem; }
+  @media (max-width:900px) { .cols { grid-template-columns:1fr; } }
+  .panel { background:#fff; border-radius:var(--radius-lg); padding:1.4rem; margin-bottom:1.5rem; }
+  .cols .panel { margin-bottom:0; }
+  .panel h2 { font-size:.95rem; font-weight:800; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center; gap:.75rem; }
+  .panel h2 a, .panel h2 button.lnk { font-size:.8rem; font-weight:700; color:var(--accent); text-decoration:none; background:none; border:none; cursor:pointer; font-family:inherit; }
+  .row-item { display:flex; justify-content:space-between; align-items:center; padding:.7rem 0; border-bottom:1px solid #f0f1f5; font-size:.88rem; gap:.75rem; }
+  .row-item:last-child { border-bottom:none; }
+  .row-item a.title { color:var(--ink); text-decoration:none; font-weight:700; } .row-item .meta { color:#9aa2b1; font-size:.78rem; }
+  .badge { display:inline-block; padding:.15rem .55rem; border-radius:20px; font-size:.7rem; font-weight:700; white-space:nowrap; }
+  .badge-kladde { background:#e9ebf0; color:#5b6476; } .badge-testing { background:#fdf0d5; color:#9a6b0a; } .badge-aktiv { background:#dcf5e3; color:#1a7a3a; } .badge-arkiveret { background:#f3dde0; color:#9a2f3d; }
+  .badge-ny { background:#fff4de; color:#b45309; } .badge-oprettet { background:#dcf5e3; color:#1a7a3a; } .badge-afvist { background:#e9ebf0; color:#5b6476; }
+  .empty-note { color:#9aa2b1; font-size:.85rem; padding:.5rem 0; }
 
-  .stat-card {
-    background: var(--ink); color: var(--text-ink);
-    border-radius: var(--radius-lg);
-    padding: 1.25rem 1.4rem;
-    border-top: 3px solid var(--accent);
-  }
-  .stat-card.secondary { border-top-color: var(--ink-2); }
-  .stat-num { font-size: 2.1rem; font-weight: 800; line-height: 1; }
-  .stat-label { font-size: .82rem; color: var(--text-dim); margin-top: .4rem; }
+  .order { border:1px solid #eceff4; border-radius:14px; padding:.9rem 1rem; margin-bottom:.75rem; }
+  .order:last-child { margin-bottom:0; } .order.new { border-color:#f3d9a4; background:#fffaf0; }
+  .order-top { display:flex; justify-content:space-between; align-items:flex-start; gap:.75rem; }
+  .order-org { font-weight:800; font-size:.95rem; } .order-meta { font-size:.8rem; color:#5b6476; margin-top:.15rem; line-height:1.5; }
+  .order-msg { font-size:.82rem; background:#f6f7fb; border-radius:8px; padding:.5rem .7rem; margin-top:.5rem; white-space:pre-line; }
+  .order-actions { display:flex; gap:.5rem; margin-top:.7rem; flex-wrap:wrap; }
 
-  .cols { display: grid; grid-template-columns: 1.3fr 1fr; gap: 1.5rem; }
-  @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
-
-  .panel {
-    background: #fff; border-radius: var(--radius-lg);
-    padding: 1.4rem;
-  }
-  .panel h2 {
-    font-size: .95rem; font-weight: 700; margin-bottom: 1rem;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .panel h2 a { font-size: .8rem; font-weight: 600; color: var(--accent); text-decoration: none; }
-
-  .row-item {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: .7rem 0; border-bottom: 1px solid #f0f1f5;
-    font-size: .88rem; gap: .75rem;
-  }
-  .row-item:last-child { border-bottom: none; }
-  .row-item a.title { color: var(--ink); text-decoration: none; font-weight: 600; }
-  .row-item .meta { color: #9aa2b1; font-size: .78rem; }
-
-  .badge {
-    display: inline-block; padding: .15rem .55rem; border-radius: 20px;
-    font-size: .7rem; font-weight: 700; white-space: nowrap;
-  }
-  .badge-kladde    { background: #e9ebf0; color: #5b6476; }
-  .badge-testing   { background: #fdf0d5; color: #9a6b0a; }
-  .badge-aktiv     { background: #dcf5e3; color: #1a7a3a; }
-  .badge-arkiveret { background: #f3dde0; color: #9a2f3d; }
-
-  .empty-note { color: #9aa2b1; font-size: .85rem; padding: .5rem 0; }
-
-  .quick-actions { display: flex; gap: .75rem; margin-top: 1.5rem; flex-wrap: wrap; }
-  .btn {
-    padding: .7rem 1.2rem; border-radius: var(--radius-sm); border: none;
-    font-size: .88rem; font-weight: 700; cursor: pointer; text-decoration: none;
-    display: inline-flex; align-items: center; gap: .4rem;
-  }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-primary:hover { background: #d13950; }
-  .btn-outline { background: #fff; color: var(--ink); border: 1.5px solid #dadfe8; }
-  .btn-outline:hover { border-color: var(--ink); }
-
-  #loading { color: #9aa2b1; padding: 2rem 0; }
+  .quick-actions { display:flex; gap:.75rem; margin-top:1.5rem; flex-wrap:wrap; }
+  .btn { padding:.7rem 1.2rem; border-radius:var(--radius-sm); border:none; font-size:.88rem; font-weight:700; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:.4rem; font-family:inherit; }
+  .btn-sm { padding:.45rem .8rem; font-size:.78rem; }
+  .btn-primary { background:var(--accent); color:#fff; } .btn-primary:hover { background:#d13950; }
+  .btn-outline { background:#fff; color:var(--ink); border:1.5px solid #dadfe8; } .btn-outline:hover { border-color:var(--ink); }
+  .btn:disabled { opacity:.5; cursor:not-allowed; }
+  .backup { display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+  .backup p { font-size:.84rem; color:#5b6476; max-width:540px; } .backup p.stale { color:#b45309; font-weight:600; }
+  .err-item { font-size:.8rem; padding:.5rem 0; border-bottom:1px solid #f0f1f5; } .err-item:last-child { border-bottom:none; } .err-item code { color:#9a2f3d; word-break:break-word; }
+  #loading { color:#9aa2b1; padding:2rem 0; }
 </style>
 </head>
 <body>
 
 <div id="sidebar">
-  <div class="logo">🗺️ Quiz Platform</div>
+  <div class="logo">🗺️ GPS Jagten</div>
   <nav class="route">
     <a href="overview.html" class="route-item active"><span class="dot"></span> Oversigt</a>
     <a href="customers.html" class="route-item"><span class="dot"></span> Kunder</a>
@@ -174,7 +93,7 @@
 </div>
 
 <div id="mobile-topbar">
-  <span class="logo">🗺️ Quiz Platform</span>
+  <span class="logo">🗺️ GPS Jagten</span>
   <nav>
     <a href="overview.html" class="active">Oversigt</a>
     <a href="customers.html">Kunder</a>
@@ -190,22 +109,19 @@
 
   <div id="content" style="display:none;">
     <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-num" id="stat-aktive">–</div>
-        <div class="stat-label">Aktive løb lige nu</div>
-      </div>
-      <div class="stat-card secondary">
-        <div class="stat-num" id="stat-total">–</div>
-        <div class="stat-label">Løb i alt</div>
-      </div>
-      <div class="stat-card secondary">
-        <div class="stat-num" id="stat-kunder">–</div>
-        <div class="stat-label">Kunder</div>
-      </div>
-      <div class="stat-card secondary">
-        <div class="stat-num" id="stat-hold">–</div>
-        <div class="stat-label">Hold i alt</div>
-      </div>
+      <div class="stat-card hot"><div class="stat-num" id="stat-aktive">–</div><div class="stat-label">Aktive løb lige nu</div></div>
+      <div class="stat-card" id="card-orders"><div class="stat-num" id="stat-orders">–</div><div class="stat-label">Nye bestillinger</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-kunder">–</div><div class="stat-label">Kunder</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-total">–</div><div class="stat-label">Løb i alt</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-hold">–</div><div class="stat-label">Hold i alt</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-svar">–</div><div class="stat-label">Svar seneste 30 dage</div></div>
+      <div class="stat-card" id="card-storage"><div class="stat-num" id="stat-lager">–</div><div class="stat-label" id="stat-lager-label">Fotolager</div></div>
+      <div class="stat-card" id="card-errors"><div class="stat-num" id="stat-fejl">–</div><div class="stat-label">Fejl seneste døgn</div></div>
+    </div>
+
+    <div class="panel" id="orders-panel" style="display:none">
+      <h2>Bestillinger <span id="orders-count" class="badge badge-ny" style="display:none"></span></h2>
+      <div id="orders"></div>
     </div>
 
     <div class="cols">
@@ -219,6 +135,19 @@
       </div>
     </div>
 
+    <div class="panel" style="margin-top:1.5rem">
+      <h2>Backup</h2>
+      <div class="backup">
+        <p id="backup-note"></p>
+        <button class="btn btn-outline" id="btn-backup" onclick="downloadBackup()">⬇️ Hent backup (JSON)</button>
+      </div>
+    </div>
+
+    <div class="panel" id="errors-panel">
+      <h2>Fejl fra siderne <button class="lnk" id="btn-errors" onclick="toggleErrors()">Vis</button></h2>
+      <div id="errors" style="display:none"></div>
+    </div>
+
     <div class="quick-actions">
       <button class="btn btn-primary" onclick="createQuiz()">+ Ny quiz</button>
       <a class="btn btn-outline" href="customers.html">+ Ny kunde</a>
@@ -227,68 +156,155 @@
 </main>
 
 <script>
-(async () => {
+const FREE_STORAGE_BYTES = 1024 * 1024 * 1024        // Supabase Free: 1 GB filer (tjek supabase.com/pricing)
+const BACKUP_KEY = 'jagten-sidste-backup'
+let orders = [], stats = null
+function go(url) { if (window.__nav) window.__nav.push(url); else location.href = url }     // ét sted for navigation
+
+;(async () => {
   const session = await getSession();
-  if (!session) { location.href = 'login.html'; return; }
+  if (!session) { go('login.html'); return; }
   if (session.type === 'pin') {
-    if (!session.is_admin) { location.href = `editor.html?q=${session.quiz_id}`; return; }
+    if (!session.is_admin) { go('customer-overview.html'); return; }     // kunder hører ikke til her
     activatePinClient();
   }
   await loadOverview();
 })();
 
 async function loadOverview() {
-  const [quizzesRes, customersRes, teamsRes] = await Promise.all([
-    sb.schema('quiz').from('quizzes')
-      .select('id, title, status, created_at, customer_id, customers(name)')
-      .order('created_at', { ascending: false }),
-    sb.schema('quiz').from('customers')
-      .select('id, name, email, company, created_at')
-      .order('created_at', { ascending: false }),
-    sb.schema('quiz').from('teams').select('id', { count: 'exact', head: true })
+  const [quizzesRes, customersRes, statsRes, ordersRes] = await Promise.all([
+    sb.schema('quiz').from('quizzes').select('id, title, status, created_at, customer_id, customers(name)').order('created_at', { ascending: false }),
+    sb.schema('quiz').from('customers').select('id, name, email, company, created_at').order('created_at', { ascending: false }),
+    sb.schema('quiz').rpc('admin_stats'),
+    sb.schema('quiz').rpc('list_orders')
   ]);
 
   document.getElementById('loading').style.display = 'none';
   document.getElementById('content').style.display = 'block';
 
-  const quizzes   = quizzesRes.data ?? [];
-  const customers = customersRes.data ?? [];
+  const quizzes = quizzesRes.data ?? [], customers = customersRes.data ?? [];
+  stats = statsRes.data ?? null; orders = ordersRes.data ?? [];
 
-  document.getElementById('stat-aktive').textContent = quizzes.filter(q => q.status === 'aktiv').length;
-  document.getElementById('stat-total').textContent  = quizzes.length;
-  document.getElementById('stat-kunder').textContent = customers.length;
-  document.getElementById('stat-hold').textContent   = teamsRes.count ?? '–';
+  const set = (id, v) => { document.getElementById(id).textContent = v ?? '–' };
+  set('stat-aktive', stats?.quizzes_live ?? quizzes.filter(q => q.status === 'aktiv').length);
+  set('stat-total',  stats?.quizzes ?? quizzes.length);
+  set('stat-kunder', stats?.customers ?? customers.length);
+  set('stat-hold',   stats?.teams);
+  set('stat-svar',   stats?.answers_30d);
+  set('stat-orders', stats?.orders_new ?? orders.filter(o => o.status === 'ny').length);
+  set('stat-fejl',   stats?.errors_24h);
+  document.getElementById('card-orders').classList.toggle('warn', (stats?.orders_new ?? 0) > 0);
+  document.getElementById('card-errors').classList.toggle('warn', (stats?.errors_24h ?? 0) > 0);
 
+  // Fotolager (gratis plan: 1 GB) – advarsel ved 70 %
+  if (stats && stats.storage_bytes != null) {
+    const mb = stats.storage_bytes / 1048576, pct = stats.storage_bytes / FREE_STORAGE_BYTES * 100;
+    set('stat-lager', (mb < 10 ? mb.toFixed(1) : Math.round(mb)) + ' MB');
+    set('stat-lager-label', 'Fotolager (' + Math.round(pct) + ' % af 1 GB gratis)');
+    document.getElementById('card-storage').classList.toggle('warn', pct >= 70);
+  } else set('stat-lager', '–');
+
+  renderOrders();
   renderRecentQuizzes(quizzes.slice(0, 5));
   renderRecentCustomers(customers.slice(0, 5));
+  renderBackupNote();
 }
 
-function renderRecentQuizzes(quizzes) {
-  const el = document.getElementById('recent-quizzes');
-  if (!quizzes.length) {
-    el.innerHTML = '<p class="empty-note">Ingen løb oprettet endnu.</p>';
-    return;
-  }
-  el.innerHTML = quizzes.map(q => `
-    <div class="row-item">
-      <div>
-        <a class="title" href="editor.html?q=${q.id}">${escHtml(q.title || '(uden titel)')}</a>
-        <div class="meta">${q.customers?.name ? '👤 ' + escHtml(q.customers.name) : 'Ingen kunde'} · ${formatDate(q.created_at)}</div>
+// ── Bestillinger ─────────────────────────────────────────────
+function renderOrders() {
+  const panel = document.getElementById('orders-panel'), el = document.getElementById('orders');
+  panel.style.display = orders.length ? 'block' : 'none';
+  const n = orders.filter(o => o.status === 'ny').length, cnt = document.getElementById('orders-count');
+  cnt.style.display = n ? 'inline-block' : 'none'; cnt.textContent = n + ' ny' + (n === 1 ? '' : 'e');
+  el.innerHTML = orders.map(o => `
+    <div class="order ${o.status === 'ny' ? 'new' : ''}" data-id="${escHtml(o.id)}">
+      <div class="order-top">
+        <div>
+          <div class="order-org">${escHtml(o.org_name)}</div>
+          <div class="order-meta">${escHtml(o.contact_name)} · <a href="mailto:${escHtml(o.email)}">${escHtml(o.email)}</a>${o.phone ? ' · ' + escHtml(o.phone) : ''}<br>
+            ${o.event_type ? escHtml(o.event_type) + ' · ' : ''}${o.expected_date ? 'dato ' + escHtml(o.expected_date) + ' · ' : ''}bestilt ${formatDate(o.created_at)}</div>
+        </div>
+        <span class="badge badge-${escHtml(o.status)}">${{ ny: 'Ny', oprettet: 'Kunde oprettet', afvist: 'Afvist' }[o.status] ?? escHtml(o.status)}</span>
       </div>
-      <span class="badge badge-${q.status}">${labelStatus(q.status)}</span>
+      ${o.message ? `<div class="order-msg">${escHtml(o.message)}</div>` : ''}
+      <div class="order-actions">
+        ${o.status === 'ny' ? `<button class="btn btn-primary btn-sm" onclick="createCustomer('${escHtml(o.id)}')">Opret kunde</button>
+          <button class="btn btn-outline btn-sm" onclick="rejectOrder('${escHtml(o.id)}')">Afvis</button>` : ''}
+        ${o.status === 'oprettet' && o.customer_id ? `<a class="btn btn-outline btn-sm" href="customers.html?c=${escHtml(o.customer_id)}">Åbn kunden</a>` : ''}
+        ${o.status === 'afvist' ? `<button class="btn btn-outline btn-sm" onclick="createCustomer('${escHtml(o.id)}')">Opret alligevel</button>` : ''}
+      </div>
     </div>`).join('');
 }
 
+async function createCustomer(orderId) {
+  const { data, error } = await sb.schema('quiz').rpc('create_customer_from_order', { p_order_id: orderId });
+  if (error) { alert('Kunne ikke oprette kunden: ' + error.message); return; }
+  go('customers.html?c=' + data);          // her sætter du PIN og sender login til kunden
+}
+async function rejectOrder(orderId) {
+  if (!confirm('Afvis bestillingen? Den slettes automatisk efter 90 dage.')) return;
+  const { error } = await sb.schema('quiz').rpc('set_order_status', { p_order_id: orderId, p_status: 'afvist' });
+  if (error) { alert(error.message); return; }
+  await loadOverview();
+}
+
+// ── Backup (gratis Supabase har ingen automatiske backups) ───
+function renderBackupNote() {
+  const note = document.getElementById('backup-note'); let last = null;
+  try { last = localStorage.getItem(BACKUP_KEY) } catch (_) {}
+  const days = last ? Math.floor((Date.now() - Number(last)) / 86400000) : null;
+  note.className = days === null || days >= 7 ? 'stale' : '';
+  note.textContent = days === null ? 'Du har ikke hentet en backup fra denne browser endnu. Hent en jævnligt og gem den et sikkert sted – den indeholder kunder, løb, poster, opgaver og svar, men aldrig PIN-koder eller deltagerdata.'
+    : days >= 7 ? 'Sidste backup er ' + days + ' dage gammel. Hent en ny.' : 'Sidste backup: ' + (days === 0 ? 'i dag' : days + ' dag' + (days === 1 ? '' : 'e') + ' siden') + '.';
+}
+async function downloadBackup() {
+  const btn = document.getElementById('btn-backup'); btn.disabled = true;
+  const { data, error } = await sb.schema('quiz').rpc('admin_export_all');
+  btn.disabled = false;
+  if (error) { alert('Backup fejlede: ' + error.message); return; }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+  a.download = 'gps-jagten-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  try { localStorage.setItem(BACKUP_KEY, String(Date.now())) } catch (_) {}
+  renderBackupNote();
+}
+
+// ── Fejl ─────────────────────────────────────────────────────
+let errorsLoaded = false;
+async function toggleErrors() {
+  const box = document.getElementById('errors'), btn = document.getElementById('btn-errors');
+  const open = box.style.display === 'none';
+  box.style.display = open ? 'block' : 'none'; btn.textContent = open ? 'Skjul' : 'Vis';
+  if (!open || errorsLoaded) return;
+  const { data, error } = await sb.schema('quiz').rpc('admin_recent_errors', { p_limit: 50 });
+  if (error) { box.innerHTML = '<p class="empty-note">Kunne ikke hente: ' + escHtml(error.message) + '</p>'; return; }
+  errorsLoaded = true;
+  box.innerHTML = (data ?? []).length ? data.map(e => `<div class="err-item"><b>${escHtml(e.page ?? '')}</b> <span class="meta">${e.created_at ? formatDate(e.created_at) : ''}</span><br><code>${escHtml(e.message ?? '')}</code></div>`).join('')
+    : '<p class="empty-note">Ingen fejl registreret.</p>';
+}
+
+// ── Lister ───────────────────────────────────────────────────
+function renderRecentQuizzes(quizzes) {
+  const el = document.getElementById('recent-quizzes');
+  if (!quizzes.length) { el.innerHTML = '<p class="empty-note">Ingen løb oprettet endnu.</p>'; return; }
+  el.innerHTML = quizzes.map(q => `
+    <div class="row-item">
+      <div>
+        <a class="title" href="editor.html?q=${escHtml(q.id)}">${escHtml(q.title || '(uden titel)')}</a>
+        <div class="meta">${q.customers?.name ? '👤 ' + escHtml(q.customers.name) : 'Ingen kunde'} · ${formatDate(q.created_at)}</div>
+      </div>
+      <span class="badge badge-${escHtml(q.status)}">${labelStatus(q.status)}</span>
+    </div>`).join('');
+}
 function renderRecentCustomers(customers) {
   const el = document.getElementById('recent-customers');
-  if (!customers.length) {
-    el.innerHTML = '<p class="empty-note">Ingen kunder oprettet endnu.</p>';
-    return;
-  }
+  if (!customers.length) { el.innerHTML = '<p class="empty-note">Ingen kunder oprettet endnu.</p>'; return; }
   el.innerHTML = customers.map(c => `
     <div class="row-item">
       <div>
-        <a class="title" href="customers.html">${escHtml(c.name)}</a>
+        <a class="title" href="customers.html?c=${escHtml(c.id)}">${escHtml(c.name)}</a>
         <div class="meta">${escHtml(c.company || c.email || '')}</div>
       </div>
     </div>`).join('');
@@ -298,22 +314,14 @@ async function createQuiz() {
   const session = await getSession();
   const insertRow = { title: 'Ny quiz', status: 'kladde' };
   if (session?.user?.id) insertRow.owner_id = session.user.id;
-  const { data, error } = await sb.schema('quiz').from('quizzes')
-    .insert(insertRow).select('id').single();
+  const { data, error } = await sb.schema('quiz').from('quizzes').insert(insertRow).select('id').single();
   if (error) { alert('Kunne ikke oprette quiz: ' + error.message); return; }
-  location.href = `editor.html?q=${data.id}`;
+  go(`editor.html?q=${data.id}`);
 }
 
-function labelStatus(s) {
-  return { kladde: 'Kladde', testing: 'Test', aktiv: 'Aktiv', arkiveret: 'Arkiveret' }[s] ?? s;
-}
-function formatDate(iso) {
-  if (!iso) return '';
-  return new Date(iso).toLocaleDateString('da-DK', { day: 'numeric', month: 'short' });
-}
-function escHtml(s) {
-  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
+function labelStatus(s) { return { kladde: 'Kladde', testing: 'Test', aktiv: 'Aktiv', arkiveret: 'Arkiveret' }[s] ?? s; }
+function formatDate(iso) { return iso ? new Date(iso).toLocaleDateString('da-DK', { day: 'numeric', month: 'short' }) : ''; }
+function escHtml(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 </script>
 </body>
 </html>

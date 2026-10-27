@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>Tjekliste – GPS Jagten</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Inter',system-ui,sans-serif; color:#1a1f36; background:#f5f7fa; line-height:1.65; }
+  main { max-width:780px; margin:0 auto; padding:2rem 1.25rem 4rem; }
+  h1 { font-family:'Syne',system-ui,sans-serif; font-size:1.9rem; font-weight:800; letter-spacing:-.02em; margin-bottom:.4rem; }
+  h2 { font-family:'Syne',system-ui,sans-serif; font-size:1.1rem; margin:2rem 0 .5rem; }
+  p, li { font-size:.94rem; margin-bottom:.6rem; } ul { padding-left:1.3rem; }
+  .meta { color:#6b7385; font-size:.85rem; margin-bottom:1.5rem; }
+  .draft { background:#fff4d6; border:1.5px solid #f0c24b; border-radius:12px; padding:.85rem 1rem; font-size:.88rem; margin-bottom:1.5rem; }
+  .udfyld { background:#fff1a8; border-radius:4px; padding:0 .25rem; font-weight:600; }
+  table { width:100%; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 1px 8px rgba(0,0,0,.06); margin:.6rem 0 1rem; }
+  th, td { text-align:left; padding:.6rem .8rem; border-bottom:1px solid #eceff4; font-size:.86rem; vertical-align:top; } th { background:#fafbfc; font-size:.72rem; letter-spacing:.05em; text-transform:uppercase; color:#6b7385; }
+  a { color:#4f46e5; } .back { display:inline-block; margin-bottom:1.2rem; font-size:.85rem; text-decoration:none; }
+  .sign { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:1.5rem; } .sign div { border-top:1.5px solid #1a1f36; padding-top:.4rem; font-size:.82rem; min-height:4.5rem; }
+  @media print { body { background:#fff; } .back, .draft { display:none; } main { padding:0; } }
+  @media (max-width:560px) { .sign { grid-template-columns:1fr; } }
+  details { background:#fff; border-radius:12px; box-shadow:0 1px 6px rgba(0,0,0,.05); margin-bottom:.5rem; }
+  summary { cursor:pointer; padding:.85rem 1rem; font-weight:700; font-size:.92rem; list-style:none; display:flex; justify-content:space-between; gap:1rem; }
+  summary::-webkit-details-marker { display:none; } summary::after { content:'+'; color:#6b7385; font-weight:700; } details[open] summary::after { content:'–'; }
+  details .a { padding:0 1rem 1rem; } details .a p:last-child { margin-bottom:0; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:.75rem; margin:.8rem 0 1rem; }
+  .card { background:#fff; border-radius:14px; padding:1rem; box-shadow:0 1px 8px rgba(0,0,0,.06); } .card b { display:block; margin-bottom:.2rem; } .card span { font-size:.85rem; color:#4b5468; }
+  .num { display:inline-grid; place-items:center; width:24px; height:24px; border-radius:50%; background:#eeedff; color:#4f46e5; font-weight:800; font-size:.8rem; margin-bottom:.4rem; }
+  .box { width:15px; height:15px; border:1.8px solid #1a1f36; border-radius:3px; display:inline-block; margin-right:.6rem; vertical-align:-2px; flex-shrink:0; }
+  ul.check { list-style:none; padding:0; } ul.check li { display:flex; align-items:flex-start; padding:.25rem 0; margin:0; }
+  .btnrow { display:flex; gap:.6rem; flex-wrap:wrap; margin:1rem 0; } .btn { display:inline-block; background:#5b52f5; color:#fff; padding:.65rem 1.1rem; border-radius:10px; text-decoration:none; font-weight:700; font-size:.88rem; border:none; cursor:pointer; font-family:inherit; }
+  .btn.o { background:#fff; color:#1a1f36; border:1.5px solid #dadfe8; }
+  @media print { .btnrow { display:none; } details { box-shadow:none; border:1px solid #ddd; } details > .a { display:block; } }
+</style>
+
+</head>
+<body>
+<main>
+<a class="back" href="javascript:history.back()">← Tilbage</a>
+<h1>Tjekliste til dagen</h1>
+<p class="meta">Print siden, og tag den med. Sæt kryds undervejs.</p>
+<div class="btnrow"><button class="btn" onclick="window.print()">🖨️ Print</button></div>
+
+<h2>Dagen før</h2>
+<ul class="check"><li><span class="box"></span><span>Løbet er <b>testet</b> som testhold – på en rigtig telefon, udenfor</span></li><li><span class="box"></span><span>Alle poster har mindst én opgave, og alle opgaver har et rigtigt svar</span></li><li><span class="box"></span><span>Hold er oprettet, og <b>QR-koder er printet</b> (trin 4 → Print alle hold-QR)</span></li><li><span class="box"></span><span><b>Quizmaster-arket</b> er printet (nødkoder til posterne)</span></li><li><span class="box"></span><span>Vejret er tjekket – og I har en plan B, hvis det regner</span></li><li><span class="box"></span><span>Aftal, hvem der er quizmaster og har telefon og opladet batteri</span></li><li><span class="box"></span><span>Beslut, om vinderen skal afsløres til sidst (trin 1)</span></li></ul>
+
+<h2>På dagen – før start</h2>
+<ul class="check"><li><span class="box"></span><span>Aktivér løbet fra oversigten, når deltagerne er klar (eller sæt en åbningstid)</span></li><li><span class="box"></span><span>Åbn scoreboardet på en storskærm eller din egen telefon</span></li><li><span class="box"></span><span>Alle hold har fået deres QR-kode eller link</span></li><li><span class="box"></span><span>Alle ved, at linket skal åbnes i <b>Chrome eller Safari</b> og at placering skal tillades</span></li><li><span class="box"></span><span>Fortæl: hold telefonen tændt, og gå sammen</span></li><li><span class="box"></span><span>Fortæl, hvor I mødes igen, og hvad klokken er</span></li><li><span class="box"></span><span>Aftal, hvem deltagerne kontakter, hvis noget går galt</span></li></ul>
+
+<h2>Under løbet</h2>
+<ul class="check"><li><span class="box"></span><span>Åbn <b>Live-kort</b> på scoreboardet, og hold øje med hold, der ikke er set længe</span></li><li><span class="box"></span><span>Godkend foto-svar, der afventer (vises på scoreboardet)</span></li><li><span class="box"></span><span>Hold telefonen klar til at give en <b>nødkode</b> ved GPS-problemer</span></li><li><span class="box"></span><span>Hold øje med hold, der falder bagud eller er faret vild</span></li></ul>
+
+<h2>Efter løbet</h2>
+<ul class="check"><li><span class="box"></span><span>Afslut løbet fra scoreboardet eller oversigten</span></li><li><span class="box"></span><span><b>Afslør vinderen</b> med podiet</span></li><li><span class="box"></span><span>Hent <b>resultater som CSV</b> og print <b>diplomer</b> (resultatsiden)</span></li><li><span class="box"></span><span>Del tak og evt. billeder med deltagerne</span></li><li><span class="box"></span><span>Husk: data slettes automatisk efter 90 dage. Slet før, hvis du vil</span></li><li><span class="box"></span><span>Brug "Kopiér" til at gøre løbet klar til næste gang</span></li></ul>
+
+</main>
+</body>
+</html>

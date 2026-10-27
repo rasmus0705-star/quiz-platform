@@ -1,9 +1,9 @@
-# CLAUDE.md – "Jagten" (GPS-quizplatform) projektkort
+# CLAUDE.md – "GPS Jagten" (GPS-quizplatform) projektkort
 
-> Indsæt i starten af en ny chat for hurtig kontekst. Opdateret 26. oktober 2026 (efter temaer, kortudbyder-modul, GDPR, selvhostede biblioteker).
+> Indsæt i starten af en ny chat for hurtig kontekst. Opdateret 28. oktober 2026 (efter live-kort, afsløring, 4-trins opretter, bestilling, admin-værktøjer).
 
 ## Hvad er dette?
-Dansk selvbetjeningsplatform til GPS-quiz (escape room kommer senere), brandet **Jagten**.
+Dansk selvbetjeningsplatform til GPS-quiz (escape room kommer senere), brandet **GPS Jagten** (arbejdsnavn – kan ændres, se backlog).
 Rasmus (admin) giver kunder (foreninger/arrangører) adgang med en PIN. Kunden bygger sine løb i en wizard og deler
 hold-links/QR. Hold spiller i mobilbrowseren **uden login** (token i URL). Bygget af Rasmus (ralv@verdo.com).
 
@@ -30,6 +30,7 @@ hold-links/QR. Hold spiller i mobilbrowseren **uden login** (token i URL). Bygge
 | Scoreboard | `board/scoreboard.html?q=<quiz-id>[&r=<runde>][&tv=1]` | alle (+ quizmaster-bar) |
 | Jura (UDKAST) | `privatliv.html`, `databehandleraftale.html` | alle / kunder |
 | PWA | `sw.js` (v4), `manifest.json` (relative stier!) | – |
+| Brand/PWA | `favicon.svg`, `icons/` (app-ikoner, delingsbillede), `404.html`, `manifest.json` | – |
 | Delt JS | `js/api.js`, `js/config.js`, `js/map-config.js`, `js/map.js`, `js/themes.js` | – |
 
 ## Sikkerhedsmodel (VIGTIGT – ændret 25/10)
@@ -100,13 +101,16 @@ opgave åbner automatisk efter **4 sek. inden for radius** med GPS-nøjagtighed 
 resultat → tilbage til kort (eller "Næste opgave" på samme stop) → færdig-skærm med placering. I **låst** rækkefølge sender serveren
 kun stop til og med det aktuelle. Pins er ikke klikbare for rigtige hold (kun testhold) – ellers kunne man svare uden at være der.
 Foto: komprimeres til ≤1600 px, uploades til `answers/<team_id>/`, serveren validerer URL'en.
+- **Aktivering (26/10, efter første feltest):** inden for stoppets radius + GPS-nøjagtighed ok. Tæt på midten (≤ 60 % af radius) åbner opgaven efter 0,8 sek., ellers 2,5 sek. med nedtælling ("Åbner om N sek…").
+- **Færdig-skærm viser bevidst IKKE placering**, scoreboard-link eller "del resultat" – vinderen skal være en overraskelse. (Selve scoreboardet er stadig offentligt for den der har linket → se backlog: afsløringstilstand.)
+- Kort: klassisk og firma bruger lyst kort (vejene var svære at se på mørkt kort i dagslys).
 
 ## Scoreboard
 Poller `get_scoreboard` hvert 5. sek (ingen realtime – submissions er fjernet fra publication). Tydelig fejl/"ikke åbent endnu".
 Quizmaster-bar (kun hvis session må styre løbet): afslut, start ny runde, godkend/afvis fotos. Offentligt vises kun godkendte fotos.
 
 ## Deploy-rækkefølge (vigtigt)
-1. SQL Editor → kør `001_…`, `002_…`, **`003_temaer_og_gdpr.sql`** (alle kan genkøres). Vælg "Run and enable RLS" hvis spurgt.
+1. SQL Editor → kør `001_…`, `002_…`, `003_…`, **`004_arrangoer_og_drift.sql`** (alle kan genkøres). **Kør SQL FØR siderne pushes** – editoren bruger nye kolonner (`hide_results`, `opens_at`, `closes_at`). Vælg "Run and enable RLS" hvis spurgt.
 2. Edge Functions (dashboard, ikke git): `quiz-check-answer`, `quiz-pin-auth`, **`purge-data`** → Deploy. Secrets: `PURGE_SECRET` (ny, lang tilfældig tekst).
 3. GitHub → Settings → Secrets → Actions: `PURGE_SECRET`, `SUPABASE_URL`, `SUPABASE_ANON`. Kør workflowet "Slet udløbne deltagerdata" manuelt én gang (svar: `{"mode":"cron",…}`).
 4. `js/map-config.js`: vælg kortudbyder + nøgle (standard = OSM, kun test).
@@ -120,19 +124,35 @@ Edge Functions og SQL følger **ikke** med git push. GitHub slår planlagte jobs
 - Scoreboard bruger sin egen klient (ikke api.js).
 - Ny SQL gemmes i `supabase/migrations/NNN_navn.sql` (ikke kun i dashboardet).
 
-## Status
+## Tidligere status (26/10)
 **Færdigt:** auth pr. kunde, kunde-wizard, admin-editor, løbskort med checkliste/hold-deling/QR/print, test via skjult testhold, spilside (**nyt design: tema, kompas, varm/kold, målcirkel + rute, "Fremme!"-øjeblik, konfetti, samtykke**), scoreboard (**tema + live-ticker**), foto-godkendelse, låst/fri rækkefølge server-side, sikkerhedslukning, runder, nødudgang, resultatside med CSV/diplomer, kopiér løb, **temaer (7), udskiftelig kortudbyder, GDPR-sletning (90 dage) + udkast til privatlivspolitik/databehandleraftale, selvhostede biblioteker/skrifttyper.**
 
 **Verificeret 26/10 (ikke mod rigtige Supabase/telefon):** migration 001+002+003 (003 kørt 2×) på lokal Postgres med skema-stub – 64 + 37 + 31 adgangs-/runde-/PIN-/foto-/nødkode-/resultat-/kopi-/tema-/sletnings-tests ok; Edge Functions (inkl. `purge-data`) mod mock; alle sider i jsdom. **Ikke testet: rigtige kortfliser fra en betalt udbyder, kompas på rigtig telefon (iOS kræver tilladelse), udskrift af diplomer, GitHub-jobbet, det faktiske udseende på telefon.**
 
-## Backlog (prioriteret)
-1. **Før første betalende kunde:** overvej en betalt kortudbyder (OpenFreeMap har ingen driftsgaranti – `js/map-config.js`), udfyld + få privatlivspolitik/databehandleraftale gennemlæst af jurist, bekræft Supabase-region (EU) og at `update_team_position` kun gemmer seneste position (PK `team_id`), skift kontaktmail på forsiden (står som en Verdo-mailadresse).
-2. **"Find mit login" via mail** i stedet for at vise linket (kræver SMTP); i dag kan man via mail gætte et kunde-id (PIN beskytter stadig).
-3. Server-side GPS-tjek (en snyder kan kalde `quiz-check-answer` direkte med et token – nødkoden håndhæves heller ikke server-side); rate-limit på `quiz-check-answer`; `anon_insert_errors` kan spammes.
-4. Admin-PIN kan låses af 5 forkerte gæt (DoS). Storage-SELECT-policy tillader listing af bucket (billeder er offentlige via URL).
-5. Versionering: dump hele det historiske skema (`supabase db dump`) til `supabase/schema.sql`.
-6. `overview.html`: ret redirect for ikke-admin (`editor.html?q=${session.quiz_id}` → `customer-overview.html`).
-7. Kunde kan ikke slette løb selv (kun admin). Overvej "Slet kladde" for kunder.
-8. UI til `theme_texts` (egne ord/velkomsttekst pr. løb) og evt. flere temaer (påske, halloween, escape room).
-9. Sjovere konkurrence: bonus for hurtigste hold, hints mod pointfradrag, holdfarver, lyd.
-10. Escape room/indendørs (`qr_token` på stops er klar), Stripe, push (`teams.push_token`, `notifications` klar), eget domæne + separat Supabase, betalt Supabase-plan før drift.
+## Arrangør- og driftsfunktioner (migration 004, 28/10)
+- **Live-kort** (scoreboard, kun quizmaster): `get_team_positions` → mærker grøn <3 min / orange / rød ≥6 min + advarsler for hold uden signal. Positioner >12 t gamle vises ikke.
+- **Afsløring af vinderen:** `quizzes.hide_results` (standard TIL for nye løb, sættes i trin 1) + `results_revealed_at`. Mens skjult returnerer `get_scoreboard` til offentligheden **kun navne + fremdrift** (ingen point/tid/rækkefølge – også ikke i API'et). Quizmasteren ser alt, men scoreboardet viser som standard det skjulte billede også for ham ("Se placeringer (kun mig)" til at kigge) → storskærm røber intet. "Afslør vinderen" → podie-animation på alle skærme. Ny runde nulstiller afsløringen. Spillerens færdig-skærm viser aldrig placering.
+- **Planlagt åbning/lukning:** `opens_at`/`closes_at`. Spiller: nedtælling før start (serverens ur via `server_now`), "Løbet er lukket" efter, tid tilbage i topbaren. Server: trigger på `submissions` afviser svar uden for tidsrummet (testhold undtaget).
+- **Dårlig dækning (spiller):** svar og fotos prøves automatisk igen (banner med nedtælling), serverfejl (4xx) prøves ikke; næste post hentes når dækningen er tilbage (`online`-hændelse). Ikke varig kø på tværs af genindlæsning.
+- **Bestilling:** `bestil.html` → `submit_order` (samtykke, honningkrukke, max 3/mail/døgn, max 30/time) → `orders` (RLS, kun RPC) → admin-forsiden (`app/overview.html`): "Opret kunde" (`create_customer_from_order`, idempotent) → `customers.html?c=<id>` (sæt PIN, send login). Afviste bestillinger slettes efter 90 dage. Betaling ikke bygget (felter `plan`, `amount_dkk` findes).
+- **Kunde-selvbetjening:** "Skift PIN" (`change_my_pin`, spærring efter 5 forkerte, logger andre enheder ud). "Glemt PIN" kræver mail → ikke bygget (admin nulstiller).
+- **Admin:** `admin_stats` (kunder/løb/hold/svar/fotolager med advarsel ved 70 % af 1 GB), `admin_recent_errors`, `admin_export_all` (backup som JSON – aldrig PIN-hash/deltagerdata; knap + 7-dages påmindelse), `delete_customer_cascade` (+ `purgeQuizData` for fotos først; kræver at man skriver SLET; blokeres ved live løb).
+- **Grænser** (triggers): 100 løb/kunde, 200 hold/løb, 100 poster/løb, 300 opgaver/løb.
+- **Opretter i 4 trin:** Løbet → Poster (kort; navngiv i panel, "hvad nu?", træk nåle, omdøb/flyt/slet) → Opgaver (status pr. post, fasit-advarsler) → Hold & deling. Fast "Sådan gør du" med afkrydsninger i hvert trin. Oversigten har en fast 3-trins vejledning + "Hjælp". Live-advarsel i editoren når løbet kører.
+- Sider: `bestil.html`, `hjaelp.html` (FAQ), `tjekliste.html` (printbar), `vilkaar.html` (UDKAST med gule felter).
+
+## Status og hvad der mangler
+**Alt nedenfor er testet i jsdom/lokal Postgres (199 DB-tests, edge, ~14 side-suiter) – IKKE på rigtige telefoner/Supabase.**
+
+### Skal på plads før første betalende kunde
+1. **Supabase Free pauser efter 7 dages inaktivitet og har ingen backups** (Pro ≈ 25 USD/md. løser begge). Det daglige purge-job holder sandsynligvis projektet vågent – verificér.
+2. Udfyld + jurist-læs `privatliv.html`, `databehandleraftale.html`, `vilkaar.html`. CVR/moms/faktura. Betaling (Stripe/MobilePay) når det skal koste noget.
+3. Bucket `quiz-uploads`: sæt `file_size_limit` (5 MB) og `allowed_mime_types` (image/*) i Supabase (ingen kode).
+4. Bekræft at `update_team_position` kun gemmer seneste position (PK `team_id`) og Supabase-region (EU).
+5. Forsiden lover "escape room" – findes ikke endnu. Ret teksten eller byg det.
+6. "Glemt PIN" via mail (kræver mail-afsendelse: Edge Function + udbyder).
+
+### Halvt/ikke bygget
+- Varig offline-kø for svar (kun automatisk genforsøg nu). Import af backup. PDF-holdkort med logo. Eget domæne + mail.
+- Server-side GPS-tjek; rate-limit på `quiz-check-answer`; `anon_insert_errors` kan spammes; admin-PIN kan låses af 5 gæt; storage-SELECT tillader listing; `find_login` afslører kunde-id; versionér hele skemaet (`supabase db dump`).
+- `theme_texts`-UI, flere temaer, escape room/indendørs, push, eget logo.

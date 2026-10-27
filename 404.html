@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Siden findes ikke – GPS Jagten</title>
+<link rel="icon" href="/quiz-platform/favicon.svg" type="image/svg+xml">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{min-height:100vh;display:grid;place-items:center;padding:24px;background:#0d0f14;color:#f0eeea;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;text-align:center}
+  .box{max-width:420px}
+  .pin{width:76px;height:76px;border-radius:22px;margin:0 auto 22px;background:linear-gradient(135deg,#5b52f5,#8b5cf6);display:grid;place-items:center}
+  h1{font-size:1.6rem;margin-bottom:8px} p{color:rgba(255,255,255,.65);line-height:1.6;margin-bottom:22px}
+  a{display:inline-block;background:#e8c84a;color:#0d0f14;font-weight:800;text-decoration:none;padding:13px 24px;border-radius:12px}
+  small{display:block;margin-top:18px;color:rgba(255,255,255,.4)}
+</style></head>
+<body><div class="box">
+  <div class="pin"><svg width="38" height="38" viewBox="0 0 64 64"><path d="M32 8c-9 0-16 7-16 15.5C16 36 32 56 32 56s16-20 16-32.5C48 15 41 8 32 8Z" fill="#fff"/><circle cx="32" cy="23.5" r="6" fill="#6e5af5"/></svg></div>
+  <h1>Her er du faret vild</h1>
+  <p>Siden findes ikke, eller linket er ikke helt rigtigt. Har du fået et link til et løb eller et scoreboard, så bed afsenderen om at sende det igen.</p>
+  <a id="home" href="/">Til forsiden</a>
+  <small>GPS Jagten</small>
+</div>
+<script>
+  // Projekt-sider ligger under /quiz-platform/ – et eget domæne ligger i roden
+  if (location.hostname.endsWith('github.io')) document.getElementById('home').href = '/quiz-platform/';
+</script></body></html>

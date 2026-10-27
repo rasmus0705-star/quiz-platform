@@ -3,12 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scoreboard – Jagten</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../icons/favicon-48.png" sizes="48x48" type="image/png">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <meta name="robots" content="noindex, nofollow">
+<title>Scoreboard – GPS Jagten</title>
 <link rel="manifest" href="../manifest.json">
 <link rel="stylesheet" href="../fonts/fonts.css">
 <script src="../vendor/supabase.js"></script>
 <script src="../js/config.js"></script>
 <script src="../js/themes.js"></script>
+<script src="../js/map-config.js"></script>
+<script src="../js/map.js"></script>
 <style>
   *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
   :root {
@@ -86,6 +92,35 @@
   .bar i { display:block; height:100%; background:var(--gold); border-radius:99px; transition:width .6s; } .bar i.f { background:var(--green); }
   .pts { font-size:1.15rem; font-weight:800; color:var(--gold); text-align:right; } .tm { font-size:.72rem; color:var(--muted); text-align:right; }
 
+  /* skjult tilstand + afsløring + live-kort */
+  #hidden-card { display:none; text-align:center; background:var(--panel); border:1px solid var(--border); border-radius:22px; padding:2rem 1.25rem; margin-bottom:1.25rem; }
+  #hidden-card .lock { font-size:3rem; } #hidden-card h2 { font-family:var(--font-display); font-size:1.5rem; margin:.4rem 0; } #hidden-card p { color:var(--muted); }
+  body.tv #hidden-card h2 { font-size:3rem; } body.tv #hidden-card p { font-size:1.4rem; }
+  #peek-note { display:none; background:color-mix(in srgb,var(--accent) 14%,transparent); border:1px dashed var(--accent); border-radius:12px; padding:.55rem .9rem; font-size:.82rem; margin-bottom:1rem; text-align:center; }
+  .row.noscore .rk { background:var(--tint); color:var(--muted); font-size:1.1rem; }
+  .mbtn.on { outline:2px solid var(--accent); }
+  #livemap-wrap { display:none; margin-bottom:1.5rem; }
+  #livemap { height:340px; border-radius:16px; overflow:hidden; border:1px solid var(--border); background:var(--deep); }
+  #lm-warn { margin-top:.6rem; font-size:.84rem; display:grid; gap:.3rem; }
+  #lm-warn .w { background:color-mix(in srgb,var(--bad) 14%,transparent); border:1px solid color-mix(in srgb,var(--bad) 40%,transparent); border-radius:10px; padding:.45rem .75rem; }
+  .tm-pin { width:30px; height:30px; border-radius:50%; display:grid; place-items:center; font:800 .8rem var(--font-display); color:#fff; border:3px solid #fff; box-shadow:0 2px 8px rgba(0,0,0,.4); }
+  .tm-pin.ok { background:#16a34a; } .tm-pin.slow { background:#d97706; } .tm-pin.lost { background:#dc2626; }
+  .st-pin { width:12px; height:12px; border-radius:50%; background:var(--accent); border:2px solid #fff; opacity:.85; }
+  #reveal { position:fixed; inset:0; z-index:900; display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:2rem; background:radial-gradient(circle at 50% 35%, color-mix(in srgb,var(--accent) 30%,var(--night)), var(--night) 75%); overflow:hidden; }
+  #reveal.show { display:flex; animation:fadein .4s; }
+  @keyframes fadein { from { opacity:0; } to { opacity:1; } }
+  #rv-title { font-family:var(--font-display); font-size:clamp(1.6rem,5vw,3.4rem); font-weight:800; margin-bottom:1.6rem; min-height:1.3em; }
+  #rv-podium { display:flex; align-items:flex-end; justify-content:center; gap:clamp(.6rem,2vw,1.6rem); }
+  .rv-slot { opacity:0; transform:translateY(30px) scale(.8); transition:all .7s cubic-bezier(.2,.9,.3,1.3); text-align:center; min-width:min(28vw,220px); }
+  .rv-slot.in { opacity:1; transform:none; }
+  .rv-slot .n { font-family:var(--font-display); font-weight:800; font-size:clamp(1.1rem,3vw,2.2rem); word-break:break-word; }
+  .rv-slot .p { color:var(--accent); font-weight:800; font-size:clamp(1rem,2.4vw,1.8rem); margin:.2rem 0 .5rem; }
+  .rv-slot .blk { border-radius:14px 14px 0 0; display:grid; place-items:center; font-size:clamp(2rem,6vw,4rem); background:var(--panel); border:1px solid var(--border); }
+  .rv-slot.s1 .blk { height:clamp(150px,28vh,260px); background:color-mix(in srgb,var(--accent) 28%,var(--panel)); } .rv-slot.s2 .blk { height:clamp(110px,20vh,190px); } .rv-slot.s3 .blk { height:clamp(80px,14vh,140px); }
+  #rv-close { margin-top:1.6rem; background:var(--tint); color:var(--text); border:1px solid var(--border); border-radius:12px; padding:.7rem 1.4rem; font-weight:700; cursor:pointer; display:none; }
+  .rv-conf { position:absolute; top:-20px; border-radius:2px; animation:rvfall linear forwards; pointer-events:none; }
+  @keyframes rvfall { to { transform:translateY(115vh) rotate(720deg); opacity:.9; } }
+
   /* live-ticker: det der lige er sket */
   #ticker { display:none; background:var(--deep); border-bottom:1px solid var(--border); padding:.55rem 1.75rem; font-size:.84rem; gap:.5rem 1.6rem; flex-wrap:wrap; align-items:center; }
   #ticker.show { display:flex; }
@@ -132,6 +167,10 @@
   <span>Quizmaster</span>
   <button class="mbtn red"   id="btn-end"    style="display:none">🏁 Afslut løbet</button>
   <button class="mbtn green" id="btn-reopen" style="display:none">▶ Start ny runde</button>
+  <button class="mbtn" id="btn-map" style="background:#0f766e" title="Se hvor holdene er lige nu">🗺 Live-kort</button>
+  <button class="mbtn" id="btn-peek" style="display:none;background:#475569" title="Se placeringerne, mens de er skjult for deltagerne">👁 Se placeringer (kun mig)</button>
+  <button class="mbtn" id="btn-reveal" style="display:none;background:#b45309">🎉 Afslør vinderen</button>
+  <button class="mbtn" id="btn-rehide" style="display:none;background:#475569">🔒 Skjul igen</button>
   <a class="mbtn" id="res-link" href="#" style="background:#6c63ff;text-decoration:none" title="Rangliste, alle svar, CSV og diplomer">📄 Resultater &amp; diplomer</a>
   <span id="mgr-msg"></span>
 </div>
@@ -149,6 +188,13 @@
   </div>
 
   <div id="body" style="display:none">
+    <div id="peek-note">👁 <b>Kun du ser placeringerne.</b> Deltagerne og storskærmen viser stadig det skjulte billede.</div>
+    <div id="hidden-card"><div class="lock">🔒</div><h2>Resultatet afsløres til sidst</h2><p id="hidden-sub"></p></div>
+    <div id="livemap-wrap">
+      <div class="sec">🗺 LIVE-KORT <span id="lm-sub" style="font-weight:400"></span></div>
+      <div id="livemap"></div>
+      <div id="lm-warn"></div>
+    </div>
     <div class="stats">
       <div class="stat"><b id="s-teams">–</b><span>Hold</span></div>
       <div class="stat"><b id="s-done">–</b><span>Færdige</span></div>
@@ -162,8 +208,14 @@
       <div class="grid" id="photos"></div>
     </div>
   </div>
-  <div class="attr">Jagten · live opdatering · <a href="../privatliv.html" style="color:inherit">Privatliv</a></div>
+  <div class="attr">GPS Jagten · live opdatering · <a href="../privatliv.html" style="color:inherit">Privatliv</a></div>
 </main>
+
+<div id="reveal" aria-live="polite">
+  <div id="rv-title"></div>
+  <div id="rv-podium"></div>
+  <button id="rv-close">Luk</button>
+</div>
 
 <script>
 const { createClient } = supabase;
@@ -173,7 +225,8 @@ const quizId = qs.get('q');
 let viewRound = Number(qs.get('r')) || null;
 let sbm = null, isManager = false;                              // klient med quizmaster-session
 let prev = {}, prevState = {}, prevLeader = null, firstRender = true, lastData = null, appliedTheme = null;
-let events = [];                                                 // ticker: seneste hændelser { txt, at }
+let events = [];
+let peek = false, lastHidden = null, REVEAL_STEP_MS = 1800;   // peek: quizmaster kigger på facit uden at afsløre for andre                                                 // ticker: seneste hændelser { txt, at }
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
@@ -196,12 +249,61 @@ async function detectManager() {
 // ── hent + tegn ──
 async function load() {
   if (!quizId || !UUID.test(quizId)) { $('quiz-title').textContent = ''; notice('Ugyldigt scoreboard-link. Der mangler ?q=<quiz-id>.', true); return; }
-  const { data, error } = await sb.schema('quiz').rpc('get_scoreboard', { p_quiz_id: quizId, p_round: viewRound });
+  const client = isManager && sbm ? sbm : sb;                   // quizmasteren får den fulde udgave (også mens den er skjult for andre)
+  const { data, error } = await client.schema('quiz').rpc('get_scoreboard', { p_quiz_id: quizId, p_round: viewRound });
   if (error) { notice('Kunne ikke hente scoreboard: ' + error.message, true); return; }
   if (!data) { $('quiz-title').textContent = ''; $('body').style.display = 'none'; notice('Scoreboardet er ikke åbent endnu – det vises, når løbet er aktivt.'); return; }
   lastData = data; notice(''); render(data);
   if (isManager) { loadPending(); loadUnlocks(); }
 }
+
+// Skjult visning: kun holdnavne i alfabetisk rækkefølge + fremdrift. Ingen point, tid, placering eller vinder.
+function renderHidden(d, teams) {
+  const total = d.activities, doneN = teams.filter(t => t.finished).length;
+  $('s-teams').textContent = teams.length; $('s-done').textContent = doneN; $('s-stops').textContent = d.stops;
+  $('winner').style.display = 'none'; $('podium').style.display = 'none';
+  $('hidden-sub').textContent = teams.length
+    ? (doneN === teams.length ? 'Alle hold er færdige – vinderen afsløres snart!' : `${doneN} af ${teams.length} hold er færdige. Vinderen afsløres, når arrangøren er klar.`)
+    : 'Ingen hold endnu';
+  $('list').innerHTML = teams.map(t => {
+    const pct = total ? Math.min(100, (t.answered || 0) / total * 100) : 0;
+    return `<div class="row noscore${t.finished ? ' fin' : ''}">
+      <div class="rk">${esc((t.name || '?').trim().charAt(0).toUpperCase())}</div>
+      <div class="info"><div class="nm">${esc(t.name)} ${t.finished ? '<span class="badge">✅ Færdig</span>' : ''}</div>
+        <div class="bar"><i class="${t.finished ? 'f' : ''}" style="width:${pct}%"></i></div></div>
+    </div>`;
+  }).join('');
+  events = []; renderTicker();                                // ingen "X overtager føringen" mens det er skjult
+  prev = {}; prevState = {}; prevLeader = null; firstRender = true;
+  const photos = d.photos || [];
+  $('photos-wrap').style.display = photos.length ? 'block' : 'none';
+  $('photos').innerHTML = photos.map(ph => `<div class="ph"><img src="${esc(ph.url)}" alt="" loading="lazy"><div class="cap"><b>${esc(ph.team)}</b><br>${esc(ph.question)}</div></div>`).join('');
+}
+
+// ── Afsløring med podie ──
+function playReveal(teams) {
+  const top = teams.slice(0, 3), box = $('reveal');
+  const medals = ['🥇', '🥈', '🥉'], order = top.map((t, i) => i).reverse();       // 3. plads først, vinderen sidst
+  $('rv-podium').innerHTML = [1, 0, 2].map(i => top[i] ? `<div class="rv-slot s${i + 1}" id="rv-${i}"><div class="n">${esc(top[i].name)}</div><div class="p">${top[i].points} point</div><div class="blk">${medals[i]}</div></div>` : '').join('');
+  $('rv-title').textContent = 'Og placeringerne er…'; $('rv-close').style.display = 'none';
+  box.classList.add('show');
+  order.forEach((i, k) => setTimeout(() => {
+    const el = $('rv-' + i); if (el) el.classList.add('in');
+    if (i === 0) { $('rv-title').textContent = '🏆 Vinderen er ' + top[0].name + '!'; rvConfetti(); setTimeout(() => { $('rv-close').style.display = 'inline-block'; }, REVEAL_STEP_MS); }
+    else if (k === 0) $('rv-title').textContent = i === 2 ? 'På 3. pladsen…' : 'På 2. pladsen…';
+    else if (i === 1) $('rv-title').textContent = 'På 2. pladsen…';
+  }, REVEAL_STEP_MS * (k + 1)));
+}
+function rvConfetti() {
+  const cols = jagtenTheme(appliedTheme).confetti || ['#e8c84a', '#22c55e', '#e94560'];
+  for (let i = 0; i < 90; i++) {
+    const el = document.createElement('div'); el.className = 'rv-conf';
+    const sz = 6 + Math.random() * 9;
+    el.style.cssText = `left:${Math.random() * 100}%;width:${sz}px;height:${sz}px;background:${cols[i % cols.length]};animation-duration:${2.5 + Math.random() * 3}s;animation-delay:${Math.random() * 1.2}s`;
+    $('reveal').appendChild(el); setTimeout(() => el.remove(), 7500);
+  }
+}
+$('rv-close').onclick = () => { $('reveal').classList.remove('show'); };
 
 function fmtDur(s) { if (s == null) return '–'; const h = Math.floor(s/3600), m = Math.floor(s%3600/60), x = s%60; return h ? `${h}t ${m}m` : m ? `${m}m ${x}s` : `${x}s`; }
 
@@ -256,6 +358,20 @@ function render(d) {
   $('btn-reopen').style.display = isManager && q.status === 'arkiveret' ? '' : 'none';
 
   $('body').style.display = 'block';
+
+  // Skjult tilstand: ingen point/placering til offentligheden – og også kun til quizmasteren hvis han ikke har valgt "se placeringer" (storskærmen må ikke afsløre noget ved et uheld)
+  const hideActive = !!d.hide_results && !d.revealed;
+  const hidden = !!d.results_hidden || (hideActive && !(isManager && peek));
+  $('btn-reveal').style.display = isManager && hideActive ? '' : 'none';
+  $('btn-peek').style.display   = isManager && hideActive ? '' : 'none';
+  $('btn-peek').textContent     = peek ? '🙈 Skjul placeringer igen' : '👁 Se placeringer (kun mig)';
+  $('btn-rehide').style.display = isManager && !!d.hide_results && !!d.revealed ? '' : 'none';
+  $('peek-note').style.display  = isManager && hideActive && peek ? 'block' : 'none';
+  $('hidden-card').style.display = hidden ? 'block' : 'none';
+  if (lastHidden === true && !hidden && teams.length && teams[0].answered > 0) playReveal(teams);   // afsløringen: podie med forsinkelse
+  lastHidden = hidden;
+  if (hidden) { renderHidden(d, teams); return; }
+
   const doneN = teams.filter(t => t.finished).length;
   $('s-teams').textContent = teams.length; $('s-done').textContent = doneN; $('s-stops').textContent = d.stops;
 
@@ -354,6 +470,70 @@ async function setStatus(status, okMsg) {
   setTimeout(() => { $('mgr-msg').textContent = ''; }, 6000);
   load();
 }
+
+// ── quizmaster: afsløring ──
+$('btn-reveal').onclick = async () => {
+  if (!confirm('Afslør vinderen nu?\n\nPlaceringerne bliver synlige for alle, og scoreboardet viser podiet.')) return;
+  const { error } = await sbm.schema('quiz').rpc('reveal_results', { p_quiz_id: quizId, p_reveal: true });
+  if (error) { alert('Fejl: ' + error.message); return; }
+  peek = false; load();
+};
+$('btn-rehide').onclick = async () => {
+  const { error } = await sbm.schema('quiz').rpc('reveal_results', { p_quiz_id: quizId, p_reveal: false });
+  if (error) { alert('Fejl: ' + error.message); return; }
+  load();
+};
+$('btn-peek').onclick = () => { peek = !peek; if (lastData) render(lastData); };
+
+// ── quizmaster: live-kort (kun arrangøren kan hente positionerne) ──
+let lmap = null, lmarkers = {}, lstopLayer = null, lmOpen = false, lmFitted = false, lmTimer = null;
+function ensureLeaflet() {
+  if (window.L && window.L.map) return Promise.resolve();
+  jagtenLoadCss(JAGTEN_BASE + 'vendor/leaflet/leaflet.css');
+  return jagtenLoadScript(JAGTEN_BASE + 'vendor/leaflet/leaflet.js');
+}
+async function toggleLiveMap() {
+  lmOpen = !lmOpen;
+  $('livemap-wrap').style.display = lmOpen ? 'block' : 'none'; $('btn-map').classList.toggle('on', lmOpen);
+  clearInterval(lmTimer);
+  if (!lmOpen) return;
+  try { await ensureLeaflet(); } catch (e) { $('lm-sub').textContent = '– kortet kunne ikke hentes'; return; }
+  if (!lmap) {
+    lmap = L.map('livemap', { zoomControl: true, attributionControl: false });
+    L.control.attribution({ prefix: false }).addTo(lmap);
+    jagtenAddTiles(L, lmap, 'light', '');
+    lmap.setView([56.26, 9.5], 7);
+    const { data } = await sbm.schema('quiz').from('stops').select('name, lat, lng').eq('quiz_id', quizId);
+    lstopLayer = L.layerGroup().addTo(lmap);
+    (data || []).forEach(st => { if (st.lat != null) { const m = L.marker([st.lat, st.lng], { icon: L.divIcon({ html: '<div class="st-pin"></div>', iconSize: [12, 12], className: '' }), interactive: true }).addTo(lstopLayer); const tip = document.createElement('span'); tip.textContent = st.name; m.bindTooltip(tip); }});
+  }
+  refreshPositions(); lmTimer = setInterval(() => { if (!document.hidden) refreshPositions(); }, 10000);
+}
+async function refreshPositions() {
+  if (!sbm || !lmap) return;
+  const { data, error } = await sbm.schema('quiz').rpc('get_team_positions', { p_quiz_id: quizId });
+  if (error) { $('lm-sub').textContent = '– ' + error.message; return; }
+  const rows = data || [], now = Date.now(), seen = new Set(), pts = [];
+  rows.forEach(r => {
+    seen.add(r.team_name);
+    const min = Math.max(0, Math.round((now - new Date(r.recorded_at).getTime()) / 60000));
+    const cls = min < 3 ? 'ok' : min < 6 ? 'slow' : 'lost';
+    const icon = L.divIcon({ html: `<div class="tm-pin ${cls}">${esc((r.team_name || '?').trim().charAt(0).toUpperCase())}</div>`, iconSize: [30, 30], iconAnchor: [15, 15], className: '' });
+    const tip = document.createElement('span'); tip.textContent = `${r.team_name} · ${min < 1 ? 'lige nu' : min + ' min siden'} · ${r.answered}/${r.total} besvaret`;
+    if (lmarkers[r.team_name]) lmarkers[r.team_name].setLatLng([r.lat, r.lng]).setIcon(icon).setTooltipContent(tip);
+    else lmarkers[r.team_name] = L.marker([r.lat, r.lng], { icon }).addTo(lmap).bindTooltip(tip);
+    pts.push([r.lat, r.lng]);
+  });
+  Object.keys(lmarkers).forEach(n => { if (!seen.has(n)) { lmap.removeLayer(lmarkers[n]); delete lmarkers[n]; } });
+  if (!lmFitted && pts.length) { lmap.fitBounds(pts, { padding: [50, 50], maxZoom: 17 }); lmFitted = true; }
+  // advarsler: hold der ikke er set i 6+ min, og hold uden signal overhovedet
+  const warn = [];
+  rows.forEach(r => { const min = Math.round((now - new Date(r.recorded_at).getTime()) / 60000); if (min >= 6) warn.push(`⚠️ <b>${esc(r.team_name)}</b> er ikke set i ${min} min`); });
+  ((lastData && lastData.teams) || []).forEach(t => { if (!seen.has(t.name) && !t.finished) warn.push(`📡 <b>${esc(t.name)}</b> har ikke sendt position`); });
+  $('lm-warn').innerHTML = warn.map(w => `<div class="w">${w}</div>`).join('');
+  $('lm-sub').textContent = `– ${rows.length} hold med signal · opdateres hvert 10. sek.`;
+}
+$('btn-map').onclick = toggleLiveMap;
 
 $('round-sel').onchange = e => { viewRound = Number(e.target.value); firstRender = true; load(); };
 $('tv-btn').onclick = () => document.body.classList.toggle('tv');
