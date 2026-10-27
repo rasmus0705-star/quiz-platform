@@ -599,7 +599,11 @@ function pickNext() {
 function initMap() {
   map = L.map('map', { zoomControl: false, attributionControl: false });
   L.control.attribution({ prefix: false, position: 'bottomright' }).addTo(map);
-  jagtenAddTiles(L, map, theme.map.style, theme.map.tint);        // kortudbyder + stil følger temaet (se js/map-config.js)
+  // Alle deltagerkort skal kunne ses i direkte sollys.
+  // Temaet styrer stadig resten af brugerfladen, men kortet er altid lyst.
+  const playerMapStyle = 'light';
+  const playerMapTint = 'contrast(1.18) saturate(1.08) brightness(1.08)';
+  jagtenAddTiles(L, map, playerMapStyle, playerMapTint);        // lyst og tydeligt kort for alle temaer
   map.setView([56.26, 9.5], 7);
   renderPins();
 }
