@@ -34,6 +34,168 @@ BEGIN
   DELETE FROM quiz.teams          WHERE id      = ANY (v_ids);
 END $$;
 
+-- Kunden sletter sit eget løb (kun kladde eller afsluttet – aldrig et løb der kører).
+-- Fotos i Storage skal ryddes FØR via purge-data; databasen kan ikke slette filer.
+CREATE OR REPLACE FUNCTION quiz.delete_my_quiz(p_quiz_id uuid) RETURNS void
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = quiz, public AS $$
+DECLARE v_status text;
+BEGIN
+  IF NOT (quiz.check_session(p_quiz_id) OR auth.role() = 'authenticated') THEN RAISE EXCEPTION 'Adgang nægtet'; END IF;
+  SELECT status INTO v_status FROM quiz.quizzes WHERE id = p_quiz_id;
+  IF NOT FOUND THEN RAISE EXCEPTION 'Løbet findes ikke'; END IF;
+  IF v_status = 'aktiv' THEN RAISE EXCEPTION 'Afslut løbet, før du sletter det'; END IF;
+  PERFORM quiz.delete_quiz_cascade(p_quiz_id);
+END $$;
+
+-- ---------------------------------------------------------------------
+-- DEL 8: Foto-opgaver uden rigtigt svar – quizmasteren giver point (0..max)
+-- ---------------------------------------------------------------------
+ALTER TABLE quiz.submissions ADD COLUMN IF NOT EXISTS judged_at timestamptz;
+
+-- Foto-opgaver kan nu også være 'skjul' (kun quizmasteren ser billedet)
+DO $$
+DECLARE r record;
+BEGIN
+  FOR r IN SELECT conname FROM pg_constraint
+            WHERE conrelid = 'quiz.activities'::regclass AND contype = 'c'
+              AND pg_get_constraintdef(oid) ~* 'approval'
+  LOOP EXECUTE format('ALTER TABLE quiz.activities DROP CONSTRAINT %I', r.conname); END LOOP;
+  ALTER TABLE quiz.activities ADD CONSTRAINT activities_approval_check
+    CHECK (approval IS NULL OR approval IN ('auto','manuel','vis_kun','skjul'));
+EXCEPTION WHEN OTHERS THEN RAISE NOTICE 'approval-begrænsning uændret: %', SQLERRM;
+END $$;
+
+-- Afløser review_submission for foto: god/afvist ELLER en karakter. p_points = NULL → afvist.
+CREATE OR REPLACE FUNCTION quiz.score_submission(p_submission_id uuid, p_points int)
+RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path = quiz, public AS $$
+DECLARE v_quiz uuid; v_max int;
+BEGIN
+  SELECT s.quiz_id, a.points INTO v_quiz, v_max
+    FROM quiz.submissions sb
+    JOIN quiz.activities a ON a.id = sb.activity_id
+    JOIN quiz.stops s      ON s.id = a.stop_id
+   WHERE sb.id = p_submission_id;
+  IF v_quiz IS NULL THEN RAISE EXCEPTION 'Besvarelsen findes ikke'; END IF;
+  IF NOT (quiz.check_session(v_quiz) OR auth.role() = 'authenticated') THEN RAISE EXCEPTION 'Adgang nægtet'; END IF;
+  IF p_points IS NULL THEN
+    UPDATE quiz.submissions SET status = 'rejected', is_correct = false, points = 0, judged_at = now() WHERE id = p_submission_id;
+  ELSE
+    IF p_points < 0 OR p_points > GREATEST(v_max, 0) THEN RAISE EXCEPTION 'Point skal være mellem 0 og %', GREATEST(v_max, 0); END IF;
+    UPDATE quiz.submissions SET status = 'ok', is_correct = (p_points > 0), points = p_points, judged_at = now() WHERE id = p_submission_id;
+  END IF;
+END $$;
+
+-- Alle holdets fotos i runden – til bedømmelse og til fotovæggen
+CREATE OR REPLACE FUNCTION quiz.get_photo_wall(p_quiz_id uuid, p_round int DEFAULT NULL)
+RETURNS jsonb LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path = quiz, public AS $$
+DECLARE v_q quiz.quizzes; v_r int; v_mgr boolean;
+BEGIN
+  SELECT * INTO v_q FROM quiz.quizzes WHERE id = p_quiz_id;
+  IF NOT FOUND THEN RETURN NULL; END IF;
+  v_mgr := quiz.check_session(p_quiz_id) OR auth.role() = 'authenticated';
+  v_r := LEAST(GREATEST(COALESCE(p_round, v_q.round_no), 1), v_q.round_no);
+  RETURN jsonb_build_object('round', v_r, 'manager', v_mgr,
+    'photos', COALESCE((
+      SELECT jsonb_agg(jsonb_build_object('id', sb.id, 'team', t.name, 'question', a.question, 'stop', st.name,
+                                          'url', sb.answer #>> '{}', 'points', sb.points, 'max', a.points,
+                                          'status', sb.status, 'judged', sb.judged_at IS NOT NULL, 'at', sb.created_at)
+               ORDER BY sb.created_at)
+        FROM quiz.submissions sb
+        JOIN quiz.activities a ON a.id = sb.activity_id
+        JOIN quiz.stops st     ON st.id = a.stop_id
+        JOIN quiz.teams t      ON t.id = sb.team_id
+       WHERE st.quiz_id = p_quiz_id AND sb.round_no = v_r AND a.type = 'foto'
+         AND t.name <> '🧪 Testhold'
+         AND (sb.answer #>> '{}') LIKE 'https://%'
+         AND (v_mgr OR (sb.status = 'ok' AND a.approval <> 'skjul'))), '[]'::jsonb));
+END $$;
+
+-- ---------------------------------------------------------------------
+-- DEL 9: Skabelon-løb (færdige løb kunden kan kopiere)
+-- ---------------------------------------------------------------------
+ALTER TABLE quiz.quizzes ADD COLUMN IF NOT EXISTS is_template  boolean NOT NULL DEFAULT false;
+ALTER TABLE quiz.quizzes ADD COLUMN IF NOT EXISTS template_tag text;
+CREATE INDEX IF NOT EXISTS quizzes_template ON quiz.quizzes (is_template) WHERE is_template;
+
+-- Skabeloner ejes af admin (customer_id IS NULL) og kan ses af alle kunder
+CREATE OR REPLACE FUNCTION quiz.list_templates()
+RETURNS TABLE(id uuid, title text, description text, theme text, template_tag text, stops int, activities int)
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = quiz, public AS $$
+  SELECT q.id, q.title, q.description, q.theme, q.template_tag,
+         (SELECT count(*)::int FROM quiz.stops s WHERE s.quiz_id = q.id),
+         (SELECT count(*)::int FROM quiz.activities a JOIN quiz.stops s ON s.id = a.stop_id WHERE s.quiz_id = q.id)
+    FROM quiz.quizzes q
+   WHERE q.is_template
+   ORDER BY q.template_tag NULLS LAST, q.title;
+$$;
+
+-- Kunden tager en kopi af en skabelon. Kopien bliver kundens egen kladde (aldrig selv en skabelon).
+CREATE OR REPLACE FUNCTION quiz.copy_template(p_template_id uuid, p_title text DEFAULT NULL)
+RETURNS uuid LANGUAGE plpgsql SECURITY DEFINER SET search_path = quiz, public AS $$
+DECLARE v_src quiz.quizzes; v_new uuid := gen_random_uuid(); v_cust uuid; s record; a record; v_ns uuid; v_na uuid;
+BEGIN
+  SELECT customer_id INTO v_cust FROM quiz.sessions WHERE id = quiz.get_session_id() AND expires_at > now();
+  IF v_cust IS NULL AND NOT (quiz.check_session_is_admin() OR auth.role() = 'authenticated') THEN
+    RAISE EXCEPTION 'Du skal være logget ind';
+  END IF;
+  SELECT * INTO v_src FROM quiz.quizzes WHERE id = p_template_id AND is_template;
+  IF NOT FOUND THEN RAISE EXCEPTION 'Skabelonen findes ikke'; END IF;
+
+  INSERT INTO quiz.quizzes (id, title, description, status, stop_order, customer_id, mode, timer_min, theme, theme_texts, hide_results)
+  VALUES (v_new, COALESCE(NULLIF(btrim(p_title), ''), v_src.title), v_src.description, 'kladde', v_src.stop_order,
+          v_cust, v_src.mode, v_src.timer_min, v_src.theme, v_src.theme_texts, v_src.hide_results);
+
+  FOR s IN SELECT * FROM quiz.stops WHERE quiz_id = p_template_id ORDER BY sort, created_at, id LOOP
+    INSERT INTO quiz.stops (quiz_id, name, lat, lng, radius_m, sort)
+    VALUES (v_new, s.name, s.lat, s.lng, s.radius_m, s.sort) RETURNING id INTO v_ns;
+    FOR a IN SELECT * FROM quiz.activities WHERE stop_id = s.id ORDER BY sort NULLS LAST, id LOOP
+      INSERT INTO quiz.activities (stop_id, sort, type, question, options, points, time_limit_s, hint, media_url, approval)
+      VALUES (v_ns, a.sort, a.type, a.question, a.options, a.points, a.time_limit_s, a.hint, a.media_url, a.approval)
+      RETURNING id INTO v_na;
+      INSERT INTO quiz.answer_keys (activity_id, correct, tolerance)
+      SELECT v_na, k.correct, k.tolerance FROM quiz.answer_keys k WHERE k.activity_id = a.id;
+    END LOOP;
+  END LOOP;
+  RETURN v_new;
+END $$;
+
+-- Admin gør et løb til skabelon (eller fjerner mærket igen)
+CREATE OR REPLACE FUNCTION quiz.set_template(p_quiz_id uuid, p_is boolean, p_tag text DEFAULT NULL)
+RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path = quiz, public AS $$
+BEGIN
+  IF NOT (quiz.check_session_is_admin() OR auth.role() = 'authenticated') THEN RAISE EXCEPTION 'Adgang nægtet'; END IF;
+  IF p_tag IS NOT NULL AND p_tag !~ '^.{0,40}$' THEN RAISE EXCEPTION 'Mærkat er for langt'; END IF;
+  PERFORM set_config('quiz.bypass_guard', '1', true);
+  UPDATE quiz.quizzes SET is_template = p_is, template_tag = nullif(btrim(coalesce(p_tag, '')), '') WHERE id = p_quiz_id;
+  PERFORM set_config('quiz.bypass_guard', '0', true);
+END $$;
+
+-- Skabeloner må ikke tælle med i kundens løb-liste eller i grænsen på 100
+CREATE OR REPLACE FUNCTION quiz.trg_quota() RETURNS trigger
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = quiz, public AS $$
+DECLARE v_quiz uuid;
+BEGIN
+  IF TG_TABLE_NAME = 'quizzes' THEN
+    IF NEW.customer_id IS NOT NULL AND (SELECT count(*) FROM quiz.quizzes WHERE customer_id = NEW.customer_id AND NOT is_template) >= 100 THEN
+      RAISE EXCEPTION 'Du har nået grænsen på 100 løb – slet gamle løb eller kontakt os';
+    END IF;
+  ELSIF TG_TABLE_NAME = 'teams' THEN
+    IF NEW.name <> '🧪 Testhold' AND (SELECT count(*) FROM quiz.teams WHERE quiz_id = NEW.quiz_id AND name <> '🧪 Testhold') >= 200 THEN
+      RAISE EXCEPTION 'Et løb kan have højst 200 hold';
+    END IF;
+  ELSIF TG_TABLE_NAME = 'stops' THEN
+    IF (SELECT count(*) FROM quiz.stops WHERE quiz_id = NEW.quiz_id) >= 100 THEN
+      RAISE EXCEPTION 'Et løb kan have højst 100 poster';
+    END IF;
+  ELSIF TG_TABLE_NAME = 'activities' THEN
+    SELECT quiz_id INTO v_quiz FROM quiz.stops WHERE id = NEW.stop_id;
+    IF (SELECT count(*) FROM quiz.activities a JOIN quiz.stops s ON s.id = a.stop_id WHERE s.quiz_id = v_quiz) >= 300 THEN
+      RAISE EXCEPTION 'Et løb kan have højst 300 opgaver';
+    END IF;
+  END IF;
+  RETURN NEW;
+END $$;
+
 -- ---------------------------------------------------------------------
 -- DEL 1: Live-kort (kun quizmaster/admin) – seneste position pr. hold
 -- ---------------------------------------------------------------------

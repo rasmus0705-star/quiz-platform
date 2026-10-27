@@ -442,8 +442,9 @@
 <div class="p2-grid">
 <div class="card p2-map">
 <div style="position:relative;margin-bottom:.75rem;">
-<input type="text" id="map-search" placeholder="🔍  Søg på by eller adresse…" style="padding-right:2.5rem;"
-oninput="onSearchInput()" onkeydown="if(event.key==='Enter')doSearch()">
+<input type="text" id="map-search" placeholder="🔍  Søg på by eller adresse…" style="padding-right:2.5rem;" autocomplete="off"
+role="combobox" aria-expanded="false" aria-controls="search-results"
+oninput="onSearchInput()" onkeydown="searchKey(event)">
 <button onclick="doSearch()" aria-label="Søg" style="position:absolute;right:.5rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1rem;">🔍</button>
 <div id="search-results" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:1000;background:var(--white);border:1.5px solid #e2e8f0;border-top:none;border-radius:0 0 var(--radius-sm) var(--radius-sm);box-shadow:var(--shadow);max-height:220px;overflow-y:auto;"></div>
 </div>
@@ -824,6 +825,11 @@ async function moveStop(stopId, dir) {
   renderStops()
 }
 
+// Har kortet plads? (på en skjult fane er det 0 px, og så bliver zoom forkert)
+function mapHasSize() {
+  try { const z = map.getSize(); return !(Number(z.x) > 0) ? false : true } catch (_) { return true }
+}
+
 function renderPosts() {
   if (!map) return
   markers.forEach(m => m.remove()); markers = []
@@ -836,7 +842,8 @@ function renderPosts() {
     m.on('dragend', () => movePin(st.id, m.getLatLng()))
     markers.push(m); bounds.push([st.lat, st.lng])
   })
-  if (bounds.length && !didFit) { map.fitBounds(bounds, { padding: [40,40] }); didFit = true }
+  // zoom først ind, når kortet er synligt (på en skjult fane er det 0 px stort, og zoom bliver forkert)
+  if (bounds.length && !didFit && mapHasSize()) { map.fitBounds(bounds, { padding: [40,40] }); didFit = true }
 
   const el = document.getElementById('stop-list')
   if (!stops.length) { el.innerHTML = '<div class="empty-posts">Klik på kortet for at placere din første post.</div>'; return }
@@ -1093,12 +1100,14 @@ function buildActForm(stopId, act, mcCountOverride) {
     ` : ''}
 
     ${type==='foto' ? `
-      <label>Godkendelse</label>
+      <label>Bedømmelse</label>
       <select id="maf-approval">
-        <option value="auto"    ${approval==='auto'   ?'selected':''}>Auto – point med det samme</option>
-        <option value="manuel"  ${approval==='manuel' ?'selected':''}>Manuel – du godkender</option>
-        <option value="vis_kun" ${approval==='vis_kun'?'selected':''}>Vis kun – ingen point</option>
+        <option value="manuel"  ${approval==='manuel' ?'selected':''}>Du giver point (0 til max) – til kreative foto-opgaver</option>
+        <option value="auto"    ${approval==='auto'   ?'selected':''}>Fuldt point med det samme – til "bevis at I var her"</option>
+        <option value="vis_kun" ${approval==='vis_kun'?'selected':''}>Vis kun på fotovæggen – ingen point</option>
+        <option value="skjul"   ${approval==='skjul'  ?'selected':''}>Kun til dig – vises ikke offentligt</option>
       </select>
+      <p class="hint">Vælger du "Du giver point", bedømmer du hvert billede fra 0 til opgavens point. Billederne vises på fotovæggen på scoreboardet.</p>
     ` : ''}
 
     <div style="display:flex;gap:.5rem;margin-top:1rem;">
@@ -1506,7 +1515,7 @@ function showQR(url, title) {
 function closeQR() { document.getElementById('qr-modal').classList.remove('open') }
 
 // ── Kortsøgning (udbyderen vælges i js/map-config.js) ─────────
-let searchTimer = null, searchHits = []
+let searchTimer = null, searchHits = [], searchSel = -1
 
 function searchMsg(txt) {
   const res = document.getElementById('search-results')
@@ -1514,8 +1523,29 @@ function searchMsg(txt) {
   res.innerHTML = `<div style="padding:.6rem 1rem;color:var(--muted);font-size:.85rem;">${escHtml(txt)}</div>`
 }
 
+// Enter søger – og når listen er fremme, vælger Enter det fremhævede resultat. Pil op/ned flytter, Esc lukker.
+function searchKey(e) {
+  const open = searchHits.length && document.getElementById('search-results').style.display === 'block'
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    if (!open) { if (e.key === 'ArrowDown') doSearch(); e.preventDefault(); return }
+    e.preventDefault()
+    searchSel = (searchSel + (e.key === 'ArrowDown' ? 1 : -1) + searchHits.length) % searchHits.length
+    markSearchSel()
+  } else if (e.key === 'Enter') {
+    e.preventDefault()
+    if (open) { const r = searchHits[searchSel < 0 ? 0 : searchSel]; if (r) selectSearchResult(r.lat, r.lng) }
+    else doSearch()
+  } else if (e.key === 'Escape') { hideSearchResults() }
+}
+
+function markSearchSel() {
+  const rows = document.querySelectorAll('#search-results .sr-item')
+  rows.forEach((el, i) => { const on = i === searchSel; el.style.background = on ? '#eeedff' : ''; el.setAttribute('aria-selected', on ? 'true' : 'false'); if (on) el.scrollIntoView?.({ block: 'nearest' }) })
+}
+
 function onSearchInput() {
   clearTimeout(searchTimer)
+  searchSel = -1
   const q = document.getElementById('map-search').value.trim()
   if (q.length < 2) { hideSearchResults(); return }
   // Gratis OSM-søgning (Nominatim) må ikke bruges som "søg mens du skriver" – kun når brugeren trykker Enter/pil
@@ -1529,14 +1559,16 @@ async function doSearch() {
   searchMsg('Søger…')
   try {
     searchHits = await jagtenGeocode(q)
+    searchSel = 0                                   // første resultat er valgt – tryk bare Enter
     if (!searchHits.length) { searchMsg('Ingen resultater'); return }
     const res = document.getElementById('search-results')
+    document.getElementById('map-search').setAttribute('aria-expanded', 'true')
     // data-attributter + delegering: ingen stednavne i inline JavaScript
     res.innerHTML = searchHits.map((r, i) => `
-      <div class="sr-item" data-i="${i}" style="padding:.55rem 1rem;cursor:pointer;font-size:.85rem;border-bottom:1px solid #f0f0f0;">
+      <div class="sr-item" role="option" aria-selected="${i === 0}" data-i="${i}" style="padding:.55rem 1rem;cursor:pointer;font-size:.85rem;border-bottom:1px solid #f0f0f0;${i === 0 ? 'background:#eeedff;' : ''}">
         <div style="font-weight:600;">${escHtml(r.label.split(',')[0])}</div>
         <div style="font-size:.74rem;color:var(--muted);">${escHtml(r.label)}</div>
-      </div>`).join('')
+      </div>`).join('') + '<div style="padding:.35rem 1rem .5rem;font-size:.7rem;color:var(--muted);">↑↓ for at vælge · Enter for at gå dertil</div>'
   } catch (e) {
     searchMsg('Søgning fejlede – prøv igen')
   }
@@ -1548,10 +1580,8 @@ document.getElementById('search-results').addEventListener('click', e => {
   if (r) selectSearchResult(r.lat, r.lng)
 })
 document.getElementById('search-results').addEventListener('mouseover', e => {
-  const el = e.target.closest('.sr-item'); if (el) el.style.background = '#f5f7fa'
-})
-document.getElementById('search-results').addEventListener('mouseout', e => {
-  const el = e.target.closest('.sr-item'); if (el) el.style.background = ''
+  const el = e.target.closest('.sr-item'); if (!el) return
+  searchSel = Number(el.dataset.i); markSearchSel()
 })
 
 function selectSearchResult(lat, lng) {
@@ -1603,8 +1633,10 @@ updateHideUI(); renderHelp()
 renderThemes()
 
 function hideSearchResults() {
-  const el = document.getElementById('search-results')
-  if (el) el.style.display = 'none'
+  const res = document.getElementById('search-results')
+  res.style.display = 'none'; res.innerHTML = ''
+  searchSel = -1; searchHits = []
+  document.getElementById('map-search').setAttribute('aria-expanded', 'false')
 }
 
 document.addEventListener('click', e => {

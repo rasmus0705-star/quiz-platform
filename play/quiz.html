@@ -64,6 +64,14 @@
     .rules { list-style:none; text-align:left; width:100%; margin:.4rem auto 0; display:grid; gap:.5rem; }
     .rules li { display:flex; gap:.7rem; align-items:flex-start; background:var(--tint); border:1px solid var(--border); border-radius:calc(var(--radius) - 4px); padding:.6rem .8rem; font-size:.84rem; line-height:1.4; }
     .rules .ri { font-size:1.1rem; line-height:1.3; }
+    .toggle-row { display:flex; align-items:center; justify-content:space-between; gap:.9rem; width:100%; max-width:340px; margin:0 auto 1rem; background:var(--tint); border:1px solid var(--border); border-radius:calc(var(--radius) - 4px); padding:.7rem .9rem; cursor:pointer; text-align:left; }
+    .toggle-row .tr-text { font-size:.86rem; font-weight:700; } .toggle-row .tr-sub { font-size:.74rem; color:var(--muted); font-weight:400; margin-top:1px; }
+    .switch { position:relative; width:46px; height:27px; flex-shrink:0; }
+    .switch input { position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer; }
+    .switch i { position:absolute; inset:0; border-radius:99px; background:var(--tint); border:1px solid var(--border); transition:background .2s; pointer-events:none; }
+    .switch i::after { content:''; position:absolute; top:3px; left:3px; width:19px; height:19px; border-radius:50%; background:var(--muted); transition:transform .2s, background .2s; }
+    .switch input:checked + i { background:color-mix(in srgb, var(--accent) 35%, transparent); border-color:var(--accent); }
+    .switch input:checked + i::after { transform:translateX(19px); background:var(--accent); }
     .consent { display:flex; gap:.65rem; align-items:flex-start; text-align:left; font-size:.76rem; color:var(--muted); max-width:340px; margin:0 auto 1rem; line-height:1.45; cursor:pointer; }
     .consent input { width:20px; height:20px; flex-shrink:0; accent-color:var(--accent); margin-top:1px; }
     .consent a { color:var(--accent); }
@@ -236,6 +244,10 @@
     <br><button onclick="copyLink()">Kopiér link</button>
   </div>
   <div class="chips" id="chips"></div>
+  <label class="toggle-row" for="wake-chk">
+    <span><span class="tr-text">🔆 Hold skærmen tændt</span><span class="tr-sub">Anbefales – så slukker telefonen ikke undervejs</span></span>
+    <span class="switch"><input type="checkbox" id="wake-chk" checked><i></i></span>
+  </label>
   <label class="consent" id="consent-box">
     <input type="checkbox" id="consent-chk">
     <span>Jeg accepterer, at jeres position, svar og billeder bruges under løbet. <a href="../privatliv.html" target="_blank" rel="noopener">Læs mere</a></span>
@@ -668,6 +680,8 @@ async function startGame(skipGps) {
     gpsWatch = navigator.geolocation.watchPosition(onPos, onPosErr, { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 });
     startHeading();
   }
+  // skærmlåsen skal bedes om i SAMME tryk som Start, ellers afviser browseren den
+  if ($('wake-chk').checked && !wakeWanted) { wakeWanted = true; $('btn-wake').classList.add('on'); acquireWake(); }
   manualMode = !!skipGps && !team.is_test;       // uden GPS: hvert stop låses op med nødkode
   gameStartAt = Date.now();
   if (manualMode) { $('acc-pill').style.display = 'block'; $('acc-text').textContent = 'uden GPS'; $('acc-pill').style.color = 'var(--bad)'; }
@@ -1034,7 +1048,7 @@ function showResult(res) {
   const { stop, act } = cur;
   let cls, emoji, label, sub, pts = null;
   if (res.status === 'pending')        { cls = 'pending'; emoji = '📸'; label = 'Billede sendt'; sub = 'Afventer godkendelse fra quizmaster'; }
-  else if (act.type === 'foto' && act.approval === 'vis_kun') { cls = 'correct'; emoji = '📸'; label = words.photoThanks; sub = 'Det vises på scoreboardet'; }
+  else if (act.type === 'foto' && (act.approval === 'vis_kun' || act.approval === 'skjul')) { cls = 'correct'; emoji = '📸'; label = words.photoThanks; sub = act.approval === 'skjul' ? 'Kun arrangøren ser billedet' : 'Det vises på scoreboardet'; }
   else if (res.is_correct)             { cls = 'correct'; emoji = '✅'; label = act.type === 'foto' ? words.photoOk : words.correct; sub = 'point'; pts = res.points ?? 0; }
   else                                 { cls = 'wrong';   emoji = '❌'; label = words.wrong; sub = 'Ingen point denne gang'; }
 
@@ -1140,7 +1154,7 @@ async function pollStatus() {
 }
 
 // ═════════ Hold skærmen tændt ═════════
-let wakeLock = null, wakeWanted = false, noSleep = null;
+let wakeLock = null, wakeWanted = false, noSleep = null;   // wakeWanted sættes også fra velkomstskærmens kontakt
 async function toggleWake() {
   const btn = $('btn-wake');
   if (wakeWanted) {
@@ -1150,20 +1164,21 @@ async function toggleWake() {
     return;
   }
   wakeWanted = true; btn.classList.add('on');
-  await acquireWake();
+  await acquireWake(false);          // brugeren trykkede selv → sig til hvis det ikke kan lade sig gøre
 }
-async function acquireWake() {
+async function acquireWake(silent = true) {
   if ('wakeLock' in navigator) {
     try { wakeLock = await navigator.wakeLock.request('screen'); return; } catch (_) {}
   }
   if (typeof NoSleep !== 'undefined') {
     try { noSleep = noSleep || new NoSleep(); await noSleep.enable(); return; } catch (_) {}
   }
-  wakeWanted = false; $('btn-wake').classList.remove('on');
-  alert('Skærm-lås virker ikke i denne browser. Slå "Skærm altid tændt" til i telefonens indstillinger.');
+  // Virker ikke her: slå kontakten fra uden at genere. Kun hvis brugeren selv trykkede, siger vi hvorfor.
+  wakeWanted = false; $('btn-wake').classList.remove('on'); const c = $('wake-chk'); if (c) c.checked = false;
+  if (!silent) alert('Skærm-lås virker ikke i denne browser. Slå "Skærm altid tændt" til i telefonens indstillinger.');
 }
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible' && wakeWanted && 'wakeLock' in navigator) acquireWake();
+  if (document.visibilityState === 'visible' && wakeWanted && 'wakeLock' in navigator) acquireWake(true);
 });
 
 // ═════════ Hjælpere ═════════

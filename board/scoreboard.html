@@ -133,6 +133,17 @@
   .ph { position:relative; border-radius:10px; overflow:hidden; aspect-ratio:1; background:var(--panel); }
   .ph img { width:100%; height:100%; object-fit:cover; }
   .ph span { position:absolute; left:0; right:0; bottom:0; background:linear-gradient(transparent, rgba(0,0,0,.75)); padding:.35rem .5rem; font-size:.68rem; font-weight:600; }
+  .grade { display:flex; gap:4px; flex-wrap:wrap; }
+  .gbtn { min-width:34px; height:34px; border-radius:9px; border:1px solid var(--border); background:var(--tint); color:var(--text); font:700 .9rem var(--font-display); cursor:pointer; }
+  .gbtn:hover { border-color:var(--accent); color:var(--accent); } .gbtn.full { background:color-mix(in srgb,var(--good) 22%,transparent); border-color:var(--good); }
+  .gbtn:disabled, .mbtn:disabled { opacity:.45; cursor:default; }
+  #wall-wrap { display:none; margin-bottom:1.5rem; }
+  #wall { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:10px; }
+  #wall figure { background:var(--panel); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+  #wall img { width:100%; aspect-ratio:4/3; object-fit:cover; display:block; }
+  #wall figcaption { padding:.5rem .6rem; font-size:.78rem; } #wall figcaption b { display:block; }
+  #wall .pts { color:var(--accent); font-weight:700; }
+  body.tv #wall { grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); } body.tv #wall figcaption { font-size:1rem; }
   .pend { background:var(--panel); border:1px solid color-mix(in srgb,var(--accent) 40%,transparent); border-radius:12px; padding:.75rem; display:flex; gap:.85rem; align-items:center; margin-bottom:.6rem; }
   .pend img { width:84px; height:84px; object-fit:cover; border-radius:8px; flex-shrink:0; }
   .pend .t { flex:1; min-width:0; font-size:.82rem; } .pend .t b { display:block; font-size:.9rem; }
@@ -168,6 +179,7 @@
   <button class="mbtn red"   id="btn-end"    style="display:none">🏁 Afslut løbet</button>
   <button class="mbtn green" id="btn-reopen" style="display:none">▶ Start ny runde</button>
   <button class="mbtn" id="btn-map" style="background:#0f766e" title="Se hvor holdene er lige nu">🗺 Live-kort</button>
+  <button class="mbtn" id="btn-wall" style="background:#7c3aed" title="Vis alle holdenes billeder">📸 Fotovæg</button>
   <button class="mbtn" id="btn-peek" style="display:none;background:#475569" title="Se placeringerne, mens de er skjult for deltagerne">👁 Se placeringer (kun mig)</button>
   <button class="mbtn" id="btn-reveal" style="display:none;background:#b45309">🎉 Afslør vinderen</button>
   <button class="mbtn" id="btn-rehide" style="display:none;background:#475569">🔒 Skjul igen</button>
@@ -190,7 +202,12 @@
   <div id="body" style="display:none">
     <div id="peek-note">👁 <b>Kun du ser placeringerne.</b> Deltagerne og storskærmen viser stadig det skjulte billede.</div>
     <div id="hidden-card"><div class="lock">🔒</div><h2>Resultatet afsløres til sidst</h2><p id="hidden-sub"></p></div>
-    <div id="livemap-wrap">
+    <div id="wall-wrap">
+    <div class="sec">📸 FOTOVÆG <span id="wall-sub" style="font-weight:400"></span></div>
+    <div id="wall"></div>
+  </div>
+
+  <div id="livemap-wrap">
       <div class="sec">🗺 LIVE-KORT <span id="lm-sub" style="font-weight:400"></span></div>
       <div id="livemap"></div>
       <div id="lm-warn"></div>
@@ -254,6 +271,7 @@ async function load() {
   if (error) { notice('Kunne ikke hente scoreboard: ' + error.message, true); return; }
   if (!data) { $('quiz-title').textContent = ''; $('body').style.display = 'none'; notice('Scoreboardet er ikke åbent endnu – det vises, når løbet er aktivt.'); return; }
   lastData = data; notice(''); render(data);
+  if (wallOpen) loadWall();
   if (isManager) { loadPending(); loadUnlocks(); }
 }
 
@@ -430,11 +448,18 @@ async function loadPending() {
   const { data, error } = await sbm.schema('quiz').rpc('get_pending_photos', { p_quiz_id: quizId });
   if (error) return;
   $('pending-wrap').style.display = data?.length ? 'block' : 'none';
-  $('pending').innerHTML = (data || []).map(p => `<div class="pend">
+  // Foto-opgaver har ingen facit: quizmasteren giver point fra 0 til opgavens max (eller afviser billedet)
+  $('pending').innerHTML = (data || []).map(p => {
+    const max = Math.max(0, p.points ?? 0);
+    const steps = max > 1 && max <= 10 ? Array.from({ length: max + 1 }, (_, n) => n) : null;
+    return `<div class="pend">
       <a href="${esc(p.url)}" target="_blank" rel="noopener"><img src="${esc(p.url)}" alt=""></a>
-      <div class="t"><b>${esc(p.team_name)}</b>${esc(p.question || '')}<br><span style="color:var(--gold)">${p.points ?? 0} point</span></div>
-      <div class="a"><button class="mbtn green" data-id="${esc(p.submission_id)}" data-ok="1">✓ Godkend</button>
-      <button class="mbtn red" data-id="${esc(p.submission_id)}" data-ok="0">✕ Afvis</button></div></div>`).join('');
+      <div class="t"><b>${esc(p.team_name)}</b>${esc(p.question || '')}<br><span style="color:var(--accent)">op til ${max} point</span></div>
+      <div class="a">${steps
+        ? `<div class="grade">${steps.map(n => `<button class="gbtn${n === max ? ' full' : ''}" data-id="${esc(p.submission_id)}" data-pts="${n}" title="${n} point">${n}</button>`).join('')}</div>`
+        : `<button class="mbtn green" data-id="${esc(p.submission_id)}" data-pts="${max}">✓ Godkend</button>`}
+      <button class="mbtn red" data-id="${esc(p.submission_id)}" data-pts="x">✕ Afvis</button></div></div>`;
+  }).join('');
 }
 async function loadUnlocks() {
   const { data, error } = await sbm.schema('quiz').rpc('get_unlocks', { p_quiz_id: quizId });
@@ -448,9 +473,10 @@ async function loadUnlocks() {
 
 $('pending').addEventListener('click', async e => {
   const b = e.target.closest('button[data-id]'); if (!b) return;
-  b.disabled = true;
-  const { error } = await sbm.schema('quiz').rpc('review_submission', { p_submission_id: b.dataset.id, p_approve: b.dataset.ok === '1' });
-  if (error) { alert('Fejl: ' + error.message); b.disabled = false; return; }
+  [...b.parentElement.parentElement.querySelectorAll('button')].forEach(x => x.disabled = true);
+  const pts = b.dataset.pts === 'x' ? null : Number(b.dataset.pts);
+  const { error } = await sbm.schema('quiz').rpc('score_submission', { p_submission_id: b.dataset.id, p_points: pts });
+  if (error) { alert('Fejl: ' + error.message); [...b.parentElement.parentElement.querySelectorAll('button')].forEach(x => x.disabled = false); return; }
   load();
 });
 
@@ -470,6 +496,28 @@ async function setStatus(status, okMsg) {
   setTimeout(() => { $('mgr-msg').textContent = ''; }, 6000);
   load();
 }
+
+// ── Fotovæg: alle holdenes billeder (offentligt kun de godkendte) ──
+let wallOpen = false;
+async function toggleWall() {
+  wallOpen = !wallOpen;
+  $('wall-wrap').style.display = wallOpen ? 'block' : 'none';
+  $('btn-wall').classList.toggle('on', wallOpen);
+  if (wallOpen) await loadWall();
+}
+async function loadWall() {
+  const client = isManager && sbm ? sbm : sb;
+  const { data, error } = await client.schema('quiz').rpc('get_photo_wall', { p_quiz_id: quizId, p_round: viewRound });
+  if (error) { $('wall-sub').textContent = '– ' + error.message; return; }
+  const photos = (data && data.photos) || [];
+  $('wall-sub').textContent = photos.length ? `– ${photos.length} billede${photos.length === 1 ? '' : 'r'}` : '– ingen billeder endnu';
+  $('wall').innerHTML = photos.map(p => `<figure>
+    <a href="${esc(p.url)}" target="_blank" rel="noopener"><img src="${esc(p.url)}" alt="" loading="lazy"></a>
+    <figcaption><b>${esc(p.team)}</b>${esc(p.question || '')}
+      ${p.status === 'pending' ? '<span class="pts">⏳ afventer</span>' : p.status === 'rejected' ? '<span class="pts">🚫 afvist</span>' : `<span class="pts">${p.points} / ${p.max} point</span>`}
+    </figcaption></figure>`).join('');
+}
+$('btn-wall').onclick = toggleWall;
 
 // ── quizmaster: afsløring ──
 $('btn-reveal').onclick = async () => {

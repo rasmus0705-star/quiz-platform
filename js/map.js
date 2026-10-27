@@ -110,6 +110,19 @@ function jagtenOsmFallback(L, map, style, tint, why) {
   return layer
 }
 
+// Vent til kortets container har en størrelse. Et kort på en skjult fane (fx editorens "Poster") er 0 px stort, og et vektorkort
+// oprettet dér bliver aldrig tegnet. Leaflet melder 'resize', når fanen vises (invalidateSize); en lille poll er ekstra sikkerhed.
+function jagtenWhenSized(map) {
+  return new Promise(resolve => {
+    const sized = () => { try { const z = map.getSize(); return z.x > 0 && z.y > 0 } catch (_) { return true } }
+    if (typeof map.getSize !== 'function' || sized()) return resolve()
+    let done = false, timer = null
+    const fin = () => { if (done) return; done = true; clearInterval(timer); try { map.off && map.off('resize', fin) } catch (_) {}; resolve() }
+    try { map.on && map.on('resize', fin) } catch (_) {}
+    timer = setInterval(() => { try { map.invalidateSize && map.invalidateSize({ animate: false }) } catch (_) {}; if (sized()) fin() }, 400)
+  })
+}
+
 // Vektorkort via MapLibre inde i Leaflet. Reserve-kæde: ønsket stil → stabil lys stil + farvefilter → OSM-fliser.
 function jagtenAddVector(L, map, spec, style, tint) {
   const out = { layer: null, spec, pending: null }
@@ -141,7 +154,11 @@ function jagtenAddVector(L, map, spec, style, tint) {
     setTimeout(failover, JAGTEN_GL_TIMEOUT_MS)
   }
 
-  out.pending = jagtenLoadMapLibre(L).then(() => addGl(spec.styleName, spec.native), err => toOsm(String(err && err.message || err)))
+  // Enhver fejl (script kan ikke hentes, WebGL, 0-størrelse …) giver OSM-fliser – aldrig et tomt, gråt kort
+  out.pending = jagtenLoadMapLibre(L)
+    .then(() => jagtenWhenSized(map))
+    .then(() => addGl(spec.styleName, spec.native))
+    .catch(err => toOsm(String(err && err.message || err)))
   return out
 }
 

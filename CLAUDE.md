@@ -142,8 +142,25 @@ Edge Functions og SQL følger **ikke** med git push. GitHub slår planlagte jobs
 - **Rettet efter første feltrunde (29/10):** (1) 004 opretter selv `data_purged_at`/`delete_after` (tidligere kun i 003 → "column data_purged_at does not exist" ved aktivering/sletning hvis 003 ikke var kørt helt); `tjek_database.sql` viser hvilke kolonner/funktioner der mangler. (2) Kort: lys stil er nu OpenFreeMap `bright` (liberty var cremefarvet med hvide veje – svær at læse); reserve-kæde ønsket → `liberty` → OSM; skift `light` til `positron` i `js/map-config.js` hvis stadig svær. (3) Nødkoder er flyttet fra opgave-trinnet til trin 4 ("Vis nødkoder"). (4) Poster er større (nummer, navn, antal opgaver, fremhævning når ny). (5) Editoren bruger pladsen på store skærme (to kolonner, kort op til 68vh/820px, skrifter skaleres fra 1500 px). (6) Oversigt: større overskrifter, "Aktivér uden test", og testkontrol: "Genoptag test" (samme testhold) / "Afbryd test" (`end_test_team`) / "Test" starter forfra (spørger først).
 - Sider: `bestil.html`, `hjaelp.html` (FAQ), `tjekliste.html` (printbar), `vilkaar.html` (UDKAST med gule felter).
 
+## Runde 29/10 – fire ønsker + foto-løb og skabeloner
+- **Skærmlås på velkomstskærmen:** kontakt (TIL som standard) ved siden af samtykket; låsen bedes om i samme tryk som Start, ellers afviser browseren den. Virker den ikke, slås kontakten tavst fra – kun hvis brugeren selv trykker på 🔆 på kortet, kommer der en besked.
+- **Nøgletal på alle admin-sider:** `js/admin-stats.js` → `initAdminStats('overview'|'customers'|'quizzes')` tegner stribe i `#admin-stats`. Cacher i sessionStorage i 60 sek.; `refreshAdminStats()` efter handlinger. Erstatter de gamle stat-kort på `overview.html`.
+- **Søgning:** pil op/ned vælger, Enter går til det valgte (første er valgt på forhånd), Esc lukker. Uden liste søger Enter.
+- **Kunden kan slette eget løb:** `delete_my_quiz` (kun kladde/afsluttet; aldrig et løb der kører), fotos ryddes først via `purgeQuizData`.
+- **Foto-løb:** `score_submission(submission, point)` – point 0..opgavens max, NULL = afvist, kan gøres om. Scoreboardets godkendelse er nu en karakterskala (0..max, eller "Godkend" ved 1 point). **Fotovæg** (`get_photo_wall`, knap 📸): quizmaster ser alle fotos med point/max og status; offentligheden kun godkendte. Ny approval-værdi `skjul` (kun quizmasteren ser billedet). Testholdets fotos vises aldrig.
+- **Skabelon-løb:** `quizzes.is_template` + `template_tag`. Admin stjernemarkerer et løb i `dashboard.html` (`set_template`). Kunden: "Start fra skabelon" i oversigten → `list_templates` → `copy_template` giver kundens egen kladde (poster, opgaver og fasit; ingen hold) og åbner trin 2. Skabeloner tæller ikke i grænsen på 100 løb.
+- **Kortet i editoren var gråt:** vektorkortet blev oprettet på en skjult fane (0 px). `jagtenWhenSized()` venter nu på, at kortet har plads, og enhver fejl giver OSM-fliser i stedet for et tomt kort.
+- Alt dette ligger i `004_arrangoer_og_drift.sql` (kan genkøres). `reparation_003.sql` findes, hvis 003 ikke kørte færdigt; `tjek_database.sql` viser hvad der mangler.
+
+## Idéer til senere (fra 29/10)
+- **Deltag med kode** i stedet for et link pr. hold (SkoleGPS-greb) – nemmere at råbe op i en forsamling.
+- Billige, fordi systemet næsten kan det: **escape room** (kodeord pr. post → samlet kode til sidst), **"Big Talk"** (opgaver uden svar), flere skabeloner.
+- Mellem: **GPS-auktion** (point falder, jo flere hold der har været der), **power-ups** mellem hold.
+- Store/frarådes nu: **"Among Us" i realtid** (holdene skal se hinandens positioner → ny privatlivsvurdering), **GPS-kunst** (kræver hele ruten gemt).
+- **Musikløb:** Spotifys vilkår skal undersøges, før der bygges noget. Virker uden Spotify ved at arrangøren selv lægger lydklip op, som de har rettigheder til.
+
 ## Status og hvad der mangler
-**Alt nedenfor er testet i jsdom/lokal Postgres (199 DB-tests, edge, ~14 side-suiter) – IKKE på rigtige telefoner/Supabase.**
+**Alt er testet i jsdom/lokal Postgres (236 DB-tests, 427 side-tests i 18 suiter, edge functions) – IKKE på rigtige telefoner/Supabase.**
 
 ### Skal på plads før første betalende kunde
 1. **Supabase Free pauser efter 7 dages inaktivitet og har ingen backups** (Pro ≈ 25 USD/md. løser begge). Det daglige purge-job holder sandsynligvis projektet vågent – verificér.

@@ -11,6 +11,7 @@
 <script src="../vendor/supabase.js"></script>
 <script src="../js/config.js"></script>
 <script src="../js/api.js"></script>
+<script src="../js/admin-stats.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root { --bg:#eef1f6; --ink:#16213e; --ink-2:#0f3460; --accent:#e94560; --text-ink:#eaeaea; --text-dim:#8892a4; --radius-lg:18px; --radius-sm:8px; --green:#16a34a; --amber:#d97706; }
@@ -108,16 +109,7 @@
   <div id="loading">Indlæser…</div>
 
   <div id="content" style="display:none;">
-    <div class="stats-row">
-      <div class="stat-card hot"><div class="stat-num" id="stat-aktive">–</div><div class="stat-label">Aktive løb lige nu</div></div>
-      <div class="stat-card" id="card-orders"><div class="stat-num" id="stat-orders">–</div><div class="stat-label">Nye bestillinger</div></div>
-      <div class="stat-card"><div class="stat-num" id="stat-kunder">–</div><div class="stat-label">Kunder</div></div>
-      <div class="stat-card"><div class="stat-num" id="stat-total">–</div><div class="stat-label">Løb i alt</div></div>
-      <div class="stat-card"><div class="stat-num" id="stat-hold">–</div><div class="stat-label">Hold i alt</div></div>
-      <div class="stat-card"><div class="stat-num" id="stat-svar">–</div><div class="stat-label">Svar seneste 30 dage</div></div>
-      <div class="stat-card" id="card-storage"><div class="stat-num" id="stat-lager">–</div><div class="stat-label" id="stat-lager-label">Fotolager</div></div>
-      <div class="stat-card" id="card-errors"><div class="stat-num" id="stat-fejl">–</div><div class="stat-label">Fejl seneste døgn</div></div>
-    </div>
+    <div id="admin-stats" aria-label="Nøgletal"></div>
 
     <div class="panel" id="orders-panel" style="display:none">
       <h2>Bestillinger <span id="orders-count" class="badge badge-ny" style="display:none"></span></h2>
@@ -184,25 +176,8 @@ async function loadOverview() {
 
   const quizzes = quizzesRes.data ?? [], customers = customersRes.data ?? [];
   stats = statsRes.data ?? null; orders = ordersRes.data ?? [];
-
-  const set = (id, v) => { document.getElementById(id).textContent = v ?? '–' };
-  set('stat-aktive', stats?.quizzes_live ?? quizzes.filter(q => q.status === 'aktiv').length);
-  set('stat-total',  stats?.quizzes ?? quizzes.length);
-  set('stat-kunder', stats?.customers ?? customers.length);
-  set('stat-hold',   stats?.teams);
-  set('stat-svar',   stats?.answers_30d);
-  set('stat-orders', stats?.orders_new ?? orders.filter(o => o.status === 'ny').length);
-  set('stat-fejl',   stats?.errors_24h);
-  document.getElementById('card-orders').classList.toggle('warn', (stats?.orders_new ?? 0) > 0);
-  document.getElementById('card-errors').classList.toggle('warn', (stats?.errors_24h ?? 0) > 0);
-
-  // Fotolager (gratis plan: 1 GB) – advarsel ved 70 %
-  if (stats && stats.storage_bytes != null) {
-    const mb = stats.storage_bytes / 1048576, pct = stats.storage_bytes / FREE_STORAGE_BYTES * 100;
-    set('stat-lager', (mb < 10 ? mb.toFixed(1) : Math.round(mb)) + ' MB');
-    set('stat-lager-label', 'Fotolager (' + Math.round(pct) + ' % af 1 GB gratis)');
-    document.getElementById('card-storage').classList.toggle('warn', pct >= 70);
-  } else set('stat-lager', '–');
+  try { sessionStorage.setItem('admin-stats', JSON.stringify({ t: Date.now(), d: stats })) } catch (_) {}
+  initAdminStats('overview');
 
   renderOrders();
   renderRecentQuizzes(quizzes.slice(0, 5));
@@ -245,6 +220,7 @@ async function rejectOrder(orderId) {
   if (!confirm('Afvis bestillingen? Den slettes automatisk efter 90 dage.')) return;
   const { error } = await sb.schema('quiz').rpc('set_order_status', { p_order_id: orderId, p_status: 'afvist' });
   if (error) { alert(error.message); return; }
+  try { sessionStorage.removeItem('admin-stats') } catch (_) {}
   await loadOverview();
 }
 

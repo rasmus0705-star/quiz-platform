@@ -12,6 +12,7 @@
 <script src="../vendor/qrcode.min.js"></script>
 <script src="../js/config.js"></script>
 <script src="../js/api.js"></script>
+<script src="../js/admin-stats.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -191,6 +192,7 @@
 </div>
 
 <main>
+  <div id="admin-stats" aria-label="Nøgletal"></div>
   <h1>Kunder</h1>
   <p class="lead">Administrér kunder, PIN-koder og løb.</p>
 
@@ -311,6 +313,7 @@ let editingId = null
     if (!session.is_admin) { location.href = 'customer-overview.html'; return; }
     activatePinClient()
   }
+  initAdminStats('customers')
   await loadCustomers()
 })()
 
@@ -526,6 +529,7 @@ async function deleteCustomer() {
   const { error } = await sb.schema('quiz').rpc('delete_customer_cascade', { p_customer_id: activeId })
   btn.disabled = false; btn.textContent = '🗑 Slet kunde'
   if (error) { alert('Kunne ikke slette kunden: ' + error.message); return }
+  refreshAdminStats('customers')
   activeId = null
   try { history.replaceState(null, '', location.pathname) } catch (_) {}          // fjern ?c=… så en genindlæsning ikke leder efter den slettede kunde
   document.getElementById('detail-content').style.display = 'none'

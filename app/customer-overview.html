@@ -145,6 +145,12 @@
     .act { display:flex; align-items:center; justify-content:center; gap:7px; border:1px solid var(--line); background:var(--white); color:var(--ink); border-radius:10px; padding:11px 10px; font-size:.92rem; font-weight:600; transition:background .12s, border-color .12s; }
     .act:hover { background:var(--bg); border-color:#d5dae6; }
     .act.good { background:var(--green-soft); border-color:#bfe6cc; color:#166534; }
+    .act.danger { color:#b91c1c; } .act.danger:hover { background:var(--red-soft); border-color:#fecaca; }
+    .tpl-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:12px; }
+    .tpl { text-align:left; background:var(--white); border:1.5px solid var(--line); border-radius:14px; padding:14px; cursor:pointer; font-family:inherit; }
+    .tpl:hover { border-color:var(--accent); box-shadow:0 4px 14px rgba(91,82,245,.12); }
+    .tpl b { display:block; font-size:1rem; margin-bottom:3px; } .tpl .d { font-size:.84rem; color:var(--ink-2); line-height:1.4; } .tpl .m { font-size:.76rem; color:var(--muted); margin-top:7px; }
+    .tpl .tag { display:inline-block; font-size:.7rem; font-weight:700; background:var(--accent-soft); color:var(--accent); border-radius:99px; padding:2px 8px; margin-bottom:6px; }
     .danger-link { display:inline-flex; align-items:center; gap:6px; background:none; border:none; color:var(--red); font-size:.8rem; font-weight:600; margin-top:12px; padding:4px 2px; }
     .danger-link:hover { text-decoration:underline; }
 
@@ -204,6 +210,8 @@
   <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
   <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></symbol>
   <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 22V4M4 4h13l-2 4 2 4H4"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 17l9 5 9-5"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></symbol>
 </svg>
 
@@ -224,7 +232,10 @@
       <h1>Mine løb</h1>
       <p>Byg, test og del dine GPS-løb</p>
     </div>
-    <button class="btn-primary" onclick="newQuiz()"><svg class="ic"><use href="#i-plus"/></svg>Nyt løb</button>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-primary" style="background:var(--white);color:var(--ink);border:1.5px solid var(--line);box-shadow:none" onclick="openTemplates()"><svg class="ic"><use href="#i-layers"/></svg>Start fra skabelon</button>
+      <button class="btn-primary" onclick="newQuiz()"><svg class="ic"><use href="#i-plus"/></svg>Nyt løb</button>
+    </div>
   </div>
 
   <section id="guide" style="display:none"></section>
@@ -251,6 +262,16 @@
 </main>
 
 <div id="toast" role="status" aria-live="polite"></div>
+
+<!-- Skabeloner -->
+<div id="tpl-modal" class="modal-overlay" onclick="if(event.target===this)closeTemplates()">
+  <div class="modal-box" style="max-width:720px;text-align:left">
+    <h3>Start fra en skabelon</h3>
+    <p style="font-size:.86rem;color:var(--ink-2);margin-bottom:14px">Du får din egen kopi med poster og opgaver, som du kan rette til. Skabelonen ændres ikke.</p>
+    <div id="tpl-list" class="tpl-grid"></div>
+    <button class="btn-close-modal" style="margin-top:16px;width:100%" onclick="closeTemplates()">Luk</button>
+  </div>
+</div>
 
 <!-- Skift PIN -->
 <div id="pin-modal" class="modal-overlay" onclick="if(event.target===this)closePinModal()">
@@ -437,7 +458,8 @@ function card(q) {
             : `<button class="act" onclick="startTestRun('${q.id}')">${ico('flask', 'sm')}Test</button>`,
     (s.live || s.ended) ? `<button class="act" onclick="openResults('${q.id}')">${ico('file', 'sm')}Resultater</button>` : '',
     `<button class="act" onclick="printTeams('${q.id}')">${ico('print', 'sm')}Print QR</button>`,
-    `<button class="act" onclick="copyQuiz('${q.id}')" title="Kopiér stop, opgaver og fasit til et nyt løb">${ico('copy', 'sm')}Kopiér</button>`
+    `<button class="act" onclick="copyQuiz('${q.id}')" title="Kopiér stop, opgaver og fasit til et nyt løb">${ico('copy', 'sm')}Kopiér</button>`,
+    s.live ? '' : `<button class="act danger" onclick="deleteQuiz('${q.id}')">${ico('trash', 'sm')}Slet</button>`
   ].join('')
 
   return `
@@ -607,6 +629,46 @@ function printTeams(quizId) {
     <\/script>
   </body></html>`)
   win.document.close()
+}
+
+// ── Skabeloner ────────────────────────────────────────────────
+async function openTemplates() {
+  const box = document.getElementById('tpl-modal'), list = document.getElementById('tpl-list')
+  list.innerHTML = '<p style="color:var(--muted);font-size:.88rem">Henter skabeloner…</p>'
+  box.classList.add('open')
+  const { data, error } = await sb.schema('quiz').rpc('list_templates')
+  if (error) { list.innerHTML = `<p style="color:var(--red);font-size:.88rem">${escHtml(error.message)}</p>`; return }
+  if (!data?.length) { list.innerHTML = '<p style="color:var(--muted);font-size:.88rem">Der er ingen skabeloner endnu. Opret et løb fra bunden med "Nyt løb".</p>'; return }
+  list.innerHTML = data.map(t => `<button class="tpl" data-id="${escHtml(t.id)}">
+    ${t.template_tag ? `<span class="tag">${escHtml(t.template_tag)}</span>` : ''}
+    <b>${escHtml(t.title || 'Uden titel')}</b>
+    <div class="d">${escHtml(t.description || '')}</div>
+    <div class="m">${t.stops} ${t.stops === 1 ? 'post' : 'poster'} · ${t.activities} ${t.activities === 1 ? 'opgave' : 'opgaver'}</div></button>`).join('')
+  list.onclick = e => { const b = e.target.closest('.tpl'); if (b) useTemplate(b.dataset.id, data.find(t => t.id === b.dataset.id)) }
+}
+function closeTemplates() { document.getElementById('tpl-modal').classList.remove('open') }
+
+async function useTemplate(id, tpl) {
+  const title = prompt('Navn på dit nye løb:', tpl?.title || 'Nyt løb')
+  if (title === null) return
+  const { data, error } = await sb.schema('quiz').rpc('copy_template', { p_template_id: id, p_title: title.trim() || null })
+  if (error) { toast('Kunne ikke bruge skabelonen: ' + error.message, true); return }
+  closeTemplates()
+  openQuiz(data, 2)                       // gå direkte til kortet, så poster kan flyttes til jeres by
+}
+
+// ── Slet eget løb ─────────────────────────────────────────────
+async function deleteQuiz(quizId) {
+  const q = quizzes.find(x => x.id === quizId); if (!q) return
+  if (q.status === 'aktiv') { toast('Afslut løbet, før du sletter det', true); return }
+  const teams = realTeams(q).length
+  if (!confirm(`Slet "${q.title || 'uden titel'}" permanent?\n\n` +
+      `• ${(q.stops ?? []).length} poster og deres opgaver\n• ${teams} hold med svar, point og billeder\n\nDet kan IKKE fortrydes.`)) return
+  try { await purgeQuizData(quizId, true) }      // fotos først – databasen kan ikke slette filer
+  catch (e) { if (!confirm('Billederne kunne ikke slettes: ' + e.message + '\n\nSlet løbet alligevel?')) return }
+  const { error } = await sb.schema('quiz').rpc('delete_my_quiz', { p_quiz_id: quizId })
+  if (error) { toast('Kunne ikke slette: ' + error.message, true); return }
+  toast('Løbet er slettet'); await loadQuizzes()
 }
 
 // ── Skift PIN ─────────────────────────────────────────────────
