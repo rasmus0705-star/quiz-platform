@@ -497,6 +497,11 @@ async function newQuizForCustomer() {
 }
 
 async function deleteQuiz(quizId) {
+  const quiz = quizCache[quizId]
+  if (quiz?.status === 'aktiv') {
+    alert('Løbet er aktivt. Afslut løbet, før det kan slettes.')
+    return
+  }
   const title = quizTitle(quizId)
   if (!confirm(`Slet "${title}" permanent? Kan ikke fortrydes.`)) return
   // Først fotos og deltagerdata i Storage (databasen kan ikke slette filer) – ellers bliver billederne liggende

@@ -136,7 +136,7 @@
     </div>
 
     <div class="panel" id="errors-panel">
-      <h2>Fejl fra siderne <button class="lnk" id="btn-errors" onclick="toggleErrors()">Vis</button></h2>
+      <h2>Fejl fra siderne <span style="float:right;display:flex;gap:.7rem;align-items:center"><button class="lnk" id="btn-clear-errors" onclick="clearErrors()" style="display:none;color:#b91c1c">Slet alle</button><button class="lnk" id="btn-errors" onclick="toggleErrors()">Vis</button></span></h2>
       <div id="errors" style="display:none"></div>
     </div>
 
@@ -250,15 +250,27 @@ async function downloadBackup() {
 // ── Fejl ─────────────────────────────────────────────────────
 let errorsLoaded = false;
 async function toggleErrors() {
-  const box = document.getElementById('errors'), btn = document.getElementById('btn-errors');
+  const box = document.getElementById('errors'), btn = document.getElementById('btn-errors'), clearBtn = document.getElementById('btn-clear-errors');
   const open = box.style.display === 'none';
   box.style.display = open ? 'block' : 'none'; btn.textContent = open ? 'Skjul' : 'Vis';
+  clearBtn.style.display = open ? 'inline' : 'none';
   if (!open || errorsLoaded) return;
   const { data, error } = await sb.schema('quiz').rpc('admin_recent_errors', { p_limit: 50 });
   if (error) { box.innerHTML = '<p class="empty-note">Kunne ikke hente: ' + escHtml(error.message) + '</p>'; return; }
   errorsLoaded = true;
-  box.innerHTML = (data ?? []).length ? data.map(e => `<div class="err-item"><b>${escHtml(e.page ?? '')}</b> <span class="meta">${e.created_at ? formatDate(e.created_at) : ''}</span><br><code>${escHtml(e.message ?? '')}</code></div>`).join('')
+  box.innerHTML = (data ?? []).length ? data.map(e => `<div class="err-item"><b>${escHtml(e.page ?? '')}</b> <span class="meta">${e.created_at ? formatDateTime(e.created_at) : ''}</span><br><code>${escHtml(e.message ?? '')}</code></div>`).join('')
     : '<p class="empty-note">Ingen fejl registreret.</p>';
+}
+
+async function clearErrors() {
+  if (!confirm('Slet alle registrerede fejl? Det kan ikke fortrydes.')) return;
+  const btn = document.getElementById('btn-clear-errors');
+  btn.disabled = true; btn.textContent = 'Sletter…';
+  const { error } = await sb.schema('quiz').rpc('admin_clear_errors');
+  btn.disabled = false; btn.textContent = 'Slet alle';
+  if (error) { alert('Fejlene kunne ikke slettes: ' + error.message); return; }
+  errorsLoaded = true;
+  document.getElementById('errors').innerHTML = '<p class="empty-note">Ingen fejl registreret.</p>';
 }
 
 // ── Lister ───────────────────────────────────────────────────
@@ -297,6 +309,7 @@ async function createQuiz() {
 
 function labelStatus(s) { return { kladde: 'Kladde', testing: 'Test', aktiv: 'Aktiv', arkiveret: 'Arkiveret' }[s] ?? s; }
 function formatDate(iso) { return iso ? new Date(iso).toLocaleDateString('da-DK', { day: 'numeric', month: 'short' }) : ''; }
+function formatDateTime(iso) { return iso ? new Date(iso).toLocaleString('da-DK', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }) : ''; }
 function escHtml(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 </script>
 </body>

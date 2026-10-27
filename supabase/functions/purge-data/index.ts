@@ -19,7 +19,7 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 
 const CORS = {
   'Access-Control-Allow-Origin':  '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-purge-secret',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-session, x-purge-secret',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 const json = (data: unknown, status = 200) =>
