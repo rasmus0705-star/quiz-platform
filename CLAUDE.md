@@ -159,6 +159,12 @@ Edge Functions og SQL følger **ikke** med git push. GitHub slår planlagte jobs
 - Store/frarådes nu: **"Among Us" i realtid** (holdene skal se hinandens positioner → ny privatlivsvurdering), **GPS-kunst** (kræver hele ruten gemt).
 - **Musikløb:** Spotifys vilkår skal undersøges, før der bygges noget. Virker uden Spotify ved at arrangøren selv lægger lydklip op, som de har rettigheder til.
 
+## Rettet 30/10 (efter feltest)
+- **Spillerkortet rammer holdet + næste post ind** ved første position og hver gang et nyt stop bliver det næste (`frameNextStop`, `framedFor`). Derefter er kortet i fred, så holdet selv kan zoome. ◎-knappen viser dem sammen igen i stedet for kun at centrere.
+- **"Ny post"-panelet er flyttet ned under kortet** (venstre kolonne). Det lå i højre kolonne og kunne være uden for synsfeltet, så det lignede, at klik på kortet ikke virkede. Hjælpeteksten under kortet skifter nu undervejs ("Giv posten et navn…" → "Klik på kortet, hvor næste post skal ligge").
+- Ny test `smoke_click.js` klikker med RIGTIG Leaflet på kortet og går hele vejen gennem at gemme en post – fanger den slags regression fremover.
+- Forsiden er skrevet om: hvad systemet kan nu (GPS-løb + foto-jagt, 12 funktioner), og et klart adskilt afsnit "På tegnebrættet" (escape room, mordgåde, løb uden svar, deltag med kode) med besked om at det ikke er klar.
+
 ## Status og hvad der mangler
 **Alt er testet i jsdom/lokal Postgres (236 DB-tests, 427 side-tests i 18 suiter, edge functions) – IKKE på rigtige telefoner/Supabase.**
 

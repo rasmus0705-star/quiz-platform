@@ -285,7 +285,7 @@
   </div>
   <div class="btns">
     <button class="map-btn" id="btn-list"   onclick="openStops()"     title="Alle stop">☰</button>
-    <button class="map-btn" id="btn-locate" onclick="centerOnUser()"  title="Find mig">◎</button>
+    <button class="map-btn" id="btn-locate" onclick="centerOnUser()"  title="Vis mig og næste stop" aria-label="Vis mig og næste stop">◎</button>
     <button class="map-btn" id="btn-wake"   onclick="toggleWake()"    title="Hold skærmen tændt">🔆</button>
   </div>
 </div>
@@ -363,6 +363,7 @@ let team = null, stops = [], subs = {};
 let theme = jagtenTheme('standard'), words = jagtenWords(theme);
 let userLat = null, userLng = null, userAcc = null, lastFixAt = 0, heading = null;
 let map, userMarker, accCircle, targetCircle, routeLine, pinMarkers = {}, didFit = false, lastTargetId = null;
+let framedFor = null;        // hvilket stop kortet sidst blev indrammet efter – så vi ikke flytter kortet, mens holdet selv zoomer
 let gpsWatch = null, gameOn = false, cur = null, arriving = false, busy = false, backTimer = null;
 let nearSince = {}, lastSent = { t: 0, lat: null, lng: null };
 let unlocked = new Set(), manualMode = false, gameStartAt = 0;
@@ -656,7 +657,23 @@ function updateUserMarker() {
   }
 }
 
-function centerOnUser() { if (userLat !== null) map.setView([userLat, userLng], 17, { animate: true }); }
+// Vis BÅDE holdet og næste post. Bruges ved start, når et nyt stop bliver det næste, og når man trykker på ◎.
+function frameNextStop(animate = true) {
+  if (!map) return false;
+  const next = pickNext();
+  if (!next || next.lat == null) return false;
+  if (userLat === null) { map.setView([next.lat, next.lng], 16, { animate }); return true; }
+  const pts = [[userLat, userLng], [next.lat, next.lng]];
+  // ekstra luft i bunden, så bundpanelet ikke dækker nålen
+  map.fitBounds(pts, { padding: [60, 60], paddingBottomRight: [60, 150], maxZoom: 17, animate });
+  return true;
+}
+
+// ◎-knappen: vis holdet og næste post sammen. Er alle poster klaret, centreres der bare på holdet.
+function centerOnUser() {
+  if (frameNextStop(true)) return;
+  if (userLat !== null) map.setView([userLat, userLng], 17, { animate: true });
+}
 
 // ═════════ GPS + kompas ═════════
 async function startGame(skipGps) {
@@ -794,6 +811,9 @@ function updateNextStop() {
   if (!next) { card.style.display = 'none'; updateOverlays(null); renderProgress(); return; }
   card.style.display = 'flex';
   if (lastTargetId !== next.id) renderPins();            // nyt mål → fremhæv det på kortet
+  // Ram kortet ind om holdet og næste post: ved første position og hver gang et nyt stop bliver det næste.
+  // Derefter må holdet selv zoome og flytte rundt uden at blive afbrudt.
+  if (!manualMode && userLat !== null && framedFor !== next.id) { framedFor = next.id; frameNextStop(didFit); didFit = true; }
   $('next-name').textContent = next.name;
   const d = distanceTo(next.lat, next.lng);
   const heat = $('heat'), bar = $('heat-bar'), compass = $('compass');
@@ -1084,6 +1104,7 @@ async function closeActivity() {
   clearInterval(backTimer);
   $('activity-overlay').classList.remove('open');
   cur = null; nearSince = {};
+  framedFor = null;                     // nyt mål efter opgaven → vis holdet og næste post sammen igen
   await loadStops();                    // låst rækkefølge: næste stop afsløres nu
   renderPins(); updateNextStop();
   if (allDone()) showFinished();

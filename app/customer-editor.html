@@ -452,10 +452,6 @@ oninput="onSearchInput()" onkeydown="searchKey(event)">
 <div id="map"></div>
 <p class="hint" id="map-hint">Klik på kortet, hvor en post skal ligge. Du kan trække i nålene bagefter for at justere.</p>
 
-</div>
-
-<div class="card p2-side">
-<div class="card-title">Dine poster</div>
 <div id="newpost" class="newpost" style="display:none">
 <div class="np-title">📍 Ny post</div>
 <input type="text" id="np-name" maxlength="80" placeholder="Navn på posten, fx Kirken" onkeydown="if(event.key==='Enter')saveNewPost()">
@@ -475,6 +471,10 @@ oninput="onSearchInput()" onkeydown="searchKey(event)">
 </div>
 </div>
 
+</div>
+
+<div class="card p2-side">
+<div class="card-title">Dine poster</div>
 <div id="stop-list"></div>
 </div>
 </div>
@@ -742,12 +742,14 @@ function initMap() {
 function onMapClick(e) { startNewPost(e.latlng) }
 
 async function startNewPost(latlng) {
-  if (!quizId) { await saveQuiz(); if (!quizId) return }
+  if (!quizId) { await saveQuiz(); if (!quizId) { flash('⚠️ Gem løbet først – gå til trin 1 og giv det et navn'); return } }
   document.getElementById('np-done').style.display = 'none'
   if (pendingMarker) pendingMarker.setLatLng(latlng)
   else pendingMarker = L.marker(latlng, { draggable: true, icon: L.divIcon({ html: '<div class="pin-n new">+</div>', iconSize: [30,30], iconAnchor: [15,15], className: '' }) }).addTo(map)
   const box = document.getElementById('newpost'), inp = document.getElementById('np-name')
   box.style.display = 'block'; inp.value = ''
+  document.getElementById('map').classList.remove('placing')
+  document.getElementById('map-hint').textContent = 'Giv posten et navn nedenfor, og tryk "Gem post".'
   setTimeout(() => inp.focus(), 50)
   box.scrollIntoView?.({ behavior: 'smooth', block: 'nearest' })
 }
@@ -765,6 +767,7 @@ async function saveNewPost() {
   lastAddedId = data.id
   map.removeLayer(pendingMarker); pendingMarker = null
   document.getElementById('newpost').style.display = 'none'
+  document.getElementById('map-hint').textContent = 'Klik på kortet, hvor næste post skal ligge. Du kan trække i nålene bagefter.'
   document.getElementById('np-done-title').textContent = '✅ "' + name + '" er gemt (post ' + stops.length + ')'
   document.getElementById('np-done').style.display = 'block'
   renderStops()
@@ -773,6 +776,7 @@ async function saveNewPost() {
 function cancelNewPost() {
   if (pendingMarker) { map.removeLayer(pendingMarker); pendingMarker = null }
   document.getElementById('newpost').style.display = 'none'
+  document.getElementById('map-hint').textContent = 'Klik på kortet, hvor en post skal ligge. Du kan trække i nålene bagefter for at justere.'
 }
 
 // "Placér næste post": kortet gøres klar (markør = trådkors), og feltet med forrige post lukkes
