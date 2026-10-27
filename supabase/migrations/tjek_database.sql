@@ -9,7 +9,7 @@ WITH k(tbl, col) AS (VALUES
   ('quizzes','opens_at'), ('quizzes','closes_at'), ('stops','unlock_code'), ('teams','token')),
 f(fn, kraever) AS (VALUES
   ('set_quiz_status','001'), ('create_test_team','001'), ('copy_quiz','002'), ('unlock_stop','002'), ('get_results','002'),
-  ('purge_quiz_participant_data','003'), ('session_can_manage','003'), ('cleanup_housekeeping','003'),
+  ('get_purgeable_quizzes','003'), ('get_quiz_team_ids','003'), ('purge_quiz_participant_data','003'), ('session_can_manage','003'), ('cleanup_housekeeping','003'),
   ('get_team_positions','004'), ('reveal_results','004'), ('submit_order','004'), ('list_orders','004'),
   ('change_my_pin','004'), ('admin_stats','004'), ('end_test_team','004'))
 SELECT 'kolonne' AS type, tbl || '.' || col AS navn, '' AS kraever_migration,
