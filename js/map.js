@@ -163,8 +163,13 @@ function jagtenAddVector(L, map, spec, style, tint) {
 }
 
 // Tilføjer kortlag + filter. Raster: hvis udbyderen ikke leverer en eneste tile (forkert nøgle, spærret) skiftes til OSM.
-function jagtenAddTiles(L, map, style, tint) {
-  const spec = jagtenTileSpec(style)
+// opts.raster = true  → brug ALTID almindelige kortfliser (ingen WebGL-lag ovenpå).
+// Bruges i editorerne, hvor man klikker direkte på kortet: vektorlærredet kan sluge klikket.
+function jagtenAddTiles(L, map, style, tint, opts) {
+  let spec = jagtenTileSpec(style)
+  if (spec.vector && opts && opts.raster) {
+    spec = { provider: 'osm', native: false, maxZoom: 19, attribution: '© OpenStreetMap-bidragydere', url: JAGTEN_OSM_URL }
+  }
   if (spec.vector) return jagtenAddVector(L, map, spec, style, tint)
 
   let layer = L.tileLayer(spec.url, { maxZoom: spec.maxZoom, attribution: spec.attribution }).addTo(map)

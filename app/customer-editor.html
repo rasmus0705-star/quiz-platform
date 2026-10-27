@@ -283,7 +283,7 @@
     .need-save { background:#fff4de; border:1.5px solid #f3d9a4; border-radius:14px; padding:16px 18px; margin-bottom:16px; }
     .need-save b { display:block; font-family:'Syne','Inter',sans-serif; font-size:1rem; margin-bottom:4px; }
     .need-save p { font-size:.88rem; color:#8a5a00; line-height:1.5; margin-bottom:10px; }
-    #map.locked { opacity:.55; pointer-events:none; }
+    #map.locked { opacity:.7; }        /* tonet ned, men stadig til at bruge – kortet må aldrig føles dødt */
     .hint.warn { color:#b45309; font-weight:600; }
     .help { background:var(--white); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:12px; padding:14px 16px; margin-bottom:16px; }
     .help-title { font-family:'Syne','Inter',sans-serif; font-weight:800; font-size:.9rem; margin-bottom:4px; }
@@ -747,7 +747,8 @@ function initMap() {
   if (map) return
   window.addEventListener('resize', () => { if (map) map.invalidateSize() })   // kortet fylder pladsen, når vinduet ændrer størrelse
   map = L.map('map').setView([56.3, 10.0], 7)
-  jagtenAddTiles(L, map, 'light', '')          // kortudbyder: se js/map-config.js
+  // Kortfliser (ikke vektor) i editoren: man klikker direkte på kortet her, og et WebGL-lag kan sluge klikket
+  jagtenAddTiles(L, map, 'light', '', { raster: true })
   map.on('click', e => { lastMapClick = Date.now(); onMapClick(e) })
 
   // Sikkerhedsnet: vektorkortets lærred kan sluge Leaflets klik, så kortet ser "dødt" ud.

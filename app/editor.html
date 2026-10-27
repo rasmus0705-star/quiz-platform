@@ -234,7 +234,8 @@ async function init() {
   }
 
   map = L.map('map').setView([56.3, 10.0], 7);
-  jagtenAddTiles(L, map, 'light', '');                // kortudbyder: se js/map-config.js
+  // Kortfliser (ikke vektor) i editoren: man klikker direkte på kortet her, og et WebGL-lag kan sluge klikket
+  jagtenAddTiles(L, map, 'light', '', { raster: true });
   const notice = jagtenMapNotice();                  // advarsel hvis kortet kun er til test (OSM)
   if (notice) { const el = document.getElementById('map-notice'); el.textContent = notice; el.style.display = 'block'; }
   initThemeSelect();

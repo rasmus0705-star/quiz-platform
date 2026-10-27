@@ -170,6 +170,7 @@ To uafhængige årsager, begge rettet:
 1. **Løbet var ikke gemt.** Et nyt løb oprettes først, når det har et navn (`create_quiz_for_customer`). Gik man direkte til trin 2 via trinbjælken, kaldte kortklik `saveQuiz()`, som kun gav et lille "⚠️ Titel mangler" i headeren → det lignede et dødt kort. Nu: gult banner i trin 2/3/4 ("Giv først løbet et navn" + knap til trin 1), kortet tones ned og hjælpeteksten advarer.
 2. **Vektorkortets lærred sluger Leaflets klik** (kun med WebGL – derfor fangede jsdom-testen det ikke, da den falder tilbage til raster). Begge editorer har nu et sikkerhedsnet: en lytter direkte på `#map` der regner klikket om med `mouseEventToLatLng`, springes over hvis Leaflet allerede klarede det (500 ms), ignorerer træk (>6 px) og klik på markører/kontroller.
 `smoke_click.js` dækker nu begge dele med rigtig Leaflet.
+3. **Editorerne bruger nu ALTID kortfliser** (`jagtenAddTiles(..., { raster: true })`) – intet WebGL-lag over kortet, så Leaflets klik virker som før ombygningen. Spillersiden beholder vektorkortet (der klikkes kun på markører). Vil man have vektor i editoren igen, skal klik-problemet løses først. `#map.locked` tones kun ned; `pointer-events:none` er fjernet, så kortet aldrig kan føles dødt.
 
 ## Status og hvad der mangler
 **Alt er testet i jsdom/lokal Postgres (236 DB-tests, 427 side-tests i 18 suiter, edge functions) – IKKE på rigtige telefoner/Supabase.**
