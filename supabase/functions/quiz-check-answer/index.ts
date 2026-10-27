@@ -42,12 +42,26 @@ Deno.serve(async (req) => {
       return json({ error: 'Ugyldigt hold-token' }, 403);
     }
 
-    // 2. Tjek om holdet allerede har besvaret denne aktivitet
+    // Hent den aktuelle runde. Submissions er versionsstyret pr. runde.
+    const { data: quiz, error: quizErr } = await sb
+      .from('quizzes')
+      .select('round_no')
+      .eq('id', team.quiz_id)
+      .single();
+
+    if (quizErr || !quiz) {
+      return json({ error: 'Quiz ikke fundet' }, 404);
+    }
+
+    const round_no = quiz.round_no ?? 1;
+
+    // 2. Tjek kun om holdet allerede har besvaret aktiviteten i denne runde.
     const { data: existing } = await sb
       .from('submissions')
       .select('id, is_correct, points')
       .eq('team_id', team.id)
       .eq('activity_id', activity_id)
+      .eq('round_no', round_no)
       .maybeSingle();
 
     if (existing) {
@@ -62,7 +76,7 @@ Deno.serve(async (req) => {
     // 3. Hent aktivitet (tjek den tilhører quizzens stops)
     const { data: activity, error: actErr } = await sb
       .from('activities')
-      .select('id, points, type, stops!inner(quiz_id)')
+      .select('id, points, type, approval, stops!inner(quiz_id)')
       .eq('id', activity_id)
       .eq('stops.quiz_id', team.quiz_id)
       .single();
@@ -79,9 +93,15 @@ Deno.serve(async (req) => {
       .maybeSingle();
 
     // Ingen fasit = aktiviteten godkendes automatisk (fx foto-opgaver)
+    const isPhoto = activity.type === 'foto';
+    const photoApproval = activity.approval ?? 'auto';
+    const manualPhoto = isPhoto && photoApproval === 'manuel';
     let is_correct = false;
 
-    if (!key || keyErr) {
+    if (manualPhoto) {
+      // Manuel bedømmelse: gem svaret, men giv hverken point eller endeligt resultat endnu.
+      is_correct = true;
+    } else if (!key || keyErr) {
       // Ingen fasit defineret – marker som korrekt (manuel bedømmelse)
       is_correct = true;
     } else {
@@ -90,7 +110,10 @@ Deno.serve(async (req) => {
       is_correct = checkAnswer(String(answer), correctVal, key.tolerance ?? null);
     }
 
-    const points = is_correct ? (activity.points ?? 0) : 0;
+    const points = isPhoto && photoApproval !== 'auto'
+      ? 0
+      : (is_correct ? (activity.points ?? 0) : 0);
+    const status = manualPhoto ? 'pending' : 'ok';
 
     // 5. Gem submission
     const { error: subErr } = await sb.from('submissions').insert({
@@ -99,6 +122,8 @@ Deno.serve(async (req) => {
       answer:      String(answer),
       is_correct,
       points,
+      round_no,
+      status,
     });
 
     if (subErr) {
@@ -109,6 +134,7 @@ Deno.serve(async (req) => {
     return json({
       is_correct,
       points,
+      status,
       message: is_correct ? 'Korrekt!' : 'Forkert – prøv igen',
     });
 

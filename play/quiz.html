@@ -689,8 +689,13 @@ async function startGame(skipGps) {
   }
   $('welcome-btn').disabled = true;
   if (!team.started_at) {
-    const { data } = await sb.schema('quiz').rpc('start_team_run', { p_token: token });
-    team.started_at = data || new Date().toISOString();
+    const { data, error } = await sb.schema('quiz').rpc('start_team_run', { p_token: token });
+    if (error || !data) {
+      $('welcome-btn').disabled = false;
+      $('welcome-err').textContent = 'Løbet kunne ikke startes. Kontrollér forbindelsen og prøv igen.';
+      return;
+    }
+    team.started_at = data;
   }
   if (!skipGps) {
     if (gpsWatch !== null) navigator.geolocation.clearWatch(gpsWatch);
