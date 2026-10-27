@@ -622,8 +622,26 @@ async function init() {
 }
 
 // ── Steps ─────────────────────────────────────────────────────
-function goStep(n, save = false) {
-  if (save) saveQuiz()
+async function goStep(n, save = false) {
+  if (save) await saveQuiz()
+
+  // Trin 2-4 er en del af samme guide. Opret/gem derfor kladden
+  // automatisk, når brugeren går videre fra trin 1, så poster kan
+  // placeres uden et separat Gem-klik.
+  if (n >= 2 && !quizId) {
+    await saveQuiz()
+    if (!quizId) {
+      goStep(1)
+      setTimeout(() => {
+        const title = document.getElementById('title')
+        title?.focus()
+        title?.select()
+      }, 60)
+      flash('⚠️ Skriv først et navn på løbet')
+      return
+    }
+  }
+
   currentStep = n
   ;[1,2,3,4].forEach(i => {
     document.getElementById('pane-'+i).classList.toggle('active', i === n)
