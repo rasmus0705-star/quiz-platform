@@ -1,11 +1,11 @@
 // =============================================================
 // sw.js – Service Worker (PWA offline-grundlag)
-// v5 (hjælp + tjekliste kan åbnes uden dækning; v4: biblioteker og skrifttyper ligger nu på egen server (vendor/, fonts/) og forhåndscaches,
+// v6 (mobilforbedringer i deltagerflowet; v5: hjælp + tjekliste kan åbnes uden dækning; v4: biblioteker og skrifttyper ligger nu på egen server (vendor/, fonts/) og forhåndscaches,
 //     så spillesiden stadig kan åbne ved dårlig dækning. Cacher KUN egne filer –
 //     aldrig Supabase-kald eller kort-tiles. Netværk først, cache som nødløsning.
 // =============================================================
 
-const CACHE = 'jagten-v5';
+const CACHE = 'jagten-v6';
 const FILES = [
   'index.html',
   'privatliv.html',

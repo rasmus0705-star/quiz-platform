@@ -7,10 +7,20 @@ const SUPABASE_URL  = Deno.env.get('SUPABASE_URL')!
 const SERVICE_KEY   = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 const ADMIN_PIN_ENV = Deno.env.get('ADMIN_PIN') ?? ''
 
-const CORS = {
-  'Access-Control-Allow-Origin' : '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+const ALLOWED_ORIGINS = new Set(
+  (Deno.env.get('APP_ORIGINS') ?? 'https://rasmus0705-star.github.io,http://localhost:3000,http://localhost:5500,http://127.0.0.1:5500')
+    .split(',').map((origin: string) => origin.trim()).filter(Boolean)
+)
+
+function corsHeaders(req: Request) {
+  const headers = new Headers({
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Vary': 'Origin',
+  })
+  const origin = req.headers.get('origin')
+  if (origin && ALLOWED_ORIGINS.has(origin)) headers.set('Access-Control-Allow-Origin', origin)
+  return headers
 }
 
 async function logAttempt(sb: ReturnType<typeof createClient>, target: string, success: boolean) {
@@ -29,35 +39,41 @@ async function sha256(text: string): Promise<string> {
     .map(b => b.toString(16).padStart(2, '0')).join('')
 }
 
-Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response(null, { headers: CORS })
+Deno.serve(async (req: Request) => {
+  const headers = corsHeaders(req)
+  if (req.method === 'OPTIONS') return new Response(null, { headers })
 
-  let body: { quiz_id?: string; pin?: string }
+  let body: { quiz_id?: string; customer_id?: string; pin?: string }
   try { body = await req.json() } catch {
-    return Response.json({ error: 'Ugyldig request' }, { status: 400, headers: CORS })
+    return Response.json({ error: 'Ugyldig request' }, { status: 400, headers })
   }
 
-  const { quiz_id, pin } = body
+  const { quiz_id, customer_id, pin } = body
   if (!pin) {
-    return Response.json({ error: 'PIN mangler' }, { status: 400, headers: CORS })
+    return Response.json({ error: 'PIN mangler' }, { status: 400, headers })
   }
 
   const sb     = createClient(SUPABASE_URL, SERVICE_KEY)
-  const target = quiz_id ?? 'admin'
+  const target = customer_id ? 'customer:' + customer_id : (quiz_id ?? 'admin')
 
   // ── Rate-limit: max 5 forkerte forsøg pr. 10 minutter pr. target ──
   const windowStart = new Date(Date.now() - 10 * 60 * 1000).toISOString()
-  const { count: recentFails } = await sb
+  const { count: recentFails, error: rateLimitErr } = await sb
     .schema('quiz').from('login_attempts')
     .select('id', { count: 'exact', head: true })
     .eq('target', target)
     .eq('success', false)
     .gte('created_at', windowStart)
 
+  if (rateLimitErr) {
+    console.error('Rate-limit opslag fejlede:', rateLimitErr)
+    return Response.json({ error: 'Login er midlertidigt utilgængeligt. Prøv igen om lidt.' }, { status: 503, headers })
+  }
+
   if ((recentFails ?? 0) >= 5) {
     return Response.json(
       { error: 'For mange forkerte forsøg. Prøv igen om 10 minutter.' },
-      { status: 429, headers: CORS }
+      { status: 429, headers }
     )
   }
 
@@ -65,6 +81,7 @@ Deno.serve(async (req) => {
   const adminHash = await sha256(ADMIN_PIN_ENV.trim())
 
   let sessionQuizId: string | null = null
+  let sessionCustomerId: string | null = null
   let isAdmin = false
   let expiresAt: Date
 
@@ -75,6 +92,36 @@ Deno.serve(async (req) => {
     expiresAt     = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 dage
 
   // ── Quiz-PIN ───────────────────────────────────────────────
+  } else if (customer_id) {
+    const { data: customer, error } = await sb
+      .schema('quiz').from('customers')
+      .select('id, pin_expires_at')
+      .eq('id', customer_id)
+      .single()
+
+    if (error || !customer) {
+      await logAttempt(sb, target, false)
+      return Response.json({ error: 'Forkert login' }, { status: 401, headers })
+    }
+
+    const { data: valid, error: verifyErr } = await sb.schema('quiz').rpc('verify_customer_pin', {
+      p_customer_id: customer_id,
+      p_pin: pin.trim()
+    })
+    if (verifyErr || !valid) {
+      await logAttempt(sb, target, false)
+      return Response.json({ error: 'Forkert login' }, { status: 401, headers })
+    }
+    if (customer.pin_expires_at && new Date(customer.pin_expires_at) < new Date()) {
+      await logAttempt(sb, target, false)
+      return Response.json({ error: 'PIN er udløbet' }, { status: 401, headers })
+    }
+
+    sessionCustomerId = customer_id
+    expiresAt = customer.pin_expires_at
+      ? new Date(customer.pin_expires_at)
+      : new Date(Date.now() + 24 * 60 * 60 * 1000)
+
   } else if (quiz_id) {
     const { data: quiz, error } = await sb
       .schema('quiz').from('quizzes')
@@ -83,15 +130,15 @@ Deno.serve(async (req) => {
       .single()
 
     if (error || !quiz) {
-      return Response.json({ error: 'Quiz ikke fundet' }, { status: 404, headers: CORS })
+      return Response.json({ error: 'Forkert login' }, { status: 401, headers })
     }
     if (!quiz.pin_hash || quiz.pin_hash !== pinHash) {
       await logAttempt(sb, target, false)
-      return Response.json({ error: 'Forkert PIN' }, { status: 401, headers: CORS })
+      return Response.json({ error: 'Forkert login' }, { status: 401, headers })
     }
     if (quiz.pin_expires_at && new Date(quiz.pin_expires_at) < new Date()) {
       await logAttempt(sb, target, false)
-      return Response.json({ error: 'PIN er udløbet' }, { status: 401, headers: CORS })
+      return Response.json({ error: 'PIN er udløbet' }, { status: 401, headers })
     }
 
     sessionQuizId = quiz_id
@@ -101,7 +148,7 @@ Deno.serve(async (req) => {
 
   } else {
     await logAttempt(sb, target, false)
-    return Response.json({ error: 'Forkert PIN' }, { status: 401, headers: CORS })
+    return Response.json({ error: 'Forkert login' }, { status: 401, headers })
   }
 
   // ── Opret session ─────────────────────────────────────────
@@ -109,6 +156,7 @@ Deno.serve(async (req) => {
     .schema('quiz').from('sessions')
     .insert({
       quiz_id   : sessionQuizId,
+      customer_id: sessionCustomerId,
       is_admin  : isAdmin,
       expires_at: expiresAt.toISOString()
     })
@@ -117,7 +165,7 @@ Deno.serve(async (req) => {
 
   if (sessionErr || !session) {
     console.error('Session insert fejl:', sessionErr)
-    return Response.json({ error: 'Sessionsoprettelse fejlede' }, { status: 500, headers: CORS })
+    return Response.json({ error: 'Sessionsoprettelse fejlede' }, { status: 500, headers })
   }
 
   await logAttempt(sb, target, true)
@@ -126,6 +174,7 @@ Deno.serve(async (req) => {
     session_id : session.id,
     is_admin   : isAdmin,
     quiz_id    : sessionQuizId,
+    customer_id: sessionCustomerId,
     expires_at : expiresAt.toISOString()
-  }, { headers: CORS })
+  }, { headers })
 })
