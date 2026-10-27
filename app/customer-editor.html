@@ -592,6 +592,7 @@ let currentStep = 1
 let quizHide   = true                    // nye løb: skjul placeringer til afsløringen (kan ændres i trin 1)
 let pendingMarker = null
 let lastAddedId = null
+let lastMapClick = 0
 let shareTeam  = null
 let editActId  = null
 let editStopId = null
@@ -736,7 +737,21 @@ function initMap() {
   window.addEventListener('resize', () => { if (map) map.invalidateSize() })   // kortet fylder pladsen, når vinduet ændrer størrelse
   map = L.map('map').setView([56.3, 10.0], 7)
   jagtenAddTiles(L, map, 'light', '')          // kortudbyder: se js/map-config.js
-  map.on('click', onMapClick)
+  map.on('click', e => { lastMapClick = Date.now(); onMapClick(e) })
+
+  // Sikkerhedsnet: vektorkortets lærred kan sluge Leaflets klik, så kortet ser "dødt" ud.
+  // Vi lytter derfor også direkte på kortets element – og springer over, hvis Leaflet allerede klarede det.
+  const el = document.getElementById('map')
+  let downX = 0, downY = 0
+  el.addEventListener('pointerdown', ev => { downX = ev.clientX; downY = ev.clientY }, true)
+  el.addEventListener('click', ev => {
+    if (Date.now() - lastMapClick < 500) return                                  // Leaflet har allerede sendt klikket
+    if (Math.hypot(ev.clientX - downX, ev.clientY - downY) > 6) return           // det var et træk, ikke et klik
+    if (ev.target.closest('.leaflet-marker-icon, .leaflet-control, .leaflet-popup, .leaflet-bar')) return
+    if (!map || typeof map.mouseEventToLatLng !== 'function') return
+    lastMapClick = Date.now()
+    onMapClick({ latlng: map.mouseEventToLatLng(ev) })
+  })
 }
 
 function onMapClick(e) { startNewPost(e.latlng) }

@@ -217,6 +217,7 @@ let quizId     = params.get('q');
 let quizStatus = 'kladde';
 let quizMode   = 'fri';
 let quizTheme  = 'standard';
+let lastMapClick = 0;
 let stops      = [];
 let teams      = [];
 let map, markers = [];
@@ -237,7 +238,20 @@ async function init() {
   const notice = jagtenMapNotice();                  // advarsel hvis kortet kun er til test (OSM)
   if (notice) { const el = document.getElementById('map-notice'); el.textContent = notice; el.style.display = 'block'; }
   initThemeSelect();
-  map.on('click', onMapClick);
+  map.on('click', e => { lastMapClick = Date.now(); onMapClick(e); });
+
+  // Sikkerhedsnet: vektorkortets lærred kan sluge Leaflets klik (se customer-editor.html)
+  const mapEl = document.getElementById('map');
+  let downX = 0, downY = 0;
+  mapEl.addEventListener('pointerdown', ev => { downX = ev.clientX; downY = ev.clientY; }, true);
+  mapEl.addEventListener('click', ev => {
+    if (Date.now() - lastMapClick < 500) return;
+    if (Math.hypot(ev.clientX - downX, ev.clientY - downY) > 6) return;
+    if (ev.target.closest('.leaflet-marker-icon, .leaflet-control, .leaflet-popup, .leaflet-bar')) return;
+    if (!map || typeof map.mouseEventToLatLng !== 'function') return;
+    lastMapClick = Date.now();
+    onMapClick({ latlng: map.mouseEventToLatLng(ev) });
+  });
 
   if (quizId) await loadAll();
   updateReadinessUI();
