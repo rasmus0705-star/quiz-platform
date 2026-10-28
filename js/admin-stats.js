@@ -21,7 +21,7 @@ function adminStatsCss() {
   document.head.appendChild(el)
 }
 
-// page: 'overview' | 'customers' | 'quizzes' – den aktuelle side linkes ikke til sig selv
+// page: 'overview' | 'customers' | 'quizzes' | 'analytics' – den aktuelle side linkes ikke til sig selv
 async function initAdminStats(page) {
   const host = document.getElementById('admin-stats')
   if (!host) return null
@@ -39,15 +39,16 @@ async function initAdminStats(page) {
   }
   const mb = d.storage_bytes == null ? null : d.storage_bytes / 1048576
   const pct = d.storage_bytes == null ? 0 : d.storage_bytes / ADMIN_FREE_STORAGE * 100
+  const link = (target, href) => page === target ? null : href
   const cells = [
-    { n: d.quizzes_live, l: 'Aktive løb', cls: 'hot', href: page === 'quizzes' ? null : 'dashboard.html' },
-    { n: d.orders_new, l: 'Nye bestillinger', cls: d.orders_new > 0 ? 'warn' : '', href: page === 'overview' ? null : 'overview.html' },
-    { n: d.customers, l: 'Kunder', href: page === 'customers' ? null : 'customers.html' },
-    { n: d.quizzes, l: 'Løb i alt', href: page === 'quizzes' ? null : 'dashboard.html' },
-    { n: d.teams, l: 'Hold i alt' },
-    { n: d.answers_30d, l: 'Svar (30 dage)' },
-    { n: mb == null ? '–' : (mb < 10 ? mb.toFixed(1) : Math.round(mb)) + ' MB', l: 'Fotolager' + (d.storage_bytes == null ? '' : ' (' + Math.round(pct) + ' %)'), cls: pct >= 70 ? 'warn' : '' },
-    { n: d.errors_24h, l: 'Fejl (24 t)', cls: d.errors_24h > 0 ? 'warn' : '', href: page === 'overview' ? null : 'overview.html' }
+    { n: d.quizzes_live, l: 'Aktive løb', cls: 'hot', href: link('quizzes', 'dashboard.html') },
+    { n: d.orders_new, l: 'Nye bestillinger', cls: d.orders_new > 0 ? 'warn' : '', href: link('overview', 'overview.html') },
+    { n: d.customers, l: 'Kunder', href: link('customers', 'customers.html') },
+    { n: d.quizzes, l: 'Løb i alt', href: link('quizzes', 'dashboard.html') },
+    { n: d.teams, l: 'Hold i alt', href: link('analytics', 'analytics.html#teams') },
+    { n: d.answers_30d, l: 'Svar (30 dage)', href: link('analytics', 'analytics.html#answers') },
+    { n: mb == null ? '–' : (mb < 10 ? mb.toFixed(1) : Math.round(mb)) + ' MB', l: 'Fotolager' + (d.storage_bytes == null ? '' : ' (' + Math.round(pct) + ' %)'), cls: pct >= 70 ? 'warn' : '', href: link('analytics', 'analytics.html#storage') },
+    { n: d.errors_24h, l: 'Fejl (24 t)', cls: d.errors_24h > 0 ? 'warn' : '', href: link('overview', 'overview.html#errors') }
   ]
   host.innerHTML = cells.map(c => {
     const inner = `<b>${c.n ?? '–'}</b><span>${c.l}</span>`

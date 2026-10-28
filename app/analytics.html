@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<meta name="robots" content="noindex, nofollow">
+<title>Statistik – GPS Jagten</title>
+<script src="../vendor/supabase.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/admin-stats.js"></script>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#eef1f6;--ink:#16213e;--ink2:#0f3460;--accent:#e94560;--muted:#6b7485;--line:#e5e8ef}
+  body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex}
+  #sidebar{width:230px;flex-shrink:0;background:var(--ink);color:#eaeaea;display:flex;flex-direction:column;padding:1.5rem 0;position:sticky;top:0;height:100vh}
+  .logo{font-size:1.05rem;font-weight:700;padding:0 1.5rem 1.75rem}nav{padding:0 1.5rem;flex:1;display:grid;align-content:start;gap:.15rem}
+  nav a{color:#8892a4;text-decoration:none;font-size:.92rem;font-weight:600;padding:.65rem 0}nav a:hover,nav a.active{color:#fff}
+  .signout{padding:0 1.5rem;margin-top:auto}.signout button{width:100%;padding:.6rem;border:0;border-radius:8px;background:rgba(255,255,255,.08);color:#eaeaea;cursor:pointer}
+  #mobile-topbar{display:none}@media(max-width:760px){body{display:block}#sidebar{display:none}#mobile-topbar{display:flex;justify-content:space-between;align-items:center;background:var(--ink);color:#fff;padding:.85rem 1rem}#mobile-topbar nav{display:flex;gap:1rem;padding:0;flex:0}#mobile-topbar a{color:#aab2c2;text-decoration:none;font-size:.8rem}#mobile-topbar a.active{color:#fff}}
+  main{flex:1;max-width:1180px;padding:2.25rem 2.5rem}@media(max-width:760px){main{padding:1.25rem}}
+  h1{font-size:1.6rem;margin-bottom:.25rem}.lead{color:var(--muted);font-size:.9rem;margin-bottom:1.25rem}
+  .panel{background:#fff;border-radius:18px;padding:1.35rem;margin-top:1rem;box-shadow:0 1px 2px rgba(22,33,62,.04)}.panel h2{font-size:1rem;margin-bottom:.25rem}.sub{font-size:.78rem;color:var(--muted);margin-bottom:1rem}
+  .grid{display:grid;grid-template-columns:1.5fr 1fr;gap:1rem}@media(max-width:900px){.grid{grid-template-columns:1fr}}
+  .bars{height:230px;display:flex;align-items:stretch;gap:7px;border-bottom:1px solid var(--line);padding:1rem 0 0}.bar-group{flex:1;display:flex;flex-direction:column;justify-content:flex-end;min-width:0}.bar-stack{height:185px;display:flex;align-items:flex-end;gap:3px}.bar{flex:1;min-height:2px;border-radius:5px 5px 0 0;background:#5b52f5}.bar.alt{background:#e94560}.bar-label{text-align:center;color:var(--muted);font-size:.62rem;margin-top:.45rem;white-space:nowrap;overflow:hidden}.legend{display:flex;gap:1rem;color:var(--muted);font-size:.75rem;margin-top:.7rem}.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:4px;background:#5b52f5}.legend i.alt{background:#e94560}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:1rem}@media(max-width:620px){.split{grid-template-columns:1fr}}
+  .metric-list{display:grid;gap:.55rem;margin-top:.8rem}.metric{display:grid;grid-template-columns:100px 1fr 42px;gap:.5rem;align-items:center;font-size:.78rem}.track{height:9px;background:#edf0f5;border-radius:9px;overflow:hidden}.fill{height:100%;background:var(--ink2);border-radius:9px}.empty{color:var(--muted);font-size:.85rem;padding:1rem 0}
+  .error{color:#a52c3d;padding:1rem;background:#fdecef;border-radius:10px;font-size:.85rem}
+</style>
+</head>
+<body>
+<aside id="sidebar"><div class="logo">🗺️ GPS Jagten</div><nav>
+  <a href="overview.html">Oversigt</a><a href="customers.html">Kunder</a><a href="dashboard.html">Alle løb</a><a href="analytics.html" class="active">Statistik</a>
+</nav><div class="signout"><button onclick="signOut()">Log ud</button></div></aside>
+<div id="mobile-topbar"><b>🗺️ GPS Jagten</b><nav><a href="overview.html">Oversigt</a><a href="analytics.html" class="active">Statistik</a></nav></div>
+<main>
+  <h1>Statistik</h1><p class="lead">Udviklingen i kunder, løb, hold, svar og bestillinger.</p>
+  <div id="admin-stats" aria-label="Nøgletal"></div>
+  <div id="loading" class="panel">Indlæser statistik…</div>
+  <div id="content" style="display:none">
+    <div class="grid">
+      <section class="panel" id="answers"><h2>Aktivitet pr. måned</h2><p class="sub">De seneste 12 måneder</p><div class="bars" id="monthly-bars"></div><div class="legend"><span><i></i>Kunder / løb</span><span><i class="alt"></i>Hold / svar</span></div></section>
+      <section class="panel" id="storage"><h2>Fordeling</h2><p class="sub">Nuværende løb og opgavetyper</p><div class="split"><div><b>Løbsstatus</b><div class="metric-list" id="statuses"></div></div><div><b>Opgavetyper</b><div class="metric-list" id="activities"></div></div></div></section>
+    </div>
+    <section class="panel" id="teams"><h2>Hold og svar pr. måned</h2><p class="sub">Brug grafen til at se, hvornår platformen bliver brugt mest.</p><div class="bars" id="usage-bars"></div><div class="legend"><span><i></i>Hold</span><span><i class="alt"></i>Svar</span></div></section>
+  </div>
+  <div id="error" style="display:none"></div>
+</main>
+<script>
+const $ = id => document.getElementById(id)
+const labels = { mc:'Multiple choice', tekst:'Tekst', tal:'Tal', foto:'Foto', info:'Info' }
+;(async () => {
+  const session = await getSession()
+  if (!session) { location.href = 'login.html'; return }
+  if (session.type === 'pin') { if (!session.is_admin) { location.href = 'customer-overview.html'; return } activatePinClient() }
+  initAdminStats('analytics')
+  const { data, error } = await sb.schema('quiz').rpc('admin_analytics', { p_months: 12 })
+  $('loading').style.display = 'none'
+  if (error || !data) { $('error').textContent = 'Kunne ikke hente statistik: ' + (error?.message || 'ukendt fejl'); $('error').className = 'error'; $('error').style.display = 'block'; return }
+  $('content').style.display = 'block'
+  renderBars($('monthly-bars'), data.months || [], ['customers','quizzes'], ['teams','answers'])
+  renderBars($('usage-bars'), data.months || [], ['teams'], ['answers'])
+  renderMetrics($('statuses'), data.quiz_statuses || [], x => x.label)
+  renderMetrics($('activities'), data.activity_types || [], x => labels[x.label] || x.label)
+})()
+function renderBars(host, rows, first, second) {
+  const all = [...first, ...second].flatMap(key => rows.map(r => Number(r[key]) || 0)); const max = Math.max(...all, 1)
+  host.innerHTML = rows.map(r => `<div class="bar-group"><div class="bar-stack">${first.map(k => `<i class="bar" title="${k}: ${r[k] || 0}" style="height:${Math.max(2, (r[k] || 0) / max * 100)}%"></i>`).join('')}${second.map(k => `<i class="bar alt" title="${k}: ${r[k] || 0}" style="height:${Math.max(2, (r[k] || 0) / max * 100)}%"></i>`).join('')}</div><span class="bar-label">${String(r.month || '').slice(5)}</span></div>`).join('')
+}
+function renderMetrics(host, rows, label) {
+  const max = Math.max(...rows.map(x => Number(x.value) || 0), 1)
+  host.innerHTML = rows.length ? rows.map(x => `<div class="metric"><span>${label(x)}</span><div class="track"><i class="fill" style="width:${(x.value / max * 100)}%"></i></div><b>${x.value}</b></div>`).join('') : '<span class="empty">Ingen data endnu</span>'
+}
+</script>
+</body>
+</html>
