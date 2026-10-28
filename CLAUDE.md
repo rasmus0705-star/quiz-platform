@@ -110,7 +110,7 @@ Poller `get_scoreboard` hvert 5. sek (ingen realtime – submissions er fjernet 
 Quizmaster-bar (kun hvis session må styre løbet): afslut, start ny runde, godkend/afvis fotos. Offentligt vises kun godkendte fotos.
 
 ## Deploy-rækkefølge (vigtigt)
-1. SQL Editor → kør `001_…`, `002_…`, `003_…`, **`004_arrangoer_og_drift.sql`** (alle kan genkøres). **Kør SQL FØR siderne pushes** – editoren bruger nye kolonner (`hide_results`, `opens_at`, `closes_at`). Vælg "Run and enable RLS" hvis spurgt.
+1. SQL Editor → kør `001_…`, `002_…`, `003_…`, **`004_arrangoer_og_drift.sql`**, og derefter **`013_private_orders_and_admin_error_fix.sql`** (alle kan genkøres). **Kør SQL FØR siderne pushes** – editoren bruger nye kolonner (`hide_results`, `opens_at`, `closes_at`). Vælg "Run and enable RLS" hvis spurgt.
 2. Edge Functions (dashboard, ikke git): `quiz-check-answer`, `quiz-pin-auth`, **`purge-data`** → Deploy. Secrets: `PURGE_SECRET` (ny, lang tilfældig tekst).
 3. GitHub → Settings → Secrets → Actions: `PURGE_SECRET`, `SUPABASE_URL`, `SUPABASE_ANON`. Kør workflowet "Slet udløbne deltagerdata" manuelt én gang (svar: `{"mode":"cron",…}`).
 4. `js/map-config.js`: vælg kortudbyder + nøgle (standard = OSM, kun test).
@@ -134,7 +134,7 @@ Edge Functions og SQL følger **ikke** med git push. GitHub slår planlagte jobs
 - **Afsløring af vinderen:** `quizzes.hide_results` (standard TIL for nye løb, sættes i trin 1) + `results_revealed_at`. Mens skjult returnerer `get_scoreboard` til offentligheden **kun navne + fremdrift** (ingen point/tid/rækkefølge – også ikke i API'et). Quizmasteren ser alt, men scoreboardet viser som standard det skjulte billede også for ham ("Se placeringer (kun mig)" til at kigge) → storskærm røber intet. "Afslør vinderen" → podie-animation på alle skærme. Ny runde nulstiller afsløringen. Spillerens færdig-skærm viser aldrig placering.
 - **Planlagt åbning/lukning:** `opens_at`/`closes_at`. Spiller: nedtælling før start (serverens ur via `server_now`), "Løbet er lukket" efter, tid tilbage i topbaren. Server: trigger på `submissions` afviser svar uden for tidsrummet (testhold undtaget).
 - **Dårlig dækning (spiller):** svar og fotos prøves automatisk igen (banner med nedtælling), serverfejl (4xx) prøves ikke; næste post hentes når dækningen er tilbage (`online`-hændelse). Ikke varig kø på tværs af genindlæsning.
-- **Bestilling:** `bestil.html` → `submit_order` (samtykke, honningkrukke, max 3/mail/døgn, max 30/time) → `orders` (RLS, kun RPC) → admin-forsiden (`app/overview.html`): "Opret kunde" (`create_customer_from_order`, idempotent) → `customers.html?c=<id>` (sæt PIN, send login). Afviste bestillinger slettes efter 90 dage. Betaling ikke bygget (felter `plan`, `amount_dkk` findes).
+- **Bestilling:** `bestil.html` → `submit_order` (samtykke, honningkrukke, max 3/mail/døgn, max 30/time) → `orders` (RLS, kun RPC) → admin-forsiden (`app/overview.html`): "Opret kunde" (`create_customer_from_order`, idempotent) → `customers.html?c=<id>` (sæt PIN, send login). Organisationsnavn er valgfrit, så privatpersoner kan bestille. `013_private_orders_and_admin_error_fix.sql` gør `orders.org_name` nullable og opdaterer RPC'en. Afviste bestillinger slettes efter 90 dage. Betaling ikke bygget (felter `plan`, `amount_dkk` findes).
 - **Kunde-selvbetjening:** "Skift PIN" (`change_my_pin`, spærring efter 5 forkerte, logger andre enheder ud). "Glemt PIN" kræver mail → ikke bygget (admin nulstiller).
 - **Admin:** `admin_stats` (kunder/løb/hold/svar/fotolager med advarsel ved 70 % af 1 GB), `admin_recent_errors`, `admin_export_all` (backup som JSON – aldrig PIN-hash/deltagerdata; knap + 7-dages påmindelse), `delete_customer_cascade` (+ `purgeQuizData` for fotos først; kræver at man skriver SLET; blokeres ved live løb).
 - **Grænser** (triggers): 100 løb/kunde, 200 hold/løb, 100 poster/løb, 300 opgaver/løb.
@@ -149,6 +149,8 @@ Edge Functions og SQL følger **ikke** med git push. GitHub slår planlagte jobs
 - **Kunden kan slette eget løb:** `delete_my_quiz` (kun kladde/afsluttet; aldrig et løb der kører), fotos ryddes først via `purgeQuizData`.
 - **Foto-løb:** `score_submission(submission, point)` – point 0..opgavens max, NULL = afvist, kan gøres om. Scoreboardets godkendelse er nu en karakterskala (0..max, eller "Godkend" ved 1 point). **Fotovæg** (`get_photo_wall`, knap 📸): quizmaster ser alle fotos med point/max og status; offentligheden kun godkendte. Ny approval-værdi `skjul` (kun quizmasteren ser billedet). Testholdets fotos vises aldrig.
 - **Skabelon-løb:** `quizzes.is_template` + `template_tag`. Admin stjernemarkerer et løb i `dashboard.html` (`set_template`). Kunden: "Start fra skabelon" i oversigten → `list_templates` → `copy_template` giver kundens egen kladde (poster, opgaver og fasit; ingen hold) og åbner trin 2. Skabeloner tæller ikke i grænsen på 100 løb.
+- **Sikkerhedsrettelse (013):** `admin_clear_errors()` kræver nu altid `check_session_is_admin()`. `auth.role() = 'authenticated'` må ikke bruges som admin-kontrol, fordi det også omfatter almindelige autentificerede brugere. Samme rettelse findes i `012_admin_error_management.sql` og gentages i migration 013 til eksisterende databaser.
+- **Skærmlås (spiller):** Wake Lock anmodes med `await` i samme brugertryk som Start, genanskaffes efter `release` og ved `visibilitychange`, når løbet er i gang. Browser- og telefonunderstøttelse skal stadig testes fysisk på iOS og Android.
 - **Kortet i editoren var gråt:** vektorkortet blev oprettet på en skjult fane (0 px). `jagtenWhenSized()` venter nu på, at kortet har plads, og enhver fejl giver OSM-fliser i stedet for et tomt kort.
 - Alt dette ligger i `004_arrangoer_og_drift.sql` (kan genkøres). `reparation_003.sql` findes, hvis 003 ikke kørte færdigt; `tjek_database.sql` viser hvad der mangler.
 
@@ -174,6 +176,13 @@ To uafhængige årsager, begge rettet:
 
 ## Status og hvad der mangler
 **Alt er testet i jsdom/lokal Postgres (236 DB-tests, 427 side-tests i 18 suiter, edge functions) – IKKE på rigtige telefoner/Supabase.**
+
+### Aktuel fokus efter migration 013
+1. Kør `013_private_orders_and_admin_error_fix.sql` i Supabase og test både admin-rydning af fejl og privat bestilling.
+2. Felttest på en rigtig iPhone og Android: GPS-tilladelse, skærmlås, kamera/foto, dårlig forbindelse og QR/holdlinks.
+3. Udfyld og få gennemlæst `privatliv.html`, `databehandleraftale.html` og `vilkaar.html`, før der inviteres betalende kunder.
+4. Lav én konkret Gl. Estrup-skabelon og brug den i en fuld prøve fra bestilling til afsluttet løb.
+5. Byg først derefter offentlig QR-information, QR-oplåsning og escape-room-flow.
 
 ### Skal på plads før første betalende kunde
 1. **Supabase Free pauser efter 7 dages inaktivitet og har ingen backups** (Pro ≈ 25 USD/md. løser begge). Det daglige purge-job holder sandsynligvis projektet vågent – verificér.

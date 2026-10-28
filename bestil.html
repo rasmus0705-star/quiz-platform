@@ -63,7 +63,7 @@
   <section>
     <div class="kicker">Bestil login</div>
     <h1>Kom i gang med dit eget GPS-løb</h1>
-    <p class="lead">Fortæl lidt om jer, så opretter vi et login til jer. Det tager under et minut.</p>
+    <p class="lead">Udfyld formularen, så opretter vi et login til dig. Det tager under et minut.</p>
     <div class="plan">
       <div class="price">0 kr. <small>i opstartsperioden</small></div>
       <ul>
@@ -79,8 +79,8 @@
 
   <section>
     <form id="form" novalidate>
-      <label for="org">Forening eller virksomhed *</label>
-      <input id="org" autocomplete="organization" maxlength="120" required>
+      <label for="org">Virksomhed, forening eller navn <span class="opt">(valgfri)</span></label>
+      <input id="org" autocomplete="organization" maxlength="120" placeholder="Fx privatperson, GPS-klubben eller Firma A/S">
       <div class="row2">
         <div><label for="name">Dit navn *</label><input id="name" autocomplete="name" maxlength="120" required></div>
         <div><label for="email">E-mail *</label><input id="email" type="email" autocomplete="email" maxlength="200" required></div>
@@ -137,13 +137,12 @@ $('form').addEventListener('submit', async e => {
   const err = msg => { $('err').textContent = msg || '' }
   err('')
   const org = $('org').value.trim(), name = $('name').value.trim(), email = $('email').value.trim()
-  if (org.length < 2) return err('Skriv navnet på foreningen eller virksomheden.')
   if (name.length < 2) return err('Skriv dit navn.')
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email)) return err('Skriv en gyldig e-mailadresse.')
   if (!$('consent').checked) return err('Sæt kryds ved, at vi må gemme dine oplysninger.')
   sending = true; $('go').disabled = true; $('go').textContent = 'Sender…'
   const { data, error } = await sbPublic.schema('quiz').rpc('submit_order', {
-    p_org: org, p_name: name, p_email: email, p_phone: $('phone').value.trim() || null, p_event_type: $('type').value || null,
+    p_org: org || null, p_name: name, p_email: email, p_phone: $('phone').value.trim() || null, p_event_type: $('type').value || null,
     p_expected: $('date').value || null, p_message: $('msg').value.trim() || null, p_consent: true, p_website: $('website').value
   })
   sending = false; $('go').disabled = false; $('go').textContent = 'Send bestilling'

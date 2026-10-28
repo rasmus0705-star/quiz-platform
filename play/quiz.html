@@ -718,7 +718,12 @@ async function startGame(skipGps) {
     startHeading();
   }
   // skærmlåsen skal bedes om i SAMME tryk som Start, ellers afviser browseren den
-  if ($('wake-chk').checked && !wakeWanted) { wakeWanted = true; $('btn-wake').classList.add('on'); acquireWake(); }
+  if ($('wake-chk').checked && !wakeWanted) {
+    wakeWanted = true;
+    $('btn-wake').classList.add('on');
+    // Skal afvikles som en del af Start-knappens brugertryk på iOS/Android.
+    await acquireWake();
+  }
   manualMode = !!skipGps && !team.is_test;       // uden GPS: hvert stop låses op med nødkode
   gameStartAt = Date.now();
   if (manualMode) { $('acc-pill').style.display = 'block'; $('acc-text').textContent = 'uden GPS'; $('acc-pill').style.color = 'var(--bad)'; }
@@ -1217,18 +1222,27 @@ async function toggleWake() {
   await acquireWake(false);          // brugeren trykkede selv → sig til hvis det ikke kan lade sig gøre
 }
 async function acquireWake(silent = true) {
+  if (wakeLock && !wakeLock.released) return true;
   if ('wakeLock' in navigator) {
-    try { wakeLock = await navigator.wakeLock.request('screen'); return; } catch (_) {}
+    try {
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener?.('release', () => {
+        wakeLock = null;
+        if (wakeWanted && gameOn) setTimeout(() => acquireWake(true), 150);
+      });
+      return true;
+    } catch (_) {}
   }
   if (typeof NoSleep !== 'undefined') {
-    try { noSleep = noSleep || new NoSleep(); await noSleep.enable(); return; } catch (_) {}
+    try { noSleep = noSleep || new NoSleep(); await noSleep.enable(); return true; } catch (_) {}
   }
   // Virker ikke her: slå kontakten fra uden at genere. Kun hvis brugeren selv trykkede, siger vi hvorfor.
   wakeWanted = false; $('btn-wake').classList.remove('on'); const c = $('wake-chk'); if (c) c.checked = false;
   if (!silent) alert('Skærm-lås virker ikke i denne browser. Slå "Skærm altid tændt" til i telefonens indstillinger.');
+  return false;
 }
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible' && wakeWanted && 'wakeLock' in navigator) acquireWake(true);
+  if (document.visibilityState === 'visible' && wakeWanted && gameOn) acquireWake(true);
 });
 
 // ═════════ Hjælpere ═════════

@@ -10,11 +10,15 @@ AS $$
 DECLARE
   v_deleted integer := 0;
 BEGIN
-  IF NOT (quiz.check_session_is_admin() OR auth.role() = 'authenticated') THEN
+  -- Kun en aktiv administrativ session må rydde fejloversigten.
+  -- auth.role() = 'authenticated' er ikke tilstrækkeligt: det omfatter
+  -- almindelige Supabase-brugere.
+  IF NOT quiz.check_session_is_admin() THEN
     RAISE EXCEPTION 'Adgang nægtet';
   END IF;
 
-  DELETE FROM quiz.errors;
+  -- Supabase safe-delete kræver en WHERE-betingelse, også når alt skal ryddes.
+  DELETE FROM quiz.errors WHERE true;
   GET DIAGNOSTICS v_deleted = ROW_COUNT;
   RETURN v_deleted;
 END;
