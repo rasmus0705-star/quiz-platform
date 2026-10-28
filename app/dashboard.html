@@ -199,7 +199,7 @@ async function loadQuizzes() {
   const { data, error } = await sb
     .schema('quiz')
     .from('quizzes')
-    .select('id, title, status, round_no, created_at, customer_id, customers(name), is_template, template_tag')
+    .select('id, title, status, round_no, created_at, customer_id, customers(name), is_template, template_tag, template_locked')
     .order('created_at', { ascending: false });
 
   document.getElementById('loading').style.display = 'none';
@@ -234,20 +234,22 @@ function renderGrid() {
   }
   grid.innerHTML = list.map(q => {
     const custName = q.customers?.name;
+    const locked = !!q.template_locked;
     return `
     <div class="quiz-card">
-      <a href="editor.html?q=${q.id}" style="text-decoration:none;color:inherit;">
+      <div style="text-decoration:none;color:inherit;">
         <h2>${escHtml(q.title || '(uden titel)')}</h2>
-        <span class="badge badge-${q.status}">${labelStatus(q.status)}${(q.round_no ?? 1) > 1 ? ' · runde ' + q.round_no : ''}</span>
+        <span class="badge badge-${q.status}">${locked ? 'Fast skabelon' : labelStatus(q.status)}${!locked && (q.round_no ?? 1) > 1 ? ' · runde ' + q.round_no : ''}</span>
         <p>Oprettet ${formatDate(q.created_at)}</p>
         ${custName ? `<p>👤 ${escHtml(custName)}</p>` : '<p>Ingen kunde</p>'}
-      </a>
+      </div>
       <div style="display:flex;gap:.4rem;margin-top:.25rem;">
-        <a class="btn btn-sm btn-outline" style="flex:1;text-align:center;text-decoration:none;" href="editor.html?q=${q.id}">✏️ Åbn</a>
-        <a class="btn btn-sm btn-outline" style="text-decoration:none;" href="results.html?q=${q.id}" title="Resultater, CSV og diplomer">📄</a>
-        <button class="btn btn-sm btn-outline" onclick="toggleTemplate('${q.id}')" title="${q.is_template ? 'Fjern som skabelon' : 'Gør til skabelon, kunderne kan kopiere'}" style="${q.is_template ? 'border-color:#5b52f5;color:#5b52f5;' : ''}">${q.is_template ? '★' : '☆'}</button>
-        <button class="btn btn-sm btn-outline" onclick="copyQuiz('${q.id}')" title="Kopiér løb">⧉</button>
-        <button class="btn btn-sm btn-danger-ghost" onclick="deleteQuiz('${q.id}')" title="Slet quiz">🗑</button>
+        ${locked ? '<span class="badge" style="background:#f1edff;color:#5b52f5;flex:1;text-align:center;padding:.55rem;">Kopieres fra kundeoversigten</span>' : `
+          <a class="btn btn-sm btn-outline" style="flex:1;text-align:center;text-decoration:none;" href="editor.html?q=${q.id}">✏️ Åbn</a>
+          <a class="btn btn-sm btn-outline" style="text-decoration:none;" href="results.html?q=${q.id}" title="Resultater, CSV og diplomer">📄</a>
+          <button class="btn btn-sm btn-outline" onclick="toggleTemplate('${q.id}')" title="${q.is_template ? 'Fjern som skabelon' : 'Gør til skabelon, kunderne kan kopiere'}" style="${q.is_template ? 'border-color:#5b52f5;color:#5b52f5;' : ''}">${q.is_template ? '★' : '☆'}</button>
+          <button class="btn btn-sm btn-outline" onclick="copyQuiz('${q.id}')" title="Kopiér løb">⧉</button>
+          <button class="btn btn-sm btn-danger-ghost" onclick="deleteQuiz('${q.id}')" title="Slet quiz">🗑</button>`}
       </div>
     </div>`;
   }).join('');

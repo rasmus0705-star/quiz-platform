@@ -110,7 +110,7 @@ Poller `get_scoreboard` hvert 5. sek (ingen realtime – submissions er fjernet 
 Quizmaster-bar (kun hvis session må styre løbet): afslut, start ny runde, godkend/afvis fotos. Offentligt vises kun godkendte fotos.
 
 ## Deploy-rækkefølge (vigtigt)
-1. SQL Editor → kør `001_…`, `002_…`, `003_…`, **`004_arrangoer_og_drift.sql`**, derefter **`013_private_orders_and_admin_error_fix.sql`** og **`014_admin_analytics.sql`** (alle kan genkøres). **Kør SQL FØR siderne pushes** – editoren bruger nye kolonner (`hide_results`, `opens_at`, `closes_at`). Vælg "Run and enable RLS" hvis spurgt.
+1. SQL Editor → kør `001_…`, `002_…`, `003_…`, **`004_arrangoer_og_drift.sql`**, derefter **`013_private_orders_and_admin_error_fix.sql`**, **`014_admin_analytics.sql`** og **`015_auning_locked_template.sql`** (alle kan genkøres). **Kør SQL FØR siderne pushes** – editoren bruger nye kolonner (`hide_results`, `opens_at`, `closes_at`). Vælg "Run and enable RLS" hvis spurgt.
 2. Edge Functions (dashboard, ikke git): `quiz-check-answer`, `quiz-pin-auth`, **`purge-data`** → Deploy. Secrets: `PURGE_SECRET` (ny, lang tilfældig tekst).
 3. GitHub → Settings → Secrets → Actions: `PURGE_SECRET`, `SUPABASE_URL`, `SUPABASE_ANON`. Kør workflowet "Slet udløbne deltagerdata" manuelt én gang (svar: `{"mode":"cron",…}`).
 4. `js/map-config.js`: vælg kortudbyder + nøgle (standard = OSM, kun test).
@@ -152,6 +152,8 @@ Edge Functions og SQL følger **ikke** med git push. GitHub slår planlagte jobs
 - **Sikkerhedsrettelse (013):** `admin_clear_errors()` kræver nu altid `check_session_is_admin()`. `auth.role() = 'authenticated'` må ikke bruges som admin-kontrol, fordi det også omfatter almindelige autentificerede brugere. Samme rettelse findes i `012_admin_error_management.sql` og gentages i migration 013 til eksisterende databaser.
 - **Skærmlås (spiller):** Wake Lock anmodes med `await` i samme brugertryk som Start, genanskaffes efter `release` og ved `visibilitychange`, når løbet er i gang. Browser- og telefonunderstøttelse skal stadig testes fysisk på iOS og Android.
 - **Admin-statistik (migration 014):** `app/analytics.html` viser månedlige grafer for kunder, løb, hold, svar og bestillinger samt fordeling af løbsstatus og opgavetyper via `admin_analytics`. Nøgletalsstriben i `js/admin-stats.js` linker hold, svar og fotolager til relevante sektioner på statistik-siden. Besøgsstatistik for selve hjemmesiden er ikke med.
+- **Auning-skabelon (migration 015):** importerer 10 historiske poster, 30 multiple-choice-opgaver, beskrivende info-opgaver og billeder fra `C:\Kodning\Rom-sniffer\auning`. Masteren har `template_locked = true`, kan ikke redigeres/slettes fra UI eller direkte via normale sessioner og kopieres til kundens eget løb via `copy_template`. Kopien kan bruges som konkurrence med point eller som videnstur med skjulte resultater. Billederne ligger i `assets/auning/`.
+- **Holdruter:** `teams.route_order` og `get_quiz_stops` understøtter en særskilt stoprækkefølge pr. hold; UI til valg af rute er ikke bygget endnu. Uden `route_order` bruges løbets normale rækkefølge.
 - **Kortet i editoren var gråt:** vektorkortet blev oprettet på en skjult fane (0 px). `jagtenWhenSized()` venter nu på, at kortet har plads, og enhver fejl giver OSM-fliser i stedet for et tomt kort.
 - Alt dette ligger i `004_arrangoer_og_drift.sql` (kan genkøres). `reparation_003.sql` findes, hvis 003 ikke kørte færdigt; `tjek_database.sql` viser hvad der mangler.
 
