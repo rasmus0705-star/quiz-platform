@@ -11165,5 +11165,692 @@
     "forkerte": [],
     "forklaring": "Batman er en af de eneste store superhelter uden overnaturlige evner – han bruger intellekt, træning og teknologi.",
     "status": "godkendt"
+  },
+  {
+    "id": "geo-0114",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder verdens længste bjergkæde over havets overflade?",
+    "korrekt": "Andesbjergene",
+    "forkerte": [
+      "Rocky Mountains",
+      "Himalaya",
+      "Alperne"
+    ],
+    "forklaring": "Andesbjergene strækker sig over cirka 7.000 kilometer langs Sydamerikas vestkyst gennem syv lande.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0115",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket land har flest naturlige søer i verden?",
+    "korrekt": "Canada",
+    "forkerte": [
+      "Rusland",
+      "Finland",
+      "Sverige"
+    ],
+    "forklaring": "Canada har over 879.000 søer på mere end 0,1 km², hvilket er mere end resten af verden tilsammen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0116",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Suezkanalen forbinder Middelhavet med Det Røde Hav.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Suezkanalen i Egypten åbnede i 1869 og gør det muligt for skibe at sejle mellem Europa og Asien uden om Afrika.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0117",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det dybeste punkt i verdenshavene?",
+    "korrekt": "Challengerdypet",
+    "forkerte": [
+      "Tonga-graven",
+      "Puerto Rico-graven",
+      "Java-graven"
+    ],
+    "forklaring": "Challengerdypet ligger i Marianergraven i Stillehavet og er knap 11.000 meter dybt.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0118",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket land er verdens mindste målt på areal?",
+    "korrekt": "Vatikanstaten",
+    "forkerte": [
+      "Monaco",
+      "San Marino",
+      "Liechtenstein"
+    ],
+    "forklaring": "Vatikanstaten ligger inde i Rom og dækker et areal på kun 0,44 kvadratkilometer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0119",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilket afrikansk land har aldrig været koloniseret af en europæisk magt?",
+    "korrekt": "Etiopien",
+    "forkerte": [
+      "Kenya",
+      "Ghana",
+      "Senegal"
+    ],
+    "forklaring": "Etiopien bevarede sin uafhængighed under kapløbet om Afrika (bortset fra en kort italiensk besættelse 1936-1941).",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0120",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Istanbul er den eneste storby i verden, der ligger på to kontinenter.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Bosporusstrædet deler Istanbul mellem Europa og Asien.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0121",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder øgruppen, som Galápagosøerne tilhører politisk?",
+    "korrekt": "Ecuador",
+    "forkerte": [
+      "Peru",
+      "Chile",
+      "Colombia"
+    ],
+    "forklaring": "Galápagosøerne ligger i Stillehavet omkring 1.000 kilometer vest for Ecuadors fastland.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0105",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket år sank passagerskibet Titanic?",
+    "korrekt": "1912",
+    "forkerte": [
+      "1908",
+      "1914",
+      "1918"
+    ],
+    "forklaring": "RMS Titanic ramte et isbjerg i Nordatlanten natten mellem den 14. og 15. april 1912 på sin jomfrurejse.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0106",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed den danske konge, der samlede og kristnede danerne ifølge Jellingstenen?",
+    "korrekt": "Harald Blåtand",
+    "forkerte": [
+      "Gorm den Gamle",
+      "Svend Tveskæg",
+      "Knud den Store"
+    ],
+    "forklaring": "Harald Blåtand rejste den store Jellingsten omkring år 965 til minde om sine forældre og sine bedrifter.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0107",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Første Verdenskrig begyndte i 1914 og sluttede i 1918.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Krigen brød ud i sommeren 1914 efter skuddet i Sarajevo og sluttede med våbenstilstanden den 11. november 1918.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0108",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken oldtidsby blev begravet under aske ved vulkanen Vesuvs udbrud i år 79?",
+    "korrekt": "Pompeji",
+    "forkerte": [
+      "Karthago",
+      "Troja",
+      "Sparta"
+    ],
+    "forklaring": "Pompeji og nabobyen Herculaneum blev dækket af op til flere meter vulkansk aske og pimpsten, hvilket bevarede byerne for eftertiden.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0109",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilket år blev stavnsbåndet ophævet i Danmark?",
+    "korrekt": "1788",
+    "forkerte": [
+      "1770",
+      "1807",
+      "1849"
+    ],
+    "forklaring": "Stavnsbåndet blev ophævet den 20. juni 1788 som en central del af landboreformerne.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0110",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvem var Storbritanniens premierminister under størstedelen af Anden Verdenskrig?",
+    "korrekt": "Winston Churchill",
+    "forkerte": [
+      "Neville Chamberlain",
+      "Clement Attlee",
+      "Anthony Eden"
+    ],
+    "forklaring": "Winston Churchill overtog posten i maj 1940 og ledte Storbritannien frem til juli 1945.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0111",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed det første menneske på Månen i 1969?",
+    "korrekt": "Neil Armstrong",
+    "forkerte": [
+      "Buzz Aldrin",
+      "Michael Collins",
+      "Jurij Gagarin"
+    ],
+    "forklaring": "Neil Armstrong betrådte Månen den 20. juli 1969 som kommandør på Apollo 11-missionen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0112",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilken traktat afsluttede Første Verdenskrig mellem Tyskland og de allierede?",
+    "korrekt": "Versaillestraktaten",
+    "forkerte": [
+      "Wienkongressen",
+      "Potsdamaftalen",
+      "Utrechtfreden"
+    ],
+    "forklaring": "Versaillestraktaten blev underskrevet den 28. juni 1919 i Spejlsalen på Versailles-slottet.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0113",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Cleopatra var den sidste aktive hersker af det ptolemæiske kongerige i Egypten.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Cleopatra 7. døde i år 30 f.Kr., hvorefter Egypten blev en romersk provins.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0114",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "I hvilket år blev Christiania oprettet på Bådsmandsstrædes Kaserne?",
+    "korrekt": "1971",
+    "forkerte": [
+      "1968",
+      "1975",
+      "1980"
+    ],
+    "forklaring": "Fristaden Christiania blev grundlagt i september 1971, da slumstormere brød hul i hegnet til det nedlagte militærområde.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0103",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken planet i solsystemet har flest kendte måner?",
+    "korrekt": "Saturn",
+    "forkerte": [
+      "Jupiter",
+      "Uranus",
+      "Neptun"
+    ],
+    "forklaring": "Saturn har over 140 bekræftede måner og overhalede dermed Jupiter i antal kendte måner.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0104",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Lys bevæger sig med cirka 300.000 kilometer i sekundet i vakuum.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Den nøjagtige lyshastighed i vakuum er 299.792.458 meter i sekundet.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0105",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den danske fysiker, der modtog Nobelprisen i 1922 for sin atommodel?",
+    "korrekt": "Niels Bohr",
+    "forkerte": [
+      "H.C. Ørsted",
+      "Tycho Brahe",
+      "Ole Rømer"
+    ],
+    "forklaring": "Niels Bohr modtog Nobelprisen i fysik for sine studier af atomernes struktur og stråling.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0106",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilken blodtype kaldes den universelle donor for røde blodlegemer?",
+    "korrekt": "0 negativ",
+    "forkerte": [
+      "AB positiv",
+      "A negativ",
+      "B positiv"
+    ],
+    "forklaring": "Blodtype 0 negativ mangler A-, B- og Rhesus-antigener på overfladen og kan derfor gives til næsten alle modtagere i nødsituationer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0107",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder kraften, der holder planeterne i kredsløb om Solen?",
+    "korrekt": "Tyngdekraften",
+    "forkerte": [
+      "Magnetisme",
+      "Centrifugalkraften",
+      "Kernekræfter"
+    ],
+    "forklaring": "Tyngdekraften (gravitation) er den tiltrækkende kraft mellem alle legemer med masse.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0108",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket grundstof har atomnummer 1 i det periodiske system?",
+    "korrekt": "Brint",
+    "forkerte": [
+      "Helium",
+      "Ilt",
+      "Kulstof"
+    ],
+    "forklaring": "Brint (hydrogen) har ét proton i kernen og er det letteste og mest udbredte grundstof i universet.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0109",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den del af hjernen, der primært styrer balance og koordination?",
+    "korrekt": "Lillehjernen",
+    "forkerte": [
+      "Storhjernen",
+      "Hjernestammen",
+      "Hypothalamus"
+    ],
+    "forklaring": "Lillehjernen (cerebellum) ligger bagerst i kraniet og finjusterer bevægelser, kropsholdning og balance.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0110",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Diamanter og grafit i en blyant består af det samme grundstof.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Både diamant og grafit består udelukkende af kulstof (carbon), men atomerne er bundet sammen i forskellige krystalstrukturer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0122",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket land har verdens længste kystlinje?",
+    "korrekt": "Canada",
+    "forkerte": [
+      "Indonesien",
+      "Rusland",
+      "Norge"
+    ],
+    "forklaring": "Canadas kystlinje er over 202.000 kilometer lang på grund af de mange øer og fjorde mod Ishavet, Atlanterhavet og Stillehavet.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0123",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Møn er forbundet med Sjælland via Dronning Alexandrines Bro.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Dronning Alexandrines Bro åbnede i 1943 og forbinder Kalvehave på Sydsjælland med Koster på Møn.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0124",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket hav ligger mellem Italien og Balkanhalvøen?",
+    "korrekt": "Adriaterhavet",
+    "forkerte": [
+      "Det Ægæiske Hav",
+      "Det Tyrrhenske Hav",
+      "Det Ioniske Hav"
+    ],
+    "forklaring": "Adriaterhavet er en nordlig udløber af Middelhavet og grænser op til blandt andet Italien, Kroatien og Albanien.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0125",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Gennem hvilket land løber størstedelen af Amazonfloden?",
+    "korrekt": "Brasilien",
+    "forkerte": [
+      "Peru",
+      "Colombia",
+      "Venezuela"
+    ],
+    "forklaring": "Amazonfloden udspringer i Andesbjergene i Peru, men størstedelen af dens løb og udmundingen i Atlanterhavet ligger i Brasilien.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0126",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilket land grænser op til flest andre lande i verden?",
+    "korrekt": "Kina",
+    "forkerte": [
+      "Rusland",
+      "Brasilien",
+      "Tyskland"
+    ],
+    "forklaring": "Kina deler landegrænse med 14 suveræne stater (ligesom Rusland, der også grænser op til 14 stater).",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0127",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Det Døde Hav ligger over 400 meter under havets overflade.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Bredden ved Det Døde Hav mellem Israel, Vestbredden og Jordan er det lavest beliggende landområde på Jorden.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0115",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket år blev Danmark besat af Tyskland under Anden Verdenskrig?",
+    "korrekt": "1940",
+    "forkerte": [
+      "1939",
+      "1941",
+      "1943"
+    ],
+    "forklaring": "Tyske tropper krydsede grænsen om morgenen den 9. april 1940 under Operation Weserübung.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0116",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvem opfandt bogtrykkerkunsten med løse metaltyper i Europa omkring 1450?",
+    "korrekt": "Johannes Gutenberg",
+    "forkerte": [
+      "Leonardo da Vinci",
+      "Martin Luther",
+      "Galileo Galilei"
+    ],
+    "forklaring": "Tyskeren Johannes Gutenberg revolutionerede udbredelsen af bøger i Mainz med sin trykpresse.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0117",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Den Franske Revolution begyndte i 1789 med stormen på Bastillen.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Stormen på fæstningen Bastillen i Paris fandt sted den 14. juli 1789, som i dag er Frankrigs nationaldag.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0118",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "I hvilket år tabte Danmark Slesvig og Holsten efter Slaget ved Dybbøl?",
+    "korrekt": "1864",
+    "forkerte": [
+      "1848",
+      "1871",
+      "1920"
+    ],
+    "forklaring": "Efter nederlaget i krigen i 1864 måtte Danmark afstå hertugdømmerne Slesvig, Holsten og Lauenborg til Preussen og Østrig.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0119",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket berømt monument i Indien blev bygget af stormogulen Shah Jahan til minde om sin hustru?",
+    "korrekt": "Taj Mahal",
+    "forkerte": [
+      "Det Røde Fort",
+      "Hawa Mahal",
+      "Qutub Minar"
+    ],
+    "forklaring": "Taj Mahal i Agra blev opført mellem 1632 og 1653 i hvid marmor.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0120",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvem holdt den berømte tale 'I Have a Dream' i 1963?",
+    "korrekt": "Martin Luther King Jr.",
+    "forkerte": [
+      "Malcolm X",
+      "John F. Kennedy",
+      "Nelson Mandela"
+    ],
+    "forklaring": "Martin Luther King Jr. holdt talen foran Lincoln Memorial i Washington D.C. den 28. august 1963.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0121",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed det sovjetiske rumfartøj, der i 1957 blev verdens første kunstige satellit i kredsløb?",
+    "korrekt": "Sputnik 1",
+    "forkerte": [
+      "Vostok 1",
+      "Mir",
+      "Sojuz 1"
+    ],
+    "forklaring": "Sputnik 1 blev opsendt den 4. oktober 1957 og indledte rumkapløbet mellem Sovjetunionen og USA.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0122",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Danmark solgte De Dansk-Vestindiske Øer til USA i 1917.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Øerne Sankt Thomas, Sankt Jan og Sankt Croix blev overdraget til USA den 31. marts 1917 for 25 millioner dollar.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0123",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken græsk bystat er kendt som demokratiets vugge?",
+    "korrekt": "Athen",
+    "forkerte": [
+      "Sparta",
+      "Korinth",
+      "Theben"
+    ],
+    "forklaring": "I det antikke Athen udviklede man i 500-tallet f.Kr. et direkte demokrati for byens frie mandlige borgere.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0111",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken planet er den største i vores solsystem?",
+    "korrekt": "Jupiter",
+    "forkerte": [
+      "Saturn",
+      "Neptun",
+      "Uranus"
+    ],
+    "forklaring": "Jupiter er en gasplanet med en masse, der er mere end dobbelt så stor som alle de andre planeter i solsystemet tilsammen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0112",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den proces, hvor planter omdanner sollys, vand og kuldioxid til ilt og sukker?",
+    "korrekt": "Fotosyntese",
+    "forkerte": [
+      "Respiration",
+      "Osmose",
+      "Gæring"
+    ],
+    "forklaring": "Fotosyntesen foregår i planternes grønkorn og er grundlaget for næsten alt liv på Jorden.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0113",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Vand koger ved 100 grader celsius ved normalt atmosfærisk tryk ved havoverfladen.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Ved lavere tryk, for eksempel højt oppe på et bjerg, koger vand ved en lavere temperatur.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0114",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket vitamin danner huden, når den udsættes for solens UVB-stråler?",
+    "korrekt": "D-vitamin",
+    "forkerte": [
+      "C-vitamin",
+      "B12-vitamin",
+      "A-vitamin"
+    ],
+    "forklaring": "D-vitamin er vigtigt for kroppens optagelse af kalk og for sunde knogler og muskler.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0115",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det hårdeste naturligt forekommende mineral på Mohs' hårdhedsskala?",
+    "korrekt": "Diamant",
+    "forkerte": [
+      "Kvarts",
+      "Korund",
+      "Topas"
+    ],
+    "forklaring": "Diamant ligger øverst på Mohs' skala med værdien 10 og kan kun ridses af en anden diamant.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0116",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange kamre har det menneskelige hjerte?",
+    "korrekt": "4",
+    "forkerte": [
+      "2",
+      "3",
+      "6"
+    ],
+    "forklaring": "Hjertet består af to forkamre (atrier) og to hjertekamre (ventrikler).",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0117",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvem formulerede den generelle relativitetsteori i 1915?",
+    "korrekt": "Albert Einstein",
+    "forkerte": [
+      "Isaac Newton",
+      "Max Planck",
+      "Stephen Hawking"
+    ],
+    "forklaring": "Albert Einstein beskrev tyngdekraften som en krumning af rumtiden forårsaget af masse og energi.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0118",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "En elektrons elektriske ladning er positiv.",
+    "korrekt": "Falsk",
+    "forkerte": [],
+    "forklaring": "En elektron har en negativ elektrisk ladning, mens en proton er positivt ladet og en neutron er neutral.",
+    "status": "godkendt"
   }
 ]
