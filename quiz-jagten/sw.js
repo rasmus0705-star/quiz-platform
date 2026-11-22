@@ -1,5 +1,5 @@
 ﻿'use strict';
-const CACHE = 'quizjagten-shell-v3';
+const CACHE = 'quizjagten-shell-v4';
 const SHELL = ['./', './index.html', './style.css', './config.js', './app.js', './questions.json', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', event => {

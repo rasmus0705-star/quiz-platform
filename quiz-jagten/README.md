@@ -71,4 +71,4 @@ Hvert spørgsmål har et id i formatet `abc-0001`, en kategori, niveau 1–4, `s
 
 ## Danske Trivia-spørgsmål
 
-70 spørgsmål er hentet via API fra [psch.dk - Trivia Quizdatabase](https://psch.dk/?v=quiz). API’ets svar indeholder et obligatorisk `credit_html`; appens forside viser kildeangivelsen: ?Spørgsmål er hentet fra psch.dk - Trivia Quizdatabase?. De enkelte poster i `questions.json` gemmer API-id, men aldrig API-nøglen.
+571 spørgsmål fra [psch.dk - Trivia Quizdatabase](https://psch.dk/?v=quiz) er nu registreret i banken via API. Vi hentede 600 unikke API-id’er; 70 lå allerede i banken, 501 nye blev tilføjet, og 29 overlappende spørgsmål blev udeladt. Appens forside viser API’ets krævede kildeangivelse. API-nøglen gemmes ikke i projektet.

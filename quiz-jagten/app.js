@@ -9,7 +9,7 @@ const CFG = Object.assign({
 
 const KAT = {
   historie: 'Historie', geografi: 'Geografi', natur: 'Natur', sport: 'Sport',
-  underholdning: 'Underholdning', videnskab: 'Videnskab', sprog_kultur: 'Sprog & kultur', mad_drikke: 'Mad & drikke'
+  underholdning: 'Underholdning', videnskab: 'Videnskab', sprog_kultur: 'Sprog & kultur', mad_drikke: 'Mad & drikke', blandet: 'Blandet'
 };
 const NIV = { 1: 'Let', 2: 'Middel', 3: 'Svær', 4: 'Ekspert' };
 const POINT = { 1: 1, 2: 2, 3: 3, 4: 5 };
