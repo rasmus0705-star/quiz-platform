@@ -1,0 +1,487 @@
+﻿[
+    {
+        "value":  [
+                      {
+                          "id":  "his-0001",
+                          "kategori":  "historie",
+                          "niveau":  1,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvilket år fik Danmark sin første grundlov?",
+                          "korrekt":  "1849",
+                          "forkerte":  [
+                                           "1814",
+                                           "1864",
+                                           "1901"
+                                       ],
+                          "forklaring":  "Danmarks første grundlov blev underskrevet den 5. juni 1849."
+                      },
+                      {
+                          "id":  "his-0002",
+                          "kategori":  "historie",
+                          "niveau":  2,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvilken dansk konge forbindes med Jellingstenene og kristningen af Danmark?",
+                          "korrekt":  "Harald Blåtand",
+                          "forkerte":  [
+                                           "Svend Tveskæg",
+                                           "Valdemar Sejr",
+                                           "Christian IV"
+                                       ],
+                          "forklaring":  "Harald Blåtand rejste den store Jellingsten i 900-tallet."
+                      },
+                      {
+                          "id":  "his-0003",
+                          "kategori":  "historie",
+                          "niveau":  3,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "I hvilket år blev de dansk-vestindiske øer overdraget til USA?",
+                          "korrekt":  "1917",
+                          "forkerte":  [
+                                           "1864",
+                                           "1905",
+                                           "1945"
+                                       ],
+                          "forklaring":  "Danmark solgte øerne til USA i 1917. De kendes i dag som De Amerikanske Jomfruøer."
+                      },
+                      {
+                          "id":  "geo-0001",
+                          "kategori":  "geografi",
+                          "niveau":  1,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvad hedder Danmarks hovedstad?",
+                          "korrekt":  "København",
+                          "forkerte":  [
+                                           "Aarhus",
+                                           "Odense",
+                                           "Aalborg"
+                                       ],
+                          "forklaring":  "København er Danmarks hovedstad og største by."
+                      },
+                      {
+                          "id":  "geo-0002",
+                          "kategori":  "geografi",
+                          "niveau":  2,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvilket stræde ligger mellem Danmark og Sverige ved København?",
+                          "korrekt":  "Øresund",
+                          "forkerte":  [
+                                           "Storebælt",
+                                           "Lillebælt",
+                                           "Kattegat"
+                                       ],
+                          "forklaring":  "Øresund forbinder Østersøen med Kattegat og adskiller Sjælland fra Skåne."
+                      },
+                      {
+                          "id":  "geo-0003",
+                          "kategori":  "geografi",
+                          "niveau":  3,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvad er hovedstaden i New Zealand?",
+                          "korrekt":  "Wellington",
+                          "forkerte":  [
+                                           "Auckland",
+                                           "Christchurch",
+                                           "Hamilton"
+                                       ],
+                          "forklaring":  "Wellington ligger på Nordøens sydspids og er landets hovedstad."
+                      },
+                      {
+                          "id":  "nat-0001",
+                          "kategori":  "natur",
+                          "niveau":  1,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvilket dyr er verdens største nulevende dyr?",
+                          "korrekt":  "Blåhvalen",
+                          "forkerte":  [
+                                           "Afrikansk elefant",
+                                           "Hvalhaj",
+                                           "Kaskelothval"
+                                       ],
+                          "forklaring":  "Blåhvalen kan blive over 25 meter lang og veje mere end 100 ton."
+                      },
+                      {
+                          "id":  "nat-0002",
+                          "kategori":  "natur",
+                          "niveau":  2,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvilken gas optager planter fra luften under fotosyntesen?",
+                          "korrekt":  "Kuldioxid",
+                          "forkerte":  [
+                                           "Ilt",
+                                           "Helium",
+                                           "Brint"
+                                       ],
+                          "forklaring":  "Planter bruger kuldioxid, vand og lysenergi til at danne sukker og ilt."
+                      },
+                      {
+                          "id":  "nat-0003",
+                          "kategori":  "natur",
+                          "niveau":  3,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvilket af disse pattedyr lægger æg?",
+                          "korrekt":  "Næbdyret",
+                          "forkerte":  [
+                                           "Odderen",
+                                           "Delfinen",
+                                           "Flagermusen"
+                                       ],
+                          "forklaring":  "Næbdyret er et kloakdyr, en lille gruppe pattedyr, der lægger æg."
+                      },
+                      {
+                          "id":  "spo-0001",
+                          "kategori":  "sport",
+                          "niveau":  1,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvor mange spillere har et fodboldhold på banen ved kampens start?",
+                          "korrekt":  "11",
+                          "forkerte":  [
+                                           "9",
+                                           "10",
+                                           "12"
+                                       ],
+                          "forklaring":  "Et hold stiller med ti markspillere og en målmand."
+                      },
+                      {
+                          "id":  "spo-0002",
+                          "kategori":  "sport",
+                          "niveau":  2,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvilken sportsgren dyrkes i Tour de France?",
+                          "korrekt":  "Cykling",
+                          "forkerte":  [
+                                           "Løb",
+                                           "Motorsport",
+                                           "Triatlon"
+                                       ],
+                          "forklaring":  "Tour de France er et etapeløb på landevejscykel."
+                      },
+                      {
+                          "id":  "spo-0003",
+                          "kategori":  "sport",
+                          "niveau":  3,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvor mange ringe er der i det olympiske symbol?",
+                          "korrekt":  "5",
+                          "forkerte":  [
+                                           "4",
+                                           "6",
+                                           "7"
+                                       ],
+                          "forklaring":  "De fem sammenflettede ringe symboliserer mødet mellem verdensdele."
+                      },
+                      {
+                          "id":  "und-0001",
+                          "kategori":  "underholdning",
+                          "niveau":  1,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvem skrev bøgerne om Harry Potter?",
+                          "korrekt":  "J.K. Rowling",
+                          "forkerte":  [
+                                           "Astrid Lindgren",
+                                           "Suzanne Collins",
+                                           "Tove Jansson"
+                                       ],
+                          "forklaring":  "Den britiske forfatter J.K. Rowling skrev Harry Potter-serien."
+                      },
+                      {
+                          "id":  "und-0002",
+                          "kategori":  "underholdning",
+                          "niveau":  2,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvad hedder løven i Disneys Løvernes Konge?",
+                          "korrekt":  "Simba",
+                          "forkerte":  [
+                                           "Mufasa",
+                                           "Scar",
+                                           "Timon"
+                                       ],
+                          "forklaring":  "Simba er filmens hovedperson; Mufasa er hans far."
+                      },
+                      {
+                          "id":  "und-0003",
+                          "kategori":  "underholdning",
+                          "niveau":  3,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvilken dansk forfatter skrev eventyret Den lille havfrue?",
+                          "korrekt":  "H.C. Andersen",
+                          "forkerte":  [
+                                           "Karen Blixen",
+                                           "Martin Andersen Nexø",
+                                           "Tove Ditlevsen"
+                                       ],
+                          "forklaring":  "H.C. Andersens eventyr Den lille havfrue udkom i 1837."
+                      },
+                      {
+                          "id":  "vid-0001",
+                          "kategori":  "videnskab",
+                          "niveau":  1,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvad er den kemiske formel for vand?",
+                          "korrekt":  "H₂O",
+                          "forkerte":  [
+                                           "CO₂",
+                                           "O₂",
+                                           "NaCl"
+                                       ],
+                          "forklaring":  "Et vandmolekyle består af to hydrogenatomer og ét oxygenatom."
+                      },
+                      {
+                          "id":  "vid-0002",
+                          "kategori":  "videnskab",
+                          "niveau":  2,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvilken planet kaldes ofte den røde planet?",
+                          "korrekt":  "Mars",
+                          "forkerte":  [
+                                           "Venus",
+                                           "Jupiter",
+                                           "Merkur"
+                                       ],
+                          "forklaring":  "Jernholdigt støv på Mars\u0027 overflade giver planeten dens rødlige farve."
+                      },
+                      {
+                          "id":  "vid-0003",
+                          "kategori":  "videnskab",
+                          "niveau":  3,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvilken partikel har negativ elektrisk ladning?",
+                          "korrekt":  "Elektronen",
+                          "forkerte":  [
+                                           "Protonen",
+                                           "Neutronen",
+                                           "Fotonen"
+                                       ],
+                          "forklaring":  "Elektronen har negativ ladning; protonen er positiv, og neutronen er neutral."
+                      },
+                      {
+                          "id":  "spr-0001",
+                          "kategori":  "sprog_kultur",
+                          "niveau":  1,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvad betyder det franske ord “bonjour”?",
+                          "korrekt":  "Goddag",
+                          "forkerte":  [
+                                           "Godnat",
+                                           "Tak",
+                                           "Farvel"
+                                       ],
+                          "forklaring":  "“Bonjour” bruges som en hilsen og betyder goddag eller god morgen."
+                      },
+                      {
+                          "id":  "spr-0002",
+                          "kategori":  "sprog_kultur",
+                          "niveau":  2,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvad er flertalsformen af det engelske ord “child”?",
+                          "korrekt":  "Children",
+                          "forkerte":  [
+                                           "Childs",
+                                           "Childes",
+                                           "Childrens"
+                                       ],
+                          "forklaring":  "“Child” har den uregelmæssige flertalsform “children”."
+                      },
+                      {
+                          "id":  "spr-0003",
+                          "kategori":  "sprog_kultur",
+                          "niveau":  3,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvilket skriftsystem bruger japansk blandt andet til fremmede ord?",
+                          "korrekt":  "Katakana",
+                          "forkerte":  [
+                                           "Kyrillisk",
+                                           "Hangul",
+                                           "Devanagari"
+                                       ],
+                          "forklaring":  "Japansk bruger blandt andet katakana til låneord og udenlandske navne."
+                      },
+                      {
+                          "id":  "mad-0001",
+                          "kategori":  "mad_drikke",
+                          "niveau":  1,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvad er hovedingrediensen i hummus?",
+                          "korrekt":  "Kikærter",
+                          "forkerte":  [
+                                           "Linser",
+                                           "Kartofler",
+                                           "Hvide bønner"
+                                       ],
+                          "forklaring":  "Hummus laves typisk af blendede kikærter, tahin, citron og hvidløg."
+                      },
+                      {
+                          "id":  "mad-0002",
+                          "kategori":  "mad_drikke",
+                          "niveau":  2,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Fra hvilket land stammer fetaost?",
+                          "korrekt":  "Grækenland",
+                          "forkerte":  [
+                                           "Italien",
+                                           "Frankrig",
+                                           "Spanien"
+                                       ],
+                          "forklaring":  "Feta er en græsk ost med beskyttet oprindelsesbetegnelse."
+                      },
+                      {
+                          "id":  "mad-0003",
+                          "kategori":  "mad_drikke",
+                          "niveau":  3,
+                          "type":  "mc",
+                          "status":  "godkendt",
+                          "spoergsmaal":  "Hvilken korntype bruges traditionelt til couscous?",
+                          "korrekt":  "Hård hvede",
+                          "forkerte":  [
+                                           "Ris",
+                                           "Rug",
+                                           "Majs"
+                                       ],
+                          "forklaring":  "Couscous fremstilles traditionelt af semulje fra hård hvede."
+                      }
+                  ],
+        "Count":  24
+    },
+    {
+        "id":  "his-0004",
+        "kategori":  "historie",
+        "niveau":  4,
+        "type":  "mc",
+        "status":  "godkendt",
+        "spoergsmaal":  "Hvilken fred i 1658 førte til, at Danmark afstod Skåne, Blekinge og Halland til Sverige?",
+        "korrekt":  "Roskildesfreden",
+        "forkerte":  [
+                         "Brømsebrofreden",
+                         "Freden i Kiel",
+                         "Freden i København"
+                     ],
+        "forklaring":  "Roskildesfreden blev indgået i 1658 efter svenskernes invasion af Sjælland."
+    },
+    {
+        "id":  "geo-0004",
+        "kategori":  "geografi",
+        "niveau":  4,
+        "type":  "mc",
+        "status":  "godkendt",
+        "spoergsmaal":  "Hvilken europæisk hovedstad ligger ved floden Tejo (Tajo)?",
+        "korrekt":  "Lissabon",
+        "forkerte":  [
+                         "Madrid",
+                         "Porto",
+                         "Sevilla"
+                     ],
+        "forklaring":  "Tejo løber gennem Spanien og Portugal og munder ud ved Lissabon."
+    },
+    {
+        "id":  "nat-0004",
+        "kategori":  "natur",
+        "niveau":  4,
+        "type":  "mc",
+        "status":  "godkendt",
+        "spoergsmaal":  "Hvad kaldes den proces, hvor planter afgiver vanddamp gennem bladene?",
+        "korrekt":  "Transpiration",
+        "forkerte":  [
+                         "Bestøvning",
+                         "Gæring",
+                         "Kvælstoffiksering"
+                     ],
+        "forklaring":  "Ved transpiration fordamper vand fra plantens blade, især gennem små spalteåbninger."
+    },
+    {
+        "id":  "spo-0004",
+        "kategori":  "sport",
+        "niveau":  4,
+        "type":  "mc",
+        "status":  "godkendt",
+        "spoergsmaal":  "Hvilket land vandt det første VM i kvindefodbold i 1991?",
+        "korrekt":  "USA",
+        "forkerte":  [
+                         "Norge",
+                         "Tyskland",
+                         "Brasilien"
+                     ],
+        "forklaring":  "USA vandt finalen mod Norge ved VM i Kina i 1991."
+    },
+    {
+        "id":  "und-0004",
+        "kategori":  "underholdning",
+        "niveau":  4,
+        "type":  "mc",
+        "status":  "godkendt",
+        "spoergsmaal":  "Hvem komponerede musikken til Peer Gynt?",
+        "korrekt":  "Edvard Grieg",
+        "forkerte":  [
+                         "Jean Sibelius",
+                         "Carl Nielsen",
+                         "Richard Wagner"
+                     ],
+        "forklaring":  "Den norske komponist Edvard Grieg skrev scenemusikken til Ibsens Peer Gynt."
+    },
+    {
+        "id":  "vid-0004",
+        "kategori":  "videnskab",
+        "niveau":  4,
+        "type":  "mc",
+        "status":  "godkendt",
+        "spoergsmaal":  "Hvilket grundstof har atomnummer 79?",
+        "korrekt":  "Guld",
+        "forkerte":  [
+                         "Sølv",
+                         "Platin",
+                         "Kviksølv"
+                     ],
+        "forklaring":  "Guld har atomnummer 79 og det kemiske symbol Au."
+    },
+    {
+        "id":  "spr-0004",
+        "kategori":  "sprog_kultur",
+        "niveau":  4,
+        "type":  "mc",
+        "status":  "godkendt",
+        "spoergsmaal":  "Fra hvilket sprog kommer ordet “Schadenfreude”?",
+        "korrekt":  "Tysk",
+        "forkerte":  [
+                         "Hollandsk",
+                         "Svensk",
+                         "Jiddisch"
+                     ],
+        "forklaring":  "Det tyske ord beskriver glæde over en andens uheld."
+    },
+    {
+        "id":  "mad-0004",
+        "kategori":  "mad_drikke",
+        "niveau":  4,
+        "type":  "mc",
+        "status":  "godkendt",
+        "spoergsmaal":  "Hvilket krydderi giver traditionelt svenske lussekatter deres gyldne farve?",
+        "korrekt":  "Safran",
+        "forkerte":  [
+                         "Kardemomme",
+                         "Gurkemeje",
+                         "Kanel"
+                     ],
+        "forklaring":  "Safran giver lussekatte deres karakteristiske gule farve."
+    }
+]

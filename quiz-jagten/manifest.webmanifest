@@ -1,0 +1,15 @@
+﻿{
+  "id": "./",
+  "name": "Quizjagten",
+  "short_name": "Quizjagten",
+  "description": "Quiz alene, med venner eller til fest.",
+  "lang": "da",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#17205A",
+  "theme_color": "#17205A",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
