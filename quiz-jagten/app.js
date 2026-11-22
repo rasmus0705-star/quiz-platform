@@ -352,30 +352,71 @@ function home() {
   const mode = (m, ic, cls, title, desc, disabled = false) =>
     `<button class="mode" data-m="${m}" ${disabled ? 'disabled' : ''}><span class="ic ${cls}" aria-hidden="true">${ic}</span><strong>${title}</strong><span class="d">${desc}</span></button>`;
   const dag = store.get('dag-' + today());
-  render(`<div class="screen">
-    <header class="brand"><h1>${esc(CFG.APP_NAVN)}</h1><p>${BANK.length} spørgsmål klar</p></header>
-    ${BANK.length ? '' : '<p class="explain">Der er ingen godkendte spørgsmål endnu. Sæt status til "godkendt" i questions.json, eller slå VIS_KLADDER til i config.js.</p>'}
-    <section class="group"><h2>Alene</h2><div class="modes">
-      ${mode('dag', '☀', 'a3', 'Dagens quiz', dag ? `Klaret i dag: ${dag.ok} af ${dag.n} rigtige` : 'Samme 10 spørgsmål for alle i dag')}
-      ${mode('traen', '◎', 'a1', 'Træning', 'Vælg selv emner og sværhedsgrad')}
-      ${mode('surv', '♥', 'a0', 'Survival', `Ét forkert svar, og det er slut. Rekord: ${store.get('surv-best', 0)}`)}
-    </div></section>
-    <section class="group"><h2>To spillere</h2><div class="modes">
-      ${mode('spoerg', '?', 'a3', 'Spørg løs', 'Læs op og svar frit – med eller uden point og tur')}
-      ${mode('duel', '⇄', 'a2', 'Duel på én telefon', 'Send telefonen frem og tilbage')}
-      ${mode('udfordr', '✉', 'a1', 'Udfordr en ven', 'Send et link – I får de samme spørgsmål')}
-    </div></section>
-    <section class="group"><h2>Selskab</h2><div class="modes">
-      ${mode('host', '▣', 'a3', 'Live på storskærm', live ? 'Alle svarer på deres egen telefon' : 'Kræver Supabase-nøgler i config.js', !live)}
-      ${mode('join', '#', 'a2', 'Deltag i live-spil', 'Har du fået en kode?', !live)}
-      ${mode('qm', '♪', 'a0', 'Quizmaster', 'Én læser op – ingen andre skærme')}
-    </div></section>
-    <button class="btn" id="install" hidden>Installér som app</button>
-    <p class="explain">Nogle spørgsmål er oversat og bearbejdet fra <a href="https://the-trivia-api.com/" target="_blank" rel="noopener noreferrer">The Trivia API</a> under <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC 4.0</a>. Oversættelserne er redigeret.</p>
-    <p class="explain"><a href="https://psch.dk/?v=quiz" target="_blank" rel="noopener noreferrer">Spørgsmål er hentet fra psch.dk - Trivia Quizdatabase</a>.</p>
+  render(`<div class="home-shell">
+    <nav class="home-nav" aria-label="Hovedmenu">
+      <a class="home-logo" href="#" aria-label="Quizjagten forsiden">Quizjagten</a>
+      <div class="home-nav-links">
+        <a href="#spiltyper">Spiltyper</a>
+        <a href="#saadan">S&aring;dan spiller du</a>
+        <a href="#kilder">Kilder</a>
+        <button class="home-install" id="install" hidden>Hent app</button>
+      </div>
+    </nav>
+    <section class="home-hero">
+      <div class="hero-eyebrow"><span></span> Almen viden &middot; 9 emner &middot; solo og selskab</div>
+      <h1 class="home-title"><span class="line-dim">Velkommen til</span><span class="line-gold">Quizjagten</span></h1>
+      <p class="home-sub">Spil alene, udfordr vennerne eller saml alle om en quiz. V&aelig;lg mellem ${BANK.length.toLocaleString('da-DK')} sp&oslash;rgsm&aring;l om alt fra natur og historie til sport og underholdning.</p>
+      <div class="home-actions">
+        <button class="home-primary hero-cta">Spil dagens quiz <span aria-hidden="true">&rarr;</span></button>
+        <a class="home-ghost" href="#spiltyper">V&aelig;lg spiltyper</a>
+      </div>
+      <div class="home-proof"><span>${BANK.length.toLocaleString('da-DK')} sp&oslash;rgsm&aring;l</span><i></i><span>9 emner</span><i></i><span>Alene eller sammen</span></div>
+    </section>
+    <section class="home-content" id="spiltyper">
+      <div class="home-section-heading">
+        <p class="home-kicker">Hvad vil du spille?</p><h2>En quiz til enhver anledning</h2>
+        <p>V&aelig;lg en spiltype, og kom i gang med det samme.</p>
+      </div>
+      ${BANK.length ? '' : '<p class="explain">Der er ingen godkendte sp&oslash;rgsm&aring;l endnu. S&aelig;t status til "godkendt" i questions.json, eller sl&aring; VIS_KLADDER til i config.js.</p>'}
+      <div class="home-groups">
+        <section class="group"><h2>Alene</h2><div class="modes">
+          ${mode('dag', '&#9728;', 'a3', 'Dagens quiz', dag ? 'Klaret i dag: ' + dag.ok + ' af ' + dag.n + ' rigtige' : 'Samme 10 sp&oslash;rgsm&aring;l for alle i dag')}
+          ${mode('traen', '&#9673;', 'a1', 'Tr&aelig;ning', 'V&aelig;lg selv emner og sv&aelig;rhedsgrad')}
+          ${mode('surv', '&#9829;', 'a0', 'Survival', '&Eacute;t forkert svar, og det er slut. Rekord: ' + store.get('surv-best', 0))}
+        </div></section>
+        <section class="group"><h2>To spillere</h2><div class="modes">
+          ${mode('spoerg', '?', 'a3', 'Sp&oslash;rg l&oslash;s', 'L&aelig;s op og svar frit &ndash; med eller uden point og tur')}
+          ${mode('duel', '&#8644;', 'a2', 'Duel p&aring; &eacute;n telefon', 'Send telefonen frem og tilbage')}
+          ${mode('udfordr', '&#9993;', 'a1', 'Udfordr en ven', 'Send et link &ndash; I f&aring;r de samme sp&oslash;rgsm&aring;l')}
+        </div></section>
+        <section class="group"><h2>Selskab</h2><div class="modes">
+          ${mode('host', '&#9635;', 'a3', 'Live p&aring; storsk&aelig;rm', live ? 'Alle svarer p&aring; deres egen telefon' : 'Kr&aelig;ver Supabase-n&oslash;gler i config.js', !live)}
+          ${mode('join', '#', 'a2', 'Deltag i live-spil', 'Har du f&aring;et en kode?', !live)}
+          ${mode('qm', '&#9835;', 'a0', 'Quizmaster', '&Eacute;n l&aelig;ser op &ndash; ingen andre sk&aelig;rme')}
+        </div></section>
+      </div>
+    </section>
+    <section class="home-how" id="saadan">
+      <div class="home-how-copy">
+        <p class="home-kicker">Let at komme i gang</p><h2>V&aelig;lg et spil.<br>Find jeres svar.</h2>
+        <p>Spil en hurtig quiz alene, send en udfordring til en ven, eller lav en quiz for hele selskabet. I kan v&aelig;lge emner og sv&aelig;rhedsgrad, n&aring;r spiltypen giver mulighed for det.</p>
+      </div>
+      <div class="home-steps">
+        <div><span>01</span><p><strong>V&aelig;lg spiltype</strong><small>Dagens quiz, duel, survival og meget mere.</small></p></div>
+        <div><span>02</span><p><strong>Svar p&aring; sp&oslash;rgsm&aring;l</strong><small>F&aring; point for hvert rigtigt svar.</small></p></div>
+        <div><span>03</span><p><strong>Spil igen eller del</strong><small>Udfordr vennerne, eller forts&aelig;t sammen.</small></p></div>
+      </div>
+    </section>
+    <footer class="home-footer" id="kilder">
+      <a class="home-logo" href="#">Quizjagten</a><div>
+        <p>Nogle sp&oslash;rgsm&aring;l er oversat og bearbejdet fra <a href="https://the-trivia-api.com/" target="_blank" rel="noopener noreferrer">The Trivia API</a> under <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC 4.0</a>. Overs&aelig;ttelserne er redigeret.</p>
+        <p><a href="https://psch.dk/?v=quiz" target="_blank" rel="noopener noreferrer">Sp&oslash;rgsm&aring;l er hentet fra psch.dk - Trivia Quizdatabase</a>.</p>
+      </div>
+    </footer>
   </div>`);
   const routes = { dag: dagens, traen: traening, surv: survival, spoerg: spoergSetup, duel: duelSetup, udfordr: udfordrSetup, host: liveHostSetup, join: () => liveJoin(), qm: quizmasterSetup };
-  $$('.mode').forEach(b => b.onclick = () => BANK.length || ['join'].includes(b.dataset.m) ? routes[b.dataset.m]() : toast('Der er ingen spørgsmål endnu'));
+  $$('.mode').forEach(b => b.onclick = () => BANK.length || ['join'].includes(b.dataset.m) ? routes[b.dataset.m]() : toast('Der er ingen sp\u00f8rgsm\u00e5l endnu'));
+  $('.hero-cta').onclick = () => routes.dag();
   const installBtn = $('#install');
   if (!isStandalone()) {
     installBtn.hidden = false;
