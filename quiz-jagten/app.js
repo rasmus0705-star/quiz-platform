@@ -371,6 +371,7 @@ function home() {
       ${mode('qm', '♪', 'a0', 'Quizmaster', 'Én læser op – ingen andre skærme')}
     </div></section>
     <button class="btn" id="install" hidden>Installér som app</button>
+    <p class="explain">Nogle spørgsmål er oversat og bearbejdet fra <a href="https://the-trivia-api.com/" target="_blank" rel="noopener noreferrer">The Trivia API</a> under <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC 4.0</a>. Oversættelserne er redigeret.</p>
   </div>`);
   const routes = { dag: dagens, traen: traening, surv: survival, spoerg: spoergSetup, duel: duelSetup, udfordr: udfordrSetup, host: liveHostSetup, join: () => liveJoin(), qm: quizmasterSetup };
   $$('.mode').forEach(b => b.onclick = () => BANK.length || ['join'].includes(b.dataset.m) ? routes[b.dataset.m]() : toast('Der er ingen spørgsmål endnu'));

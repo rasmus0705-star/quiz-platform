@@ -14216,5 +14216,1964 @@
     "forkerte": [],
     "forklaring": "Harry Potter og de Vises Sten udkom i 1997 og var Rowlings debutroman.",
     "status": "godkendt"
+  },
+  {
+    "id": "geo-0153",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Ved hvilket hav findes Jordens lavest beliggende landomr?de?",
+    "korrekt": "Det D?de Hav",
+    "forkerte": [
+      "Det Kaspiske Hav",
+      "Arals?en",
+      "Victorias?en"
+    ],
+    "forklaring": "Det D?de Havs bred ligger mere end 400 meter under havets overflade.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "65056f367a97013de78b53f7",
+      "url": "https://the-trivia-api.com/v2/question/65056f367a97013de78b53f7",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/place/Dead-Sea#:~:text=The%20Dead%20Sea%20has,the%20surface%20of%20Earth"
+      ],
+      "checked_at": "2026-11-20T16:26:52.656Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "his-0148",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad k?mpede abolitionisterne for at afskaffe i 1800-tallet?",
+    "korrekt": "Slaveri",
+    "forkerte": [
+      "Kolonialisme",
+      "B?rnearbejde",
+      "Monarki"
+    ],
+    "forklaring": "Abolitionister arbejdede for at afskaffe slavehandel og slaveri.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "65056eed7a97013de78b5391",
+      "url": "https://the-trivia-api.com/v2/question/65056eed7a97013de78b5391",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/topic/abolitionism-European-and-American-social-movement#:~:text=abolitionism%2C%20(c.%201783%E2%80%931888)%2C%20in,trade%20and%20chattel%20slavery"
+      ],
+      "checked_at": "2026-11-21T10:24:12.980Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "his-0149",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvem modtog Nobels fredspris i 1979 for sit arbejde blandt fattige?",
+    "korrekt": "Moder Teresa",
+    "forkerte": [
+      "Nelson Mandela",
+      "Martin Luther King Jr.",
+      "Malala Yousafzai"
+    ],
+    "forklaring": "Moder Teresa grundlagde velg?renhedsorganisationen Missionaries of Charity.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c3c7cc59eab6f951a70",
+      "url": "https://the-trivia-api.com/v2/question/622a1c3c7cc59eab6f951a70",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.nobelprize.org/prizes/peace/1979/press-release/"
+      ],
+      "checked_at": "2026-11-19T00:33:17.290Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "his-0150",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad var navnet p? atombomben, der blev kastet over Hiroshima?",
+    "korrekt": "Little Boy",
+    "forkerte": [
+      "Fat Man",
+      "Trinity",
+      "Thin Man"
+    ],
+    "forklaring": "Little Boy blev kastet over Hiroshima den 6. august 1945.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c3c7cc59eab6f9518c7",
+      "url": "https://the-trivia-api.com/v2/question/622a1c3c7cc59eab6f9518c7",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/technology/Little-Boy"
+      ],
+      "checked_at": "2026-11-19T00:32:37.843Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "his-0151",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "I hvilket ?r blev NASA oprettet?",
+    "korrekt": "1958",
+    "forkerte": [
+      "1957",
+      "1961",
+      "1969"
+    ],
+    "forklaring": "NASA begyndte sit arbejde den 1. oktober 1958.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c3c7cc59eab6f951886",
+      "url": "https://the-trivia-api.com/v2/question/622a1c3c7cc59eab6f951886",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/topic/NASA#:~:text=National%20Aeronautics%20and%20Space,agency%20established%20in%201958",
+        "https://www.nasa.gov/history/#:~:text=Since%20October%201%2C%201958%2C,human%20and%20robotic%20spaceflight"
+      ],
+      "checked_at": "2026-11-19T00:32:29.449Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "his-0152",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken romersk by blev begravet under aske fra Vesuv i ?r 79?",
+    "korrekt": "Pompeji",
+    "forkerte": [
+      "Herculaneum",
+      "Ostia",
+      "Karthago"
+    ],
+    "forklaring": "Vesuvs udbrud begravede Pompeji og bevarede mange bygninger og genstande.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c3c7cc59eab6f9517fa",
+      "url": "https://the-trivia-api.com/v2/question/622a1c3c7cc59eab6f9517fa",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/place/Pompeii"
+      ],
+      "checked_at": "2026-11-19T00:32:15.796Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "nat-0128",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes arter, der er i fare for at udd??",
+    "korrekt": "Truede arter",
+    "forkerte": [
+      "Invasive arter",
+      "Husdyr",
+      "Udd?de arter"
+    ],
+    "forklaring": "En truet art har en betydelig risiko for at udd?.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "648889175dba6c873ef650de",
+      "url": "https://the-trivia-api.com/v2/question/648889175dba6c873ef650de",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [],
+      "checked_at": "2026-11-19T22:21:23.270Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "nat-0129",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dyrefamilie tilh?rer b?de leoparder og pumaer?",
+    "korrekt": "Kattefamilien",
+    "forkerte": [
+      "Hundefamilien",
+      "Bj?rnefamilien",
+      "M?rfamilien"
+    ],
+    "forklaring": "Leoparder og pumaer er begge kattedyr.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "65056f687a97013de78b543e",
+      "url": "https://the-trivia-api.com/v2/question/65056f687a97013de78b543e",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/animal/cat#:~:text=Cat%20(Felis%20catus)%2C%20domesticated,of%20the%20family%20Felidae"
+      ],
+      "checked_at": "2026-11-20T16:27:13.396Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "nat-0130",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken familie tilh?rer ulven?",
+    "korrekt": "Hundefamilien",
+    "forkerte": [
+      "Kattefamilien",
+      "Bj?rnefamilien",
+      "M?rfamilien"
+    ],
+    "forklaring": "Ulve tilh?rer hundefamilien, Canidae.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "65056f0d7a97013de78b53be",
+      "url": "https://the-trivia-api.com/v2/question/65056f0d7a97013de78b53be",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/animal/wolf"
+      ],
+      "checked_at": "2026-11-20T16:26:33.778Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "nat-0131",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken hunderace bruges ofte som sl?dehund i arktiske egne?",
+    "korrekt": "Siberian husky",
+    "forkerte": [
+      "Sch?ferhund",
+      "Dalmatiner",
+      "Puddel"
+    ],
+    "forklaring": "Siberian husky er avlet til at tr?kke sl?der over lange afstande.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "65056fa67a97013de78b5492",
+      "url": "https://the-trivia-api.com/v2/question/65056fa67a97013de78b5492",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://en.wikipedia.org/w/index.php?title=Husky&oldid=1383156057#:~:text=Husky%20is%20a%20general,work%20as%20sled%20dogs"
+      ],
+      "checked_at": "2026-11-20T16:27:37.738Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "nat-0132",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken af disse fugle kan ikke flyve?",
+    "korrekt": "Emu",
+    "forkerte": [
+      "Albatros",
+      "?rn",
+      "Due"
+    ],
+    "forklaring": "Emuen er en stor, flyveudygtig fugl, der lever i Australien.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "65056e3d7a97013de78b529c",
+      "url": "https://the-trivia-api.com/v2/question/65056e3d7a97013de78b529c",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://nationalzoo.si.edu/animals/emu#:~:text=Emus%20are%20large%2C%20flightless,and%20related%20to%20ostriches"
+      ],
+      "checked_at": "2026-11-20T14:37:11.749Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "nat-0133",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes planter, der fanger og ford?jer insekter?",
+    "korrekt": "K?d?dende planter",
+    "forkerte": [
+      "Snylteplanter",
+      "Sporeplanter",
+      "Vandplanter"
+    ],
+    "forklaring": "K?d?dende planter f?r en del af deres n?ring ved at fange sm?dyr.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c3a7cc59eab6f951021",
+      "url": "https://the-trivia-api.com/v2/question/622a1c3a7cc59eab6f951021",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/plant/carnivorous-plant#:~:text=Carnivorous%20plant%2C%20any%20plant,ingenious%20pitfalls%20and%20traps"
+      ],
+      "checked_at": "2026-11-18T22:28:24.406Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "vid-0137",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken teori beskriver, hvordan universet begyndte at udvide sig fra en meget varm og t?t tilstand?",
+    "korrekt": "Big Bang-teorien",
+    "forkerte": [
+      "Steady state-teorien",
+      "Kaosteorien",
+      "Relativitetsteorien"
+    ],
+    "forklaring": "Big Bang-teorien beskriver universets udvikling fra en tidlig, ekstremt varm og t?t tilstand.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "63d95307168979b94b2e4f7e",
+      "url": "https://the-trivia-api.com/v2/question/63d95307168979b94b2e4f7e",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/story/was-the-big-bang-actually-an-explosion#:~:text=The%20big%2Dbang%20theory%20of,energy%20called%20a%20singularity"
+      ],
+      "checked_at": "2026-11-19T16:25:12.882Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "vid-0138",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilken type kemiske forbindelser blev reguleret i Montrealprotokollen fra 1987 for at beskytte ozonlaget?",
+    "korrekt": "CFC-gasser",
+    "forkerte": [
+      "Drivhusgasser",
+      "?delgasser",
+      "Kulbrinter"
+    ],
+    "forklaring": "Montrealprotokollen indf?rte udfasning af blandt andet CFC-gasser, der nedbryder ozonlaget.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "647f9ded3a4302a71927167f",
+      "url": "https://the-trivia-api.com/v2/question/647f9ded3a4302a71927167f",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://noaa.gov/news-release/montreal-protocol-emerges-as-powerful-climate-treaty#:~:text=the%20international%20community%20adopted,and%20many%20other%20products"
+      ],
+      "checked_at": "2026-11-19T22:20:21.177Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "vid-0139",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken planet er den n?stst?rste i solsystemet?",
+    "korrekt": "Saturn",
+    "forkerte": [
+      "Jupiter",
+      "Uranus",
+      "Neptun"
+    ],
+    "forklaring": "Jupiter er st?rst, mens Saturn er den n?stst?rste planet.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "646140b74d46e537ca8cda0a",
+      "url": "https://the-trivia-api.com/v2/question/646140b74d46e537ca8cda0a",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://science.nasa.gov/saturn/facts/#:~:text=Saturn%20is%20the%20sixth,in%20our%20solar%20system"
+      ],
+      "checked_at": "2026-11-19T18:25:54.277Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "vid-0140",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket lag ligger mellem Jordens skorpe og kerne?",
+    "korrekt": "Kappen",
+    "forkerte": [
+      "Den ydre kerne",
+      "Lithosf?ren",
+      "Atmosf?ren"
+    ],
+    "forklaring": "Jordens kappe ligger mellem skorpen og den ydre kerne.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "65056e0f7a97013de78b525b",
+      "url": "https://the-trivia-api.com/v2/question/65056e0f7a97013de78b525b",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.ngu.no/en/about-geology/crust-mantle-and-core#:~:text=The%20mantle%20lies%20between,with%20the%20largest%20volume",
+        "https://education.nationalgeographic.org/resource/mantle#:~:text=The%20mantle%20lies%20between,outer%20layer%2C%20the%20crust"
+      ],
+      "checked_at": "2026-11-20T14:36:58.070Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "vid-0141",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes en tilstand, hvor tyngdekraftens virkning opleves som meget lille, for eksempel i frit fald?",
+    "korrekt": "Mikrogravitation",
+    "forkerte": [
+      "Hypergravitation",
+      "Antigravitation",
+      "Vakuum"
+    ],
+    "forklaring": "I mikrogravitation opleves n?sten v?gtl?shed, selv om tyngdekraften stadig virker.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "647f9deb3a4302a719271659",
+      "url": "https://the-trivia-api.com/v2/question/647f9deb3a4302a719271659",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://nasa.gov/audience/forstudents/5-8/features/nasa-knows/what-is-microgravity-58.html#:~:text=%E2%80%9CMicro%2D%E2%80%9D%20means%20%E2%80%9Cvery%20small%2C%E2%80%9D,to%20be%20very%20small"
+      ],
+      "checked_at": "2026-11-19T22:20:16.569Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "vid-0142",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad m?ler Mach-tallet?",
+    "korrekt": "Hastighed i forhold til lydens hastighed",
+    "forkerte": [
+      "Lufttryk i forhold til havniveau",
+      "Afstand i forhold til Jordens radius",
+      "Lysstyrke i forhold til solen"
+    ],
+    "forklaring": "Mach 1 svarer til lydens hastighed under de givne forhold.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "6461407e4d46e537ca8cd9e5",
+      "url": "https://the-trivia-api.com/v2/question/6461407e4d46e537ca8cd9e5",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/science/Mach-number#:~:text=In%20the%20case%20of,sound%20in%20that%20fluid"
+      ],
+      "checked_at": "2026-11-19T18:25:47.531Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "vid-0143",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange centimeter g?r der p? en meter?",
+    "korrekt": "100",
+    "forkerte": [
+      "10",
+      "1.000",
+      "10.000"
+    ],
+    "forklaring": "En meter best?r af 100 centimeter.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "65056f577a97013de78b5426",
+      "url": "https://the-trivia-api.com/v2/question/65056f577a97013de78b5426",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://collinsdictionary.com/dictionary/english/metre#:~:text=A%20metre%20is%20a,equal%20to%20100%20centimetres"
+      ],
+      "checked_at": "2026-11-20T16:27:06.609Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "vid-0144",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad bruges isopropylalkohol ofte til?",
+    "korrekt": "Som desinfektionsmiddel",
+    "forkerte": [
+      "Som s?demiddel",
+      "Som g?dning",
+      "Som br?ndstof i madlavning"
+    ],
+    "forklaring": "Isopropylalkohol bruges blandt andet i desinfektionsmidler og antiseptiske produkter.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "624437b1746187c5e7be936c",
+      "url": "https://the-trivia-api.com/v2/question/624437b1746187c5e7be936c",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [],
+      "checked_at": "2026-11-19T11:50:39.595Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "vid-0145",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "I hvilket ?r blev Pluto klassificeret som en dv?rgplanet?",
+    "korrekt": "2006",
+    "forkerte": [
+      "1999",
+      "2012",
+      "2018"
+    ],
+    "forklaring": "Den Internationale Astronomiske Union ?ndrede Plutos klassifikation i 2006.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "65056fd97a97013de78b54d7",
+      "url": "https://the-trivia-api.com/v2/question/65056fd97a97013de78b54d7",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/place/Pluto-dwarf-planet#:~:text=In%202006%20the%20International,and%20anomalous%20orbital%20characteristics"
+      ],
+      "checked_at": "2026-11-20T16:27:59.545Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "vid-0146",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket instrument m?ler lufttryk?",
+    "korrekt": "Et barometer",
+    "forkerte": [
+      "Et termometer",
+      "Et hygrometer",
+      "Et anemometer"
+    ],
+    "forklaring": "Et barometer m?ler atmosf?rens tryk.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "623388230161109f922aac6a",
+      "url": "https://the-trivia-api.com/v2/question/623388230161109f922aac6a",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/technology/barometer#:~:text=Barometer%2C%20device%20used%20to%20measure%20atmospheric%20pressure"
+      ],
+      "checked_at": "2026-11-19T08:46:26.899Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "vid-0147",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes det, n?r en v?ske bev?ger sig op gennem et smalt r?r mod tyngdekraften?",
+    "korrekt": "Kapill?rvirkning",
+    "forkerte": [
+      "Fordampning",
+      "Kondensation",
+      "Diffusion"
+    ],
+    "forklaring": "Kapill?rvirkning skyldes blandt andet v?skens overfladesp?nding og tiltr?kning til r?rets overflade.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "65056fb07a97013de78b549f",
+      "url": "https://the-trivia-api.com/v2/question/65056fb07a97013de78b549f",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://davidson.weizmann.ac.il/en/online/askexpert/chemistry/what-capillary-action-and-how-it-affected-gravity-ariel-michal#:~:text=Capillary%20action%20(or%20capillarity),as%20a%20thin%20tube"
+      ],
+      "checked_at": "2026-11-20T16:27:41.659Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "vid-0148",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den mindste knogle i menneskekroppen?",
+    "korrekt": "Stigb?jlen",
+    "forkerte": [
+      "Malleus",
+      "Kn?skallen",
+      "Hyoidbenet"
+    ],
+    "forklaring": "Stigb?jlen sidder i mellem?ret og er kun f? millimeter lang.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "647d5c21e9542d21c32c817a",
+      "url": "https://the-trivia-api.com/v2/question/647d5c21e9542d21c32c817a",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://my.clevelandclinic.org/health/body/ossicles"
+      ],
+      "checked_at": "2026-11-19T22:19:29.864Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spo-0123",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad betyder det japanske ord judo omtrent?",
+    "korrekt": "Den bl?de vej",
+    "forkerte": [
+      "Den hurtige h?nd",
+      "Kampens kunst",
+      "Den st?rke vej"
+    ],
+    "forklaring": "Navnet judo overs?ttes ofte til ?den bl?de vej?.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "6ae82946bb6335621cbf775c",
+      "url": "https://the-trivia-api.com/v2/question/6ae82946bb6335621cbf775c",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [],
+      "checked_at": "2026-11-03T09:05:39.711Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spo-0124",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken sport udviklede William G. Morgan i 1895 som et mindre fysisk alternativ til basketball?",
+    "korrekt": "Volleyball",
+    "forkerte": [
+      "H?ndbold",
+      "Badminton",
+      "Basketball"
+    ],
+    "forklaring": "William G. Morgan udviklede spillet, der f?rst blev kaldt mintonette.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "6affe48361cc4cb84e4a69bd",
+      "url": "https://the-trivia-api.com/v2/question/6affe48361cc4cb84e4a69bd",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [],
+      "checked_at": "2026-11-20T09:04:54.739Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spo-0125",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad beskriver udtrykket ?southpaw? typisk i boksning?",
+    "korrekt": "En venstreh?ndet bokser",
+    "forkerte": [
+      "En bokser, der kun angriber",
+      "En bokser i tungv?gtsklassen",
+      "En bokser, der k?mper med ryggen til modstanderen"
+    ],
+    "forklaring": "En southpaw-bokser st?r typisk med h?jre fod forrest og f?rer med venstre h?nd.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "6470d59c32850588056636e7",
+      "url": "https://the-trivia-api.com/v2/question/6470d59c32850588056636e7",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://en.wikipedia.org/w/index.php?title=Southpaw_stance&oldid=1386083925#:~:text=In%20American%20English%2C%20%22southpaw%22,person%20who%20is%20left%2Dhanded"
+      ],
+      "checked_at": "2026-11-19T20:35:42.091Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spo-0126",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "I hvilken sport bruges udtrykkene birdie, eagle og bogey om resultatet p? et hul?",
+    "korrekt": "Golf",
+    "forkerte": [
+      "Tennis",
+      "Cricket",
+      "Baseball"
+    ],
+    "forklaring": "Udtrykkene beskriver antal slag i forhold til hullets par i golf.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "65056f817a97013de78b5460",
+      "url": "https://the-trivia-api.com/v2/question/65056f817a97013de78b5460",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://vivasport.com/golf/stories/golf-scoring-explained#:~:text=Golf%20scoring%20explained%3A%20Par%2C,a%20hole%20should%20take"
+      ],
+      "checked_at": "2026-11-20T16:27:23.384Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spo-0127",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken sport konkurrerer deltagerne i om Ryder Cup?",
+    "korrekt": "Golf",
+    "forkerte": [
+      "Tennis",
+      "Roning",
+      "Cykling"
+    ],
+    "forklaring": "Ryder Cup er en international holdturnering i golf.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "6384b42e83dddfb71ee5e362",
+      "url": "https://the-trivia-api.com/v2/question/6384b42e83dddfb71ee5e362",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://kids.britannica.com/students/article/Ryder-Cup/313321#:~:text=Ryder%20Cup%20is%20a,United%20States%20and%20Europe"
+      ],
+      "checked_at": "2026-11-19T14:26:37.576Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spo-0128",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken sport forbindes Tour de France med?",
+    "korrekt": "Cykling",
+    "forkerte": [
+      "Motorsport",
+      "L?b",
+      "Langrend"
+    ],
+    "forklaring": "Tour de France er et etapel?b p? cykel.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "6384b42c83dddfb71ee5e361",
+      "url": "https://the-trivia-api.com/v2/question/6384b42c83dddfb71ee5e361",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/sports/Tour-de-France#:~:text=Tour%20de%20France%2C%20the,most%20difficult%20bicycle%20race"
+      ],
+      "checked_at": "2026-11-19T14:26:37.222Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spo-0129",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den beholder, en bueskytte opbevarer sine pile i?",
+    "korrekt": "Et pilekogger",
+    "forkerte": [
+      "Et hylster",
+      "En koggerbue",
+      "En pilepung"
+    ],
+    "forklaring": "Et pilekogger b?res typisk p? ryggen eller ved hoften.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "64f3a941601ffca0b7615ddd",
+      "url": "https://the-trivia-api.com/v2/question/64f3a941601ffca0b7615ddd",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.merriam-webster.com/dictionary/quiver#:~:text=a%20case%20for%20carrying%20or%20holding%20arrows"
+      ],
+      "checked_at": "2026-11-20T14:36:21.879Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spo-0130",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken af disse er ikke en disciplin ved vinter-OL?",
+    "korrekt": "Tovtr?kning",
+    "forkerte": [
+      "Curling",
+      "Skiskydning",
+      "Kunstsk?jtel?b"
+    ],
+    "forklaring": "Tovtr?kning har ikke v?ret en disciplin ved vinter-OL.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "65056e687a97013de78b52d8",
+      "url": "https://the-trivia-api.com/v2/question/65056e687a97013de78b52d8",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [],
+      "checked_at": "2026-11-20T14:37:26.253Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "mad-0129",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken plante bruges som r?vare til rom?",
+    "korrekt": "Sukkerr?r",
+    "forkerte": [
+      "Byg",
+      "Vindruer",
+      "Agave"
+    ],
+    "forklaring": "Rom fremstilles af produkter fra sukkerr?r, ofte melasse eller sukkerr?rssaft.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c3b7cc59eab6f951640",
+      "url": "https://the-trivia-api.com/v2/question/622a1c3b7cc59eab6f951640",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/topic/rum-liquor#:~:text=Rum%20is%20a%20distilled,byproducts%2C%20typically%20from%20molasses"
+      ],
+      "checked_at": "2026-11-19T00:31:41.494Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "mad-0130",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken spiritus blandes klassisk med tonic i en gin og tonic?",
+    "korrekt": "Gin",
+    "forkerte": [
+      "Rom",
+      "Vodka",
+      "Whisky"
+    ],
+    "forklaring": "Gin og tonic best?r traditionelt af gin, tonicvand og ofte lime.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "64e6fd970b79e5bedd55c8b3",
+      "url": "https://the-trivia-api.com/v2/question/64e6fd970b79e5bedd55c8b3",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.merriam-webster.com/dictionary/gin%20and%20tonic#:~:text=a%20cooling%20drink%20consisting,lime%20or%20lemon%20peel"
+      ],
+      "checked_at": "2026-11-20T14:36:11.329Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "mad-0131",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes en krydret relish af frugt eller gr?ntsager, som ofte serveres til indisk mad?",
+    "korrekt": "Chutney",
+    "forkerte": [
+      "Pesto",
+      "Tapenade",
+      "Salsa verde"
+    ],
+    "forklaring": "Chutney kan v?re s?d, syrlig eller st?rk og serveres ofte som tilbeh?r.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "645c9fc342ea81e2554c5f77",
+      "url": "https://the-trivia-api.com/v2/question/645c9fc342ea81e2554c5f77",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/topic/chutney"
+      ],
+      "checked_at": "2026-11-19T18:24:06.838Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "mad-0132",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken cocktail best?r traditionelt af appelsinjuice og champagne?",
+    "korrekt": "Mimosa",
+    "forkerte": [
+      "Bellini",
+      "Mojito",
+      "Daiquiri"
+    ],
+    "forklaring": "En mimosa blandes traditionelt af appelsinjuice og champagne eller anden mousserende vin.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "647eda75520523194910c1f0",
+      "url": "https://the-trivia-api.com/v2/question/647eda75520523194910c1f0",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://en.wikipedia.org/w/index.php?title=Mimosa_%28cocktail%29&oldid=1376897456#:~:text=A%20mimosa%20cocktail%20consists,juice%2C%20usually%20orange%20juice"
+      ],
+      "checked_at": "2026-11-19T22:19:34.333Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "mad-0133",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dessert har en cremet vaniljebudding med et spr?dt lag karamelliseret sukker?",
+    "korrekt": "Cr?me br?l?e",
+    "forkerte": [
+      "Panna cotta",
+      "Tiramisu",
+      "Souffl?"
+    ],
+    "forklaring": "Cr?me br?l?e serveres med et tyndt, h?rdt lag karamelliseret sukker.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c367cc59eab6f95025e",
+      "url": "https://the-trivia-api.com/v2/question/622a1c367cc59eab6f95025e",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://en.wikipedia.org/w/index.php?title=Cr%C3%A8me_br%C3%BBl%C3%A9e&oldid=1380915275"
+      ],
+      "checked_at": "2026-11-18T15:44:56.800Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "mad-0134",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den japanske ret, hvor fisk, skaldyr eller gr?ntsager dyppes i dej og frituresteges?",
+    "korrekt": "Tempura",
+    "forkerte": [
+      "Sushi",
+      "Ramen",
+      "Yakitori"
+    ],
+    "forklaring": "Tempura best?r af ingredienser, der er d?kket af en let dej og friturestegt.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c367cc59eab6f9502a9",
+      "url": "https://the-trivia-api.com/v2/question/622a1c367cc59eab6f9502a9",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://en.wikipedia.org/w/index.php?title=Tempura&oldid=1385500485"
+      ],
+      "checked_at": "2026-11-18T15:45:14.288Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "mad-0135",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken krydderurt findes b?de som krusbladet og bredbladet variant og ofte bruges som pynt?",
+    "korrekt": "Persille",
+    "forkerte": [
+      "Basilikum",
+      "Timian",
+      "Rosmarin"
+    ],
+    "forklaring": "Persille findes i b?de krusbladede og bredbladede sorter.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "648889135dba6c873ef650b8",
+      "url": "https://the-trivia-api.com/v2/question/648889135dba6c873ef650b8",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.merriam-webster.com/dictionary/parsley#:~:text=a%20European%20biennial%20herb,an%20herb%20or%20garnish"
+      ],
+      "checked_at": "2026-11-19T22:21:17.435Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "mad-0136",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken af disse er et b?r, der ofte bruges i juice og sauce?",
+    "korrekt": "Traneb?r",
+    "forkerte": [
+      "Kik?rt",
+      "Cashewn?d",
+      "Artiskok"
+    ],
+    "forklaring": "Traneb?r er et surt b?r, der ofte bruges i drikkevarer og madlavning.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "65056ed77a97013de78b5372",
+      "url": "https://the-trivia-api.com/v2/question/65056ed77a97013de78b5372",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://kids.britannica.com/kids/article/cranberry/433051#:~:text=Cranberries%20are%20fruits%20with%20a%20sour%20taste"
+      ],
+      "checked_at": "2026-11-20T16:26:14.015Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "mad-0137",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken ost rives ofte over pasta?",
+    "korrekt": "Parmesan",
+    "forkerte": [
+      "Feta",
+      "Brie",
+      "Halloumi"
+    ],
+    "forklaring": "Parmesan er en h?rd ost, der ofte rives over pasta og risotto.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c367cc59eab6f95029f",
+      "url": "https://the-trivia-api.com/v2/question/622a1c367cc59eab6f95029f",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.choice.com.au/food-and-drink/dairy/butter-and-cheese/articles/parmesan-cheese-guide#:~:text=A%20bowl%20of%20spaghetti,parmesan%20cheese%20on%20top"
+      ],
+      "checked_at": "2026-11-18T15:45:12.604Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "mad-0138",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken type mad er pita?",
+    "korrekt": "Fladbr?d",
+    "forkerte": [
+      "Friskost",
+      "Suppe",
+      "Syltet?j"
+    ],
+    "forklaring": "Pita er et rundt, bl?dt fladbr?d, som ofte kan fyldes.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c3b7cc59eab6f951635",
+      "url": "https://the-trivia-api.com/v2/question/622a1c3b7cc59eab6f951635",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.merriam-webster.com/dictionary/pita"
+      ],
+      "checked_at": "2026-11-19T00:31:39.043Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "mad-0139",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken f?devare dyrkes ofte p? tr?stammer?",
+    "korrekt": "Svampe",
+    "forkerte": [
+      "Kartofler",
+      "Kakaob?nner",
+      "Hvede"
+    ],
+    "forklaring": "Nogle spiselige svampe dyrkes p? tr?stammer eller tr?baserede v?kstmedier.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "6463394f01d576cfac3aa340",
+      "url": "https://the-trivia-api.com/v2/question/6463394f01d576cfac3aa340",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://ext.vt.edu/content/pubs_ext_vt_edu/en/ANR/ANR-102/ANR-102.html#:~:text=There%20are%20two%20basic,sawdust%20and%20other%20materials"
+      ],
+      "checked_at": "2026-11-19T20:35:15.346Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spr-0124",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad st?r forkortelsen CFO typisk for i en virksomhed?",
+    "korrekt": "Finansdirekt?r",
+    "forkerte": [
+      "Driftsdirekt?r",
+      "Teknisk direkt?r",
+      "Marketingdirekt?r"
+    ],
+    "forklaring": "CFO st?r for Chief Financial Officer, som leder en virksomheds ?konomifunktion.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "64e6536e0b79e5bedd549514",
+      "url": "https://the-trivia-api.com/v2/question/64e6536e0b79e5bedd549514",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://dictionary.cambridge.org/dictionary/english/cfo#:~:text=abbreviation%20for%20chief%20financial,for%20the%20organization's%20finances"
+      ],
+      "checked_at": "2026-11-20T14:35:39.708Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spr-0125",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken gr?sk gud blev if?lge myten Persefones ?gtef?lle og underverdenens hersker?",
+    "korrekt": "Hades",
+    "forkerte": [
+      "Zeus",
+      "Apollo",
+      "Hermes"
+    ],
+    "forklaring": "I gr?sk mytologi blev Persefone dronning i underverdenen sammen med Hades.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "645c9fc342ea81e2554c5f72",
+      "url": "https://the-trivia-api.com/v2/question/645c9fc342ea81e2554c5f72",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://britannica.com/topic/Persephone-Greek-goddess#:~:text=Persephone%20was%20the%20wife,spring%2C%20vegetation%2C%20and%20marriage"
+      ],
+      "checked_at": "2026-11-19T18:24:05.765Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spr-0126",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad betyder det moderne slangord ?ghosting? i en relation?",
+    "korrekt": "At afbryde al kontakt uden forklaring",
+    "forkerte": [
+      "At sende mange beskeder",
+      "At m?des i hemmelighed",
+      "At genoptage et gammelt venskab"
+    ],
+    "forklaring": "Ghosting betyder pludseligt at stoppe med at svare og afbryde kontakten.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "64d6a3149d5b369223eefd19",
+      "url": "https://the-trivia-api.com/v2/question/64d6a3149d5b369223eefd19",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.merriam-webster.com/dictionary/ghosting#:~:text=the%20act%20or%20practice,calls%2C%20instant%20messages%2C%20etc"
+      ],
+      "checked_at": "2026-11-20T14:35:22.516Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spr-0127",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det sjette bogstav i det gr?ske alfabet?",
+    "korrekt": "Zeta",
+    "forkerte": [
+      "Epsilon",
+      "Eta",
+      "Theta"
+    ],
+    "forklaring": "Bogstaverne f?r zeta er alfa, beta, gamma, delta og epsilon.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "647c9856f89e0968cfbc1a31",
+      "url": "https://the-trivia-api.com/v2/question/647c9856f89e0968cfbc1a31",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://en.wiktionary.org/w/index.php?title=%CE%96&oldid=91581967#:~:text=The%20upper%20case%20letter,the%20modern%20Greek%20alphabet"
+      ],
+      "checked_at": "2026-11-19T22:19:27.981Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spr-0128",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad betyder den latinske frase ?Ad victoriam??",
+    "korrekt": "Til sejr",
+    "forkerte": [
+      "Fred for alle",
+      "Husk d?den",
+      "Sandheden sejrer"
+    ],
+    "forklaring": "?Ad victoriam? betyder omtrent ?til sejr? eller ?mod sejr?.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "6371629e1bf863c45ca6c38d",
+      "url": "https://the-trivia-api.com/v2/question/6371629e1bf863c45ca6c38d",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [],
+      "checked_at": "2026-11-19T14:26:35.460Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spr-0129",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvem var den gr?ske gud for vin og fest?",
+    "korrekt": "Dionysos",
+    "forkerte": [
+      "Ares",
+      "Hermes",
+      "Poseidon"
+    ],
+    "forklaring": "Dionysos var i gr?sk mytologi forbundet med vin, frugtbarhed og teater.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c367cc59eab6f9500e5",
+      "url": "https://the-trivia-api.com/v2/question/622a1c367cc59eab6f9500e5",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/topic/Dionysus#:~:text=Dionysus%2C%20in%20Greco%2DRoman%20religion%2C,of%20wine%20and%20ecstasy"
+      ],
+      "checked_at": "2026-11-18T14:43:21.075Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "und-0124",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvem instruerede filmen E.T. the Extra-Terrestrial?",
+    "korrekt": "Steven Spielberg",
+    "forkerte": [
+      "George Lucas",
+      "James Cameron",
+      "Tim Burton"
+    ],
+    "forklaring": "Steven Spielberg instruerede science fiction-filmen fra 1982.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c367cc59eab6f95020b",
+      "url": "https://the-trivia-api.com/v2/question/622a1c367cc59eab6f95020b",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://en.wikipedia.org/w/index.php?title=E.T._the_Extra-Terrestrial&oldid=1385400604#:~:text=E.T.%20the%20Extra%2DTerrestrial%20(or,written%20by%20Melissa%20Mathison"
+      ],
+      "checked_at": "2026-11-18T15:44:36.712Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "und-0125",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken film fra 1933 handler om en ekspedition, der fanger en k?mpeabe p? en afsides ??",
+    "korrekt": "King Kong",
+    "forkerte": [
+      "Dracula",
+      "Frankenstein",
+      "The Mummy"
+    ],
+    "forklaring": "King Kong blev f?rste gang vist i 1933 og er siden blevet genindspillet flere gange.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "645f94ae541c4d4fc8cf2e4b",
+      "url": "https://the-trivia-api.com/v2/question/645f94ae541c4d4fc8cf2e4b",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/topic/King-Kong-film-1933"
+      ],
+      "checked_at": "2026-11-19T18:24:51.383Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "und-0126",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken film handler om en mand, der opdager, at hele hans liv er et tv-show?",
+    "korrekt": "The Truman Show",
+    "forkerte": [
+      "Groundhog Day",
+      "The Matrix",
+      "The Terminal"
+    ],
+    "forklaring": "I The Truman Show ved hovedpersonen ikke, at hans hverdag sendes som tv-underholdning.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "6257407c9da29df7b05f73e1",
+      "url": "https://the-trivia-api.com/v2/question/6257407c9da29df7b05f73e1",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/topic/The-Truman-Show#:~:text=The%20Truman%20Show%2C%20American,a%20reality%20television%20show"
+      ],
+      "checked_at": "2026-11-19T13:12:54.499Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "und-0127",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad st?r forkortelsen CGI for i film?",
+    "korrekt": "Computer-genererede billeder",
+    "forkerte": [
+      "Kamera-gengivet billede",
+      "Kinematografisk grafisk instruktion",
+      "Centraliseret filmoptagelse"
+    ],
+    "forklaring": "CGI betyder computer-generated imagery og bruges til digitale billeder og effekter.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "64e6fd220b79e5bedd55c843",
+      "url": "https://the-trivia-api.com/v2/question/64e6fd220b79e5bedd55c843",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.techtarget.com/whatis/definition/CGI-computer-generated-imagery#:~:text=Computer%2Dgenerated%20imagery%20(CGI)%20is,content%20using%20imaging%20software"
+      ],
+      "checked_at": "2026-11-20T14:35:49.198Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "und-0128",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken Charlie Chaplin-film viser b?de en diktator og en j?disk barber?",
+    "korrekt": "Diktatoren (The Great Dictator)",
+    "forkerte": [
+      "Moderne tider",
+      "Byens lys",
+      "Guldfeber"
+    ],
+    "forklaring": "Charlie Chaplin spiller begge roller i satiren fra 1940.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "62573f859da29df7b05f73a0",
+      "url": "https://the-trivia-api.com/v2/question/62573f859da29df7b05f73a0",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://imdb.com/title/tt0032553/plotsummary#:~:text=Dictator%20Adenoid%20Hynkel%20tries,persecution%20from%20Hynkel's%20regime"
+      ],
+      "checked_at": "2026-11-20T10:29:56.597Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "und-0129",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken film f?lger Dorothy og hunden Toto til det magiske land Oz?",
+    "korrekt": "Troldmanden fra Oz",
+    "forkerte": [
+      "Mary Poppins",
+      "Peter Pan",
+      "Alice i Eventyrland"
+    ],
+    "forklaring": "Dorothy og Toto f?res til Oz efter en tornado rammer deres hjem.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "625740f39da29df7b05f7404",
+      "url": "https://the-trivia-api.com/v2/question/625740f39da29df7b05f7404",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://kids.britannica.com/scholars/article/The-Wizard-of-Oz/477331#:~:text=When%20she%20awakens%2C%20she,talking%20trees%2C%20and%20witches"
+      ],
+      "checked_at": "2026-11-19T13:13:05.161Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "und-0130",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilke roller spiller Courteney Cox og David Schwimmer i tv-serien Friends?",
+    "korrekt": "Monica og Ross",
+    "forkerte": [
+      "Rachel og Chandler",
+      "Phoebe og Joey",
+      "Monica og Chandler"
+    ],
+    "forklaring": "Courteney Cox spiller Monica Geller, og David Schwimmer spiller Ross Geller.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "647129af64c916f9c84814b3",
+      "url": "https://the-trivia-api.com/v2/question/647129af64c916f9c84814b3",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/topic/Friends"
+      ],
+      "checked_at": "2026-11-19T20:35:47.654Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "und-0131",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken instrumentfamilie tilh?rer et glockenspiel?",
+    "korrekt": "Slagt?jsinstrumenter",
+    "forkerte": [
+      "Tr?bl?sere",
+      "Strygeinstrumenter",
+      "Messinginstrumenter"
+    ],
+    "forklaring": "Et glockenspiel frembringer toner, n?r man sl?r p? dets metalstave.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "63f394f6989356ef48370bca",
+      "url": "https://the-trivia-api.com/v2/question/63f394f6989356ef48370bca",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/art/glockenspiel#:~:text=glockenspiel%20%2C%20(German%3A%20%E2%80%9Cset,of%20tuned%20steel%20bars"
+      ],
+      "checked_at": "2026-11-19T16:25:54.678Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "und-0132",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken instrumentfamilie tilh?rer fagotten?",
+    "korrekt": "Tr?bl?sere",
+    "forkerte": [
+      "Messinginstrumenter",
+      "Slagt?jsinstrumenter",
+      "Strygeinstrumenter"
+    ],
+    "forklaring": "Fagotten er et tr?bl?seinstrument med dobbelt r?rblad.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "6266bb1dff7b6ee0496ec780",
+      "url": "https://the-trivia-api.com/v2/question/6266bb1dff7b6ee0496ec780",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.vsl.co.at/academy/woodwinds/bassoon#:~:text=The%20bassoon%20is%20a,tenor%20and%20bass%20register"
+      ],
+      "checked_at": "2026-11-19T14:24:29.620Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "und-0133",
+    "kategori": "underholdning",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilken jazzmusiker udgav albummet Kind of Blue?",
+    "korrekt": "Miles Davis",
+    "forkerte": [
+      "John Coltrane",
+      "Duke Ellington",
+      "Louis Armstrong"
+    ],
+    "forklaring": "Kind of Blue fra 1959 er et af Miles Davis? mest kendte jazzalbum.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c357cc59eab6f94fd6b",
+      "url": "https://the-trivia-api.com/v2/question/622a1c357cc59eab6f94fd6b",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/biography/Miles-Davis"
+      ],
+      "checked_at": "2026-11-18T13:28:40.609Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "und-0134",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket kunstnernavn er Richard Starkey bedre kendt under?",
+    "korrekt": "Ringo Starr",
+    "forkerte": [
+      "George Harrison",
+      "Elton John",
+      "Phil Collins"
+    ],
+    "forklaring": "Richard Starkey tog kunstnernavnet Ringo Starr som trommeslager i The Beatles.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c377cc59eab6f95043f",
+      "url": "https://the-trivia-api.com/v2/question/622a1c377cc59eab6f95043f",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/biography/Ringo-Starr#:~:text=Ringo%20Starr%2C%20born%20Richard,singer%2C%20songwriter%2C%20and%20actor"
+      ],
+      "checked_at": "2026-11-18T16:58:41.830Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "und-0135",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken musiker medvirkede sammen med Queen p? sangen Under Pressure?",
+    "korrekt": "David Bowie",
+    "forkerte": [
+      "Elton John",
+      "Freddie Mercury",
+      "Mick Jagger"
+    ],
+    "forklaring": "David Bowie og Queen indspillede Under Pressure sammen i 1981.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c357cc59eab6f94feeb",
+      "url": "https://the-trivia-api.com/v2/question/622a1c357cc59eab6f94feeb",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://en.wikipedia.org/w/index.php?title=Under_Pressure&oldid=1382838186#:~:text=%22Under%20Pressure%22%20is%20a,and%20singer%20David%20Bowie"
+      ],
+      "checked_at": "2026-11-18T14:41:36.558Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "und-0136",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvem udgav sangen Beat It i 1982?",
+    "korrekt": "Michael Jackson",
+    "forkerte": [
+      "Prince",
+      "Stevie Wonder",
+      "Lionel Richie"
+    ],
+    "forklaring": "Beat It blev udgivet p? Michael Jacksons album Thriller.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c357cc59eab6f94ff35",
+      "url": "https://the-trivia-api.com/v2/question/622a1c357cc59eab6f94ff35",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://en.wikipedia.org/w/index.php?title=Beat_It&oldid=1386273390#:~:text=%22Beat%20It%22%20is%20a,studio%20album%2C%20Thriller%20(1982)"
+      ],
+      "checked_at": "2026-11-18T14:41:45.388Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spr-0130",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvem skrev romanen Forbrydelse og straf?",
+    "korrekt": "Fjodor Dostojevskij",
+    "forkerte": [
+      "Leo Tolstoj",
+      "Anton Tjekhov",
+      "Ivan Turgenjev"
+    ],
+    "forklaring": "Den russiske forfatter Fjodor Dostojevskij udgav romanen i 1866.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c397cc59eab6f950f10",
+      "url": "https://the-trivia-api.com/v2/question/622a1c397cc59eab6f950f10",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/topic/Crime-and-Punishment-novel#:~:text=Crime%20and%20Punishment%2C%20novel,first%20published%20in%201866"
+      ],
+      "checked_at": "2026-11-18T22:27:18.671Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spr-0131",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvem skrev romanen Catch-22?",
+    "korrekt": "Joseph Heller",
+    "forkerte": [
+      "Kurt Vonnegut",
+      "George Orwell",
+      "Ernest Hemingway"
+    ],
+    "forklaring": "Joseph Hellers satiriske krigsroman Catch-22 udkom i 1961.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c397cc59eab6f950dcf",
+      "url": "https://the-trivia-api.com/v2/question/622a1c397cc59eab6f950dcf",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/biography/Joseph-Heller#:~:text=Joseph%20Heller%20(1923%E2%80%931999)%20was,after%20World%20War%20II"
+      ],
+      "checked_at": "2026-11-18T18:10:39.890Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spr-0132",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken farve f?r man normalt ved at blande gul og bl? maling?",
+    "korrekt": "Gr?n",
+    "forkerte": [
+      "Lilla",
+      "Orange",
+      "Brun"
+    ],
+    "forklaring": "Gul og bl? maling blandes normalt til gr?n, selv om resultatet afh?nger af pigmenterne.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "65056e237a97013de78b5277",
+      "url": "https://the-trivia-api.com/v2/question/65056e237a97013de78b5277",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/science/color-wheel#:~:text=Any%20two%20of%20the,violet%20(blue%20and%20red)"
+      ],
+      "checked_at": "2026-11-20T14:37:05.437Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spr-0133",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes et kunstv?rk, der er sat sammen af udklippede og p?kl?bede materialer?",
+    "korrekt": "Collage",
+    "forkerte": [
+      "Fresko",
+      "Mosaik",
+      "Litografi"
+    ],
+    "forklaring": "En collage sammens?ttes af forskellige materialer, der klippes ud og s?ttes sammen.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c3a7cc59eab6f95136a",
+      "url": "https://the-trivia-api.com/v2/question/622a1c3a7cc59eab6f95136a",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/art/collage"
+      ],
+      "checked_at": "2026-11-19T00:31:03.609Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spr-0134",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilken kunstretning brugte absurditet og gjorde opr?r mod traditionelle kunstidealer?",
+    "korrekt": "Dadaisme",
+    "forkerte": [
+      "Impressionisme",
+      "Klassicisme",
+      "Romantik"
+    ],
+    "forklaring": "Dadaismen opstod under F?rste Verdenskrig som et opr?r mod etablerede normer.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c3a7cc59eab6f951356",
+      "url": "https://the-trivia-api.com/v2/question/622a1c3a7cc59eab6f951356",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [],
+      "checked_at": "2026-11-18T22:29:25.666Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spr-0135",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvem skrev Alice i Eventyrland?",
+    "korrekt": "Lewis Carroll",
+    "forkerte": [
+      "J.M. Barrie",
+      "Roald Dahl",
+      "C.S. Lewis"
+    ],
+    "forklaring": "Lewis Carroll udgav Alice?s Adventures in Wonderland i 1865.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c397cc59eab6f950e06",
+      "url": "https://the-trivia-api.com/v2/question/622a1c397cc59eab6f950e06",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/topic/Alices-Adventures-in-Wonderland#:~:text=Alice%E2%80%99s%20Adventures%20in%20Wonderland%2C,Carroll%2C%20published%20in%201865"
+      ],
+      "checked_at": "2026-11-18T18:10:53.955Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spr-0136",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder en af de klassiske s?jleordener fra det antikke Gr?kenland?",
+    "korrekt": "Dorisk",
+    "forkerte": [
+      "Gotisk",
+      "Barok",
+      "Rokoko"
+    ],
+    "forklaring": "Dorisk er en af de tre klassiske gr?ske s?jleordener sammen med jonisk og korinthisk.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "645cb0e67d263fd509704386",
+      "url": "https://the-trivia-api.com/v2/question/645cb0e67d263fd509704386",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/technology/Doric-order#:~:text=Doric%20order%2C%20one%20of,austere%20column%20and%20capital"
+      ],
+      "checked_at": "2026-11-19T18:24:17.443Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spr-0137",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvem skrev tragedien Kong Lear?",
+    "korrekt": "William Shakespeare",
+    "forkerte": [
+      "Christopher Marlowe",
+      "Ben Jonson",
+      "John Milton"
+    ],
+    "forklaring": "Kong Lear er en tragedie skrevet af William Shakespeare.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c397cc59eab6f950fa7",
+      "url": "https://the-trivia-api.com/v2/question/622a1c397cc59eab6f950fa7",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.britannica.com/topic/King-Lear#:~:text=King%20Lear%2C%20tragedy%20in,quarto%20edition%20in%201608"
+      ],
+      "checked_at": "2026-11-18T22:27:56.556Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "geo-0154",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes en konstruktion, der sp?rrer for rindende vand?",
+    "korrekt": "En d?mning",
+    "forkerte": [
+      "En kanal",
+      "En sluseport",
+      "En akv?dukt"
+    ],
+    "forklaring": "En d?mning holder vand tilbage eller regulerer vandets str?mning.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "65056f947a97013de78b547a",
+      "url": "https://the-trivia-api.com/v2/question/65056f947a97013de78b547a",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://www.merriam-webster.com/dictionary/dam#:~:text=a%20barrier%20preventing%20the,as%20soil%20or%20snow)"
+      ],
+      "checked_at": "2026-11-20T16:27:30.173Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "vid-0149",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvordan skrives 69 med romertal?",
+    "korrekt": "LXIX",
+    "forkerte": [
+      "LXXI",
+      "XLIX",
+      "LXVII"
+    ],
+    "forklaring": "LXIX er L (50) + X (10) + IX (9), alts? 69.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "622a1c3d7cc59eab6f951be3",
+      "url": "https://the-trivia-api.com/v2/question/622a1c3d7cc59eab6f951be3",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://byjus.com/maths/69-in-roman-numerals#:~:text=69%20in%20Roman%20Numerals%20is%20LXIX"
+      ],
+      "checked_at": "2026-11-19T00:33:42.989Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
+  },
+  {
+    "id": "spr-0138",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket kodeord bruges for bogstavet V i NATO?s fonetiske alfabet?",
+    "korrekt": "Victor",
+    "forkerte": [
+      "Whiskey",
+      "Uniform",
+      "Juliett"
+    ],
+    "forklaring": "NATO?s fonetiske alfabet bruger ordet Victor for bogstavet V.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "The Trivia API",
+      "id": "6239f83aa72e7a347ac879d7",
+      "url": "https://the-trivia-api.com/v2/question/6239f83aa72e7a347ac879d7",
+      "license": "CC BY-NC 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "source_urls": [
+        "https://glossary.martide.com/victor/#:~:text=Victor%20stands%20for%20the,simply%20the%20Phonetic%20Alphabet"
+      ],
+      "checked_at": "2026-11-19T09:17:38.720Z",
+      "?ndret": "Oversat til dansk og redigeret"
+    }
   }
 ]

@@ -64,3 +64,7 @@ Mappen kan udgives som undermappe på GitHub Pages, fx `/quiz-platform/quiz-jagt
 ## Spørgsmålsformat
 
 Hvert spørgsmål har et id i formatet `abc-0001`, en kategori, niveau 1–4, `status` (`godkendt` eller `kladde`), spørgsmålet, korrekt svar, tre forkerte svar og en forklaring. Id-formatet bruges også ved indsendelse af statistik og fejlmeldinger.
+
+## Kreditering af eksterne spørgsmål
+
+73 spørgsmål er oversat og bearbejdet fra [The Trivia API](https://the-trivia-api.com/), som er udgivet under [Creative Commons Attribution-NonCommercial 4.0](https://creativecommons.org/licenses/by-nc/4.0/). Oversættelser og forklaringer er redigeret. De enkelte poster i `questions.json` indeholder API-id og eventuelle kildehenvisninger.
