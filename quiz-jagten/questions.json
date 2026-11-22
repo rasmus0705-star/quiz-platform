@@ -8412,5 +8412,1645 @@
     ],
     "forklaring": "Hustle kørte på BBC fra 2004 til 2012 og handlede om et team af svindlere.",
     "status": "godkendt"
+  },
+  {
+    "id": "geo-0084",
+    "kategori": "geografi",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den vulkaniske øgruppe vest for Portugal, der tilhører det spanske Canarias?",
+    "korrekt": "Kanarieøerne",
+    "forkerte": [
+      "Azorerne",
+      "Madeira",
+      "Kap Verde"
+    ],
+    "forklaring": "Kanarieøerne er spansk territorium og ligger tæt på den afrikanske kyst.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0085",
+    "kategori": "geografi",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad er den mindste selvstændige stat i verden?",
+    "korrekt": "Vatikanstaten",
+    "forkerte": [
+      "Monaco",
+      "San Marino",
+      "Liechtenstein"
+    ],
+    "forklaring": "Vatikanstaten er kun 0,44 km² og er omringet af Rom.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0086",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den flod, der danner grænse mellem USA og Mexico?",
+    "korrekt": "Rio Grande",
+    "forkerte": [
+      "Colorado",
+      "Mississippi",
+      "Missouri"
+    ],
+    "forklaring": "Rio Grande løber fra Colorado til Den Mexicanske Golf og er over 3.000 km lang.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0087",
+    "kategori": "geografi",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "I hvilken stat i USA ligger Mount Rushmore?",
+    "korrekt": "South Dakota",
+    "forkerte": [
+      "Wyoming",
+      "Montana",
+      "North Dakota"
+    ],
+    "forklaring": "Skulpturerne af fire præsidenter blev hugget ud i Black Hills 1927-41.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0088",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dansk by er opkaldt efter guden Odin?",
+    "korrekt": "Odense",
+    "forkerte": [
+      "Viborg",
+      "Randers",
+      "Horsens"
+    ],
+    "forklaring": "Odense menes at komme af Odinsvé – 'Odins helligdom'.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0089",
+    "kategori": "geografi",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad er Nordamerikas dybeste sø?",
+    "korrekt": "Great Slave Lake",
+    "forkerte": [
+      "Lake Superior",
+      "Lake Michigan",
+      "Crater Lake"
+    ],
+    "forklaring": "Great Slave Lake i Canada er 614 meter dybt og det dybeste sø på det nordamerikanske kontinent.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0090",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den halvø, som Spanien og Portugal deles om?",
+    "korrekt": "Den Iberiske Halvø",
+    "forkerte": [
+      "Apenninerne",
+      "Balkan",
+      "Skandinavien"
+    ],
+    "forklaring": "Den Iberiske Halvø adskilles fra resten af Europa af Pyrenæerne.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0091",
+    "kategori": "geografi",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den by i Cambodja, der er kendt for Angkor Wat?",
+    "korrekt": "Siem Reap",
+    "forkerte": [
+      "Phnom Penh",
+      "Battambang",
+      "Kampot"
+    ],
+    "forklaring": "Siem Reap er turistcentret tæt på tempelkomplekset Angkor, der er over 1.000 år gammelt.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0092",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad er den officielle betegnelse for de havstykker, der omringer Danmarks øer?",
+    "korrekt": "Farvandene",
+    "forkerte": [
+      "Fjordene",
+      "Sundene",
+      "Bæltene"
+    ],
+    "forklaring": "Storebælt, Lillebælt og Øresund er de vigtigste bælter i de indre danske farvande.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0093",
+    "kategori": "geografi",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det smalle stræde mellem Alaska og Rusland?",
+    "korrekt": "Beringstrædet",
+    "forkerte": [
+      "Hudsonbugten",
+      "Davisstrædet",
+      "Nares-strædet"
+    ],
+    "forklaring": "Beringstrædet er kun 85 km bredt og var engang en landbro, som mennesker brugte til at vandre til Amerika.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0094",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder Italiens støvlehæl-region?",
+    "korrekt": "Apulien",
+    "forkerte": [],
+    "forklaring": "Apulien (Puglia) er Italiens 'hæl' og er berømt for oliven, trlli-huse og adriatiske strande.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0095",
+    "kategori": "geografi",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvad er den officielle betegnelse for den zone i havet, der strækker sig 200 sømil fra en kysts basislinje?",
+    "korrekt": "Eksklusiv Økonomisk Zone (EEZ)",
+    "forkerte": [],
+    "forklaring": "Inden for EEZ har en kyststat suveræne rettigheder til at udnytte naturressourcerne.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0096",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den bjergkæde i Nordafrika, der løber gennem Marokko, Algeriet og Tunesien?",
+    "korrekt": "Atlasbjergene",
+    "forkerte": [],
+    "forklaring": "Atlasbjergene er opkaldt efter den græske titan Atlas og topper med Toubkal i Marokko.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0097",
+    "kategori": "geografi",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den by på Svalbard, der er verdens nordligste by med fast befolkning?",
+    "korrekt": "Longyearbyen",
+    "forkerte": [],
+    "forklaring": "Longyearbyen ligger på 78°N og er norsk territorium midt i Arktis.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0098",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder det hav, der ligger nord for Rusland og Sibirien?",
+    "korrekt": "Nordishavet",
+    "forkerte": [],
+    "forklaring": "Nordishavet dækker Jordens nordpol og er det mindste og laveste af de fem oceaner.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0080",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed den polske solidaritetsbevægelses leder, der senere blev præsident?",
+    "korrekt": "Lech Wałęsa",
+    "forkerte": [
+      "Wojciech Jaruzelski",
+      "Tadeusz Mazowiecki",
+      "Aleksander Kwaśniewski"
+    ],
+    "forklaring": "Wałęsa ledede fagforeningen Solidaritet og vandt Nobelfriedsprisen i 1983.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0081",
+    "kategori": "historie",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed den kinesiske dynastiet, der byggede Den Kinesiske Mur i sin nuværende form?",
+    "korrekt": "Ming-dynastiet",
+    "forkerte": [
+      "Qin-dynastiet",
+      "Han-dynastiet",
+      "Tang-dynastiet"
+    ],
+    "forklaring": "Den nuværende mur stammer primært fra Ming-dynastiet (1368-1644), men murens history er langt ældre.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0082",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed det danske skib, der forliste på Jyllands vestkyst i 1916?",
+    "korrekt": "Eksempel: Nymindegab-skibsforliset",
+    "forkerte": [
+      "Dannebrog",
+      "Absalon",
+      "Niels Juel"
+    ],
+    "forklaring": "Jyllands vestkyst var berygtet for skibsforlis og gav kystbefolkningen ekstra ressourcer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0083",
+    "kategori": "historie",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed den danske botaniker, der giver navn til Linnæus' Botanicus Danica?",
+    "korrekt": "Georg Christian Oeder",
+    "forkerte": [
+      "Carl von Linné",
+      "J.C. Fabricius",
+      "Martin Vahl"
+    ],
+    "forklaring": "Oeder igangsatte Floræ Danicæ, verdens længst løbende botaniske illustrationsværk.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0084",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed den angrebshandling, der trak USA ind i Anden Verdenskrig i december 1941?",
+    "korrekt": "Angrebet på Pearl Harbor",
+    "forkerte": [
+      "Blitzen over London",
+      "Operationen Barbarossa",
+      "Tobruk-offensiven"
+    ],
+    "forklaring": "Japans overraskelsesangreb på Pearl Harbor den 7. december 1941 medførte USA's krigsdeltagelse.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0085",
+    "kategori": "historie",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed den periode i 1800-tallets Kina, da opium fra Britisk Indien oversvømmede landet?",
+    "korrekt": "Opiumskrigene",
+    "forkerte": [
+      "Bokseropstanden",
+      "Taiping-opstanden",
+      "De Hvide Lotus-oprør"
+    ],
+    "forklaring": "De to Opiumskrige (1839-42 og 1856-60) endte med ydmygende kinesiske tab og Hong Kongs overdragelse.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0086",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed det habsburgske imperiums vigtigste og længst regerende kejser?",
+    "korrekt": "Frans Josef 1.",
+    "forkerte": [
+      "Karl 1.",
+      "Maximilian 1.",
+      "Rudolf 2."
+    ],
+    "forklaring": "Frans Josef 1. regerede fra 1848 til 1916 – 68 år – og var symbol på det gamle Europa.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0087",
+    "kategori": "historie",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed den ægteskabsscandal, der i 1936 tvang den britiske kong Edward 8. til at abdicere?",
+    "korrekt": "Wallis Simpson-sagen",
+    "forkerte": [
+      "Profumo-affæren",
+      "Abdikationskrisen",
+      "Windsor-affæren"
+    ],
+    "forklaring": "Edward ønskede at gifte sig med den fraskilte amerikaner Wallis Simpson, hvilket regeringen ikke ville acceptere.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0088",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed det skib, Magellan sejlede med, da han påbegyndte jordens første omsegling?",
+    "korrekt": "Trinidad",
+    "forkerte": [
+      "Victoria",
+      "Concepción",
+      "Santiago"
+    ],
+    "forklaring": "Magellan sejlede fra Spanien i 1519, men blev dræbt på Filippinerne. Skibet Victoria fuldførte rejsen i 1522.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0089",
+    "kategori": "historie",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed den nordiske gud, som vikingerne mente var den øverste?",
+    "korrekt": "Odin",
+    "forkerte": [
+      "Thor",
+      "Frej",
+      "Tyr"
+    ],
+    "forklaring": "Odin var visdoms- og krigsguden og hersker over Valhalla, hvor faldne krigere samles.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0090",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hed den indiske uafhængighedsleder, der er berømt for sin ikke-voldelige modstand?",
+    "korrekt": "Mahatma Gandhi",
+    "forkerte": [],
+    "forklaring": "Gandhi ledede Indien til uafhængighed fra britisk styre i 1947 og er symbolet på passiv modstand.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0091",
+    "kategori": "historie",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den periode i 1930'ernes Sovjet, da Stalin henrettede og deporterede millioner?",
+    "korrekt": "Den store terror",
+    "forkerte": [],
+    "forklaring": "Den store terror (1936-38) resulterede i millioner af henrettelser og deportationer til arbejdslejre.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0092",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hed den acztekiske kejser, da Hernán Cortés ankom til Mexico i 1519?",
+    "korrekt": "Montezuma 2.",
+    "forkerte": [],
+    "forklaring": "Cortés udnyttede Montezumas gæstfrihed og tog ham som gidsel, hvilket endte med aztekernes fald.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0093",
+    "kategori": "historie",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvad hed den pavelige bulle, der i 1493 delte Sydamerika mellem Spanien og Portugal?",
+    "korrekt": "Inter caetera",
+    "forkerte": [],
+    "forklaring": "Bullen Inter caetera og den efterfølgende Tordesillas-traktat delte den ny verden langs en meridian.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0094",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hed den periode i USA's forbud mod alkohol 1920-33?",
+    "korrekt": "Prohibition",
+    "forkerte": [],
+    "forklaring": "Forbudstiden skabte enorm kriminalitet og var med til at styrke den organiserede kriminalitet.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0079",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den videnskabelige betegnelse for studiet af insekter?",
+    "korrekt": "Entomologi",
+    "forkerte": [
+      "Ornitologi",
+      "Zoologi",
+      "Herpetologi"
+    ],
+    "forklaring": "En entomolog studerer insekter, der udgør over 70 % af alle kendte dyrearter.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0080",
+    "kategori": "natur",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den kemiske forbindelse, der giver mange blomster og frugter deres røde farve?",
+    "korrekt": "Anthocyanin",
+    "forkerte": [
+      "Klorofyl",
+      "Caroten",
+      "Lykopin"
+    ],
+    "forklaring": "Anthocyaniner er vandopløselige pigmenter, der farves af jordbær, blåbær og rødkål.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0081",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det fænomen, hvor hajer kan registrere elektriske felter fra levende dyr?",
+    "korrekt": "Elektroreception",
+    "forkerte": [
+      "Ekolokalisering",
+      "Magnetoreception",
+      "Kemoreception"
+    ],
+    "forklaring": "Hajer har organer kaldet Lorenziniske ampuller, der registrerer svage elektriske felter.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0082",
+    "kategori": "natur",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den biologiske proces, der nedbryder organisk materiale med hjælp af bakterier og svampe?",
+    "korrekt": "Dekomponering",
+    "forkerte": [
+      "Fermentering",
+      "Fotosyntese",
+      "Nitrifikation"
+    ],
+    "forklaring": "Dekomponering er en afgørende del af næringsstofkredsløbet i alle økosystemer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0083",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det fænomen, hvor nogle dyr kan regenerere tabte kropsdele?",
+    "korrekt": "Regeneration",
+    "forkerte": [
+      "Metamorfose",
+      "Autotomi",
+      "Kloning"
+    ],
+    "forklaring": "Autotomi er, når et dyr selv afkaster en kropsdel som forsvarsmekanisme, fx en firben der mister sin hale.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0084",
+    "kategori": "natur",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den biologiske klassifikation, der rangerer over art men under familie?",
+    "korrekt": "Slægt",
+    "forkerte": [
+      "Klasse",
+      "Orden",
+      "Stamme"
+    ],
+    "forklaring": "Hierarkiet er: rige → stamme → klasse → orden → familie → slægt → art.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0085",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det kemiske stof, der giver skildpadder deres hårde skjold?",
+    "korrekt": "Keratin",
+    "forkerte": [
+      "Chitin",
+      "Kollagen",
+      "Melanin"
+    ],
+    "forklaring": "Keratin er et strukturprotein, der også udgør hår og negle hos pattedyr.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0086",
+    "kategori": "natur",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den fænomenale art af svamp, der kan veje op til 600 tons?",
+    "korrekt": "Armillaria ostoyae",
+    "forkerte": [
+      "Amanita muscaria",
+      "Boletus edulis",
+      "Fomes fomentarius"
+    ],
+    "forklaring": "Armillaria ostoyae i Oregon er verdens største levende organisme og er over 8.000 år gammel.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0087",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det fænomen, der giver isbjerge deres blålige farve?",
+    "korrekt": "Lysabsorption i tæt is",
+    "forkerte": [
+      "Alger",
+      "Himmelrefleksion",
+      "Saltkrystaller"
+    ],
+    "forklaring": "Meget tæt og gammel is absorberer rødt lys og reflekterer blåt, deraf den blålige farve.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0088",
+    "kategori": "natur",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det sted i en celle, hvor proteinsyntesen foregår?",
+    "korrekt": "Ribosom",
+    "forkerte": [
+      "Mitokondrie",
+      "Golgi-apparat",
+      "Cellekerne"
+    ],
+    "forklaring": "Ribosomer er molekylære maskiner, der omsætter mRNA-instruktioner til proteiner.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0089",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder det fænomen, der gør, at fugle kan navigere ved hjælp af Jordens magnetfelt?",
+    "korrekt": "Magnetoreception",
+    "forkerte": [],
+    "forklaring": "Fugle bruger sandsynligvis proteiner i øjet og jernpartikler i næbet til at registrere magnetfeltet.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0090",
+    "kategori": "natur",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder det kemiske signal, insekter udsender for at tiltrække artsfæller?",
+    "korrekt": "Feromon",
+    "forkerte": [],
+    "forklaring": "Feromoner er kemiske signaler, der bruges til at tiltrække mager, markere territorier og advare om fare.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0091",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den videnskabsgren, der studerer svampe?",
+    "korrekt": "Mykologi",
+    "forkerte": [],
+    "forklaring": "Mykologi er en gren af biologien og behandler svampes klassifikation, genetik og anvendelse.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0092",
+    "kategori": "natur",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den kemiske forbindelse, der giver nælder deres brændende effekt?",
+    "korrekt": "Myresyre",
+    "forkerte": [],
+    "forklaring": "Nælders brændehår injicerer en blanding af myresyre, histamin og acetylcholin.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0093",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den biologiske term for dyr, der har konstant kropstemperatur?",
+    "korrekt": "Varmblodede",
+    "forkerte": [],
+    "forklaring": "Varmblodede dyr (endotherme) regulerer selv kropstemperaturen, modsat kolblodede (ectotherme).",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0078",
+    "kategori": "sport",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den disciplin i OL-atletik, der kombinerer 400 meter løb med 10 forhindringer?",
+    "korrekt": "400 meter hæk",
+    "forkerte": [
+      "Steeplechase",
+      "400 meter sprint",
+      "Stafet 4x400"
+    ],
+    "forklaring": "400 meter hæk har 10 hæk af 91,4 cm for mænd og 76,2 cm for kvinder.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0079",
+    "kategori": "sport",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den tekniske betegnelse for et volleyballslag, der slås ned i modstanderens bane med fuld kraft?",
+    "korrekt": "Spike",
+    "forkerte": [
+      "Blok",
+      "Lob",
+      "Serve"
+    ],
+    "forklaring": "En spike udføres ved at hoppe og slå bolden ned med en sving, der giver maksimal kraft.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0080",
+    "kategori": "sport",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det, i cricket, når en bowler tager tre wickets i tre på hinanden følgende kast?",
+    "korrekt": "Hat-trick",
+    "forkerte": [
+      "Perfect game",
+      "Triple",
+      "Turkey"
+    ],
+    "forklaring": "Hat-trick-begrebet stammer faktisk fra cricket, og bowleren fik en hat af sin klub.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0081",
+    "kategori": "sport",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den disciplin i roning, der udføres med to årer pr. roer?",
+    "korrekt": "Sculling",
+    "forkerte": [
+      "Sweep",
+      "Kayak",
+      "Ergometer"
+    ],
+    "forklaring": "I sculling holder roerne én åre i hver hånd, mens sweep-roning giver hver roer kun én åre.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0082",
+    "kategori": "sport",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den maksimale vægtklasse i boksningens superheavyweight?",
+    "korrekt": "Ingen øverste grænse",
+    "forkerte": [
+      "100 kg",
+      "110 kg",
+      "120 kg"
+    ],
+    "forklaring": "Super-heavyweight har ingen øverste grænse – min. 91 kg i amatørboksning og ingen grænse professionelt.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0083",
+    "kategori": "sport",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det danske atletik-stadion, der er hjemmebane for dansk atletik?",
+    "korrekt": "Østerbro Stadion",
+    "forkerte": [
+      "Parken",
+      "Gentofte Stadion",
+      "Bislett Stadion"
+    ],
+    "forklaring": "Østerbro Stadion i København er Danmarks største friluftsstadion for atletik.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0084",
+    "kategori": "sport",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det fænomen i svømning, hvor udøveren vender under vand og sparker fra væggen?",
+    "korrekt": "Vendinger",
+    "forkerte": [
+      "Flip turn",
+      "Dyk",
+      "Undervandssprint"
+    ],
+    "forklaring": "Effektive vendinger kan spare mange sekunder i en svømmekamp og kræver stor teknik.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0085",
+    "kategori": "sport",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det sted i Frankrig, hvor det første Tour de France-løb sluttede?",
+    "korrekt": "Paris",
+    "forkerte": [
+      "Lyon",
+      "Bordeaux",
+      "Marseille"
+    ],
+    "forklaring": "Det første Tour de France i 1903 sluttede ved Parc des Princes i Paris, som stadig er mål.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0086",
+    "kategori": "sport",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det, i ishockey, når en spiller scorer tre mål i én kamp?",
+    "korrekt": "Hat-trick",
+    "forkerte": [
+      "Perfect game",
+      "Tredobbelt",
+      "Power play"
+    ],
+    "forklaring": "Fans kaster deres hatte på isen, når en spiller laver hat-trick i NHL.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0087",
+    "kategori": "sport",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den disciplin i OL, der kombinerer langrend og riffelskydning?",
+    "korrekt": "Skiskydning",
+    "forkerte": [
+      "Nordisk kombination",
+      "Biathlon",
+      "Skiathlon"
+    ],
+    "forklaring": "Skiskydning (biathlon) er en af vinter-OLs mest populære discipliner, særligt i Skandinavien og Østeuropa.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0088",
+    "kategori": "sport",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder det danske fodboldstadion, der i 2026 er landets næststørste?",
+    "korrekt": "Ceres Park",
+    "forkerte": [],
+    "forklaring": "Ceres Park i Aarhus er hjemmebane for AGF og rummer over 20.000 tilskuere.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0089",
+    "kategori": "sport",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder det, når en tennisspiller vinder et sæt 7-5 efter at have været bagud?",
+    "korrekt": "Comeback-sæt",
+    "forkerte": [],
+    "forklaring": "Et sæt kan vindes 7-5, hvis begge spillere er nået til 5-5 og en spiller derefter vinder to på stribe.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0090",
+    "kategori": "sport",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den disciplin i OL-sejlads, der bruges lettest offshore?",
+    "korrekt": "Laser (nu ILCA)",
+    "forkerte": [],
+    "forklaring": "Laser er en enmandsjolle, der er en af OLs mest populære sejladsklasser.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0091",
+    "kategori": "sport",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder det internationle forbund, der regulerer atletik?",
+    "korrekt": "World Athletics",
+    "forkerte": [],
+    "forklaring": "World Athletics (tidligere IAAF) regulerer alle internationale atletikkonkurrencer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0092",
+    "kategori": "sport",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder det, i golf, når en spiller afslutter et hul med tre slag under par?",
+    "korrekt": "Albatros",
+    "forkerte": [],
+    "forklaring": "Albatros er ekstremt sjælden og kræver typisk en hole in one på par 4 eller to slag på par 5.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0079",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den japanske spiritus, der destilleres af sød kartoffel, byg eller ris?",
+    "korrekt": "Shochu",
+    "forkerte": [
+      "Sake",
+      "Soju",
+      "Whisky"
+    ],
+    "forklaring": "Shochu er Japans mest solgte spiritus og er typisk svagere end vestlig brændevin.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0080",
+    "kategori": "mad_drikke",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den kemiske proces, der giver brød sin sprøde skorpe ved bagning?",
+    "korrekt": "Maillard-reaktionen",
+    "forkerte": [
+      "Karamellisering",
+      "Fermentering",
+      "Gelatinering"
+    ],
+    "forklaring": "Maillard-reaktionen er en kemisk reaktion mellem aminosyrer og sukker ved høj temperatur.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0081",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den traditionelle ungarske snaps, der laves af frugt?",
+    "korrekt": "Pálinka",
+    "forkerte": [
+      "Slivovitz",
+      "Calvados",
+      "Grappa"
+    ],
+    "forklaring": "Pálinka er en frugtig brændevin og er Ungarns nationaldrink, typisk lavet af blommer, pærer eller abrikoser.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0082",
+    "kategori": "mad_drikke",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den metode til at tilberede mad i vacuum-forseglede poser i præcist tempereret vand?",
+    "korrekt": "Sous vide",
+    "forkerte": [
+      "Confit",
+      "Braisering",
+      "En papillote"
+    ],
+    "forklaring": "Sous vide (fransk for 'under vakuum') giver perfekt jævn tilberedning og bevarer saft og smag.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0083",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den georgiske naturvin, der er lavet med huden på de hvide druer?",
+    "korrekt": "Orange vin",
+    "forkerte": [
+      "Rosé",
+      "Amber vin",
+      "Pét-nat"
+    ],
+    "forklaring": "Orange vin fermenteres med drueskaller, der giver en karakteristisk gylden-orange farve og mere tanniner.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0084",
+    "kategori": "mad_drikke",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den japanske teknik til at skære fisk til sashimi i ekstremt tynde skiver?",
+    "korrekt": "Usuzukuri",
+    "forkerte": [
+      "Sogizukuri",
+      "Hirazukuri",
+      "Kakuzukuri"
+    ],
+    "forklaring": "Usuzukuri er den tyndeste sashimi-skæreteknik og bruges til hvid fisk som flounder.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0085",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den traditionelle skotske ret lavet af fåreindvolde kogt i mavetarmen?",
+    "korrekt": "Haggis",
+    "forkerte": [
+      "Cullen Skink",
+      "Cock-a-leekie",
+      "Clootie Dumpling"
+    ],
+    "forklaring": "Haggis er Skotlands nationalmåltid og fejres hvert år på Burns Night den 25. januar.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0086",
+    "kategori": "mad_drikke",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den kemiske formel for ethanol – det alkohol, vi drikker?",
+    "korrekt": "C₂H₅OH",
+    "forkerte": [
+      "CH₃OH",
+      "C₃H₇OH",
+      "C₄H₉OH"
+    ],
+    "forklaring": "Ethanol er en tocarbon-alkohol. Methanol (CH₃OH) er giftigt og bruges industrielt.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0087",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den ecuadoriansk-peruvianske fiskemarinade af citrus?",
+    "korrekt": "Ceviche",
+    "forkerte": [
+      "Tiradito",
+      "Aguachile",
+      "Escabeche"
+    ],
+    "forklaring": "Ceviche marineres i citrus, der 'koger' fisken kemisk uden varme.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0088",
+    "kategori": "mad_drikke",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den traditionelle flamske ølstil, der er spontangæret og syrlig?",
+    "korrekt": "Lambic",
+    "forkerte": [
+      "Gueuze",
+      "Witbier",
+      "Trappist"
+    ],
+    "forklaring": "Lambic gærer spontant med vilde gær fra luften i Payottenland-regionen nær Bruxelles.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0089",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den japanske smagsoplevelse fra alger og svampebuljong?",
+    "korrekt": "Dashi",
+    "forkerte": [],
+    "forklaring": "Dashi er grundfonden i japansk madlavning, lavet af kombu-alger og bonito-flager.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0090",
+    "kategori": "mad_drikke",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den proces, hvor sukker omdannes til alkohol og CO₂ af gær?",
+    "korrekt": "Gæring",
+    "forkerte": [],
+    "forklaring": "Gæring er en anaerob proces, der er grundlaget for ølbrygning, vinproduktion og brødbagning.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0091",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den traditionelle mexicanske sauce, der indeholder chokolade og chili?",
+    "korrekt": "Mole",
+    "forkerte": [],
+    "forklaring": "Mole negro er den mest komplekse variant med over 20 ingredienser og tager dage at tilberede.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0092",
+    "kategori": "mad_drikke",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den traditionelle kinesiske brygningsmetode, der bruger koji-svamp til at producere baijiu?",
+    "korrekt": "Qu-fermentering",
+    "forkerte": [],
+    "forklaring": "Qu er en starterkultur af skimmelsvamp og gær, der nedbryder stivelse og fermenterer korn til baijiu.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0093",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den israelske friturebagt kikærterbolle?",
+    "korrekt": "Falafel",
+    "forkerte": [],
+    "forklaring": "Falafel er udbredt i hele Mellemøsten og serveres tit i pitabrød med tahini og grøntsager.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0079",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det fænomen, der gør, at en væske kan stige op i et smalt rør mod tyngdekraften?",
+    "korrekt": "Kapillaritet",
+    "forkerte": [
+      "Osmose",
+      "Diffusion",
+      "Overfladespænding"
+    ],
+    "forklaring": "Kapillaritet skyldes kohæsion og adhæsion og er vigtig for planternes vandtransport.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0080",
+    "kategori": "videnskab",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad er massen af et elektron i kg (omtrent)?",
+    "korrekt": "9,11 × 10⁻³¹ kg",
+    "forkerte": [
+      "1,67 × 10⁻²⁷ kg",
+      "6,02 × 10²³ kg",
+      "1,60 × 10⁻¹⁹ kg"
+    ],
+    "forklaring": "Elektronets masse er ca. 1836 gange lettere end protonets masse.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0081",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det fænomen, der giver nordlys?",
+    "korrekt": "Solvindspartikler kolliderer med atmosfærens gasser",
+    "forkerte": [
+      "Lynnedslag",
+      "Meteornedslag",
+      "Havoverfladegas"
+    ],
+    "forklaring": "Nordlys opstår, når ladede partikler fra solen rammer atmosfærens ilt- og kvælstofatomer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0082",
+    "kategori": "videnskab",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den videnskabelige lov, der beskriver forholdet mellem tryk, volumen og temperatur for en ideel gas?",
+    "korrekt": "Den ideale gaslov",
+    "forkerte": [
+      "Boyles lov",
+      "Charles' lov",
+      "Gay-Lussacs lov"
+    ],
+    "forklaring": "Den ideale gaslov kombinerer Boyles, Charles' og Gay-Lussacs love: PV = nRT.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0083",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det fænomen, der giver radioaktive atomer en halvtid?",
+    "korrekt": "Radioaktivt henfald",
+    "forkerte": [
+      "Kernefusion",
+      "Fission",
+      "Transmutation"
+    ],
+    "forklaring": "Halvtiden er den tid, det tager for halvdelen af en radioaktiv isotop at henfalde.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0084",
+    "kategori": "videnskab",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den kvantefysiske størrelse, der beskriver den mulige tilstand for et elektron?",
+    "korrekt": "Kvantetilstand",
+    "forkerte": [
+      "Orbital",
+      "Spin",
+      "Kvantetal"
+    ],
+    "forklaring": "En kvantetilstand beskrives ved fire kvantetenummer: n, l, ml og ms.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0085",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det kemiske element med atomnummer 79?",
+    "korrekt": "Guld",
+    "forkerte": [
+      "Platin",
+      "Sølv",
+      "Kobber"
+    ],
+    "forklaring": "Guld har symbolet Au fra det latinske 'aurum' og atomnummer 79.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0086",
+    "kategori": "videnskab",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den matematiske konstant, der er forholdet mellem en cirkels omkreds og diameter?",
+    "korrekt": "Pi (π)",
+    "forkerte": [
+      "Eulers tal (e)",
+      "Den gyldne snit (φ)",
+      "Plancks konstant (h)"
+    ],
+    "forklaring": "Pi er ca. 3,14159 og er en irrationel konstant, der ikke kan udtrykkes som en brøk.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0087",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det kemiske stof, der giver kroppen energi fra cellernes iltning?",
+    "korrekt": "ATP",
+    "forkerte": [
+      "ADP",
+      "NAD",
+      "FAD"
+    ],
+    "forklaring": "ATP (adenosintrifosfat) er cellernes universelle energivaluta og produceres i mitokondrierne.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0088",
+    "kategori": "videnskab",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det fænomen, der giver et sort hul dets styrke?",
+    "korrekt": "Gravitationssingularitet",
+    "forkerte": [
+      "Neutronstjerne",
+      "Kvantetunnel",
+      "Magnetfelt"
+    ],
+    "forklaring": "Et sort hul opstår, når masse er så koncentreret, at tyngdekraften overvinder al anden kraft.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0089",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den videnskabsgren, der studerer jordbundsfysik og geologi under jordoverfladen?",
+    "korrekt": "Geofysik",
+    "forkerte": [],
+    "forklaring": "Geofysikken undersøger Jordens indre struktur ved hjælp af seismologi, gravitation og magnetisme.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0090",
+    "kategori": "videnskab",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den matematiske teknik, der bruges til at beregne arealet under en kurve?",
+    "korrekt": "Integration",
+    "forkerte": [],
+    "forklaring": "Integration er en af de to grundlæggende operationer i matematisk analyse, modsat differentiation.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0091",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder det fænomen, der giver zink sin beskyttende effekt på stål?",
+    "korrekt": "Galvanisering",
+    "forkerte": [],
+    "forklaring": "Galvanisering belægger stål med et tyndt lag zink, der beskytter mod rust ved at ofre sig selv.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0092",
+    "kategori": "videnskab",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den videnskabelige lov, der siger, at to atomer ikke kan have den samme kvantetilstand?",
+    "korrekt": "Paulis eksklusions-princip",
+    "forkerte": [],
+    "forklaring": "Paulis princip forklarer, at elektroner i samme atom aldrig kan have identiske kvantetenumre.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0093",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den biologiske struktur, der er cellemembranens dobbellagsstruktur?",
+    "korrekt": "Fosfolipid-dobbeltlag",
+    "forkerte": [],
+    "forklaring": "Fosfolipidernes hydrofobe haler vender indad, mens hydrofilt hoved vender udad mod vandet.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0080",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den retoriske figur, der gentager det samme ord i begyndelsen af flere sætninger?",
+    "korrekt": "Anafor",
+    "forkerte": [
+      "Metafor",
+      "Allitteration",
+      "Chiasme"
+    ],
+    "forklaring": "Anafor bruges for at skabe rytme og eftertryk, som i 'Vi vil leve, vi vil sejre, vi vil elske'.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0081",
+    "kategori": "sprog_kultur",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det litterære greb, der giver menneskelige egenskaber til ikke-menneskelige ting?",
+    "korrekt": "Personifikation",
+    "forkerte": [
+      "Metafor",
+      "Allegori",
+      "Synekdoke"
+    ],
+    "forklaring": "Personifikation giver ting, dyr eller abstrakte begreber menneskelige egenskaber og handlinger.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0082",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den japanske tegneserietradition med store øjne og karakteristiske ansigter?",
+    "korrekt": "Manga",
+    "forkerte": [
+      "Anime",
+      "Bishōjo",
+      "Chibi"
+    ],
+    "forklaring": "Manga er trykt tegneserie, mens anime er animationsfilm baseret på manga eller originale historier.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0083",
+    "kategori": "sprog_kultur",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den filosof, der beskrev den kategoriske imperativ?",
+    "korrekt": "Immanuel Kant",
+    "forkerte": [
+      "G.W.F. Hegel",
+      "Arthur Schopenhauer",
+      "J.S. Mill"
+    ],
+    "forklaring": "Kants kategoriske imperativ siger, at man altid bør handle, som om ens handling var en universel lov.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0084",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den indiske klassiske musikform, der bruger en sitar?",
+    "korrekt": "Raga",
+    "forkerte": [
+      "Bhangra",
+      "Qawwali",
+      "Carnatic"
+    ],
+    "forklaring": "En raga er en melodisk ramme for improvisation og er central i både nordindisk og sydindisk klassisk musik.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0085",
+    "kategori": "sprog_kultur",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den danske forfatter, der er berømt for romanen 'Lykke-Per'?",
+    "korrekt": "Henrik Pontoppidan",
+    "forkerte": [
+      "Johannes V. Jensen",
+      "Martin Andersen Nexø",
+      "Herman Bang"
+    ],
+    "forklaring": "Pontoppidan fik Nobelprisen i litteratur i 1917 og er en af dansk litteraturs største navne.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0086",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den retoriske figur, der bruger indirekte benævnelser for sensitive emner?",
+    "korrekt": "Eufemisme",
+    "forkerte": [
+      "Ironi",
+      "Sarkasme",
+      "Litotes"
+    ],
+    "forklaring": "Eufemismer bruges for at undgå stødende ord, som 'at afgå ved døden' i stedet for 'at dø'.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0087",
+    "kategori": "sprog_kultur",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den irske episke tradition om Cú Chulainn og kongerne af Ulster?",
+    "korrekt": "Ulster-cyklen",
+    "forkerte": [
+      "Fenian-cyklen",
+      "Mytologiske cyklus",
+      "Kongernes cyklus"
+    ],
+    "forklaring": "Ulster-cyklen fra ca. 100-400 e.Kr. er Irlands svar på de nordiske sagas.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0088",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den form for humor, der finder det komiske i de absurde sider af tilværelsen?",
+    "korrekt": "Absurdisme",
+    "forkerte": [
+      "Sarkasme",
+      "Sort humor",
+      "Farce"
+    ],
+    "forklaring": "Absurdistisk humor ses hos fx Monty Python og i Kafka's litterære værker.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0089",
+    "kategori": "sprog_kultur",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den græske tragiker, der er berømt for dramaet 'Ødipus Rex'?",
+    "korrekt": "Sofokles",
+    "forkerte": [
+      "Euripides",
+      "Aiskylos",
+      "Aristofanes"
+    ],
+    "forklaring": "Sofokles var en af den klassiske græske dramas store mestre og er berømt for sine skæbnetragedier.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0090",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder det litterære begreb, der beskriver en fortæller, der ved alt om alle personer og begivenheder?",
+    "korrekt": "Alvidende fortæller",
+    "forkerte": [],
+    "forklaring": "En alvidende fortæller kendes i 3. persons fortælling og kan skifte perspektiv frit.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0091",
+    "kategori": "sprog_kultur",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den retoriske teknik, der bevidst gentager det modsatte af, hvad man mener?",
+    "korrekt": "Ironi",
+    "forkerte": [],
+    "forklaring": "Ironi bruges for at understrege et pointe ved at sige det modsatte af det mente.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0092",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den form for billedkunst, der kun bruger geometriske former og klare farver?",
+    "korrekt": "Abstrakt kunst",
+    "forkerte": [],
+    "forklaring": "Abstrakt kunst adskiller sig fra figurativt og repræsentativt kunst ved at forlade den visuelle virkelighed.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0093",
+    "kategori": "sprog_kultur",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den danske filosof og teolog, der grundlagde den folkelige højskoletanke?",
+    "korrekt": "N.F.S. Grundtvig",
+    "forkerte": [],
+    "forklaring": "Grundtvig ønskede at give det brede folk adgang til oplysning og dannelse uden eksamenstyranni.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0094",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den musikgenre, der kombinerer jazz og klassisk musik?",
+    "korrekt": "Third stream",
+    "forkerte": [],
+    "forklaring": "Third stream-begrebet blev lanceret af komponisten Gunther Schuller i 1957.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0079",
+    "kategori": "underholdning",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den danske film, der er baseret på Herman Bangs roman om den elegante undergang?",
+    "korrekt": "Ved vejen",
+    "forkerte": [
+      "Stille hjerte",
+      "En kongelig affære",
+      "Babettes gæstebud"
+    ],
+    "forklaring": "Herman Bangs 'Ved Vejen' fra 1886 er en nøgleroman i dansk impressionistisk prosa.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0080",
+    "kategori": "underholdning",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den danske filminstruktør, der lavede 'Festen' og grundlagde Dogme 95 med Lars von Trier?",
+    "korrekt": "Thomas Vinterberg",
+    "forkerte": [
+      "Susanne Bier",
+      "Lone Scherfig",
+      "Bille August"
+    ],
+    "forklaring": "Festen fra 1998 var den første Dogme 95-film og slog igennem internationalt.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0081",
+    "kategori": "underholdning",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvem komponerede operaen 'Carmen'?",
+    "korrekt": "Georges Bizet",
+    "forkerte": [
+      "Giuseppe Verdi",
+      "Giacomo Puccini",
+      "Richard Wagner"
+    ],
+    "forklaring": "Carmen fra 1875 er en af operaverdenens mest opførte og er berømt for Habanera-arien.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0082",
+    "kategori": "underholdning",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den fiktive by, Kafka's roman 'Processen' foregår i?",
+    "korrekt": "Ingen navngivet by",
+    "forkerte": [
+      "Prag",
+      "Wien",
+      "Berlin"
+    ],
+    "forklaring": "Kafka's 'Processen' (1925) foregår i en unavngiven by og beskriver Josef K's absurde retssag.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0083",
+    "kategori": "underholdning",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den britiske serieforbryder, som Sherlock Holmes kæmpede mod?",
+    "korrekt": "Professor Moriarty",
+    "forkerte": [
+      "Jack the Ripper",
+      "Sebastian Moran",
+      "Charles Augustus Milverton"
+    ],
+    "forklaring": "Moriarty beskrives som 'forbrydelsens Napoleon' og Holmes' intellektuelle modstykke.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0084",
+    "kategori": "underholdning",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det musikalske stykke, Beethoven komponerede efter at have mistet hørelsen næsten fuldstændigt?",
+    "korrekt": "9. symfoni",
+    "forkerte": [
+      "5. symfoni",
+      "'Fur Elise'",
+      "'Schicksals-Sonate'"
+    ],
+    "forklaring": "Beethoven var nærmest fuldstændigt døv, da han dirigerede urpremieren på 9. symfoni i 1824.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0085",
+    "kategori": "underholdning",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den stil i billedkunst, der gengiver den indre psyke og drømmeverden?",
+    "korrekt": "Surrealisme",
+    "forkerte": [
+      "Ekspressionsisme",
+      "Kubisme",
+      "Dadaisme"
+    ],
+    "forklaring": "Surrealismen opstod i 1920'erne og er bl.a. repræsenteret af Salvador Dalí og René Magritte.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0086",
+    "kategori": "underholdning",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den danske forfatter, der beskrev Østjyllands natur og bondelivet i noveller?",
+    "korrekt": "Steen Steensen Blicher",
+    "forkerte": [
+      "Jeppe Aakjær",
+      "Johannes V. Jensen",
+      "Thit Jensen"
+    ],
+    "forklaring": "Blicher er berømt for noveller som 'Brudstykker af en Landsbydegns Dagbog' (1824).",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0087",
+    "kategori": "underholdning",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den britiske komponist, der er berømt for orkesterstykket 'The Planets'?",
+    "korrekt": "Gustav Holst",
+    "forkerte": [
+      "Edward Elgar",
+      "Ralph Vaughan Williams",
+      "Benjamin Britten"
+    ],
+    "forklaring": "Holsts 'The Planets' fra 1916 er et af orkestermusikverdenes mest kendte stykker.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0088",
+    "kategori": "underholdning",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den retoriske figur, der bruges, når den lille del repræsenterer helheden?",
+    "korrekt": "Synekdoke",
+    "forkerte": [
+      "Metafor",
+      "Metonymi",
+      "Allegori"
+    ],
+    "forklaring": "Synekdoke ses i udtryk som 'hundrede sejl' (skibe) og 'mange hænder' (arbejdere).",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0089",
+    "kategori": "underholdning",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den norske forfatter, der er berømt for romanerne om Harry Hole?",
+    "korrekt": "Jo Nesbø",
+    "forkerte": [],
+    "forklaring": "Jo Nesbø's krimiserie om efterforskeren Harry Hole er solgt i over 50 millioner eksemplarer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0090",
+    "kategori": "underholdning",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den russiske komponist, der komponerede balletten Svanesøen?",
+    "korrekt": "Pjotr Tjajkovskij",
+    "forkerte": [],
+    "forklaring": "Tjajkovskij komponerede Svanesøen (1876) samt Tornerose og Nøddeknækkeren.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0091",
+    "kategori": "underholdning",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den genre af fiktion, der kombinerer videnskab og fremtidsvisioner?",
+    "korrekt": "Science fiction",
+    "forkerte": [],
+    "forklaring": "Science fiction spænder fra Jules Verne og H.G. Wells til moderne forfattere som Isaac Asimov og Philip K. Dick.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0092",
+    "kategori": "underholdning",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den poetiske form med 14 linjer, der populærgjordes af Shakespeare og Petrarca?",
+    "korrekt": "Sonnet",
+    "forkerte": [],
+    "forklaring": "Shakespeares sonnetter er skrevet i iambisk pentameter og handler om kærlighed, tid og skønhed.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0093",
+    "kategori": "underholdning",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder det danske kunstnerpar, der er berømt for land art-projekter og 'Intet er som det ser ud'?",
+    "korrekt": "Olafur Eliasson",
+    "forkerte": [],
+    "forklaring": "Olafur Eliasson er en dansk-islandsk kunstner, der er berømt for storskala-installationer som 'The Weather Project'.",
+    "status": "godkendt"
   }
 ]
