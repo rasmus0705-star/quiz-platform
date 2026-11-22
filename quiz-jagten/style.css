@@ -299,3 +299,52 @@ input[type=text]:focus, select:focus { border-color: var(--guld); }
   .home-how { grid-template-columns: 1fr; gap: 24px; padding: 3rem 0; }
   .home-footer { flex-direction: column; gap: 16px; }
 }
+
+/* Keep every game mode visible on the opening screen */
+.home-hero { min-height: auto; padding: 1.15rem 1.5rem .4rem; }
+.home-title { font-size: clamp(2.8rem,7vw,4.9rem); margin-bottom: .55rem; }
+.home-title .line-dim { font-size: .34em; margin-bottom: .08em; }
+.home-sub { max-width: 720px; margin: 0; font-size: .98rem; line-height: 1.45; }
+.home-actions, .home-proof { display: none; }
+.home-content { padding: .85rem 0 1.2rem; }
+.home-section-heading { margin-bottom: .8rem; }
+.home-section-heading .home-kicker { margin-bottom: .2rem; }
+.home-section-heading h2 { font-size: 1.65rem; }
+.home-section-heading > p:last-child { display: none; }
+.home-groups .group { padding: 14px; }
+@media (max-width: 900px) {
+  .home-groups { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+  .home-groups .group { display: contents; }
+  .home-groups .group h2 { display: none; }
+  .home-groups .modes { display: contents; }
+  .home-groups .mode { min-height: 62px; grid-template-columns: 30px minmax(0,1fr); gap: 0 8px; padding: 8px 9px; }
+  .home-groups .mode .ic { width: 28px; height: 28px; border-radius: 8px; font-size: 1rem; }
+  .home-groups .mode strong { font-size: .84rem; line-height: 1.15; }
+  .home-groups .mode span.d { font-size: .69rem; line-height: 1.2; }
+}
+@media (max-width: 620px) {
+  .home-hero { padding: .8rem 14px .25rem; }
+  .hero-eyebrow { margin-bottom: .55rem; padding: 6px 10px; font-size: .68rem; }
+  .home-title { font-size: clamp(2.65rem,12.8vw,3.65rem); margin-bottom: .4rem; }
+  .home-title .line-dim { font-size: .34em; }
+  .home-sub { max-width: 420px; font-size: .84rem; }
+  .home-content, .home-how, .home-footer { width: calc(100% - 24px); }
+  .home-content { padding: .7rem 0 1rem; }
+  .home-section-heading { margin-bottom: .55rem; }
+  .home-section-heading h2 { font-size: 1.35rem; }
+  .home-section-heading .home-kicker { font-size: .65rem; }
+  .home-groups .mode { min-height: 58px; padding: 7px; }
+  .home-groups .mode .ic { width: 25px; height: 25px; font-size: .9rem; }
+  .home-groups .mode strong { font-size: .78rem; }
+  .home-groups .mode span.d { font-size: .64rem; }
+}
+@media (max-width: 900px) and (max-height: 740px) {
+  .home-nav { min-height: 56px; }
+  .home-hero { padding-top: .45rem; }
+  .hero-eyebrow { margin-bottom: .3rem; padding: 4px 9px; }
+  .home-title { font-size: 2.55rem; margin-bottom: .25rem; }
+  .home-sub { font-size: .78rem; }
+  .home-content { padding-top: .35rem; }
+  .home-section-heading { margin-bottom: .35rem; }
+  .home-groups .mode { min-height: 51px; padding: 5px 7px; }
+}

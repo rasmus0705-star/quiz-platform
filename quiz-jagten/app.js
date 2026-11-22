@@ -365,7 +365,7 @@ function home() {
     <section class="home-hero">
       <div class="hero-eyebrow"><span></span> Almen viden &middot; 9 emner &middot; solo og selskab</div>
       <h1 class="home-title"><span class="line-dim">Velkommen til</span><span class="line-gold">Quizjagten</span></h1>
-      <p class="home-sub">Spil alene, udfordr vennerne eller saml alle om en quiz. V&aelig;lg mellem ${BANK.length.toLocaleString('da-DK')} sp&oslash;rgsm&aring;l om alt fra natur og historie til sport og underholdning.</p>
+      <p class="home-sub">Spil alene eller sammen med vennerne. V&aelig;lg blandt ${BANK.length.toLocaleString('da-DK')} sp&oslash;rgsm&aring;l i 9 emner.</p>
       <div class="home-actions">
         <button class="home-primary hero-cta">Spil dagens quiz <span aria-hidden="true">&rarr;</span></button>
         <a class="home-ghost" href="#spiltyper">V&aelig;lg spiltyper</a>
