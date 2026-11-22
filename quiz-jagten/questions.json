@@ -16175,5 +16175,803 @@
       "checked_at": "2026-11-19T09:17:38.720Z",
       "?ndret": "Oversat til dansk og redigeret"
     }
+  },
+  {
+    "id": "und-0137",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvem synger megahittet \"Rolling in the Deep\"?",
+    "korrekt": "Adele",
+    "forkerte": [
+      "Rihanna",
+      "Katy Perry",
+      "Taylor Swift"
+    ],
+    "forklaring": "Adele udgav ?Rolling in the Deep? p? albummet 21.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 246,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "spr-0139",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken italiensk renæssancekunstner brugte fire år på at male loftet i Det Sixtinske Kapel?",
+    "korrekt": "Michelangelo",
+    "forkerte": [
+      "Rafael",
+      "Donatello",
+      "Leonardo da Vinci"
+    ],
+    "forklaring": "Michelangelo malede loftet i Det Sixtinske Kapel mellem 1508 og 1512.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 538,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "geo-0155",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken vulkansk ønation i Nordatlanten har Reykjavik som hovedstad?",
+    "korrekt": "Island",
+    "forkerte": [
+      "Irland",
+      "Færøerne",
+      "Grønland"
+    ],
+    "forklaring": "Reykjavik er Islands hovedstad.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 520,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "spo-0131",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "I hvilken ketsjersport bruger man en fjerbold i stedet for en rund bold?",
+    "korrekt": "Badminton",
+    "forkerte": [
+      "Bordtennis",
+      "Squash",
+      "Tennis"
+    ],
+    "forklaring": "Badminton spilles med en fjerbold.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 285,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "geo-0156",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket asiatisk land hører ferieøen Bali til?",
+    "korrekt": "Indonesien",
+    "forkerte": [
+      "Malaysia",
+      "Filippinerne",
+      "Thailand"
+    ],
+    "forklaring": "Bali er en ? i Indonesien.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 216,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "vid-0150",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad er det kemiske symbol for ædelmetallet Guld i det periodiske system?",
+    "korrekt": "Au",
+    "forkerte": [
+      "Go",
+      "Ag",
+      "Gd"
+    ],
+    "forklaring": "Det kemiske symbol Au kommer fra det latinske aurum.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 562,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "mad-0140",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilket krydderi omtales ofte som verdens dyreste m?lt p? v?gt?",
+    "korrekt": "Safran",
+    "forkerte": [
+      "Kanel",
+      "Vanilje",
+      "Kardemomme"
+    ],
+    "forklaring": "Safran h?stes fra krokusblomstens st?vfang, og h?sten kr?ver mange h?ndplukkede blomster.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 271,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "geo-0157",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "I hvilket asiatisk land kan man bestige vulkanen Fuji?",
+    "korrekt": "Japan",
+    "forkerte": [
+      "Kina",
+      "Indonesien",
+      "Filippinerne"
+    ],
+    "forklaring": "Fuji er en vulkan og Japans h?jeste bjerg.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 88,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "mad-0141",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken varm, mørk drik brygges over hele verden på basis af ristede bønner fra en busk?",
+    "korrekt": "Kaffe",
+    "forkerte": [
+      "Chai",
+      "Kakao",
+      "Te"
+    ],
+    "forklaring": "Kaffe brygges af ristede fr? fra kaffeplanten.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 591,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "und-0138",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den gule tv-svamp, der bor i en ananas under havet?",
+    "korrekt": "SvampeBob Firkant",
+    "forkerte": [
+      "Patrick Stjerne",
+      "Blæksprutward",
+      "Hr. Krabbe"
+    ],
+    "forklaring": "SvampeBob Firkant bor i en ananas under havet.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 235,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "vid-0151",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken berømt opfinder tilskrives ofte udviklingen af den praktiske glødepære?",
+    "korrekt": "Thomas Edison",
+    "forkerte": [
+      "Alexander Graham Bell",
+      "Albert Einstein",
+      "Nikola Tesla"
+    ],
+    "forklaring": "Thomas Edison forbindes is?r med udviklingen af en praktisk, kommercielt anvendelig gl?dep?re.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 262,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "vid-0152",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken af disse partikler befinder sig IKKE i en atomerne kerne, men i skallerne udenom?",
+    "korrekt": "Elektron",
+    "forkerte": [
+      "Proton",
+      "Neutron",
+      "Kvark"
+    ],
+    "forklaring": "Elektroner befinder sig uden for atomkernen.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 82,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "und-0139",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken skuespiller fik sit helt store gennembrud som Jack Dawson i filmen \"Titanic\" fra 1997?",
+    "korrekt": "Leonardo DiCaprio",
+    "forkerte": [
+      "Brad Pitt",
+      "Matt Damon",
+      "Johnny Depp"
+    ],
+    "forklaring": "Leonardo DiCaprio spiller Jack Dawson i filmen Titanic fra 1997.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 558,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "mad-0142",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad kalder man en person, der ikke spiser kød, men som gerne spiser mælkeprodukter og æg?",
+    "korrekt": "Vegetar",
+    "forkerte": [
+      "Veganer",
+      "Flexitar",
+      "Pescatar"
+    ],
+    "forklaring": "Vegetarer undg?r k?d, men mange spiser stadig ?g og mejeriprodukter.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 292,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "und-0140",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken film fra 1997 om et synkende skib vandt hele 11 Oscars?",
+    "korrekt": "Titanic",
+    "forkerte": [
+      "Avatar",
+      "The Matrix",
+      "Gladiator"
+    ],
+    "forklaring": "Titanic vandt 11 Oscars ved uddelingen i 1998.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 244,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "und-0141",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "I hvilken fiktiv by bor den animerede familie The Simpsons?",
+    "korrekt": "Springfield",
+    "forkerte": [
+      "Gotham",
+      "Quahog",
+      "South Park"
+    ],
+    "forklaring": "Den animerede familie Simpson bor i den fiktive by Springfield.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 543,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "nat-0134",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilket sejlivet insekt siges at kunne overleve i flere dage, efter at have fået hugget hovedet af?",
+    "korrekt": "Kakerlakken",
+    "forkerte": [
+      "Fluen",
+      "Myren",
+      "Bien"
+    ],
+    "forklaring": "Kakerlakker kan overleve nogle dage uden hoved; de d?r senere af blandt andet v?skemangel.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 579,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "mad-0143",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad kalder man vindruer, der er blevet tørret i solen eller maskinelt for at forlænge holdbarheden?",
+    "korrekt": "Rosiner",
+    "forkerte": [
+      "Dadler",
+      "Figner",
+      "Svesker"
+    ],
+    "forklaring": "Rosiner er t?rrede vindruer.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 585,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "nat-0135",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket organ er menneskets største?",
+    "korrekt": "Huden",
+    "forkerte": [
+      "Hjertet",
+      "Lungerne",
+      "Leveren"
+    ],
+    "forklaring": "Huden regnes som menneskekroppens st?rste organ m?lt p? overfladeareal.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 231,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "und-0142",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken amerikansk rockmusiker har i årtier været kendt under kælenavnet \"The Boss\"?",
+    "korrekt": "Bruce Springsteen",
+    "forkerte": [
+      "Bob Dylan",
+      "Jon Bon Jovi",
+      "Mick Jagger"
+    ],
+    "forklaring": "Bruce Springsteen har i mange ?r haft tilnavnet ?The Boss?.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 549,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "nat-0136",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange hjertekamre har et normalt menneskehjerte?",
+    "korrekt": "4",
+    "forkerte": [
+      "6",
+      "2",
+      "3"
+    ],
+    "forklaring": "Et normalt menneskehjerte har fire kamre.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 225,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "spo-0132",
+    "kategori": "sport",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "I hvilket land blev bordtennis (Ping Pong) oprindeligt opfundet som et overklasseselskabsspil?",
+    "korrekt": "Storbritannien",
+    "forkerte": [
+      "Kina",
+      "Frankrig",
+      "Sverige"
+    ],
+    "forklaring": "Bordtennis opstod i England i slutningen af 1800-tallet som et indend?rs selskabsspil.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 597,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "und-0143",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "I hvilken enormt populær fantasy-serie kæmper adelsfamilier om Jerntronen i Westeros?",
+    "korrekt": "Game of Thrones",
+    "forkerte": [
+      "Ringenes Herre",
+      "The Crown",
+      "The Witcher"
+    ],
+    "forklaring": "I Game of Thrones k?mper adelssl?gter om magten over Westeros og Jerntronen.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 557,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "und-0144",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken ikonisk musiker blev kendt under kælenavnet 'The King of Pop'?",
+    "korrekt": "Michael Jackson",
+    "forkerte": [
+      "Prince",
+      "Freddie Mercury",
+      "Elvis Presley"
+    ],
+    "forklaring": "Michael Jackson blev kendt under tilnavnet ?The King of Pop?.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 86,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "spo-0133",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Præcis hvor lang er en fuld maratondistance?",
+    "korrekt": "42,195 km",
+    "forkerte": [
+      "40 km",
+      "50 km",
+      "21,097 km"
+    ],
+    "forklaring": "En maraton er 42,195 kilometer lang.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 279,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "vid-0153",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvor hurtigt bevæger lyd sig cirka igennem luft ved stuetemperatur?",
+    "korrekt": "343 m/s",
+    "forkerte": [
+      "1000 m/s",
+      "300.000 km/s",
+      "150 m/s"
+    ],
+    "forklaring": "Ved stuetemperatur bev?ger lyd sig gennem luft med cirka 343 meter i sekundet.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 581,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "spo-0134",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad er navnet på det internationale fodboldforbund?",
+    "korrekt": "FIFA",
+    "forkerte": [
+      "UEFA",
+      "NBA",
+      "FIBA"
+    ],
+    "forklaring": "FIFA er det internationale fodboldforbund; forkortelsen kommer fra dets franske navn.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 282,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "nat-0137",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken livsvigtig muskel pumper blod rundt i hele menneskets krop?",
+    "korrekt": "Hjertet",
+    "forkerte": [
+      "Nyrerne",
+      "Lungerne",
+      "Leveren"
+    ],
+    "forklaring": "Hjertet pumper blod rundt i kroppen.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 563,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "spr-0140",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken stor historisk periode kaldes også direkte oversat for 'Genfødslen'?",
+    "korrekt": "Renæssancen",
+    "forkerte": [
+      "Romantikken",
+      "Oplysningstiden",
+      "Middelalderen"
+    ],
+    "forklaring": "Ren?ssance betyder genf?dsel og betegner en europ?isk kulturperiode.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 83,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "his-0153",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad er brødrene Wright berømte for at have opfundet og fløjet i 1903?",
+    "korrekt": "Flyvemaskinen",
+    "forkerte": [
+      "Bilen",
+      "Helikopteren",
+      "Luftballonen"
+    ],
+    "forklaring": "Br?drene Wright gennemf?rte en af de f?rste vellykkede flyvninger med et motordrevet fly i 1903.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 524,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "und-0145",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken superhelt gemmer sig bag den hemmelige identitet Peter Parker?",
+    "korrekt": "Spider-Man",
+    "forkerte": [
+      "Iron Man",
+      "Superman",
+      "Batman"
+    ],
+    "forklaring": "Superhelten Peter Parker er bedre kendt som Spider-Man.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 236,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "und-0146",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken britisk sanger står bag det massive verdenshit \"Shape of You\"?",
+    "korrekt": "Ed Sheeran",
+    "forkerte": [
+      "Harry Styles",
+      "Justin Bieber",
+      "Shawn Mendes"
+    ],
+    "forklaring": "Ed Sheeran udgav verdenshittet ?Shape of You?.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 544,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "mad-0144",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken type italiensk pasta er cylinderformet og skåret skråt i enderne som spidsen af en fjerpen?",
+    "korrekt": "Penne",
+    "forkerte": [
+      "Spaghetti",
+      "Fusilli",
+      "Macaroni"
+    ],
+    "forklaring": "Penne er r?rformet pasta med skr?t afsk?rne ender.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 588,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "vid-0154",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken måned på året har færrest dage?",
+    "korrekt": "Februar",
+    "forkerte": [
+      "Januar",
+      "April",
+      "September"
+    ],
+    "forklaring": "Februar har f?rrest dage i et almindeligt ?r.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 297,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "vid-0155",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange dage er der i et skudår?",
+    "korrekt": "366",
+    "forkerte": [
+      "364",
+      "365",
+      "367"
+    ],
+    "forklaring": "Et skud?r har 366 dage.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 289,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "vid-0156",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket opkvikkende alkaloid-stof findes naturligt i stor stil i kaffe og te?",
+    "korrekt": "Koffein",
+    "forkerte": [
+      "Teobromin",
+      "Morfin",
+      "Nikotin"
+    ],
+    "forklaring": "Koffein er et stimulerende stof, der blandt andet findes i kaffe og te.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 98,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "und-0147",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes Batmans ærkefjende, der er kendt for sit grønne hår og lilla jakkesæt?",
+    "korrekt": "Jokeren",
+    "forkerte": [
+      "Pingvinen",
+      "Two-Face",
+      "Gækkeren"
+    ],
+    "forklaring": "Jokeren er en af Batmans mest kendte ?rkefjender.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 552,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "geo-0158",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "I hvilket verdenshav finder man den populære ferieøgruppe Maldiverne?",
+    "korrekt": "Det Indiske Ocean",
+    "forkerte": [
+      "Ishavet",
+      "Stillehavet",
+      "Atlanterhavet"
+    ],
+    "forklaring": "Maldiverne ligger i Det Indiske Ocean.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 505,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
   }
 ]

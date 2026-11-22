@@ -68,3 +68,7 @@ Hvert spørgsmål har et id i formatet `abc-0001`, en kategori, niveau 1–4, `s
 ## Kreditering af eksterne spørgsmål
 
 73 spørgsmål er oversat og bearbejdet fra [The Trivia API](https://the-trivia-api.com/), som er udgivet under [Creative Commons Attribution-NonCommercial 4.0](https://creativecommons.org/licenses/by-nc/4.0/). Oversættelser og forklaringer er redigeret. De enkelte poster i `questions.json` indeholder API-id og eventuelle kildehenvisninger.
+
+## Danske Trivia-spørgsmål
+
+38 spørgsmål er hentet via API fra [psch.dk - Trivia Quizdatabase](https://psch.dk/?v=quiz). API’ets svar indeholder et obligatorisk `credit_html`; appens forside viser kildeangivelsen: ?Spørgsmål er hentet fra psch.dk - Trivia Quizdatabase?. De enkelte poster i `questions.json` gemmer API-id, men aldrig API-nøglen.
