@@ -10052,5 +10052,1118 @@
     "forkerte": [],
     "forklaring": "Olafur Eliasson er en dansk-islandsk kunstner, der er berømt for storskala-installationer som 'The Weather Project'.",
     "status": "godkendt"
+  },
+  {
+    "id": "geo-0099",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den største sø i Afrika?",
+    "korrekt": "Victoriasøen",
+    "forkerte": [
+      "Tanganyikasøen",
+      "Malawisøen",
+      "Turkanasøen"
+    ],
+    "forklaring": "Victoriasøen grænser op til Uganda, Kenya og Tanzania og er verdens næststørste ferskvandssø.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0100",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den flod, der løber gennem Wien?",
+    "korrekt": "Donau",
+    "forkerte": [
+      "Rhinen",
+      "Inn",
+      "Mur"
+    ],
+    "forklaring": "Donau er Europas næstlængste flod og løber gennem 10 lande.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0101",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den halvø, der udgør det sydlige Italien?",
+    "korrekt": "Kalabrien",
+    "forkerte": [
+      "Sicilien",
+      "Sardinien",
+      "Toscana"
+    ],
+    "forklaring": "Kalabrien udgør 'tåspidsen' på den italienske støvle og adskilles fra Sicilien af Messinastrædet.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0102",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Egypten ligger i Nordafrika.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Egypten grænser op til Libya, Sudan og Israel og en lille del af landet befinder sig i Asien.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0103",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder Finlands hovedstad?",
+    "korrekt": "Helsinki",
+    "forkerte": [
+      "Tampere",
+      "Turku",
+      "Espoo"
+    ],
+    "forklaring": "Helsinki grundlagdes i 1550 af Gustaf Vasa og er Nordens sydligste hovedstad.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0104",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad er verdens næstlængste flod?",
+    "korrekt": "Amazonas",
+    "forkerte": [
+      "Nilen",
+      "Yangtze",
+      "Mississippi"
+    ],
+    "forklaring": "Nilen og Amazonas kæmper om førstepladsen – Amazonas er dog den vandrigeste flod i verden.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0105",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den by, der er Australiens olympiske by fra 2000?",
+    "korrekt": "Sydney",
+    "forkerte": [
+      "Melbourne",
+      "Brisbane",
+      "Canberra"
+    ],
+    "forklaring": "Sydney var vært for OL i år 2000 og sejladskonkurrencerne foregik i den smukke Sydney Harbour.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0106",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den vulkanø i Det Indiske Ocean, der tilhører Frankrig?",
+    "korrekt": "Réunion",
+    "forkerte": [
+      "Madagaskar",
+      "Mauritius",
+      "Komoros"
+    ],
+    "forklaring": "Réunion er et oversøisk departement i Frankrig og er hjemsted for den aktive vulkan Piton de la Fournaise.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0107",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "I hvilken by ligger den berømte Colosseum?",
+    "korrekt": "Rom",
+    "forkerte": [],
+    "forklaring": "Colosseum blev bygget under kejser Vespasian og indviet i år 80 e.Kr. og rummer op til 50.000 tilskuere.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0108",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den store vulkan på Hawaii, der er den mest aktive i verden?",
+    "korrekt": "Kīlauea",
+    "forkerte": [],
+    "forklaring": "Kīlauea på Big Island har været i næsten konstant eruption siden 1983.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0109",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder landets i Sydamerika, der er størst?",
+    "korrekt": "Brasilien",
+    "forkerte": [],
+    "forklaring": "Brasilien udgør næsten halvdelen af Sydamerikas landmasse og er verdens femtestørste land.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0110",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den store bugt ud for Canadas atlanterhavskyst?",
+    "korrekt": "Hudsonbugten",
+    "forkerte": [],
+    "forklaring": "Hudsonbugten er næsten helt omringet af land og er en af verdens største bugter.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0111",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Holland og Nederlandene er det samme land.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Holland er egentlig kun to provinser, men bruges i daglig tale om hele landet Nederlandene.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0112",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den by i Egypten, der er berømt for pyramiderne?",
+    "korrekt": "Giza",
+    "forkerte": [
+      "Kairo",
+      "Luxor",
+      "Alexandria"
+    ],
+    "forklaring": "Giza-pyramiderne ligger faktisk i forstaden Giza til Kairo på vestsiden af Nilen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0113",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den most befolkede ø i verden?",
+    "korrekt": "Java",
+    "forkerte": [
+      "Honshu",
+      "Sri Lanka",
+      "Luzon"
+    ],
+    "forklaring": "Java i Indonesien har over 150 millioner mennesker på et areal på størrelse med England.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0095",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den berømte kinesiske handelsrute, der forbandt Øst og Vest?",
+    "korrekt": "Silkevejen",
+    "forkerte": [
+      "Tevejen",
+      "Krydderiruterne",
+      "Steppestien"
+    ],
+    "forklaring": "Silkevejen var ikke én rute, men et netværk af handelsruter, der forbandt Kina med Romerriget.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0096",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvem grundlagde det mongolske rige i 1206?",
+    "korrekt": "Djengis Khan",
+    "forkerte": [
+      "Kublai Khan",
+      "Timur",
+      "Ögedei Khan"
+    ],
+    "forklaring": "Djengis Khan samlede de mongolske stammer og opbyggede et af historiens største landeimperier.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0097",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed det skib, der medbragte de første pilgrimsfarende til Amerika i 1620?",
+    "korrekt": "Mayflower",
+    "forkerte": [
+      "Santa María",
+      "Golden Hind",
+      "Endeavour"
+    ],
+    "forklaring": "Mayflower bragte 102 passagerer fra Plymouth til Plymouth Rock i Massachusetts.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0098",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Den første verdenskrigs skyttegravskrig foregik primært på Østfronten.",
+    "korrekt": "Falsk",
+    "forkerte": [],
+    "forklaring": "Skyttegravskrigen var primært knyttet til Vestfronten i Belgien og Frankrig.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0099",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed den britiske dronning, der regerede under Storbritanniens imperiums storhedstid?",
+    "korrekt": "Victoria",
+    "forkerte": [
+      "Elizabeth 1.",
+      "Anne",
+      "Mary 2."
+    ],
+    "forklaring": "Dronning Victoria regerede fra 1837 til 1901, og perioden kaldes Victoriatidens storhedstid.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0100",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hed den aztekiske gud, som spanierne mentes for at være?",
+    "korrekt": "Quetzalcoatl",
+    "forkerte": [],
+    "forklaring": "Aztekerne troede, at Hernán Cortés var Quetzalcoatl, den fjerfyldte slanges gud, der vendte tilbage.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0101",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hed den russiske tsar, der blev myrdet med sin familie i 1918?",
+    "korrekt": "Nikolaj 2.",
+    "forkerte": [],
+    "forklaring": "Nikolaj 2. og hans familie blev skudt af bolsjevikker i Jekaterinburg den 17. juli 1918.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0102",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed den krig, der udspillede sig 1950-53 på den koreanske halvø?",
+    "korrekt": "Koreakrigen",
+    "forkerte": [
+      "Vietnamkrigen",
+      "Suez-krisen",
+      "Indokinakrigen"
+    ],
+    "forklaring": "Koreakrigen sluttede med en våbenstilstand, der deler Korea langs den 38. breddegrad.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0103",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed det land, der forbandt Europa og Indien via søvejen syd om Afrika?",
+    "korrekt": "Portugal",
+    "forkerte": [
+      "Spanien",
+      "England",
+      "Holland"
+    ],
+    "forklaring": "Vasco da Gama nåede Indien i 1498 og åbnede den portugisiske søhandelsrute syd om Afrika.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0104",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Cleopatra levede tættere på månelandingen end på pyramidernes byggeri.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Kleopatra levede ca. 30 f.Kr., månenlandingen var i 1969 e.Kr. – 2.000 år. Pyramiderne er fra ca. 2.500 f.Kr. – 2.500 år fra Kleopatra.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0094",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den lille pungmus fra Australien, der er verdens mindste pungdyr?",
+    "korrekt": "Kultpungmus",
+    "forkerte": [
+      "Koala",
+      "Wallaby",
+      "Bilby"
+    ],
+    "forklaring": "Kultpungmus (Ningaui) vejer kun nogle få gram og er et af verdens mindste pattedyr.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0095",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den biologiske term for dyr, der ikke er hvirveldyr?",
+    "korrekt": "Hvirvelløse dyr",
+    "forkerte": [
+      "Pattedyr",
+      "Krebsdyr",
+      "Arthropoder"
+    ],
+    "forklaring": "Hvirvelløse udgør over 95 % af alle dyrearter og inkluderer insekter, bløddyr og orme.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0096",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den proces, hvor vand fordamper fra planteblade?",
+    "korrekt": "Transpiration",
+    "forkerte": [
+      "Fordampning",
+      "Osmose",
+      "Kapillaritet"
+    ],
+    "forklaring": "Transpiration er planternes måde at køle sig ned på og driver vandstigningen i stilken.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0097",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Flodpferde er nærmere beslægtet med hvaler end med svin.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "DNA-analyser viser, at flodhestenes nærmeste nulevende slægtninge er hvaler og delfiner.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0098",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det fænomen, der giver ørkenens sandstorme?",
+    "korrekt": "Haboob",
+    "forkerte": [
+      "Sirocco",
+      "Mistral",
+      "Foehn"
+    ],
+    "forklaring": "Haboob er en enorm sandstorm, der opstår i Saharaen og ved Den Arabiske Halvø.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0099",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder det store pungdyr, der er Australiens nationalsymbol?",
+    "korrekt": "Kænguru",
+    "forkerte": [],
+    "forklaring": "Kænguruens unge, kaldet joey, bæres i morens pung i de første måneder.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0100",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den store sydamerikanske bjørn, der kun lever i Andesbjergene?",
+    "korrekt": "Brillebjørn",
+    "forkerte": [],
+    "forklaring": "Brillebjørnen er Sydamerikas eneste bjørneresidenter og er opkaldt efter tegningerne rundt om øjnene.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0101",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den biologiske klassifikation, der er over art og under klasse?",
+    "korrekt": "Orden",
+    "forkerte": [
+      "Familie",
+      "Stamme",
+      "Slægt"
+    ],
+    "forklaring": "Hierarkiet er: rige → stamme → klasse → orden → familie → slægt → art.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0102",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det fænomen, der giver norske fjorde deres dybe form?",
+    "korrekt": "Glacial erosion",
+    "forkerte": [
+      "Flodslid",
+      "Tektonisk sænkning",
+      "Havets ætsning"
+    ],
+    "forklaring": "Fjordene er skabt af gletschere, der gravede sig ned i dalen og uddybede dem langt under havoverfladen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0093",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det, i tennis, når man vinder fire point i træk fra 40-40?",
+    "korrekt": "Advantage og game",
+    "forkerte": [
+      "Deuce",
+      "Game",
+      "Tie-break"
+    ],
+    "forklaring": "Fra deuce (40-40) skal man vinde to point i træk – advantage og derefter game.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0094",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den disciplin i OL-atletik, der kombinerer 110 meter løb med 10 forhindringer?",
+    "korrekt": "110 meter hæk",
+    "forkerte": [
+      "100 meter hæk",
+      "Steeplechase",
+      "400 meter hæk"
+    ],
+    "forklaring": "110 meter hæk er kun for mænd ved OL – kvinderne løber 100 meter hæk.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0095",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det udstyr, man bærer på knæene i fodbold?",
+    "korrekt": "Benskinner",
+    "forkerte": [
+      "Knæbeskyttere",
+      "Skinnebenskapper",
+      "Leggings"
+    ],
+    "forklaring": "Benskinner er påkrævet udstyr i fodbold og beskytter mod slag og spark.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0096",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Mænd og kvinder konkurrerer i de samme discipliner ved OL.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "De fleste OL-discipliner har både herre- og damekonkurrencer, dog er der disciplinspecifikke undtagelser.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0097",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den position i fodbold, der er nærmest det modsatte holds mål?",
+    "korrekt": "Angriber",
+    "forkerte": [],
+    "forklaring": "Angriberen har til opgave at score mål og presser den modsatte holds forsvar.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0098",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den disciplin i OL-svømning, der kombinerer alle fire svømmestile?",
+    "korrekt": "Medley",
+    "forkerte": [],
+    "forklaring": "I individuel medley svømmes butterfly, rygcrawl, brystsvømning og crawl i nævnte rækkefølge.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0099",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det, i snooker, når man scorer 147 point på ét besøg?",
+    "korrekt": "Maximum break",
+    "forkerte": [
+      "Perfect game",
+      "Century break",
+      "147 break"
+    ],
+    "forklaring": "147 kræver alle 15 røde med sort og derefter alle farver – det er snookerens helligste bedrift.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0100",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det danske fodboldhold, der spiller i den blå by Brøndby?",
+    "korrekt": "Brøndby IF",
+    "forkerte": [
+      "FC København",
+      "Lyngby BK",
+      "HB Køge"
+    ],
+    "forklaring": "Brøndby IF er grundlagt i 1964 og er en af Danmarks mest succesfulde fodboldklubber.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0101",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den disciplin i atletik, der kaster en tung metalskive?",
+    "korrekt": "Diskos",
+    "forkerte": [
+      "Kuglestød",
+      "Spydkast",
+      "Hammer"
+    ],
+    "forklaring": "En mandsdiskos vejer 2 kg, og en kvindediskos vejer 1 kg.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0102",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Der er 11 spillere på et rugbyhold.",
+    "korrekt": "Falsk",
+    "forkerte": [],
+    "forklaring": "Et rugbyhold (union) har 15 spillere på banen. Rugby league spilles med 13.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0094",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den traditionelle spanske kold tomatsuppe?",
+    "korrekt": "Gazpacho",
+    "forkerte": [
+      "Paella",
+      "Tortilla española",
+      "Chorizo"
+    ],
+    "forklaring": "Gazpacho serveres kold og er en frisk sommerret fra Andalusien.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0095",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den indiske ret af linser, der er en hverdagsklassiker?",
+    "korrekt": "Dal",
+    "forkerte": [
+      "Paneer",
+      "Biryani",
+      "Korma"
+    ],
+    "forklaring": "Dal laves af kogte og krydrede linser og er grundlaget i indisk hverdagsmad.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0096",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den søde brødtype, der bages til påske?",
+    "korrekt": "Fastelavnsboller",
+    "forkerte": [
+      "Julekage",
+      "Kringle",
+      "Wienerbrød"
+    ],
+    "forklaring": "Fastelavnsboller bages til fastelavn og fyld med flødeskum, remonce eller syltetøj.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0097",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Mørk chokolade indeholder mere kakao end lys chokolade.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Mørk chokolade har typisk 70-99 % kakao, mens mælkechokolade normalt kun har 25-40 %.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0098",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den søde irske likør lavet med fløde og whisky?",
+    "korrekt": "Baileys",
+    "forkerte": [
+      "Kahlúa",
+      "Amaretto",
+      "Cointreau"
+    ],
+    "forklaring": "Baileys Irish Cream blev lanceret i 1974 og er en af verdens bedst sælgende likører.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0099",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den klassiske danske leverpostej, der serveres på rugbrød?",
+    "korrekt": "Leverpostej",
+    "forkerte": [],
+    "forklaring": "Leverpostej af svinelever er et af danskernes yndlingspålæg og spises af millioner dagligt.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0100",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den traditionelle australske pålæg af gær-ekstrakt med stærk smag?",
+    "korrekt": "Vegemite",
+    "forkerte": [],
+    "forklaring": "Vegemite er produceret i Australien siden 1922 og er en national institution – smagen er voldsomt intens.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0101",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den søde vietnamesiske kaffe med kondenseret mælk?",
+    "korrekt": "Cà phê sữa đá",
+    "forkerte": [
+      "Iced latte",
+      "Frappuccino",
+      "Cold brew"
+    ],
+    "forklaring": "Vietnamesisk is-kaffe laves med stærk drypkaffe og sød kondenseret mælk på is.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0102",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den kage, der bages til fødselsdage i Danmark?",
+    "korrekt": "Lagkage",
+    "forkerte": [
+      "Aflangkage",
+      "Rumdrenk",
+      "Marmorkage"
+    ],
+    "forklaring": "Lagkagen er danskernes klassiske fødselsdagskage med lag af bund, flødeskum og frugt.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0103",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Kokos er botanisk set en nød.",
+    "korrekt": "Falsk",
+    "forkerte": [],
+    "forklaring": "Kokos er botanisk set en drupe – en stenfrugt – ligesom fersken og kirsebær.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0094",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den videnskabsgren, der studerer levende organismer?",
+    "korrekt": "Biologi",
+    "forkerte": [
+      "Kemi",
+      "Fysik",
+      "Geologi"
+    ],
+    "forklaring": "Biologi dækker alt fra molekylær biologi til økologi og evolutionsteori.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0095",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den videnskabelige betegnelse for blodets røde celler?",
+    "korrekt": "Erytrocytter",
+    "forkerte": [
+      "Leukocytter",
+      "Trombocytter",
+      "Lymfocytter"
+    ],
+    "forklaring": "Erytrocytter indeholder hæmoglobin og transporterer ilt rundt i kroppen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0096",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den videnskabsgren, der studerer Jordens overflades lag og mineraler?",
+    "korrekt": "Geologi",
+    "forkerte": [
+      "Oceanografi",
+      "Meteorologi",
+      "Astronomi"
+    ],
+    "forklaring": "Geologer studerer Jordens dannelse, struktur og de processer, der former overfladen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0097",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Et atom er neutralt, fordi det har lige mange protoner og elektroner.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Protoner har positiv ladning og elektroner negativ – i et neutralt atom er de i balance.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0098",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det fenomen, der giver en genstand opdrift i vand?",
+    "korrekt": "Archimedes' princip",
+    "forkerte": [
+      "Newtons tredje lov",
+      "Pascals lov",
+      "Bernoullis princip"
+    ],
+    "forklaring": "Archimedes' princip siger, at opdriften svarer til vægten af den fortrængte væske.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0099",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder teorien om, at alle levende organismer nedstammer fra fælles forfædre?",
+    "korrekt": "Evolutionsteorien",
+    "forkerte": [],
+    "forklaring": "Charles Darwin formulerede evolutionsteorien i 'On the Origin of Species' i 1859.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0100",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den videnskabsgren, der studerer jordbundsfysik og kemiske processer i havet?",
+    "korrekt": "Oceanografi",
+    "forkerte": [],
+    "forklaring": "Oceanografien dækker havets fysik, kemi, biologi og geologi.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0101",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den proces, hvor vand fra havet fordamper og falder som regn?",
+    "korrekt": "Vandkredsløbet",
+    "forkerte": [
+      "Osmose",
+      "Transpiration",
+      "Kapillaritet"
+    ],
+    "forklaring": "Vandkredsløbet drives af solens energi og tyngdekraften og er afgørende for livet på Jorden.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0102",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Menneskets DNA er 99 % identisk med chimpansernes.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Den lille forskel på 1-2 % i DNA-sekvensen er alligevel nok til at skabe store forskelle i adfærd og anatomi.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0095",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den traditionelle indiske højtid med farver?",
+    "korrekt": "Holi",
+    "forkerte": [
+      "Diwali",
+      "Eid",
+      "Pongal"
+    ],
+    "forklaring": "Holi fejres til forårets komme og markeres ved at kaste farvepulver på hinanden.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0096",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den traditionelle japanske blomsterkunst?",
+    "korrekt": "Ikebana",
+    "forkerte": [
+      "Origami",
+      "Bonsai",
+      "Kabuki"
+    ],
+    "forklaring": "Ikebana er blomsterarrangementskunst med filosofiske principper om harmoni og balance.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0097",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den kinesiske nytårsbestemmelse, der roterer i en 12-årig dyrecyklus?",
+    "korrekt": "Det kinesiske nytår",
+    "forkerte": [
+      "Diwali",
+      "Nowruz",
+      "Tet"
+    ],
+    "forklaring": "Det kinesiske nytår fejres med fyrværkeri, røde kuverter og familiesammenkomster.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0098",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Der er mere end 7.000 levende sprog i verden.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Sprogforskere anslår ca. 7.100 levende sprog, men mange er truede med udryddelse.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0099",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den traditionelle meksikanske dødedagsfest?",
+    "korrekt": "Día de los Muertos",
+    "forkerte": [
+      "Carnival",
+      "Cinco de Mayo",
+      "Posadas"
+    ],
+    "forklaring": "Día de los Muertos fejres 1.-2. november og er en blanding af aztekiske og katolske traditioner.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0100",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den traditionelle australske urbefolkning?",
+    "korrekt": "Aboriginalfolket",
+    "forkerte": [],
+    "forklaring": "Australiens aboriginalfolk har levet på kontinentet i over 60.000 år og er verdens ældste kontinuerlige kultur.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0101",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den traditionelle skotske folkmusik, der spilles på sækkepibe?",
+    "korrekt": "Pibroch",
+    "forkerte": [],
+    "forklaring": "Pibroch er den klassiske form for sækkepibe-musik med tema og variationer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0102",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den traditionelle brasilianske karneval, der afholdes i Rio de Janeiro?",
+    "korrekt": "Karnaval",
+    "forkerte": [
+      "Samba-festival",
+      "Festa Junina",
+      "Carnaval"
+    ],
+    "forklaring": "Rios karnaval er en af verdens største folkefester med samba, kostumer og samba-skoler.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0103",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den indiske filosofiske og spirituelle tradition, der fokuserer på oplysning?",
+    "korrekt": "Hinduisme",
+    "forkerte": [
+      "Buddhisme",
+      "Jainisme",
+      "Sikhisme"
+    ],
+    "forklaring": "Hinduisme er verdens ældste levende religion og har over en milliard tilhængere.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0104",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Der er 193 lande i FN.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "FN har 193 officielle medlemslande. Vatikanstaten og Palæstina har observatørstatus.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0094",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den populære dansk tv-serie om familien på Matador?",
+    "korrekt": "Matador",
+    "forkerte": [
+      "Borgen",
+      "Broen",
+      "Forbrydelsen"
+    ],
+    "forklaring": "Matador fra 1978-82 er en af Danmarks mest sete tv-serier nogensinde.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0095",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den britiske tegnefilmsserie om en kanin og hans venner?",
+    "korrekt": "Peter Rabbit",
+    "forkerte": [
+      "Bugs Bunny",
+      "Roger Rabbit",
+      "Brer Rabbit"
+    ],
+    "forklaring": "Peter Rabbit er skabt af Beatrix Potter og har eksisteret siden 1902.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0096",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den Disney-film om prinsen, der kysser den sovende skønhed?",
+    "korrekt": "Tornerose",
+    "forkerte": [
+      "Snehvide",
+      "Askepot",
+      "Mulan"
+    ],
+    "forklaring": "Tornerose fra 1959 er baseret på eventyret af Charles Perrault og Brødrene Grimm.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0097",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Vincent van Gogh solgte kun ét maleri i sin levetid.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Van Gogh solgte kun 'Den røde vingård' i 1890 – i dag er hans malerier millioner værd.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0098",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den danske rapper, der er berømt for albummene 'Faldt i hak'?",
+    "korrekt": "L.O.C.",
+    "forkerte": [
+      "Suspekt",
+      "Kato",
+      "Gilli"
+    ],
+    "forklaring": "L.O.C. er en af Danmarks mest anerkendte rappere og kunstnere.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0099",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den film, der handler om en dukke, der er levende?",
+    "korrekt": "Toy Story",
+    "forkerte": [],
+    "forklaring": "Toy Story fra 1995 var den første heldigitalt animerede spillefilm og er en Pixar-klassiker.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0100",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den britiske humorgruppe bag Monty Python?",
+    "korrekt": "Monty Python",
+    "forkerte": [],
+    "forklaring": "Monty Python bestod af John Cleese, Michael Palin, Terry Gilliam, Eric Idle, Terry Jones og Graham Chapman.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0101",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den populære dansk tegnefilm om tre pirater?",
+    "korrekt": "Hjælp, jeg er en fisk",
+    "forkerte": [
+      "Valhalla",
+      "Blå Mænd",
+      "Rejsen til Saturn"
+    ],
+    "forklaring": "Hjælp, jeg er en fisk fra 2000 er en dansk animationsfilm om børn, der forvandles til fisk.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0102",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den musikgenre, der kombinerer jamaicansk reggae med hip-hop?",
+    "korrekt": "Dancehall",
+    "forkerte": [
+      "Ska",
+      "Dub",
+      "Reggaeton"
+    ],
+    "forklaring": "Dancehall opstod i Jamaica i slutningen af 1970'erne og er kendetegnet ved digitale beats.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0103",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Batman har overnaturlige kræfter.",
+    "korrekt": "Falsk",
+    "forkerte": [],
+    "forklaring": "Batman er en af de eneste store superhelter uden overnaturlige evner – han bruger intellekt, træning og teknologi.",
+    "status": "godkendt"
   }
 ]
