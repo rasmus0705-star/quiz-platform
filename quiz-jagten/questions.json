@@ -17120,5 +17120,530 @@
       "url": "https://psch.dk/?v=quiz",
       "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
     }
+  },
+  {
+    "id": "spo-0135",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "I hvilken sportsgren kender man den prestigefyldte turnering Wimbledon?",
+    "korrekt": "Tennis",
+    "forkerte": [
+      "Fodbold",
+      "Cricket",
+      "Golf"
+    ],
+    "forklaring": "Wimbledon er en af de fire store internationale tennisturneringer, Grand Slam-turneringerne.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 278,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "mad-0145",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken ost er traditionelt brugt på en ægte italiensk pizza Margherita?",
+    "korrekt": "Mozzarella",
+    "forkerte": [
+      "Cheddar",
+      "Gouda",
+      "Parmesan"
+    ],
+    "forklaring": "Mozzarella er en mild, frisk ost, der traditionelt bruges p? pizza Margherita.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 269,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "und-0150",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken amerikansk skuespiller har hovedrollen som Ethan Hunt i \"Mission: Impossible\"-filmene?",
+    "korrekt": "Tom Cruise",
+    "forkerte": [
+      "Daniel Craig",
+      "Brad Pitt",
+      "Matt Damon"
+    ],
+    "forklaring": "Tom Cruise spiller Ethan Hunt i Mission: Impossible-filmene.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 542,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "geo-0162",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket land er kendt for pyramiderne i Giza?",
+    "korrekt": "Egypten",
+    "forkerte": [
+      "Sudan",
+      "Peru",
+      "Mexico"
+    ],
+    "forklaring": "Pyramiderne i Giza ligger i Egypten n?r Cairo.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 205,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "vid-0157",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder moderselskabet, der ejer både Google og YouTube?",
+    "korrekt": "Alphabet",
+    "forkerte": [
+      "Apple",
+      "Meta",
+      "Microsoft"
+    ],
+    "forklaring": "Alphabet Inc. er moderselskabet, som ejer Google og YouTube.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 287,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "spo-0136",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket sydamerikansk land, anført af Lionel Messi, vandt VM i fodbold i 2022?",
+    "korrekt": "Argentina",
+    "forkerte": [
+      "Frankrig",
+      "Brasilien",
+      "Spanien"
+    ],
+    "forklaring": "Argentina vandt VM i fodbold for herrer i 2022 efter finalesejr over Frankrig.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 594,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "geo-0163",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket nordamerikansk land grænser USA kun op til i nord?",
+    "korrekt": "Canada",
+    "forkerte": [
+      "Mexico",
+      "Cuba",
+      "Grønland"
+    ],
+    "forklaring": "Canada ligger nord for USA og deler landgr?nse med landet.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 214,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "und-0151",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Fra hvilken fiktiv, ødelagt planet stammer superhelten Superman?",
+    "korrekt": "Krypton",
+    "forkerte": [
+      "Vulcan",
+      "Tatooine",
+      "Asgard"
+    ],
+    "forklaring": "I Superman-fort?llingerne er Krypton Supermans hjemplanet.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 555,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "geo-0164",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken lang bjergkæde strækker sig ned langs Sydamerikas vestkyst?",
+    "korrekt": "Andesbjergene",
+    "forkerte": [
+      "Rocky Mountains",
+      "Himalaya",
+      "Alperne"
+    ],
+    "forklaring": "Andesbjergene l?ber langs en stor del af Sydamerikas vestkyst.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 503,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "mad-0146",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Fra hvilket sydeuropæisk land stammer ris-retten Paella oprindeligt?",
+    "korrekt": "Spanien",
+    "forkerte": [
+      "Italien",
+      "Portugal",
+      "Mexico"
+    ],
+    "forklaring": "Paella er en risret, der forbindes med Valencia-regionen i Spanien.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 276,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "vid-0158",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes den kraft, der holder os fast på jorden?",
+    "korrekt": "Tyngdekraft (Gravitation)",
+    "forkerte": [
+      "Friktion",
+      "Centrifugalkraft",
+      "Magnetisme"
+    ],
+    "forklaring": "Tyngdekraften holder os p? Jordens overflade og f?r genstande til at falde mod jorden.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 218,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "geo-0165",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes den store klokke i Elizabeth Tower i London?",
+    "korrekt": "Big Ben",
+    "forkerte": [
+      "London Eye",
+      "King's Watch",
+      "Tower Clock"
+    ],
+    "forklaring": "Big Ben er navnet p? den store klokke i Elizabeth Tower i London.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 215,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "nat-0138",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder det grønne farvestof i planters blade?",
+    "korrekt": "Klorofyl",
+    "forkerte": [
+      "Cellulose",
+      "Melanin",
+      "Karoten"
+    ],
+    "forklaring": "Klorofyl absorberer lys og giver mange planter deres gr?nne farve.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 226,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "his-0156",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "I hvilket århundrede hærgede den berygtede pirat Sortskæg i Caribien?",
+    "korrekt": "1700-tallet",
+    "forkerte": [
+      "1800-tallet",
+      "1600-tallet",
+      "1500-tallet"
+    ],
+    "forklaring": "Sortsk?g var en pirat, der var aktiv i Caribien i begyndelsen af 1700-tallet.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 525,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "geo-0166",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad er hovedstaden i Italien?",
+    "korrekt": "Rom",
+    "forkerte": [
+      "Milano",
+      "Napoli",
+      "Venedig"
+    ],
+    "forklaring": "Rom er Italiens hovedstad.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 202,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "vid-0159",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange anerkendte planeter findes der i vores solsystem (efter Pluto mistede sin planetstatus)?",
+    "korrekt": "8",
+    "forkerte": [
+      "7",
+      "10",
+      "9"
+    ],
+    "forklaring": "Solsystemet har otte anerkendte planeter; Pluto regnes som en dv?rgplanet.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 578,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "geo-0167",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "I hvilket nordafrikansk land ligger storbyen Marrakech?",
+    "korrekt": "Marokko",
+    "forkerte": [
+      "Tunesien",
+      "Algeriet",
+      "Libyen"
+    ],
+    "forklaring": "Marrakech er en storby i Marokko.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 521,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "geo-0168",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket bjerg er det højeste i Afrika?",
+    "korrekt": "Kilimanjaro",
+    "forkerte": [
+      "Mont Blanc",
+      "K2",
+      "Mount Kenya"
+    ],
+    "forklaring": "Kilimanjaro er Afrikas h?jeste bjerg.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 211,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "nat-0139",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket plettet kattedyr er det hurtigste landdyr og kan løbe over 100 km/t?",
+    "korrekt": "Geparden",
+    "forkerte": [
+      "Pumaen",
+      "Løven",
+      "Leoparden"
+    ],
+    "forklaring": "Geparden er det hurtigste landdyr og kan l?be over 100 kilometer i timen i korte spurter.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 566,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "his-0157",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad var navnet på den allerførste kunstige satellit, mennesket sendte i kredsløb om Jorden (1957)?",
+    "korrekt": "Sputnik 1",
+    "forkerte": [
+      "Voyager 1",
+      "Apollo 11",
+      "Explorer 1"
+    ],
+    "forklaring": "Sputnik 1 blev i 1957 den f?rste kunstige satellit i kredsl?b om Jorden.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 90,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "geo-0169",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder verdens arealmæssigt mindste selvstændige stat?",
+    "korrekt": "Vatikanstaten",
+    "forkerte": [
+      "San Marino",
+      "Monaco",
+      "Andorra"
+    ],
+    "forklaring": "Vatikanstaten er verdens mindste selvst?ndige stat m?lt p? areal.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 506,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "nat-0140",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange tænder har en voksen hund normalt?",
+    "korrekt": "42",
+    "forkerte": [
+      "32",
+      "50",
+      "28"
+    ],
+    "forklaring": "En voksen hund har normalt 42 blivende t?nder.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 222,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "nat-0141",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange knogler er der ca. i en fuldvoksen menneskekrop?",
+    "korrekt": "206",
+    "forkerte": [
+      "105",
+      "150",
+      "301"
+    ],
+    "forklaring": "En voksen menneskekrop har typisk omkring 206 knogler.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 230,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "spr-0141",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilket sprog i verden har flest mennesker som deres første modersmål?",
+    "korrekt": "Mandarin (Kinesisk)",
+    "forkerte": [
+      "Engelsk",
+      "Hindi",
+      "Spansk"
+    ],
+    "forklaring": "Mandarin-kinesisk har flere modersm?lstalende end noget andet sprog.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 101,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "his-0158",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed den første mand, der rejste ud i rummet?",
+    "korrekt": "Yuri Gagarin",
+    "forkerte": [
+      "John Glenn",
+      "Neil Armstrong",
+      "Buzz Aldrin"
+    ],
+    "forklaring": "Jurij Gagarin blev det f?rste menneske i rummet i 1961.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 260,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
   }
 ]
