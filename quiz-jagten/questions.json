@@ -16973,5 +16973,152 @@
       "url": "https://psch.dk/?v=quiz",
       "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
     }
+  },
+  {
+    "id": "geo-0159",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken valuta bruges i Storbritannien?",
+    "korrekt": "Pund sterling",
+    "forkerte": [
+      "Dollar",
+      "Euro",
+      "Yen"
+    ],
+    "forklaring": "Pund sterling er Storbritanniens valuta.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 203,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "geo-0160",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilket asiatisk land har verdens absolut største muslimske befolkning?",
+    "korrekt": "Indonesien",
+    "forkerte": [
+      "Saudi-Arabien",
+      "Pakistan",
+      "Tyrkiet"
+    ],
+    "forklaring": "Indonesien har verdens st?rste muslimske befolkning.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 517,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "geo-0161",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange stater (stjerner i flaget) består USA af i dag?",
+    "korrekt": "50",
+    "forkerte": [
+      "52",
+      "51",
+      "49"
+    ],
+    "forklaring": "USA best?r af 50 delstater, og flagets stjerner repr?senterer dem.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 293,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "und-0148",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket tysk bilmærke er kendt for at have fire sammenhængende ringe som deres logo?",
+    "korrekt": "Audi",
+    "forkerte": [
+      "Volkswagen",
+      "BMW",
+      "Mercedes"
+    ],
+    "forklaring": "Audi-logoets fire ringe henviser til bilm?rkets historiske forg?nger Auto Union.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 294,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "und-0149",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken popstjerne udgav i 1982 albummet \"Thriller\", som stadig er et af de bedst sælgende nogensinde?",
+    "korrekt": "Michael Jackson",
+    "forkerte": [
+      "Prince",
+      "Madonna",
+      "Elton John"
+    ],
+    "forklaring": "Michael Jackson udgav Thriller i 1982; albummet er blandt verdens bedst s?lgende.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 560,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "his-0154",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvem var den første præsident i USA's historie?",
+    "korrekt": "George Washington",
+    "forkerte": [
+      "Abraham Lincoln",
+      "Thomas Jefferson",
+      "John Adams"
+    ],
+    "forklaring": "George Washington blev USA?s f?rste pr?sident i 1789.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 253,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
+  },
+  {
+    "id": "his-0155",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket af Columbus? tre skibe p? ekspeditionen i 1492 var det st?rste?",
+    "korrekt": "Santa Maria",
+    "forkerte": [
+      "Nina",
+      "Pinta",
+      "Mayflower"
+    ],
+    "forklaring": "Santa Maria var det st?rste af de tre skibe p? Columbus? f?rste ekspedition i 1492.",
+    "status": "godkendt",
+    "kilde": {
+      "navn": "psch.dk - Trivia Quizdatabase",
+      "api_id": 254,
+      "url": "https://psch.dk/?v=quiz",
+      "kreditering": "Sp?rgsm?l er hentet fra psch.dk - Trivia Quizdatabase"
+    }
   }
 ]
