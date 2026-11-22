@@ -1,487 +1,6208 @@
-﻿[
-    {
-        "value":  [
-                      {
-                          "id":  "his-0001",
-                          "kategori":  "historie",
-                          "niveau":  1,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvilket år fik Danmark sin første grundlov?",
-                          "korrekt":  "1849",
-                          "forkerte":  [
-                                           "1814",
-                                           "1864",
-                                           "1901"
-                                       ],
-                          "forklaring":  "Danmarks første grundlov blev underskrevet den 5. juni 1849."
-                      },
-                      {
-                          "id":  "his-0002",
-                          "kategori":  "historie",
-                          "niveau":  2,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvilken dansk konge forbindes med Jellingstenene og kristningen af Danmark?",
-                          "korrekt":  "Harald Blåtand",
-                          "forkerte":  [
-                                           "Svend Tveskæg",
-                                           "Valdemar Sejr",
-                                           "Christian IV"
-                                       ],
-                          "forklaring":  "Harald Blåtand rejste den store Jellingsten i 900-tallet."
-                      },
-                      {
-                          "id":  "his-0003",
-                          "kategori":  "historie",
-                          "niveau":  3,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "I hvilket år blev de dansk-vestindiske øer overdraget til USA?",
-                          "korrekt":  "1917",
-                          "forkerte":  [
-                                           "1864",
-                                           "1905",
-                                           "1945"
-                                       ],
-                          "forklaring":  "Danmark solgte øerne til USA i 1917. De kendes i dag som De Amerikanske Jomfruøer."
-                      },
-                      {
-                          "id":  "geo-0001",
-                          "kategori":  "geografi",
-                          "niveau":  1,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvad hedder Danmarks hovedstad?",
-                          "korrekt":  "København",
-                          "forkerte":  [
-                                           "Aarhus",
-                                           "Odense",
-                                           "Aalborg"
-                                       ],
-                          "forklaring":  "København er Danmarks hovedstad og største by."
-                      },
-                      {
-                          "id":  "geo-0002",
-                          "kategori":  "geografi",
-                          "niveau":  2,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvilket stræde ligger mellem Danmark og Sverige ved København?",
-                          "korrekt":  "Øresund",
-                          "forkerte":  [
-                                           "Storebælt",
-                                           "Lillebælt",
-                                           "Kattegat"
-                                       ],
-                          "forklaring":  "Øresund forbinder Østersøen med Kattegat og adskiller Sjælland fra Skåne."
-                      },
-                      {
-                          "id":  "geo-0003",
-                          "kategori":  "geografi",
-                          "niveau":  3,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvad er hovedstaden i New Zealand?",
-                          "korrekt":  "Wellington",
-                          "forkerte":  [
-                                           "Auckland",
-                                           "Christchurch",
-                                           "Hamilton"
-                                       ],
-                          "forklaring":  "Wellington ligger på Nordøens sydspids og er landets hovedstad."
-                      },
-                      {
-                          "id":  "nat-0001",
-                          "kategori":  "natur",
-                          "niveau":  1,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvilket dyr er verdens største nulevende dyr?",
-                          "korrekt":  "Blåhvalen",
-                          "forkerte":  [
-                                           "Afrikansk elefant",
-                                           "Hvalhaj",
-                                           "Kaskelothval"
-                                       ],
-                          "forklaring":  "Blåhvalen kan blive over 25 meter lang og veje mere end 100 ton."
-                      },
-                      {
-                          "id":  "nat-0002",
-                          "kategori":  "natur",
-                          "niveau":  2,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvilken gas optager planter fra luften under fotosyntesen?",
-                          "korrekt":  "Kuldioxid",
-                          "forkerte":  [
-                                           "Ilt",
-                                           "Helium",
-                                           "Brint"
-                                       ],
-                          "forklaring":  "Planter bruger kuldioxid, vand og lysenergi til at danne sukker og ilt."
-                      },
-                      {
-                          "id":  "nat-0003",
-                          "kategori":  "natur",
-                          "niveau":  3,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvilket af disse pattedyr lægger æg?",
-                          "korrekt":  "Næbdyret",
-                          "forkerte":  [
-                                           "Odderen",
-                                           "Delfinen",
-                                           "Flagermusen"
-                                       ],
-                          "forklaring":  "Næbdyret er et kloakdyr, en lille gruppe pattedyr, der lægger æg."
-                      },
-                      {
-                          "id":  "spo-0001",
-                          "kategori":  "sport",
-                          "niveau":  1,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvor mange spillere har et fodboldhold på banen ved kampens start?",
-                          "korrekt":  "11",
-                          "forkerte":  [
-                                           "9",
-                                           "10",
-                                           "12"
-                                       ],
-                          "forklaring":  "Et hold stiller med ti markspillere og en målmand."
-                      },
-                      {
-                          "id":  "spo-0002",
-                          "kategori":  "sport",
-                          "niveau":  2,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvilken sportsgren dyrkes i Tour de France?",
-                          "korrekt":  "Cykling",
-                          "forkerte":  [
-                                           "Løb",
-                                           "Motorsport",
-                                           "Triatlon"
-                                       ],
-                          "forklaring":  "Tour de France er et etapeløb på landevejscykel."
-                      },
-                      {
-                          "id":  "spo-0003",
-                          "kategori":  "sport",
-                          "niveau":  3,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvor mange ringe er der i det olympiske symbol?",
-                          "korrekt":  "5",
-                          "forkerte":  [
-                                           "4",
-                                           "6",
-                                           "7"
-                                       ],
-                          "forklaring":  "De fem sammenflettede ringe symboliserer mødet mellem verdensdele."
-                      },
-                      {
-                          "id":  "und-0001",
-                          "kategori":  "underholdning",
-                          "niveau":  1,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvem skrev bøgerne om Harry Potter?",
-                          "korrekt":  "J.K. Rowling",
-                          "forkerte":  [
-                                           "Astrid Lindgren",
-                                           "Suzanne Collins",
-                                           "Tove Jansson"
-                                       ],
-                          "forklaring":  "Den britiske forfatter J.K. Rowling skrev Harry Potter-serien."
-                      },
-                      {
-                          "id":  "und-0002",
-                          "kategori":  "underholdning",
-                          "niveau":  2,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvad hedder løven i Disneys Løvernes Konge?",
-                          "korrekt":  "Simba",
-                          "forkerte":  [
-                                           "Mufasa",
-                                           "Scar",
-                                           "Timon"
-                                       ],
-                          "forklaring":  "Simba er filmens hovedperson; Mufasa er hans far."
-                      },
-                      {
-                          "id":  "und-0003",
-                          "kategori":  "underholdning",
-                          "niveau":  3,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvilken dansk forfatter skrev eventyret Den lille havfrue?",
-                          "korrekt":  "H.C. Andersen",
-                          "forkerte":  [
-                                           "Karen Blixen",
-                                           "Martin Andersen Nexø",
-                                           "Tove Ditlevsen"
-                                       ],
-                          "forklaring":  "H.C. Andersens eventyr Den lille havfrue udkom i 1837."
-                      },
-                      {
-                          "id":  "vid-0001",
-                          "kategori":  "videnskab",
-                          "niveau":  1,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvad er den kemiske formel for vand?",
-                          "korrekt":  "H₂O",
-                          "forkerte":  [
-                                           "CO₂",
-                                           "O₂",
-                                           "NaCl"
-                                       ],
-                          "forklaring":  "Et vandmolekyle består af to hydrogenatomer og ét oxygenatom."
-                      },
-                      {
-                          "id":  "vid-0002",
-                          "kategori":  "videnskab",
-                          "niveau":  2,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvilken planet kaldes ofte den røde planet?",
-                          "korrekt":  "Mars",
-                          "forkerte":  [
-                                           "Venus",
-                                           "Jupiter",
-                                           "Merkur"
-                                       ],
-                          "forklaring":  "Jernholdigt støv på Mars\u0027 overflade giver planeten dens rødlige farve."
-                      },
-                      {
-                          "id":  "vid-0003",
-                          "kategori":  "videnskab",
-                          "niveau":  3,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvilken partikel har negativ elektrisk ladning?",
-                          "korrekt":  "Elektronen",
-                          "forkerte":  [
-                                           "Protonen",
-                                           "Neutronen",
-                                           "Fotonen"
-                                       ],
-                          "forklaring":  "Elektronen har negativ ladning; protonen er positiv, og neutronen er neutral."
-                      },
-                      {
-                          "id":  "spr-0001",
-                          "kategori":  "sprog_kultur",
-                          "niveau":  1,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvad betyder det franske ord “bonjour”?",
-                          "korrekt":  "Goddag",
-                          "forkerte":  [
-                                           "Godnat",
-                                           "Tak",
-                                           "Farvel"
-                                       ],
-                          "forklaring":  "“Bonjour” bruges som en hilsen og betyder goddag eller god morgen."
-                      },
-                      {
-                          "id":  "spr-0002",
-                          "kategori":  "sprog_kultur",
-                          "niveau":  2,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvad er flertalsformen af det engelske ord “child”?",
-                          "korrekt":  "Children",
-                          "forkerte":  [
-                                           "Childs",
-                                           "Childes",
-                                           "Childrens"
-                                       ],
-                          "forklaring":  "“Child” har den uregelmæssige flertalsform “children”."
-                      },
-                      {
-                          "id":  "spr-0003",
-                          "kategori":  "sprog_kultur",
-                          "niveau":  3,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvilket skriftsystem bruger japansk blandt andet til fremmede ord?",
-                          "korrekt":  "Katakana",
-                          "forkerte":  [
-                                           "Kyrillisk",
-                                           "Hangul",
-                                           "Devanagari"
-                                       ],
-                          "forklaring":  "Japansk bruger blandt andet katakana til låneord og udenlandske navne."
-                      },
-                      {
-                          "id":  "mad-0001",
-                          "kategori":  "mad_drikke",
-                          "niveau":  1,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvad er hovedingrediensen i hummus?",
-                          "korrekt":  "Kikærter",
-                          "forkerte":  [
-                                           "Linser",
-                                           "Kartofler",
-                                           "Hvide bønner"
-                                       ],
-                          "forklaring":  "Hummus laves typisk af blendede kikærter, tahin, citron og hvidløg."
-                      },
-                      {
-                          "id":  "mad-0002",
-                          "kategori":  "mad_drikke",
-                          "niveau":  2,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Fra hvilket land stammer fetaost?",
-                          "korrekt":  "Grækenland",
-                          "forkerte":  [
-                                           "Italien",
-                                           "Frankrig",
-                                           "Spanien"
-                                       ],
-                          "forklaring":  "Feta er en græsk ost med beskyttet oprindelsesbetegnelse."
-                      },
-                      {
-                          "id":  "mad-0003",
-                          "kategori":  "mad_drikke",
-                          "niveau":  3,
-                          "type":  "mc",
-                          "status":  "godkendt",
-                          "spoergsmaal":  "Hvilken korntype bruges traditionelt til couscous?",
-                          "korrekt":  "Hård hvede",
-                          "forkerte":  [
-                                           "Ris",
-                                           "Rug",
-                                           "Majs"
-                                       ],
-                          "forklaring":  "Couscous fremstilles traditionelt af semulje fra hård hvede."
-                      }
-                  ],
-        "Count":  24
-    },
-    {
-        "id":  "his-0004",
-        "kategori":  "historie",
-        "niveau":  4,
-        "type":  "mc",
-        "status":  "godkendt",
-        "spoergsmaal":  "Hvilken fred i 1658 førte til, at Danmark afstod Skåne, Blekinge og Halland til Sverige?",
-        "korrekt":  "Roskildesfreden",
-        "forkerte":  [
-                         "Brømsebrofreden",
-                         "Freden i Kiel",
-                         "Freden i København"
-                     ],
-        "forklaring":  "Roskildesfreden blev indgået i 1658 efter svenskernes invasion af Sjælland."
-    },
-    {
-        "id":  "geo-0004",
-        "kategori":  "geografi",
-        "niveau":  4,
-        "type":  "mc",
-        "status":  "godkendt",
-        "spoergsmaal":  "Hvilken europæisk hovedstad ligger ved floden Tejo (Tajo)?",
-        "korrekt":  "Lissabon",
-        "forkerte":  [
-                         "Madrid",
-                         "Porto",
-                         "Sevilla"
-                     ],
-        "forklaring":  "Tejo løber gennem Spanien og Portugal og munder ud ved Lissabon."
-    },
-    {
-        "id":  "nat-0004",
-        "kategori":  "natur",
-        "niveau":  4,
-        "type":  "mc",
-        "status":  "godkendt",
-        "spoergsmaal":  "Hvad kaldes den proces, hvor planter afgiver vanddamp gennem bladene?",
-        "korrekt":  "Transpiration",
-        "forkerte":  [
-                         "Bestøvning",
-                         "Gæring",
-                         "Kvælstoffiksering"
-                     ],
-        "forklaring":  "Ved transpiration fordamper vand fra plantens blade, især gennem små spalteåbninger."
-    },
-    {
-        "id":  "spo-0004",
-        "kategori":  "sport",
-        "niveau":  4,
-        "type":  "mc",
-        "status":  "godkendt",
-        "spoergsmaal":  "Hvilket land vandt det første VM i kvindefodbold i 1991?",
-        "korrekt":  "USA",
-        "forkerte":  [
-                         "Norge",
-                         "Tyskland",
-                         "Brasilien"
-                     ],
-        "forklaring":  "USA vandt finalen mod Norge ved VM i Kina i 1991."
-    },
-    {
-        "id":  "und-0004",
-        "kategori":  "underholdning",
-        "niveau":  4,
-        "type":  "mc",
-        "status":  "godkendt",
-        "spoergsmaal":  "Hvem komponerede musikken til Peer Gynt?",
-        "korrekt":  "Edvard Grieg",
-        "forkerte":  [
-                         "Jean Sibelius",
-                         "Carl Nielsen",
-                         "Richard Wagner"
-                     ],
-        "forklaring":  "Den norske komponist Edvard Grieg skrev scenemusikken til Ibsens Peer Gynt."
-    },
-    {
-        "id":  "vid-0004",
-        "kategori":  "videnskab",
-        "niveau":  4,
-        "type":  "mc",
-        "status":  "godkendt",
-        "spoergsmaal":  "Hvilket grundstof har atomnummer 79?",
-        "korrekt":  "Guld",
-        "forkerte":  [
-                         "Sølv",
-                         "Platin",
-                         "Kviksølv"
-                     ],
-        "forklaring":  "Guld har atomnummer 79 og det kemiske symbol Au."
-    },
-    {
-        "id":  "spr-0004",
-        "kategori":  "sprog_kultur",
-        "niveau":  4,
-        "type":  "mc",
-        "status":  "godkendt",
-        "spoergsmaal":  "Fra hvilket sprog kommer ordet “Schadenfreude”?",
-        "korrekt":  "Tysk",
-        "forkerte":  [
-                         "Hollandsk",
-                         "Svensk",
-                         "Jiddisch"
-                     ],
-        "forklaring":  "Det tyske ord beskriver glæde over en andens uheld."
-    },
-    {
-        "id":  "mad-0004",
-        "kategori":  "mad_drikke",
-        "niveau":  4,
-        "type":  "mc",
-        "status":  "godkendt",
-        "spoergsmaal":  "Hvilket krydderi giver traditionelt svenske lussekatter deres gyldne farve?",
-        "korrekt":  "Safran",
-        "forkerte":  [
-                         "Kardemomme",
-                         "Gurkemeje",
-                         "Kanel"
-                     ],
-        "forklaring":  "Safran giver lussekatte deres karakteristiske gule farve."
-    }
+[
+  {
+    "id": "his-0001",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvilket år fik Danmark sin første grundlov?",
+    "korrekt": "1849",
+    "forkerte": [
+      "1814",
+      "1864",
+      "1901"
+    ],
+    "forklaring": "Danmarks første grundlov blev underskrevet den 5. juni 1849."
+  },
+  {
+    "id": "his-0002",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvilken dansk konge forbindes med Jellingstenene og kristningen af Danmark?",
+    "korrekt": "Harald Blåtand",
+    "forkerte": [
+      "Svend Tveskæg",
+      "Valdemar Sejr",
+      "Christian IV"
+    ],
+    "forklaring": "Harald Blåtand rejste den store Jellingsten i 900-tallet."
+  },
+  {
+    "id": "his-0003",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "I hvilket år blev de dansk-vestindiske øer overdraget til USA?",
+    "korrekt": "1917",
+    "forkerte": [
+      "1864",
+      "1905",
+      "1945"
+    ],
+    "forklaring": "Danmark solgte øerne til USA i 1917. De kendes i dag som De Amerikanske Jomfruøer."
+  },
+  {
+    "id": "geo-0001",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvad hedder Danmarks hovedstad?",
+    "korrekt": "København",
+    "forkerte": [
+      "Aarhus",
+      "Odense",
+      "Aalborg"
+    ],
+    "forklaring": "København er Danmarks hovedstad og største by."
+  },
+  {
+    "id": "geo-0002",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvilket stræde ligger mellem Danmark og Sverige ved København?",
+    "korrekt": "Øresund",
+    "forkerte": [
+      "Storebælt",
+      "Lillebælt",
+      "Kattegat"
+    ],
+    "forklaring": "Øresund forbinder Østersøen med Kattegat og adskiller Sjælland fra Skåne."
+  },
+  {
+    "id": "geo-0003",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvad er hovedstaden i New Zealand?",
+    "korrekt": "Wellington",
+    "forkerte": [
+      "Auckland",
+      "Christchurch",
+      "Hamilton"
+    ],
+    "forklaring": "Wellington ligger på Nordøens sydspids og er landets hovedstad."
+  },
+  {
+    "id": "nat-0001",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvilket dyr er verdens største nulevende dyr?",
+    "korrekt": "Blåhvalen",
+    "forkerte": [
+      "Afrikansk elefant",
+      "Hvalhaj",
+      "Kaskelothval"
+    ],
+    "forklaring": "Blåhvalen kan blive over 25 meter lang og veje mere end 100 ton."
+  },
+  {
+    "id": "nat-0002",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvilken gas optager planter fra luften under fotosyntesen?",
+    "korrekt": "Kuldioxid",
+    "forkerte": [
+      "Ilt",
+      "Helium",
+      "Brint"
+    ],
+    "forklaring": "Planter bruger kuldioxid, vand og lysenergi til at danne sukker og ilt."
+  },
+  {
+    "id": "nat-0003",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvilket af disse pattedyr lægger æg?",
+    "korrekt": "Næbdyret",
+    "forkerte": [
+      "Odderen",
+      "Delfinen",
+      "Flagermusen"
+    ],
+    "forklaring": "Næbdyret er et kloakdyr, en lille gruppe pattedyr, der lægger æg."
+  },
+  {
+    "id": "spo-0001",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvor mange spillere har et fodboldhold på banen ved kampens start?",
+    "korrekt": "11",
+    "forkerte": [
+      "9",
+      "10",
+      "12"
+    ],
+    "forklaring": "Et hold stiller med ti markspillere og en målmand."
+  },
+  {
+    "id": "spo-0002",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvilken sportsgren dyrkes i Tour de France?",
+    "korrekt": "Cykling",
+    "forkerte": [
+      "Løb",
+      "Motorsport",
+      "Triatlon"
+    ],
+    "forklaring": "Tour de France er et etapeløb på landevejscykel."
+  },
+  {
+    "id": "spo-0003",
+    "kategori": "sport",
+    "niveau": 3,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvor mange ringe er der i det olympiske symbol?",
+    "korrekt": "5",
+    "forkerte": [
+      "4",
+      "6",
+      "7"
+    ],
+    "forklaring": "De fem sammenflettede ringe symboliserer mødet mellem verdensdele."
+  },
+  {
+    "id": "und-0001",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvem skrev bøgerne om Harry Potter?",
+    "korrekt": "J.K. Rowling",
+    "forkerte": [
+      "Astrid Lindgren",
+      "Suzanne Collins",
+      "Tove Jansson"
+    ],
+    "forklaring": "Den britiske forfatter J.K. Rowling skrev Harry Potter-serien."
+  },
+  {
+    "id": "und-0002",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvad hedder løven i Disneys Løvernes Konge?",
+    "korrekt": "Simba",
+    "forkerte": [
+      "Mufasa",
+      "Scar",
+      "Timon"
+    ],
+    "forklaring": "Simba er filmens hovedperson; Mufasa er hans far."
+  },
+  {
+    "id": "und-0003",
+    "kategori": "underholdning",
+    "niveau": 3,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvilken dansk forfatter skrev eventyret Den lille havfrue?",
+    "korrekt": "H.C. Andersen",
+    "forkerte": [
+      "Karen Blixen",
+      "Martin Andersen Nexø",
+      "Tove Ditlevsen"
+    ],
+    "forklaring": "H.C. Andersens eventyr Den lille havfrue udkom i 1837."
+  },
+  {
+    "id": "vid-0001",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvad er den kemiske formel for vand?",
+    "korrekt": "H₂O",
+    "forkerte": [
+      "CO₂",
+      "O₂",
+      "NaCl"
+    ],
+    "forklaring": "Et vandmolekyle består af to hydrogenatomer og ét oxygenatom."
+  },
+  {
+    "id": "vid-0002",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvilken planet kaldes ofte den røde planet?",
+    "korrekt": "Mars",
+    "forkerte": [
+      "Venus",
+      "Jupiter",
+      "Merkur"
+    ],
+    "forklaring": "Jernholdigt støv på Mars' overflade giver planeten dens rødlige farve."
+  },
+  {
+    "id": "vid-0003",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvilken partikel har negativ elektrisk ladning?",
+    "korrekt": "Elektronen",
+    "forkerte": [
+      "Protonen",
+      "Neutronen",
+      "Fotonen"
+    ],
+    "forklaring": "Elektronen har negativ ladning; protonen er positiv, og neutronen er neutral."
+  },
+  {
+    "id": "spr-0001",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvad betyder det franske ord “bonjour”?",
+    "korrekt": "Goddag",
+    "forkerte": [
+      "Godnat",
+      "Tak",
+      "Farvel"
+    ],
+    "forklaring": "“Bonjour” bruges som en hilsen og betyder goddag eller god morgen."
+  },
+  {
+    "id": "spr-0002",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvad er flertalsformen af det engelske ord “child”?",
+    "korrekt": "Children",
+    "forkerte": [
+      "Childs",
+      "Childes",
+      "Childrens"
+    ],
+    "forklaring": "“Child” har den uregelmæssige flertalsform “children”."
+  },
+  {
+    "id": "spr-0003",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvilket skriftsystem bruger japansk blandt andet til fremmede ord?",
+    "korrekt": "Katakana",
+    "forkerte": [
+      "Kyrillisk",
+      "Hangul",
+      "Devanagari"
+    ],
+    "forklaring": "Japansk bruger blandt andet katakana til låneord og udenlandske navne."
+  },
+  {
+    "id": "mad-0001",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvad er hovedingrediensen i hummus?",
+    "korrekt": "Kikærter",
+    "forkerte": [
+      "Linser",
+      "Kartofler",
+      "Hvide bønner"
+    ],
+    "forklaring": "Hummus laves typisk af blendede kikærter, tahin, citron og hvidløg."
+  },
+  {
+    "id": "mad-0002",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Fra hvilket land stammer fetaost?",
+    "korrekt": "Grækenland",
+    "forkerte": [
+      "Italien",
+      "Frankrig",
+      "Spanien"
+    ],
+    "forklaring": "Feta er en græsk ost med beskyttet oprindelsesbetegnelse."
+  },
+  {
+    "id": "mad-0003",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvilken korntype bruges traditionelt til couscous?",
+    "korrekt": "Hård hvede",
+    "forkerte": [
+      "Ris",
+      "Rug",
+      "Majs"
+    ],
+    "forklaring": "Couscous fremstilles traditionelt af semulje fra hård hvede."
+  },
+  {
+    "id": "his-0004",
+    "kategori": "historie",
+    "niveau": 4,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvilken fred i 1658 førte til, at Danmark afstod Skåne, Blekinge og Halland til Sverige?",
+    "korrekt": "Roskildesfreden",
+    "forkerte": [
+      "Brømsebrofreden",
+      "Freden i Kiel",
+      "Freden i København"
+    ],
+    "forklaring": "Roskildesfreden blev indgået i 1658 efter svenskernes invasion af Sjælland."
+  },
+  {
+    "id": "geo-0004",
+    "kategori": "geografi",
+    "niveau": 4,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvilken europæisk hovedstad ligger ved floden Tejo (Tajo)?",
+    "korrekt": "Lissabon",
+    "forkerte": [
+      "Madrid",
+      "Porto",
+      "Sevilla"
+    ],
+    "forklaring": "Tejo løber gennem Spanien og Portugal og munder ud ved Lissabon."
+  },
+  {
+    "id": "nat-0004",
+    "kategori": "natur",
+    "niveau": 4,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvad kaldes den proces, hvor planter afgiver vanddamp gennem bladene?",
+    "korrekt": "Transpiration",
+    "forkerte": [
+      "Bestøvning",
+      "Gæring",
+      "Kvælstoffiksering"
+    ],
+    "forklaring": "Ved transpiration fordamper vand fra plantens blade, især gennem små spalteåbninger."
+  },
+  {
+    "id": "spo-0004",
+    "kategori": "sport",
+    "niveau": 4,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvilket land vandt det første VM i kvindefodbold i 1991?",
+    "korrekt": "USA",
+    "forkerte": [
+      "Norge",
+      "Tyskland",
+      "Brasilien"
+    ],
+    "forklaring": "USA vandt finalen mod Norge ved VM i Kina i 1991."
+  },
+  {
+    "id": "und-0004",
+    "kategori": "underholdning",
+    "niveau": 4,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvem komponerede musikken til Peer Gynt?",
+    "korrekt": "Edvard Grieg",
+    "forkerte": [
+      "Jean Sibelius",
+      "Carl Nielsen",
+      "Richard Wagner"
+    ],
+    "forklaring": "Den norske komponist Edvard Grieg skrev scenemusikken til Ibsens Peer Gynt."
+  },
+  {
+    "id": "vid-0004",
+    "kategori": "videnskab",
+    "niveau": 4,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvilket grundstof har atomnummer 79?",
+    "korrekt": "Guld",
+    "forkerte": [
+      "Sølv",
+      "Platin",
+      "Kviksølv"
+    ],
+    "forklaring": "Guld har atomnummer 79 og det kemiske symbol Au."
+  },
+  {
+    "id": "spr-0004",
+    "kategori": "sprog_kultur",
+    "niveau": 4,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Fra hvilket sprog kommer ordet “Schadenfreude”?",
+    "korrekt": "Tysk",
+    "forkerte": [
+      "Hollandsk",
+      "Svensk",
+      "Jiddisch"
+    ],
+    "forklaring": "Det tyske ord beskriver glæde over en andens uheld."
+  },
+  {
+    "id": "mad-0004",
+    "kategori": "mad_drikke",
+    "niveau": 4,
+    "type": "mc",
+    "status": "godkendt",
+    "spoergsmaal": "Hvilket krydderi giver traditionelt svenske lussekatter deres gyldne farve?",
+    "korrekt": "Safran",
+    "forkerte": [
+      "Kardemomme",
+      "Gurkemeje",
+      "Kanel"
+    ],
+    "forklaring": "Safran giver lussekatte deres karakteristiske gule farve."
+  },
+  {
+    "id": "his-0005",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvem rejste den store Jellingsten?",
+    "korrekt": "Harald Blåtand",
+    "forkerte": [
+      "Gorm den Gamle",
+      "Svend Tveskæg",
+      "Knud den Store"
+    ],
+    "forklaring": "Harald rejste stenen omkring år 965 til minde om sine forældre Gorm og Thyra – og for at fortælle, at han gjorde danerne kristne.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0006",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket år blev Danmarks Grundlov underskrevet?",
+    "korrekt": "1849",
+    "forkerte": [
+      "1814",
+      "1864",
+      "1901"
+    ],
+    "forklaring": "Frederik 7. underskrev Grundloven den 5. juni 1849, og Danmark gik fra enevælde til konstitutionelt monarki.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0007",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "De Vestindiske Øer blev overdraget fra Danmark til USA i 1917.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Overdragelsen skete 31. marts 1917. Øerne hedder i dag De Amerikanske Jomfruøer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0008",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilken konge indførte enevælden i Danmark i 1660?",
+    "korrekt": "Frederik 3.",
+    "forkerte": [
+      "Christian 4.",
+      "Christian 5.",
+      "Frederik 4."
+    ],
+    "forklaring": "Efter krigene mod Sverige fik Frederik 3. arveenevælden i 1660, og Kongeloven fra 1665 cementerede den.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0009",
+    "kategori": "historie",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvilket år fandt Slaget på Reden sted?",
+    "korrekt": "1801",
+    "forkerte": [
+      "1807",
+      "1788",
+      "1814"
+    ],
+    "forklaring": "Den 2. april 1801 angreb en britisk flåde under bl.a. Horatio Nelson den danske flåde ud for København.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0005",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad er den største ø i selve Danmark (uden Grønland og Færøerne)?",
+    "korrekt": "Sjælland",
+    "forkerte": [
+      "Fyn",
+      "Lolland",
+      "Bornholm"
+    ],
+    "forklaring": "Sjælland er godt 7.000 km² – næsten dobbelt så stor som Fyn.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0006",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Grønland er verdens største ø.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Australien er større, men regnes som et kontinent – derfor er Grønland verdens største ø.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0007",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad er hovedstaden i Australien?",
+    "korrekt": "Canberra",
+    "forkerte": [
+      "Sydney",
+      "Melbourne",
+      "Perth"
+    ],
+    "forklaring": "Canberra blev anlagt som kompromis, fordi Sydney og Melbourne begge ville være hovedstad.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0008",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder Danmarks højeste naturlige punkt?",
+    "korrekt": "Møllehøj",
+    "forkerte": [
+      "Yding Skovhøj",
+      "Ejer Bavnehøj",
+      "Himmelbjerget"
+    ],
+    "forklaring": "Møllehøj er 170,86 meter – kun få centimeter højere end Yding Skovhøjs naturlige terræn.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0009",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad er Danmarks længste vandløb?",
+    "korrekt": "Gudenå",
+    "forkerte": [
+      "Skjern Å",
+      "Storå",
+      "Suså"
+    ],
+    "forklaring": "Gudenåen er omkring 160 km lang og løber fra Tinnet Krat ved Tørring til Randers Fjord.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0005",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange ben har en edderkop?",
+    "korrekt": "8",
+    "forkerte": [
+      "6",
+      "10",
+      "12"
+    ],
+    "forklaring": "Edderkopper er spindlere, ikke insekter – insekter har 6 ben.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0006",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken fugl er Danmarks nationalfugl?",
+    "korrekt": "Knopsvanen",
+    "forkerte": [
+      "Storken",
+      "Viben",
+      "Sanglærken"
+    ],
+    "forklaring": "Knopsvanen blev valgt som nationalfugl i 1984 – passende for landet, der gav os 'Den grimme ælling'.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0007",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Hvaler er pattedyr.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Hvaler ånder med lunger, føder levende unger og giver dem die.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0008",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange hjerter har en blæksprutte?",
+    "korrekt": "3",
+    "forkerte": [
+      "1",
+      "2",
+      "4"
+    ],
+    "forklaring": "To hjerter pumper blod gennem gællerne, og det tredje pumper det rundt i resten af kroppen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0009",
+    "kategori": "natur",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes de små, gennemsigtige ål, der kommer ind til kysterne fra havet?",
+    "korrekt": "Glasål",
+    "forkerte": [
+      "Blankål",
+      "Gulål",
+      "Smolt"
+    ],
+    "forklaring": "Glasålene har drevet med havstrømmene fra Sargassohavet. Smolt er derimod unge laks på vej mod havet.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0005",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket år vandt Danmark EM i fodbold for herrer?",
+    "korrekt": "1992",
+    "forkerte": [
+      "1984",
+      "1996",
+      "1988"
+    ],
+    "forklaring": "Danmark kom med i sidste øjeblik, fordi Jugoslavien blev udelukket, og slog Tyskland 2-0 i finalen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0006",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Et maratonløb er cirka 42 kilometer langt.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Den præcise distance er 42,195 km og blev fastlagt ved OL i London i 1908.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0007",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dansk cykelrytter vandt Tour de France i 2022?",
+    "korrekt": "Jonas Vingegaard",
+    "forkerte": [
+      "Bjarne Riis",
+      "Mads Pedersen",
+      "Jakob Fuglsang"
+    ],
+    "forklaring": "Vingegaard vandt igen i 2023. Touren startede i øvrigt i Danmark i 2022.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0008",
+    "kategori": "sport",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad er den højeste score, man kan få med tre pile i dart?",
+    "korrekt": "180",
+    "forkerte": [
+      "150",
+      "171",
+      "200"
+    ],
+    "forklaring": "Tre pile i tredobbelt 20 giver 3 × 60 = 180.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0005",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder Olsen-bandens leder?",
+    "korrekt": "Egon Olsen",
+    "forkerte": [
+      "Benny Frandsen",
+      "Kjeld Jensen",
+      "Dynamit-Harry"
+    ],
+    "forklaring": "Egon blev spillet af Ove Sprogøe i alle de 14 danske Olsen-banden-film.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0006",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dansk gruppe stod bag hittet 'Barbie Girl'?",
+    "korrekt": "Aqua",
+    "forkerte": [
+      "Alphabeat",
+      "Infernal",
+      "Junior Senior"
+    ],
+    "forklaring": "Sangen fra 1997 toppede hitlisterne i en lang række lande og gjorde Aqua verdenskendt.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0007",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "H.C. Andersen skrev eventyret 'Den lille havfrue'.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Eventyret udkom i 1837. Statuen på Langelinie kom til i 1913.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0008",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken duo vandt Eurovision for Danmark i 2000?",
+    "korrekt": "Olsen Brothers",
+    "forkerte": [
+      "Hot Eyes",
+      "Laban",
+      "Brixx"
+    ],
+    "forklaring": "Brødrene Jørgen og Niels Olsen vandt med 'Fly on the Wings of Love'.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0009",
+    "kategori": "underholdning",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvem instruerede filmen 'Jagten' fra 2012?",
+    "korrekt": "Thomas Vinterberg",
+    "forkerte": [
+      "Lars von Trier",
+      "Susanne Bier",
+      "Nicolas Winding Refn"
+    ],
+    "forklaring": "Mads Mikkelsen vandt prisen som bedste mandlige skuespiller i Cannes for hovedrollen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0005",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken planet er nærmest Solen?",
+    "korrekt": "Merkur",
+    "forkerte": [
+      "Venus",
+      "Mars",
+      "Jorden"
+    ],
+    "forklaring": "Merkur er også den mindste planet i solsystemet.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0006",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad er det kemiske symbol for guld?",
+    "korrekt": "Au",
+    "forkerte": [
+      "Ag",
+      "Gd",
+      "Go"
+    ],
+    "forklaring": "Au kommer af det latinske ord aurum. Ag er sølv.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0007",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Lyd bevæger sig hurtigere end lys.",
+    "korrekt": "Falsk",
+    "forkerte": [],
+    "forklaring": "Lys er næsten en million gange hurtigere – derfor ser man lynet, før man hører tordenen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0008",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dansk fysiker fik Nobelprisen i 1922 for sit arbejde med atomets opbygning?",
+    "korrekt": "Niels Bohr",
+    "forkerte": [
+      "H.C. Ørsted",
+      "Ole Rømer",
+      "Tycho Brahe"
+    ],
+    "forklaring": "Bohr fik prisen for sin atommodel. Hans søn Aage Bohr fik selv Nobelprisen i 1975.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0009",
+    "kategori": "videnskab",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvilket grundstof har det kemiske symbol W?",
+    "korrekt": "Wolfram",
+    "forkerte": [
+      "Vanadium",
+      "Wismut",
+      "Xenon"
+    ],
+    "forklaring": "Symbolet kommer af wolfram, som på engelsk også kaldes tungsten. Wismut har symbolet Bi.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0005",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket sprog er hovedsproget i Brasilien?",
+    "korrekt": "Portugisisk",
+    "forkerte": [
+      "Spansk",
+      "Fransk",
+      "Italiensk"
+    ],
+    "forklaring": "Brasilien var portugisisk koloni, og er i dag verdens største portugisisktalende land.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0006",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder Danmarks borgerlige nationalsang?",
+    "korrekt": "Der er et yndigt land",
+    "forkerte": [
+      "Kong Christian stod ved højen mast",
+      "Danmark, mit fædreland",
+      "I Danmark er jeg født"
+    ],
+    "forklaring": "Teksten er af Adam Oehlenschläger. 'Kong Christian' er Danmarks kongesang.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0007",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange bogstaver er der i det danske alfabet?",
+    "korrekt": "29",
+    "forkerte": [
+      "26",
+      "28",
+      "30"
+    ],
+    "forklaring": "De 26 latinske bogstaver plus æ, ø og å.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0008",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Ordet 'hygge' er optaget i Oxford English Dictionary.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Det kom med i 2017 efter en bølge af bøger om dansk hygge i udlandet.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0009",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvem skrev værket 'Enten – Eller' fra 1843?",
+    "korrekt": "Søren Kierkegaard",
+    "forkerte": [
+      "N.F.S. Grundtvig",
+      "Georg Brandes",
+      "Ludvig Holberg"
+    ],
+    "forklaring": "Kierkegaard udgav det under pseudonymet Victor Eremita.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0005",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad er hovedingrediensen i guacamole?",
+    "korrekt": "Avocado",
+    "forkerte": [
+      "Agurk",
+      "Ærter",
+      "Spinat"
+    ],
+    "forklaring": "Guacamole stammer fra Mexico, hvor aztekerne lavede en tidlig udgave.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0006",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket land kommer pizzaen oprindeligt fra?",
+    "korrekt": "Italien",
+    "forkerte": [
+      "Grækenland",
+      "Frankrig",
+      "USA"
+    ],
+    "forklaring": "Den klassiske Margherita forbindes med Napoli i slutningen af 1800-tallet.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0007",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Mousserende vin må kun kaldes champagne, hvis den er lavet i Champagne-regionen i Frankrig.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Navnet er en beskyttet oprindelsesbetegnelse.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0008",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad laves rom af?",
+    "korrekt": "Sukkerrør",
+    "forkerte": [
+      "Kartofler",
+      "Byg",
+      "Agave"
+    ],
+    "forklaring": "Rom destilleres af sukkerrørssaft eller melasse. Agave bruges til tequila.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0009",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilken ret blev i 2014 kåret som Danmarks nationalret?",
+    "korrekt": "Stegt flæsk med persillesovs",
+    "forkerte": [
+      "Frikadeller med kartoffelsalat",
+      "Æbleflæsk",
+      "Rødspætte med remoulade"
+    ],
+    "forklaring": "Retten vandt en afstemning, som Fødevareministeriet stod bag.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0010",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad er hovedstaden i Norge?",
+    "korrekt": "Oslo",
+    "forkerte": [
+      "Bergen",
+      "Stockholm",
+      "Trondheim"
+    ],
+    "forklaring": "Oslo hed Christiania fra 1624 til 1925, opkaldt efter Christian 4.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0011",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket hav ligger ud for Jyllands vestkyst?",
+    "korrekt": "Nordsøen",
+    "forkerte": [
+      "Østersøen",
+      "Kattegat",
+      "Bælthavet"
+    ],
+    "forklaring": "Nordsøen er kendt for sit barske vejr og de store sandstrande på den jyske vestkyst.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0012",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad er verdens største ocean?",
+    "korrekt": "Stillehavet",
+    "forkerte": [
+      "Atlanterhavet",
+      "Det Indiske Ocean",
+      "Det Arktiske Ocean"
+    ],
+    "forklaring": "Stillehavet dækker omkring en tredjedel af Jordens overflade.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0013",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Mount Everest er verdens højeste bjerg målt fra havoverfladen.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Everest er omkring 8.849 meter højt og ligger på grænsen mellem Nepal og Kina.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0014",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad er Danmarks største sø?",
+    "korrekt": "Arresø",
+    "forkerte": [
+      "Esrum Sø",
+      "Furesø",
+      "Mossø"
+    ],
+    "forklaring": "Arresø i Nordsjælland er omkring 40 km². Furesø er til gengæld den dybeste.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0015",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken by er forbundet med Nørresundby via Limfjordsbroen?",
+    "korrekt": "Aalborg",
+    "forkerte": [
+      "Hobro",
+      "Skive",
+      "Thisted"
+    ],
+    "forklaring": "Limfjordsbroen åbnede i 1933 og er en klapbro, så skibe kan komme igennem.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0016",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket nordisk land har flest indbyggere?",
+    "korrekt": "Sverige",
+    "forkerte": [
+      "Danmark",
+      "Norge",
+      "Finland"
+    ],
+    "forklaring": "Sverige har over 10 millioner indbyggere – næsten dobbelt så mange som Danmark.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0017",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad er hovedstaden i Canada?",
+    "korrekt": "Ottawa",
+    "forkerte": [
+      "Toronto",
+      "Montreal",
+      "Vancouver"
+    ],
+    "forklaring": "Ottawa blev valgt i 1857, blandt andet fordi den lå mellem det engelsk- og det fransktalende Canada.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0018",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken flod løber gennem Paris?",
+    "korrekt": "Seinen",
+    "forkerte": [
+      "Loire",
+      "Rhône",
+      "Rhinen"
+    ],
+    "forklaring": "Seinen løber ud i Den Engelske Kanal ved Le Havre.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0019",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Bornholm ligger i Østersøen.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Bornholm ligger tættere på Sverige end på resten af Danmark.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0020",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder Færøernes hovedstad?",
+    "korrekt": "Tórshavn",
+    "forkerte": [
+      "Klaksvík",
+      "Nuuk",
+      "Runavík"
+    ],
+    "forklaring": "Tórshavn betyder 'Thors havn' og er en af verdens mindste hovedstæder.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0021",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder Grønlands hovedstad?",
+    "korrekt": "Nuuk",
+    "forkerte": [
+      "Ilulissat",
+      "Sisimiut",
+      "Qaqortoq"
+    ],
+    "forklaring": "Nuuk hed tidligere Godthåb og blev grundlagt af præsten Hans Egede i 1728.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0022",
+    "kategori": "geografi",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvilken øgruppe rummer Danmarks østligste punkt?",
+    "korrekt": "Ertholmene",
+    "forkerte": [
+      "Bornholm",
+      "Anholt",
+      "Læsø"
+    ],
+    "forklaring": "Ertholmene med Christiansø ligger nordøst for Bornholm, og den østligste ø er Græsholm.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0023",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder Danmarks nordligste punkt?",
+    "korrekt": "Grenen",
+    "forkerte": [
+      "Hanstholm",
+      "Hirtshals",
+      "Råbjerg Mile"
+    ],
+    "forklaring": "Ved Grenen kan man stå med en fod i Skagerrak og en i Kattegat.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0024",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket land er verdens største målt på areal?",
+    "korrekt": "Rusland",
+    "forkerte": [
+      "Canada",
+      "Kina",
+      "USA"
+    ],
+    "forklaring": "Rusland strækker sig over 11 tidszoner.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0025",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad er verdens største varme ørken?",
+    "korrekt": "Sahara",
+    "forkerte": [
+      "Gobi",
+      "Kalahari",
+      "Atacama"
+    ],
+    "forklaring": "Regnes de kolde ørkener med, er Antarktis faktisk den største ørken.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0026",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad er hovedstaden i Schweiz?",
+    "korrekt": "Bern",
+    "forkerte": [
+      "Zürich",
+      "Genève",
+      "Basel"
+    ],
+    "forklaring": "Schweiz har officielt ingen hovedstad, men Bern er regeringssæde og kaldes 'forbundsby'.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0027",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad er Europas længste flod?",
+    "korrekt": "Volga",
+    "forkerte": [
+      "Donau",
+      "Rhinen",
+      "Dnepr"
+    ],
+    "forklaring": "Volga er omkring 3.500 km lang og løber ud i Det Kaspiske Hav.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0028",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Island er medlem af EU.",
+    "korrekt": "Falsk",
+    "forkerte": [],
+    "forklaring": "Island er med i EØS og Schengen, men ikke i EU.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0029",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange regioner er Danmark inddelt i?",
+    "korrekt": "5",
+    "forkerte": [
+      "4",
+      "7",
+      "14"
+    ],
+    "forklaring": "De fem regioner blev oprettet ved kommunalreformen i 2007 og erstattede 13 amter.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0030",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder farvandet mellem Fyn og Jylland?",
+    "korrekt": "Lillebælt",
+    "forkerte": [
+      "Storebælt",
+      "Øresund",
+      "Smålandsfarvandet"
+    ],
+    "forklaring": "Over Lillebælt går både den gamle Lillebæltsbro fra 1935 og Ny Lillebæltsbro fra 1970.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0031",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder verdens dybeste sø?",
+    "korrekt": "Bajkalsøen",
+    "forkerte": [
+      "Tanganyikasøen",
+      "Victoriasøen",
+      "Det Kaspiske Hav"
+    ],
+    "forklaring": "Bajkalsøen i Sibirien er over 1.600 meter dyb og rummer omkring en femtedel af verdens ferskvand i søer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0032",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad er hovedstaden i Tyrkiet?",
+    "korrekt": "Ankara",
+    "forkerte": [
+      "Istanbul",
+      "Izmir",
+      "Antalya"
+    ],
+    "forklaring": "Ankara blev hovedstad i 1923, selvom Istanbul er langt den største by.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0033",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken kanal forbinder Middelhavet med Det Røde Hav?",
+    "korrekt": "Suezkanalen",
+    "forkerte": [
+      "Panamakanalen",
+      "Kielerkanalen",
+      "Korinthkanalen"
+    ],
+    "forklaring": "Suezkanalen åbnede i 1869 og sparer skibe for turen syd om Afrika.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0034",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad er Afrikas højeste bjerg?",
+    "korrekt": "Kilimanjaro",
+    "forkerte": [
+      "Mount Kenya",
+      "Toubkal",
+      "Ras Dashen"
+    ],
+    "forklaring": "Kilimanjaro i Tanzania er en udslukt vulkan på knap 5.900 meter.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0035",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange lande grænser Danmark op til på land?",
+    "korrekt": "1",
+    "forkerte": [
+      "2",
+      "3",
+      "0"
+    ],
+    "forklaring": "Danmarks eneste landegrænse er mod Tyskland i Sønderjylland.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0036",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad er hovedstaden i Brasilien?",
+    "korrekt": "Brasília",
+    "forkerte": [
+      "Rio de Janeiro",
+      "São Paulo",
+      "Salvador"
+    ],
+    "forklaring": "Brasília blev bygget fra bunden og indviet som hovedstad i 1960.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0037",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken by er Danmarks næststørste?",
+    "korrekt": "Aarhus",
+    "forkerte": [
+      "Odense",
+      "Aalborg",
+      "Esbjerg"
+    ],
+    "forklaring": "Aarhus har over 300.000 indbyggere i selve byen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0038",
+    "kategori": "geografi",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder Bornholms højeste punkt?",
+    "korrekt": "Rytterknægten",
+    "forkerte": [
+      "Hammeren",
+      "Ekkodalen",
+      "Helligdomsklipperne"
+    ],
+    "forklaring": "Rytterknægten ligger i Almindingen og er omkring 162 meter højt med et udsigtstårn på toppen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0039",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilket land har hovedstaden Ulaanbaatar?",
+    "korrekt": "Mongoliet",
+    "forkerte": [
+      "Kasakhstan",
+      "Kirgisistan",
+      "Nepal"
+    ],
+    "forklaring": "Ulaanbaatar regnes for verdens koldeste hovedstad målt på årsgennemsnit.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0010",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket land besatte Danmark den 9. april 1940?",
+    "korrekt": "Tyskland",
+    "forkerte": [
+      "Sverige",
+      "Storbritannien",
+      "Sovjetunionen"
+    ],
+    "forklaring": "Besættelsen varede i fem år, indtil de tyske tropper i Danmark overgav sig i maj 1945.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0011",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad kalder vi de skandinaviske søfarere, der plyndrede og handlede i Europa omkring år 800-1050?",
+    "korrekt": "Vikinger",
+    "forkerte": [
+      "Kelter",
+      "Goter",
+      "Hunnere"
+    ],
+    "forklaring": "Vikingetiden regnes ofte fra angrebet på klostret Lindisfarne i 793.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0012",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Den tyske kapitulation i Danmark trådte i kraft den 5. maj 1945.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Budskabet om befrielsen kom i radioen om aftenen den 4. maj, og derfor sætter mange lys i vinduerne den aften.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0013",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket år blev Sønderjylland genforenet med Danmark?",
+    "korrekt": "1920",
+    "forkerte": [
+      "1864",
+      "1918",
+      "1945"
+    ],
+    "forklaring": "Genforeningen fulgte efter en folkeafstemning i Slesvig efter Første Verdenskrig.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0014",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvem var Danmarks konge under besættelsen 1940-45?",
+    "korrekt": "Christian 10.",
+    "forkerte": [
+      "Frederik 9.",
+      "Christian 9.",
+      "Frederik 8."
+    ],
+    "forklaring": "Christian 10. blev et samlingssymbol med sine daglige rideture gennem København.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0015",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken by var kongernes vigtigste residensby, før København overtog rollen i 1400-tallet?",
+    "korrekt": "Roskilde",
+    "forkerte": [
+      "Odense",
+      "Ribe",
+      "Aarhus"
+    ],
+    "forklaring": "Roskilde Domkirke er stadig gravkirke for de danske konger og dronninger.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0016",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dronning samlede Danmark, Norge og Sverige i Kalmarunionen i 1397?",
+    "korrekt": "Margrete 1.",
+    "forkerte": [
+      "Margrethe 2.",
+      "Dagmar",
+      "Thyra"
+    ],
+    "forklaring": "Margrete fik sin grandnevø Erik af Pommern kronet som konge over alle tre riger.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0017",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Christian 4. lod Rundetårn bygge.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Tårnet blev opført 1637-42 som observatorium, og man kommer op ad en snoet rampe i stedet for trapper.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0018",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket år blev reformationen gennemført i Danmark?",
+    "korrekt": "1536",
+    "forkerte": [
+      "1492",
+      "1660",
+      "1588"
+    ],
+    "forklaring": "Christian 3. gjorde Danmark luthersk, og kirkens jord og gods overgik til kronen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0019",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket år faldt Berlinmuren?",
+    "korrekt": "1989",
+    "forkerte": [
+      "1991",
+      "1985",
+      "1979"
+    ],
+    "forklaring": "Muren faldt den 9. november 1989, og Tyskland blev genforenet året efter.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0020",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket passagerskib sank på sin jomfrurejse i april 1912?",
+    "korrekt": "Titanic",
+    "forkerte": [
+      "Lusitania",
+      "Britannic",
+      "Olympic"
+    ],
+    "forklaring": "Titanic ramte et isbjerg i Nordatlanten, og over 1.500 mennesker omkom.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0021",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvem var USA's første præsident?",
+    "korrekt": "George Washington",
+    "forkerte": [
+      "Thomas Jefferson",
+      "Abraham Lincoln",
+      "John Adams"
+    ],
+    "forklaring": "Washington tiltrådte i 1789, og hovedstaden Washington D.C. er opkaldt efter ham.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0022",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket år begyndte Første Verdenskrig?",
+    "korrekt": "1914",
+    "forkerte": [
+      "1912",
+      "1916",
+      "1918"
+    ],
+    "forklaring": "Krigen udløstes af mordet på den østrigske tronfølger Franz Ferdinand i Sarajevo.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0023",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken fransk kejser blev endeligt besejret ved Waterloo i 1815?",
+    "korrekt": "Napoleon Bonaparte",
+    "forkerte": [
+      "Ludvig 16.",
+      "Napoleon 3.",
+      "Karl den Store"
+    ],
+    "forklaring": "Efter Waterloo blev Napoleon sendt i eksil på den lille ø Sankt Helena i Sydatlanten.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0024",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken egyptisk farao blev fundet i en næsten urørt grav i 1922?",
+    "korrekt": "Tutankhamon",
+    "forkerte": [
+      "Ramses 2.",
+      "Kheops",
+      "Akhenaton"
+    ],
+    "forklaring": "Graven blev fundet af Howard Carter i Kongernes Dal og var fuld af skatte, bl.a. den berømte guldmaske.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0025",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken romersk by blev begravet i aske ved Vesuvs udbrud år 79?",
+    "korrekt": "Pompeji",
+    "forkerte": [
+      "Rom",
+      "Napoli",
+      "Firenze"
+    ],
+    "forklaring": "Asken bevarede byen så godt, at man i dag kan gå rundt i dens gader og huse.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0026",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "I hvilket år fik danske kvinder valgret til Folketinget?",
+    "korrekt": "1915",
+    "forkerte": [
+      "1849",
+      "1901",
+      "1920"
+    ],
+    "forklaring": "Grundlovsændringen i 1915 gav kvinder og tyende valgret. Kvinder kunne stemme ved kommunalvalg fra 1908.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0027",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed den danske modstandsbevægelses øverste ledelse fra 1943?",
+    "korrekt": "Frihedsrådet",
+    "forkerte": [
+      "Folkerådet",
+      "Hjemmeværnet",
+      "Rigsrådet"
+    ],
+    "forklaring": "Frihedsrådet blev dannet i september 1943 for at samle de forskellige modstandsgrupper.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0028",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilket år brændte det andet Christiansborg?",
+    "korrekt": "1884",
+    "forkerte": [
+      "1794",
+      "1848",
+      "1901"
+    ],
+    "forklaring": "Det første Christiansborg brændte i 1794, det andet i 1884. Det nuværende slot stod færdigt i 1928.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0029",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Danmark solgte kolonien Trankebar i Indien til Storbritannien i 1845.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Trankebar havde været dansk handelsstation i over 200 år, og fortet Dansborg står der stadig.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0030",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes perioden i første halvdel af 1800-tallet, hvor dansk kunst og litteratur blomstrede?",
+    "korrekt": "Guldalderen",
+    "forkerte": [
+      "Sølvalderen",
+      "Oplysningstiden",
+      "Reformationstiden"
+    ],
+    "forklaring": "Fra guldalderen kender vi bl.a. H.C. Andersen, Kierkegaard, Thorvaldsen og maleren Eckersberg.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0031",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilken statsminister blev afskediget af Christian 10. under Påskekrisen i 1920?",
+    "korrekt": "C.Th. Zahle",
+    "forkerte": [
+      "Thorvald Stauning",
+      "Niels Neergaard",
+      "J.C. Christensen"
+    ],
+    "forklaring": "Afskedigelsen førte til demonstrationer og truslen om generalstrejke, og det var sidste gang en dansk konge afsatte en regering.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0032",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvem blev Danmarks første socialdemokratiske statsminister i 1924?",
+    "korrekt": "Thorvald Stauning",
+    "forkerte": [
+      "Hans Hedtoft",
+      "Jens Otto Krag",
+      "Vilhelm Buhl"
+    ],
+    "forklaring": "Stauning var statsminister i flere omgange frem til sin død i 1942.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0033",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilket år trådte Danmark ind i EF (det nuværende EU)?",
+    "korrekt": "1973",
+    "forkerte": [
+      "1972",
+      "1958",
+      "1986"
+    ],
+    "forklaring": "Folkeafstemningen blev holdt i 1972, men medlemskabet trådte i kraft 1. januar 1973.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0034",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed den tyske livlæge, der reelt styrede Danmark 1770-72?",
+    "korrekt": "Johann Friedrich Struensee",
+    "forkerte": [
+      "Ove Høegh-Guldberg",
+      "A.P. Bernstorff",
+      "Ludvig Holberg"
+    ],
+    "forklaring": "Struensee indførte mange reformer, men blev styrtet og henrettet i 1772 efter sit forhold til dronning Caroline Mathilde.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0035",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hed vikingernes tordengud?",
+    "korrekt": "Thor",
+    "forkerte": [
+      "Odin",
+      "Loke",
+      "Frej"
+    ],
+    "forklaring": "Thor svingede hammeren Mjølner, og torsdag er opkaldt efter ham.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0036",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Christian 4. var konge i mere end 50 år.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Han var konge fra 1588 til 1648 – 60 år, den længste regeringstid for en dansk monark før Margrethe 2.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0037",
+    "kategori": "historie",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes svenskernes mislykkede angreb på København natten til den 11. februar 1659?",
+    "korrekt": "Stormen på København",
+    "forkerte": [
+      "Slaget ved Lund",
+      "Slaget i Køge Bugt",
+      "Slaget ved Isted"
+    ],
+    "forklaring": "Københavnerne slog angrebet tilbage, og byen fik bagefter privilegier som tak for forsvaret.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0038",
+    "kategori": "historie",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvilken konge mistede Skåne, Halland og Blekinge ved freden i Roskilde i 1658?",
+    "korrekt": "Frederik 3.",
+    "forkerte": [
+      "Christian 4.",
+      "Christian 5.",
+      "Frederik 2."
+    ],
+    "forklaring": "Tabet af de skånske landsdele var et af de største tab i Danmarkshistorien.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0039",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvem var det første menneske, der gik på Månen?",
+    "korrekt": "Neil Armstrong",
+    "forkerte": [
+      "Buzz Aldrin",
+      "Jurij Gagarin",
+      "John Glenn"
+    ],
+    "forklaring": "Armstrong satte foden på Månen den 21. juli 1969 (dansk tid) med Apollo 11.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0010",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken frugt laves cider af?",
+    "korrekt": "Æbler",
+    "forkerte": [
+      "Appelsiner",
+      "Blommer",
+      "Vindruer"
+    ],
+    "forklaring": "Laves drikken af pærer, kaldes den pæremost eller perry.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0011",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket land kommer sushi fra?",
+    "korrekt": "Japan",
+    "forkerte": [
+      "Kina",
+      "Korea",
+      "Thailand"
+    ],
+    "forklaring": "Sushi betyder egentlig syrnet ris – fisken er ikke det afgørende.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0012",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Tomaten er botanisk set en frugt.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Botanisk er en frugt den del af planten, der indeholder frøene – derfor er også agurk og peberfrugt frugter.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0013",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket korn brygges de fleste øl primært af?",
+    "korrekt": "Byg",
+    "forkerte": [
+      "Hvede",
+      "Rug",
+      "Havre"
+    ],
+    "forklaring": "Bygget mæltes først, så stivelsen kan omdannes til sukker, som gæren kan arbejde med.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0014",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den italienske dessert med mascarpone, kaffe og kakao?",
+    "korrekt": "Tiramisu",
+    "forkerte": [
+      "Panna cotta",
+      "Cannoli",
+      "Zabaglione"
+    ],
+    "forklaring": "Tiramisu betyder 'løft mig op'.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0015",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken nød er hovedingrediensen i marcipan?",
+    "korrekt": "Mandler",
+    "forkerte": [
+      "Hasselnødder",
+      "Valnødder",
+      "Pistacienødder"
+    ],
+    "forklaring": "Marcipan laves af mandler og sukker.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0016",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den danske juledessert med ris, flødeskum og hakkede mandler?",
+    "korrekt": "Risalamande",
+    "forkerte": [
+      "Risengrød",
+      "Æbleskiver",
+      "Koldskål"
+    ],
+    "forklaring": "Navnet kommer af det franske 'riz à l'amande' – ris med mandler.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0017",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Gin er smagt til med enebær.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Enebær er den eneste krydderi-ingrediens, der skal være med, for at en spiritus må kaldes gin.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0018",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket land er retten paella fra?",
+    "korrekt": "Spanien",
+    "forkerte": [
+      "Italien",
+      "Portugal",
+      "Mexico"
+    ],
+    "forklaring": "Paella stammer fra området omkring Valencia.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0019",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes fransk mousserende vin lavet efter champagnemetoden, men uden for Champagne?",
+    "korrekt": "Crémant",
+    "forkerte": [
+      "Cava",
+      "Prosecco",
+      "Sekt"
+    ],
+    "forklaring": "Cava er spansk, prosecco italiensk og sekt tysk.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0020",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken spiritus laves af agave?",
+    "korrekt": "Tequila",
+    "forkerte": [
+      "Vodka",
+      "Gin",
+      "Calvados"
+    ],
+    "forklaring": "Ægte tequila skal laves af blå agave i bestemte områder af Mexico.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0021",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad laves calvados primært af?",
+    "korrekt": "Æbler",
+    "forkerte": [
+      "Vindruer",
+      "Blommer",
+      "Kirsebær"
+    ],
+    "forklaring": "Calvados er æblebrandy fra Normandiet. Der må også indgå lidt pærer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0022",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den klassiske danske blåskimmelost?",
+    "korrekt": "Danablu",
+    "forkerte": [
+      "Gorgonzola",
+      "Roquefort",
+      "Stilton"
+    ],
+    "forklaring": "Danablu blev udviklet i begyndelsen af 1900-tallet som et dansk alternativ til Roquefort.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0023",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes whisky lavet af maltet byg fra ét enkelt destilleri?",
+    "korrekt": "Single malt",
+    "forkerte": [
+      "Blended",
+      "Bourbon",
+      "Grain"
+    ],
+    "forklaring": "Blended whisky blander whisky fra flere destillerier.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0024",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket krydderi er det dyreste i verden målt på vægt?",
+    "korrekt": "Safran",
+    "forkerte": [
+      "Vanilje",
+      "Kardemomme",
+      "Kanel"
+    ],
+    "forklaring": "Safran er støvfang fra krokus og plukkes i hånden – der skal omkring 150.000 blomster til ét kilo.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0025",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Bourbon skal laves af mindst 51 % majs.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Bourbon skal desuden lagres på nye, forkullede egetræsfade.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0026",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket land kommer kimchi fra?",
+    "korrekt": "Korea",
+    "forkerte": [
+      "Japan",
+      "Kina",
+      "Vietnam"
+    ],
+    "forklaring": "Kimchi er fermenteret grønt, oftest kinakål med chili.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0027",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes øl, der gærer ved lav temperatur med undergær?",
+    "korrekt": "Lager",
+    "forkerte": [
+      "Ale",
+      "Stout",
+      "Porter"
+    ],
+    "forklaring": "Pilsner er den mest kendte lagertype. Ale, stout og porter er overgærede.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0028",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilket land er verdens største producent af kaffe?",
+    "korrekt": "Brasilien",
+    "forkerte": [
+      "Colombia",
+      "Vietnam",
+      "Etiopien"
+    ],
+    "forklaring": "Brasilien producerer omkring en tredjedel af verdens kaffe. Etiopien regnes for kaffens oprindelsesland.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0029",
+    "kategori": "mad_drikke",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvilken druesort dyrkes mest i Bordeaux?",
+    "korrekt": "Merlot",
+    "forkerte": [
+      "Pinot Noir",
+      "Syrah",
+      "Sangiovese"
+    ],
+    "forklaring": "Merlot dominerer på højre bred, mens Cabernet Sauvignon er stærkest på venstre bred.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0030",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den japanske risvin?",
+    "korrekt": "Sake",
+    "forkerte": [
+      "Soju",
+      "Shochu",
+      "Baijiu"
+    ],
+    "forklaring": "Soju er koreansk, og shochu og baijiu er brændevin, ikke vin.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0031",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad står IPA for i ølverdenen?",
+    "korrekt": "India Pale Ale",
+    "forkerte": [
+      "International Pale Ale",
+      "Irish Pale Ale",
+      "Imperial Porter Ale"
+    ],
+    "forklaring": "Den humlerige ølstil blev populær i 1800-tallet, hvor øl blev sejlet fra England til Indien.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0032",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket mel er det vigtigste i dansk rugbrød?",
+    "korrekt": "Rugmel",
+    "forkerte": [
+      "Hvedemel",
+      "Havremel",
+      "Majsmel"
+    ],
+    "forklaring": "Rugbrød hæves traditionelt med surdej.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0033",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken grøntsag giver suppen borsjtj sin røde farve?",
+    "korrekt": "Rødbede",
+    "forkerte": [
+      "Tomat",
+      "Peberfrugt",
+      "Gulerod"
+    ],
+    "forklaring": "Borsjtj er udbredt i Østeuropa, især Ukraine, Rusland og Polen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0034",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket land kommer ostene gouda og edamer fra?",
+    "korrekt": "Holland",
+    "forkerte": [
+      "Belgien",
+      "Danmark",
+      "Schweiz"
+    ],
+    "forklaring": "Begge oste er opkaldt efter hollandske byer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0035",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilken hedvin kommer fra Douro-dalen i Portugal?",
+    "korrekt": "Portvin",
+    "forkerte": [
+      "Sherry",
+      "Marsala",
+      "Vermouth"
+    ],
+    "forklaring": "Sherry er spansk, marsala er fra Sicilien, og vermouth er krydret vin.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0036",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes en espresso med en klat mælkeskum på toppen?",
+    "korrekt": "Macchiato",
+    "forkerte": [
+      "Cortado",
+      "Americano",
+      "Lungo"
+    ],
+    "forklaring": "Macchiato betyder 'plettet' på italiensk – kaffen er plettet med mælk.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0037",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Fra hvilket land kommer scotch whisky?",
+    "korrekt": "Skotland",
+    "forkerte": [
+      "Irland",
+      "Wales",
+      "England"
+    ],
+    "forklaring": "For at måtte kaldes scotch skal whiskyen lagres mindst tre år på fad i Skotland.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0038",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken frugt er hovedingrediensen i en klassisk tarte tatin?",
+    "korrekt": "Æbler",
+    "forkerte": [
+      "Pærer",
+      "Ferskner",
+      "Blommer"
+    ],
+    "forklaring": "Tarte tatin er en omvendt æbletærte, hvor æblerne karamelliseres i bunden af formen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0010",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes en ung frø, før den får ben?",
+    "korrekt": "Haletudse",
+    "forkerte": [
+      "Larve",
+      "Puppe",
+      "Kalv"
+    ],
+    "forklaring": "Haletudser lever i vand og ånder med gæller, indtil de forvandles til frøer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0011",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad er verdens største landdyr?",
+    "korrekt": "Afrikansk elefant",
+    "forkerte": [
+      "Giraf",
+      "Flodhest",
+      "Næsehorn"
+    ],
+    "forklaring": "En afrikansk elefanthan kan veje over 6 tons.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0012",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad spiser en kæmpepanda mest af?",
+    "korrekt": "Bambus",
+    "forkerte": [
+      "Fisk",
+      "Græs",
+      "Bær"
+    ],
+    "forklaring": "En panda kan bruge 10-16 timer om dagen på at spise bambus.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0013",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Pingviner kan flyve.",
+    "korrekt": "Falsk",
+    "forkerte": [],
+    "forklaring": "Pingviner kan ikke flyve i luften, men bruger vingerne som finner og er dygtige svømmere.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0014",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad er verdens hurtigste landdyr?",
+    "korrekt": "Gepard",
+    "forkerte": [
+      "Løve",
+      "Antilope",
+      "Leopard"
+    ],
+    "forklaring": "En gepard kan løbe omkring 100 km/t, men kun i korte spurter.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0015",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder Danmarks største rovfugl?",
+    "korrekt": "Havørn",
+    "forkerte": [
+      "Kongeørn",
+      "Musvåge",
+      "Rød glente"
+    ],
+    "forklaring": "Havørnen har et vingefang på over 2 meter og vendte tilbage som ynglefugl i Danmark i 1990'erne.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0016",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder Danmarks eneste giftige slange?",
+    "korrekt": "Hugorm",
+    "forkerte": [
+      "Snog",
+      "Glatsnog",
+      "Stålorm"
+    ],
+    "forklaring": "Stålormen er i øvrigt slet ikke en slange, men en firben uden ben.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0017",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "En flagermus er en fugl.",
+    "korrekt": "Falsk",
+    "forkerte": [],
+    "forklaring": "Flagermus er pattedyr – de eneste pattedyr, der rigtigt kan flyve.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0018",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange arme har en almindelig søstjerne?",
+    "korrekt": "5",
+    "forkerte": [
+      "4",
+      "6",
+      "8"
+    ],
+    "forklaring": "Mister en søstjerne en arm, kan den gro en ny.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0019",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes rådyrets unge?",
+    "korrekt": "Rålam",
+    "forkerte": [
+      "Kalv",
+      "Kid",
+      "Føl"
+    ],
+    "forklaring": "Rålam har hvide pletter de første måneder, som camouflerer dem i skovbunden.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0020",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket træ får agern?",
+    "korrekt": "Eg",
+    "forkerte": [
+      "Bøg",
+      "Ask",
+      "Birk"
+    ],
+    "forklaring": "Bøgen får derimod bog, som er små trekantede nødder.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0021",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes et dyr, der både spiser planter og kød?",
+    "korrekt": "Altæder",
+    "forkerte": [
+      "Planteæder",
+      "Kødæder",
+      "Ådselæder"
+    ],
+    "forklaring": "Mennesker, bjørne og grævlinger er eksempler på altædere.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0022",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken fugl lægger sine æg i andre fugles reder?",
+    "korrekt": "Gøg",
+    "forkerte": [
+      "Skade",
+      "Krage",
+      "Stær"
+    ],
+    "forklaring": "Gøgeungen skubber ofte værtsfuglens egne æg eller unger ud af reden.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0023",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad er verdens største fisk?",
+    "korrekt": "Hvalhaj",
+    "forkerte": [
+      "Hvidhaj",
+      "Brugde",
+      "Klumpfisk"
+    ],
+    "forklaring": "Hvalhajen kan blive over 12 meter lang, men lever af plankton. Brugden er nummer to.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0024",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvor længe er en elefant omtrent drægtig?",
+    "korrekt": "22 måneder",
+    "forkerte": [
+      "9 måneder",
+      "12 måneder",
+      "30 måneder"
+    ],
+    "forklaring": "Elefanten har den længste drægtighedsperiode af alle landpattedyr.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0025",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Hajer har et skelet af brusk i stedet for knogler.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Brusk er lettere og mere bøjeligt end knogle – samme materiale som i vores ører og næse.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0026",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad er det største pungdyr?",
+    "korrekt": "Rød kænguru",
+    "forkerte": [
+      "Koala",
+      "Wombat",
+      "Tasmansk djævel"
+    ],
+    "forklaring": "En stor han kan blive omkring 1,8 meter høj, når den står oprejst.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0027",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes forvandlingen, når en larve bliver til en sommerfugl?",
+    "korrekt": "Metamorfose",
+    "forkerte": [
+      "Fotosyntese",
+      "Mitose",
+      "Fermentering"
+    ],
+    "forklaring": "Under metamorfosen i puppen bliver larvens krop næsten helt bygget om.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0028",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken del af planten optager vand fra jorden?",
+    "korrekt": "Rødderne",
+    "forkerte": [
+      "Bladene",
+      "Blomsten",
+      "Stænglen"
+    ],
+    "forklaring": "Vandet transporteres fra rødderne op gennem stænglen til bladene.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0029",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilken farve har en isbjørns hud?",
+    "korrekt": "Sort",
+    "forkerte": [
+      "Hvid",
+      "Lyserød",
+      "Grå"
+    ],
+    "forklaring": "Den sorte hud optager varme, og pelsens hår er faktisk gennemsigtige og hule.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0030",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes en han-and?",
+    "korrekt": "Andrik",
+    "forkerte": [
+      "Hane",
+      "Gase",
+      "Rik"
+    ],
+    "forklaring": "En han-gås kaldes en gase, og en han-kylling kaldes en hane.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0031",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes hunnen hos krondyr?",
+    "korrekt": "Hind",
+    "forkerte": [
+      "Kid",
+      "Gimmer",
+      "Kvie"
+    ],
+    "forklaring": "Hannen kaldes en hjort og kan have et gevir med mange takker.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0032",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilken fugl har det største vingefang af alle nulevende fugle?",
+    "korrekt": "Vandrealbatros",
+    "forkerte": [
+      "Andeskondor",
+      "Havørn",
+      "Pelikan"
+    ],
+    "forklaring": "Vandrealbatrossens vingefang kan nå over 3 meter, og den kan svæve i timevis uden et vingeslag.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0033",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket krybdyr kan skifte farve og bevæge øjnene uafhængigt af hinanden?",
+    "korrekt": "Kamæleon",
+    "forkerte": [
+      "Gekko",
+      "Leguan",
+      "Salamander"
+    ],
+    "forklaring": "Kamæleonen skifter farve både for at kommunikere og for at regulere temperaturen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0034",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken sydamerikansk fisk kan give stød på flere hundrede volt?",
+    "korrekt": "Elektrisk ål",
+    "forkerte": [
+      "Murene",
+      "Flodlampret",
+      "Havål"
+    ],
+    "forklaring": "Trods navnet er den elektriske ål ikke en rigtig ål, men i familie med knivfisk.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0035",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket insekt laver den honning, vi køber i butikken?",
+    "korrekt": "Honningbien",
+    "forkerte": [
+      "Hvepsen",
+      "Myren",
+      "Mariehønen"
+    ],
+    "forklaring": "En honningbi laver kun omkring en tolvtedel teskefuld honning i hele sit liv.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0036",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken farve giver klorofyl planternes blade?",
+    "korrekt": "Grøn",
+    "forkerte": [
+      "Gul",
+      "Rød",
+      "Brun"
+    ],
+    "forklaring": "Om efteråret nedbrydes klorofylet, og så kommer de gule og røde farver frem.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0037",
+    "kategori": "natur",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvilken træart bliver højest i verden?",
+    "korrekt": "Kystredwood",
+    "forkerte": [
+      "Kæmpesequoia",
+      "Douglasgran",
+      "Kæmpeeukalyptus"
+    ],
+    "forklaring": "Det højeste kendte træ, 'Hyperion' i Californien, er over 115 meter. Kæmpesequoiaen er til gengæld størst målt på rumfang.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0038",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes læren om fugle?",
+    "korrekt": "Ornitologi",
+    "forkerte": [
+      "Entomologi",
+      "Herpetologi",
+      "Iktyologi"
+    ],
+    "forklaring": "Entomologi er læren om insekter, herpetologi om krybdyr og padder, og iktyologi om fisk.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0009",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange point giver et touchdown i amerikansk fodbold?",
+    "korrekt": "6",
+    "forkerte": [
+      "3",
+      "7",
+      "2"
+    ],
+    "forklaring": "Efter et touchdown kan holdet score ekstrapoint, men selve touchdownet giver 6.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0010",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "I hvilken sport bruger man ketsjer og fjerbold?",
+    "korrekt": "Badminton",
+    "forkerte": [
+      "Tennis",
+      "Squash",
+      "Bordtennis"
+    ],
+    "forklaring": "En fjerbold kan ved smash komme op over 400 km/t – den hurtigste bold i nogen ketsjersport.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0011",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvor ofte afholdes sommer-OL normalt?",
+    "korrekt": "Hvert 4. år",
+    "forkerte": [
+      "Hvert 2. år",
+      "Hvert 3. år",
+      "Hvert 5. år"
+    ],
+    "forklaring": "Sommer- og vinter-OL skiftes, så der er olympiske lege hvert andet år.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0012",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "En almindelig golfbane har 18 huller.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Tallet 18 blev standard efter golfbanen ved St Andrews i Skotland.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0013",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange spillere har et håndboldhold på banen ad gangen?",
+    "korrekt": "7",
+    "forkerte": [
+      "6",
+      "9",
+      "11"
+    ],
+    "forklaring": "Seks markspillere og en målmand.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0014",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dansker vandt OL-guld i herresingle i badminton ved legene i Tokyo?",
+    "korrekt": "Viktor Axelsen",
+    "forkerte": [
+      "Peter Gade",
+      "Anders Antonsen",
+      "Poul-Erik Høyer"
+    ],
+    "forklaring": "Axelsen vandt igen guld i Paris i 2024. Poul-Erik Høyer vandt guld i 1996.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0015",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken farve har førertrøjen i Tour de France?",
+    "korrekt": "Gul",
+    "forkerte": [
+      "Grøn",
+      "Hvid",
+      "Prikket"
+    ],
+    "forklaring": "Den grønne trøje er pointtrøjen, den prikkede er bjergtrøjen, og den hvide går til bedste unge rytter.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0016",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "I hvilken sport kan man slå en 'strike'?",
+    "korrekt": "Bowling",
+    "forkerte": [
+      "Golf",
+      "Curling",
+      "Tennis"
+    ],
+    "forklaring": "En strike betyder, at alle 10 kegler væltes med første kugle.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0017",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvor lang er en almindelig fodboldkamp uden tillægstid?",
+    "korrekt": "90 minutter",
+    "forkerte": [
+      "80 minutter",
+      "100 minutter",
+      "60 minutter"
+    ],
+    "forklaring": "To halvlege á 45 minutter med en pause på 15 minutter.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0018",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Caroline Wozniacki har vundet Australian Open.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Hun vandt i 2018 og blev samtidig nummer et på verdensranglisten igen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0019",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken by var vært for sommer-OL i 2012?",
+    "korrekt": "London",
+    "forkerte": [
+      "Beijing",
+      "Rio de Janeiro",
+      "Athen"
+    ],
+    "forklaring": "London blev den første by, der har været vært for sommer-OL tre gange.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0020",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket land har vundet flest VM-titler i fodbold for herrer?",
+    "korrekt": "Brasilien",
+    "forkerte": [
+      "Tyskland",
+      "Italien",
+      "Argentina"
+    ],
+    "forklaring": "Brasilien har vundet fem VM-titler.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0021",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket land vandt VM i håndbold for herrer i både 2019, 2021 og 2023?",
+    "korrekt": "Danmark",
+    "forkerte": [
+      "Frankrig",
+      "Sverige",
+      "Norge"
+    ],
+    "forklaring": "Danmark blev det første land, der har vundet herre-VM i håndbold tre gange i træk.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0022",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvor lang er en olympisk svømmebane?",
+    "korrekt": "50 meter",
+    "forkerte": [
+      "25 meter",
+      "100 meter",
+      "33 meter"
+    ],
+    "forklaring": "Kortbane er 25 meter, men ved OL svømmes der altid på langbane.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0023",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken bokser kaldte sig 'The Greatest'?",
+    "korrekt": "Muhammad Ali",
+    "forkerte": [
+      "Mike Tyson",
+      "Joe Frazier",
+      "George Foreman"
+    ],
+    "forklaring": "Ali hed oprindeligt Cassius Clay og vandt OL-guld i 1960.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0024",
+    "kategori": "sport",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "I hvilken sport spiller man om Stanley Cup?",
+    "korrekt": "Ishockey",
+    "forkerte": [
+      "Basketball",
+      "Baseball",
+      "Amerikansk fodbold"
+    ],
+    "forklaring": "Stanley Cup er pokalen i den nordamerikanske liga NHL og er over 100 år gammel.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0025",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Wimbledon spilles på græsbaner.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Wimbledon er den eneste af de fire Grand Slam-turneringer, der stadig spilles på græs.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0026",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket fodboldhold har hjemmebane i Parken?",
+    "korrekt": "F.C. København",
+    "forkerte": [
+      "Brøndby IF",
+      "AGF",
+      "FC Midtjylland"
+    ],
+    "forklaring": "Parken er også landsholdets hjemmebane og er Danmarks største stadion.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0027",
+    "kategori": "sport",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvor højt hænger kurven i basketball?",
+    "korrekt": "3,05 meter",
+    "forkerte": [
+      "2,75 meter",
+      "3,30 meter",
+      "2,90 meter"
+    ],
+    "forklaring": "Højden svarer til 10 fod og har været den samme siden sporten blev opfundet i 1891.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0028",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken svømmer har vundet flest OL-guldmedaljer?",
+    "korrekt": "Michael Phelps",
+    "forkerte": [
+      "Mark Spitz",
+      "Ian Thorpe",
+      "Ryan Lochte"
+    ],
+    "forklaring": "Phelps vandt 23 guldmedaljer – heraf otte ved legene i Beijing i 2008.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0029",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dansker vandt Tour de France i 1996?",
+    "korrekt": "Bjarne Riis",
+    "forkerte": [
+      "Rolf Sørensen",
+      "Bo Hamburger",
+      "Jesper Skibby"
+    ],
+    "forklaring": "Riis indrømmede senere brug af doping, og hans sejr står i dag med en note i rekordbøgerne.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0030",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange felter er der på et skakbræt?",
+    "korrekt": "64",
+    "forkerte": [
+      "49",
+      "81",
+      "100"
+    ],
+    "forklaring": "Brættet har 8 × 8 felter, skiftevis lyse og mørke.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0031",
+    "kategori": "sport",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes det i golf at gå et hul på to slag under par?",
+    "korrekt": "Eagle",
+    "forkerte": [
+      "Birdie",
+      "Albatros",
+      "Bogey"
+    ],
+    "forklaring": "Birdie er ét under par, albatros tre under, og bogey ét over.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0032",
+    "kategori": "sport",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvilken by var vært for det første VM i fodbold i 1930?",
+    "korrekt": "Montevideo",
+    "forkerte": [
+      "Rio de Janeiro",
+      "Buenos Aires",
+      "Rom"
+    ],
+    "forklaring": "Værtsnationen Uruguay vandt også turneringen ved at slå Argentina i finalen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0033",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange spillere har et volleyballhold på banen?",
+    "korrekt": "6",
+    "forkerte": [
+      "5",
+      "7",
+      "9"
+    ],
+    "forklaring": "Spillerne roterer én plads, hver gang holdet vinder serven tilbage.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0034",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Fra hvilket land stammer kampsporten judo?",
+    "korrekt": "Japan",
+    "forkerte": [
+      "Kina",
+      "Korea",
+      "Thailand"
+    ],
+    "forklaring": "Judo blev skabt af Jigoro Kano i 1882, og ordet betyder 'den bløde vej'.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0035",
+    "kategori": "sport",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange omgange kan en professionel VM-kamp i boksning højst vare i dag?",
+    "korrekt": "12",
+    "forkerte": [
+      "10",
+      "15",
+      "8"
+    ],
+    "forklaring": "Indtil 1980'erne kunne titelkampe vare 15 omgange.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0036",
+    "kategori": "sport",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dansker var kaptajn for Europas vindende Ryder Cup-hold i 2018?",
+    "korrekt": "Thomas Bjørn",
+    "forkerte": [
+      "Søren Kjeldsen",
+      "Thorbjørn Olesen",
+      "Søren Hansen"
+    ],
+    "forklaring": "Europa slog USA på Le Golf National uden for Paris.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0037",
+    "kategori": "sport",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilket år vandt Danmarks kvindelandshold i håndbold sin første OL-guldmedalje?",
+    "korrekt": "1996",
+    "forkerte": [
+      "2000",
+      "2004",
+      "1992"
+    ],
+    "forklaring": "Holdet vandt guld i Atlanta 1996 og fulgte op med guld i både 2000 og 2004.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0010",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dato er juleaften i Danmark?",
+    "korrekt": "24. december",
+    "forkerte": [
+      "25. december",
+      "23. december",
+      "26. december"
+    ],
+    "forklaring": "I mange andre lande, fx England og USA, er det juledag den 25. der fejres mest.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0011",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket sprog tales i Østrig?",
+    "korrekt": "Tysk",
+    "forkerte": [
+      "Østrigsk",
+      "Ungarsk",
+      "Italiensk"
+    ],
+    "forklaring": "Østrigsk tysk har dog mange egne ord, fx 'Paradeiser' for tomat.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0012",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Sankthans fejres med bål om aftenen den 23. juni.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Til bålet synger mange 'Midsommervisen', skrevet af Holger Drachmann.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0013",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Ved hvilken tradition slår man katten af tønden?",
+    "korrekt": "Fastelavn",
+    "forkerte": [
+      "Påske",
+      "Mortensaften",
+      "Sankthans"
+    ],
+    "forklaring": "I gamle dage var der en rigtig kat i tønden – i dag er den heldigvis fyldt med slik.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0014",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad spiser mange danskere traditionelt på mortensaften?",
+    "korrekt": "And",
+    "forkerte": [
+      "Kalkun",
+      "Flæskesteg",
+      "Kylling"
+    ],
+    "forklaring": "Oprindeligt var det gås, men and er blevet mest almindeligt.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0015",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dato er Danmarks grundlovsdag?",
+    "korrekt": "5. juni",
+    "forkerte": [
+      "15. juni",
+      "4. maj",
+      "5. maj"
+    ],
+    "forklaring": "Den 15. juni er Valdemarsdag, hvor Dannebrog ifølge sagnet faldt ned fra himlen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0016",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvem skrev komedien 'Jeppe på Bjerget'?",
+    "korrekt": "Ludvig Holberg",
+    "forkerte": [
+      "Adam Oehlenschläger",
+      "N.F.S. Grundtvig",
+      "Steen Steensen Blicher"
+    ],
+    "forklaring": "Holberg skrev over 30 komedier til teatret i Lille Grønnegade i 1720'erne.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0017",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket sprog har flest modersmålstalere i verden?",
+    "korrekt": "Mandarin",
+    "forkerte": [
+      "Engelsk",
+      "Spansk",
+      "Hindi"
+    ],
+    "forklaring": "Medregner man folk, der har det som andetsprog, er engelsk dog det mest talte.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0018",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "N.F.S. Grundtvig skrev mange salmer.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Grundtvig skrev eller oversatte omkring 1.500 salmer og sange.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0019",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad betyder det latinske udtryk 'carpe diem'?",
+    "korrekt": "Grib dagen",
+    "forkerte": [
+      "Kend dig selv",
+      "Jeg kom, jeg så, jeg sejrede",
+      "Mod stjernerne"
+    ],
+    "forklaring": "Udtrykket stammer fra den romerske digter Horats.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0020",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "I hvilket land er flamenco en kendt dans?",
+    "korrekt": "Spanien",
+    "forkerte": [
+      "Portugal",
+      "Italien",
+      "Mexico"
+    ],
+    "forklaring": "Flamencoen stammer fra Andalusien i det sydlige Spanien.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0021",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket land har et flag med en rød cirkel på hvid baggrund?",
+    "korrekt": "Japan",
+    "forkerte": [
+      "Kina",
+      "Sydkorea",
+      "Bangladesh"
+    ],
+    "forklaring": "Bangladesh har også en rød cirkel – men på grøn baggrund.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0022",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvem skrev salmen 'Dejlig er jorden'?",
+    "korrekt": "B.S. Ingemann",
+    "forkerte": [
+      "N.F.S. Grundtvig",
+      "H.A. Brorson",
+      "Thomas Kingo"
+    ],
+    "forklaring": "Ingemann skrev også 'I østen stiger solen op' og 'Lysets engel går med glans'.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0023",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Fra hvilket sprog stammer det engelske ord 'kindergarten'?",
+    "korrekt": "Tysk",
+    "forkerte": [
+      "Hollandsk",
+      "Dansk",
+      "Engelsk"
+    ],
+    "forklaring": "Ordet betyder 'børnehave' og kommer fra pædagogen Friedrich Fröbel.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0024",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad er Danmarks ældste universitet?",
+    "korrekt": "Københavns Universitet",
+    "forkerte": [
+      "Aarhus Universitet",
+      "Syddansk Universitet",
+      "DTU"
+    ],
+    "forklaring": "Københavns Universitet blev grundlagt i 1479.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0025",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dansk arkitekt og designer tegnede stolen 'Ægget'?",
+    "korrekt": "Arne Jacobsen",
+    "forkerte": [
+      "Hans J. Wegner",
+      "Børge Mogensen",
+      "Finn Juhl"
+    ],
+    "forklaring": "Ægget blev designet i 1958 til SAS Royal Hotel i København.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0026",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Færøsk er en dansk dialekt.",
+    "korrekt": "Falsk",
+    "forkerte": [],
+    "forklaring": "Færøsk er et selvstændigt nordisk sprog, der minder mere om islandsk end om dansk.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0027",
+    "kategori": "sprog_kultur",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder Islands parlament, der regnes for et af verdens ældste?",
+    "korrekt": "Altinget",
+    "forkerte": [
+      "Stortinget",
+      "Riksdagen",
+      "Lagtinget"
+    ],
+    "forklaring": "Altinget blev grundlagt omkring år 930. Stortinget er norsk, og Lagtinget er færøsk.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0028",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket alfabet skrives russisk med?",
+    "korrekt": "Det kyrilliske",
+    "forkerte": [
+      "Det latinske",
+      "Det græske",
+      "Det arabiske"
+    ],
+    "forklaring": "Det kyrilliske alfabet bygger delvist på det græske.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0029",
+    "kategori": "sprog_kultur",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvilket år åbnede Tivoli i København?",
+    "korrekt": "1843",
+    "forkerte": [
+      "1888",
+      "1901",
+      "1797"
+    ],
+    "forklaring": "Tivoli blev grundlagt af Georg Carstensen og er en af verdens ældste forlystelsesparker.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0030",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken kendt bygning i Sydney er tegnet af den danske arkitekt Jørn Utzon?",
+    "korrekt": "Operahuset",
+    "forkerte": [
+      "Harbour Bridge",
+      "Rådhuset",
+      "Sydney Tower"
+    ],
+    "forklaring": "Operahuset blev indviet i 1973 og kom på UNESCO's verdensarvsliste i 2007.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0031",
+    "kategori": "sprog_kultur",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvilken arkitekt tegnede Grundtvigs Kirke i København?",
+    "korrekt": "P.V. Jensen-Klint",
+    "forkerte": [
+      "Arne Jacobsen",
+      "Jørn Utzon",
+      "Martin Nyrop"
+    ],
+    "forklaring": "Kirken er bygget af omkring 6 millioner gule mursten. Martin Nyrop tegnede Københavns Rådhus.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0032",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange grammatiske køn har navneord på rigsdansk?",
+    "korrekt": "2",
+    "forkerte": [
+      "3",
+      "1",
+      "4"
+    ],
+    "forklaring": "Fælleskøn (en) og intetkøn (et). Nogle jyske dialekter har dog bevaret tre køn.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0033",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes et ord, der staves ens forfra og bagfra, som fx 'regninger'?",
+    "korrekt": "Palindrom",
+    "forkerte": [
+      "Synonym",
+      "Homonym",
+      "Anagram"
+    ],
+    "forklaring": "Andre danske eksempler er 'kajak' og 'radar'.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0034",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken religions hellige skrift er Koranen?",
+    "korrekt": "Islam",
+    "forkerte": [
+      "Hinduisme",
+      "Jødedom",
+      "Buddhisme"
+    ],
+    "forklaring": "Koranen er skrevet på arabisk og er inddelt i 114 kapitler kaldet suraer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0035",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvornår er Norges nationaldag?",
+    "korrekt": "17. maj",
+    "forkerte": [
+      "6. juni",
+      "5. juni",
+      "24. juni"
+    ],
+    "forklaring": "Dagen fejrer grundloven fra 1814. Den 6. juni er Sveriges nationaldag.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0036",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvor bor den danske kongefamilie i København?",
+    "korrekt": "Amalienborg",
+    "forkerte": [
+      "Rosenborg",
+      "Christiansborg",
+      "Frederiksborg"
+    ],
+    "forklaring": "Amalienborg består af fire ens palæer omkring en ottekantet plads med en rytterstatue af Frederik 5.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0037",
+    "kategori": "sprog_kultur",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvem skrev digtet 'Det er hvidt herude'?",
+    "korrekt": "Steen Steensen Blicher",
+    "forkerte": [
+      "N.F.S. Grundtvig",
+      "B.S. Ingemann",
+      "Jeppe Aakjær"
+    ],
+    "forklaring": "Blicher var præst i Jylland og skrev om hede og natur.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0038",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Kronborg Slot er optaget på UNESCO's verdensarvsliste.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Kronborg kom på listen i 2000.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0039",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder Danmarks flag?",
+    "korrekt": "Dannebrog",
+    "forkerte": [
+      "Unionsflaget",
+      "Korsbanneret",
+      "Rigsflaget"
+    ],
+    "forklaring": "Dannebrog regnes for verdens ældste nationalflag, der stadig er i brug.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0010",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder Anders Ands tre nevøer?",
+    "korrekt": "Rip, Rap og Rup",
+    "forkerte": [
+      "Tip, Tap og Top",
+      "Pip, Pap og Pup",
+      "Bip, Bap og Bup"
+    ],
+    "forklaring": "Nevøerne optrådte første gang i en tegneserie i 1937.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0011",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilken farve har smølferne?",
+    "korrekt": "Blå",
+    "forkerte": [
+      "Grøn",
+      "Gul",
+      "Lilla"
+    ],
+    "forklaring": "Smølferne blev skabt af den belgiske tegner Peyo i 1958.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0012",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket instrument har typisk 88 tangenter?",
+    "korrekt": "Klaver",
+    "forkerte": [
+      "Orgel",
+      "Harmonika",
+      "Cembalo"
+    ],
+    "forklaring": "De 88 tangenter fordeler sig på 52 hvide og 36 sorte.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0013",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Pippi Langstrømpe er skrevet af Astrid Lindgren.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Den første bog om Pippi udkom i 1945.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0014",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder Harry Potters ugle i de danske bøger?",
+    "korrekt": "Hedvig",
+    "forkerte": [
+      "Errol",
+      "Fawkes",
+      "Hermes"
+    ],
+    "forklaring": "Errol er familien Weasleys gamle ugle, og Fawkes er Dumbledores føniks.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0015",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket band bestod af John, Paul, George og Ringo?",
+    "korrekt": "The Beatles",
+    "forkerte": [
+      "The Rolling Stones",
+      "The Who",
+      "Queen"
+    ],
+    "forklaring": "The Beatles kom fra Liverpool og udgav deres første single i 1962.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0016",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dansk skuespiller spillede skurken Le Chiffre i James Bond-filmen 'Casino Royale' fra 2006?",
+    "korrekt": "Mads Mikkelsen",
+    "forkerte": [
+      "Nikolaj Coster-Waldau",
+      "Ulrich Thomsen",
+      "Jesper Christensen"
+    ],
+    "forklaring": "Jesper Christensen var også med i filmen – som den mystiske Mr. White.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0017",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dansk tv-serie handler om politikeren Birgitte Nyborg?",
+    "korrekt": "Borgen",
+    "forkerte": [
+      "Forbrydelsen",
+      "Matador",
+      "Arvingerne"
+    ],
+    "forklaring": "Sidse Babett Knudsen spillede Birgitte Nyborg, og serien er solgt til mange lande.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0018",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "I hvilken fiktiv by foregår tv-serien 'Matador'?",
+    "korrekt": "Korsbæk",
+    "forkerte": [
+      "Strandby",
+      "Holmestrup",
+      "Bakkely"
+    ],
+    "forklaring": "Serien følger byen fra 1929 til 1947 og blev skrevet af Lise Nørgaard.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0019",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Popgruppen ABBA kommer fra Norge.",
+    "korrekt": "Falsk",
+    "forkerte": [],
+    "forklaring": "ABBA er svensk og slog igennem, da de vandt Eurovision i 1974 med 'Waterloo'.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0020",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvem malede 'Mona Lisa'?",
+    "korrekt": "Leonardo da Vinci",
+    "forkerte": [
+      "Michelangelo",
+      "Rafael",
+      "Botticelli"
+    ],
+    "forklaring": "Maleriet hænger på Louvre i Paris og er et af verdens mest besøgte kunstværker.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0021",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dansk film vandt Oscar for bedste internationale film i 2021?",
+    "korrekt": "Druk",
+    "forkerte": [
+      "Retfærdighedens ryttere",
+      "Krigen",
+      "En kongelig affære"
+    ],
+    "forklaring": "Filmen med Mads Mikkelsen handler om fire lærere, der eksperimenterer med alkohol.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0022",
+    "kategori": "underholdning",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvem skrev romanen 'Pelle Erobreren'?",
+    "korrekt": "Martin Andersen Nexø",
+    "forkerte": [
+      "Johannes V. Jensen",
+      "Henrik Pontoppidan",
+      "Herman Bang"
+    ],
+    "forklaring": "Bille Augusts filmatisering vandt både Guldpalmen i Cannes og en Oscar.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0023",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket band udgav 'Bohemian Rhapsody' i 1975?",
+    "korrekt": "Queen",
+    "forkerte": [
+      "The Beatles",
+      "Pink Floyd",
+      "Led Zeppelin"
+    ],
+    "forklaring": "Sangen var næsten seks minutter lang og havde intet omkvæd – alligevel blev den et kæmpehit.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0024",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken komponist skrev 'Måneskinssonaten'?",
+    "korrekt": "Ludwig van Beethoven",
+    "forkerte": [
+      "Wolfgang Amadeus Mozart",
+      "Frédéric Chopin",
+      "Johann Sebastian Bach"
+    ],
+    "forklaring": "Navnet 'Måneskinssonaten' fik værket først efter Beethovens død.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0025",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Legoklodsen er en dansk opfindelse.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "LEGO kommer af 'leg godt' og blev grundlagt af Ole Kirk Christiansen i Billund.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0026",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "I hvilken by ligger Legoland i Danmark?",
+    "korrekt": "Billund",
+    "forkerte": [
+      "Vejle",
+      "Give",
+      "Grindsted"
+    ],
+    "forklaring": "Legoland Billund åbnede i 1968.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0027",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dansk forfatter skrev 'Den afrikanske farm' under navnet Isak Dinesen?",
+    "korrekt": "Karen Blixen",
+    "forkerte": [
+      "Tove Ditlevsen",
+      "Thit Jensen",
+      "Karin Michaëlis"
+    ],
+    "forklaring": "Bogen blev filmatiseret som 'Out of Africa' med Meryl Streep i 1985.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0028",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvem malede det berømte maleri 'Skrik'?",
+    "korrekt": "Edvard Munch",
+    "forkerte": [
+      "Vincent van Gogh",
+      "Gustav Klimt",
+      "P.S. Krøyer"
+    ],
+    "forklaring": "Munch var norsk og lavede flere versioner af motivet.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0029",
+    "kategori": "underholdning",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dansk maler er kendt for stille interiører i gråtoner, ofte med en kvinde set bagfra?",
+    "korrekt": "Vilhelm Hammershøi",
+    "forkerte": [
+      "P.S. Krøyer",
+      "Michael Ancher",
+      "J.F. Willumsen"
+    ],
+    "forklaring": "Mange af Hammershøis malerier er fra hans lejlighed i Strandgade på Christianshavn.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0030",
+    "kategori": "underholdning",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvem skabte tegneseriefiguren Rasmus Klump?",
+    "korrekt": "Carla og Vilhelm Hansen",
+    "forkerte": [
+      "Storm P.",
+      "Jakob Martin Strid",
+      "Peter Madsen"
+    ],
+    "forklaring": "Rasmus Klump udkom første gang i 1951.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0031",
+    "kategori": "underholdning",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvilken film vandt den allerførste Oscar for bedste film?",
+    "korrekt": "Wings",
+    "forkerte": [
+      "Metropolis",
+      "Ben-Hur",
+      "Casablanca"
+    ],
+    "forklaring": "Stumfilmen om piloter i Første Verdenskrig vandt ved den første Oscaruddeling i 1929.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0032",
+    "kategori": "underholdning",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dansk komponist skrev operaen 'Maskarade'?",
+    "korrekt": "Carl Nielsen",
+    "forkerte": [
+      "Niels W. Gade",
+      "H.C. Lumbye",
+      "Peter Heise"
+    ],
+    "forklaring": "Operaen bygger på Ludvig Holbergs komedie af samme navn.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0033",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dansker grundlagde Metallica sammen med James Hetfield?",
+    "korrekt": "Lars Ulrich",
+    "forkerte": [
+      "Kirk Hammett",
+      "Lars H.U.G.",
+      "Michael Poulsen"
+    ],
+    "forklaring": "Lars Ulrich er trommeslager og flyttede som teenager fra Gentofte til USA.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0034",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder Mickey Mouses hund?",
+    "korrekt": "Pluto",
+    "forkerte": [
+      "Fedtmule",
+      "Snoopy",
+      "Tom"
+    ],
+    "forklaring": "Fedtmule er også en hund, men han går på to ben og er Mickeys ven.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0035",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvem vandt Eurovision for Danmark i 2013 med 'Only Teardrops'?",
+    "korrekt": "Emmelie de Forest",
+    "forkerte": [
+      "Anja Nissen",
+      "Basim",
+      "Rasmussen"
+    ],
+    "forklaring": "Det var Danmarks tredje sejr i konkurrencen, og året efter blev showet holdt i København.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0036",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad hedder den lille, bippende robot i Star Wars, der er formet som en tønde?",
+    "korrekt": "R2-D2",
+    "forkerte": [
+      "C-3PO",
+      "WALL-E",
+      "K-2SO"
+    ],
+    "forklaring": "R2-D2 og den gyldne C-3PO er med i stort set alle Star Wars-film.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0037",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Shakespeares 'Hamlet' foregår på Kronborg i Helsingør.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "I stykket hedder slottet Elsinore, og Hamlet spilles stadig jævnligt på Kronborg.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0038",
+    "kategori": "underholdning",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilket instrument spillede entertaineren Victor Borge?",
+    "korrekt": "Klaver",
+    "forkerte": [
+      "Violin",
+      "Cello",
+      "Trompet"
+    ],
+    "forklaring": "Borge blev verdensberømt i USA for at blande klassisk klaverspil med humor.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0010",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Ved hvilken temperatur koger vand ved havoverfladen?",
+    "korrekt": "100 °C",
+    "forkerte": [
+      "90 °C",
+      "80 °C",
+      "120 °C"
+    ],
+    "forklaring": "På toppen af høje bjerge koger vand ved lavere temperatur, fordi lufttrykket er lavere.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0011",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange planeter er der i vores solsystem?",
+    "korrekt": "8",
+    "forkerte": [
+      "9",
+      "7",
+      "10"
+    ],
+    "forklaring": "Pluto blev i 2006 omklassificeret til dværgplanet, og derfor er der nu 8.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0012",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket organ pumper blodet rundt i kroppen?",
+    "korrekt": "Hjertet",
+    "forkerte": [
+      "Lungerne",
+      "Leveren",
+      "Nyrerne"
+    ],
+    "forklaring": "Et voksent hjerte slår omkring 100.000 gange i døgnet.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0013",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Månen lyser af sig selv.",
+    "korrekt": "Falsk",
+    "forkerte": [],
+    "forklaring": "Månen lyser kun, fordi den kaster sollyset tilbage.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0014",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvad er H₂O?",
+    "korrekt": "Vand",
+    "forkerte": [
+      "Brint",
+      "Salt",
+      "Ilt"
+    ],
+    "forklaring": "Et vandmolekyle består af to brintatomer og ét iltatom.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0015",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad er solsystemets største planet?",
+    "korrekt": "Jupiter",
+    "forkerte": [
+      "Saturn",
+      "Neptun",
+      "Uranus"
+    ],
+    "forklaring": "Jupiter er så stor, at alle de andre planeter kunne være inden i den.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0016",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange knogler har et voksent menneske normalt?",
+    "korrekt": "206",
+    "forkerte": [
+      "186",
+      "226",
+      "300"
+    ],
+    "forklaring": "Nyfødte har omkring 300 knogler, men mange vokser sammen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0017",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvilket grundstof har det kemiske symbol O?",
+    "korrekt": "Ilt",
+    "forkerte": [
+      "Osmium",
+      "Brint",
+      "Kulstof"
+    ],
+    "forklaring": "Ilt udgør omkring 21 % af atmosfæren.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0018",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Diamant består af kulstof.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Grafit i blyanter er også rent kulstof – atomerne er bare ordnet anderledes.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0019",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvem formulerede tyngdeloven og blev efter sigende inspireret af et faldende æble?",
+    "korrekt": "Isaac Newton",
+    "forkerte": [
+      "Galileo Galilei",
+      "Albert Einstein",
+      "Johannes Kepler"
+    ],
+    "forklaring": "Newton udgav sine bevægelseslove og tyngdeloven i 1687.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0020",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad måles i enheden volt?",
+    "korrekt": "Elektrisk spænding",
+    "forkerte": [
+      "Elektrisk strøm",
+      "Elektrisk modstand",
+      "Effekt"
+    ],
+    "forklaring": "Strøm måles i ampere, modstand i ohm og effekt i watt.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0021",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dansk fysiker opdagede elektromagnetismen i 1820?",
+    "korrekt": "H.C. Ørsted",
+    "forkerte": [
+      "Niels Bohr",
+      "Ole Rømer",
+      "Tycho Brahe"
+    ],
+    "forklaring": "Ørsted så, at en kompasnål flyttede sig, når der løb strøm i en ledning ved siden af.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0022",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad er det mest udbredte grundstof i universet?",
+    "korrekt": "Brint",
+    "forkerte": [
+      "Helium",
+      "Ilt",
+      "Kulstof"
+    ],
+    "forklaring": "Omkring tre fjerdedele af al almindelig stof i universet er brint.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0023",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvor lang tid tager det cirka for lyset fra Solen at nå Jorden?",
+    "korrekt": "8 minutter",
+    "forkerte": [
+      "8 sekunder",
+      "1 time",
+      "1 døgn"
+    ],
+    "forklaring": "Ser du på Solen, ser du den altså, som den så ud for 8 minutter siden.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0024",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvad er menneskekroppens største organ?",
+    "korrekt": "Huden",
+    "forkerte": [
+      "Leveren",
+      "Hjernen",
+      "Lungerne"
+    ],
+    "forklaring": "Huden på en voksen vejer flere kilo og dækker omkring 2 m².",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0025",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvilken blodtype kaldes universaldonor?",
+    "korrekt": "0 negativ",
+    "forkerte": [
+      "AB positiv",
+      "A negativ",
+      "B positiv"
+    ],
+    "forklaring": "Blod af typen 0 negativ kan gives til de fleste patienter i en nødsituation.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0026",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Ole Rømer var den første, der viste, at lyset har en endelig hastighed.",
+    "korrekt": "Sandt",
+    "forkerte": [],
+    "forklaring": "Rømer opdagede det i 1676 ved at studere Jupiters måne Io.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0027",
+    "kategori": "videnskab",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad står forkortelsen DNA for?",
+    "korrekt": "Deoxyribonukleinsyre",
+    "forkerte": [
+      "Ribonukleinsyre",
+      "Deoxyribose-aminosyre",
+      "Dinukleotidsyre"
+    ],
+    "forklaring": "Ribonukleinsyre er RNA, DNA's nære slægtning.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0028",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken temperaturskala har 0 grader ved det absolutte nulpunkt?",
+    "korrekt": "Kelvin",
+    "forkerte": [
+      "Celsius",
+      "Fahrenheit",
+      "Réaumur"
+    ],
+    "forklaring": "0 kelvin svarer til -273,15 °C – koldere kan det ikke blive.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0029",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken dansk astronom byggede observatoriet Uraniborg på Hven?",
+    "korrekt": "Tycho Brahe",
+    "forkerte": [
+      "Ole Rømer",
+      "Niels Bohr",
+      "H.C. Ørsted"
+    ],
+    "forklaring": "Tycho Brahe mistede en del af næsen i en duel og bar en næseprotese af metal.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0030",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "mc",
+    "spoergsmaal": "Hvad er pH-værdien af rent vand ved 25 °C?",
+    "korrekt": "7",
+    "forkerte": [
+      "0",
+      "5",
+      "14"
+    ],
+    "forklaring": "pH 7 er neutralt. Lavere er surt, og højere er basisk.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0031",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken partikel i atomet har negativ ladning?",
+    "korrekt": "Elektron",
+    "forkerte": [
+      "Proton",
+      "Neutron",
+      "Foton"
+    ],
+    "forklaring": "Protoner er positive, og neutroner har ingen ladning.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0032",
+    "kategori": "videnskab",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvilken planet bruger længst tid på at dreje én gang om sig selv?",
+    "korrekt": "Venus",
+    "forkerte": [
+      "Merkur",
+      "Jupiter",
+      "Mars"
+    ],
+    "forklaring": "Et døgn på Venus varer omkring 243 jorddøgn – længere end planetens år.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0033",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "mc",
+    "spoergsmaal": "Hvem udviklede relativitetsteorien?",
+    "korrekt": "Albert Einstein",
+    "forkerte": [
+      "Isaac Newton",
+      "Niels Bohr",
+      "Stephen Hawking"
+    ],
+    "forklaring": "Den kendte formel E = mc² stammer fra den specielle relativitetsteori fra 1905.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0034",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilket metal er flydende ved stuetemperatur?",
+    "korrekt": "Kviksølv",
+    "forkerte": [
+      "Bly",
+      "Tin",
+      "Aluminium"
+    ],
+    "forklaring": "Kviksølv blev tidligere brugt i termometre, men er giftigt.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0035",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvilken stjerne ligger tættest på Jorden?",
+    "korrekt": "Solen",
+    "forkerte": [
+      "Proxima Centauri",
+      "Sirius",
+      "Nordstjernen"
+    ],
+    "forklaring": "Proxima Centauri er den nærmeste stjerne efter Solen – godt fire lysår væk.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0036",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "mc",
+    "spoergsmaal": "Hvor mange tænder har et voksent menneske normalt, når visdomstænderne er med?",
+    "korrekt": "32",
+    "forkerte": [
+      "28",
+      "30",
+      "36"
+    ],
+    "forklaring": "Uden visdomstænder er tallet 28.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0037",
+    "kategori": "videnskab",
+    "niveau": 4,
+    "type": "mc",
+    "spoergsmaal": "Hvad kaldes det, når et fast stof går direkte over til gas uden at blive flydende?",
+    "korrekt": "Sublimation",
+    "forkerte": [
+      "Fordampning",
+      "Kondensation",
+      "Smeltning"
+    ],
+    "forklaring": "Tøris sublimerer – det bliver til kuldioxidgas uden at smelte.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0038",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "sandt_falsk",
+    "spoergsmaal": "Saturn er den eneste planet i solsystemet med ringe.",
+    "korrekt": "Falsk",
+    "forkerte": [],
+    "forklaring": "Jupiter, Uranus og Neptun har også ringe, men de er langt svagere end Saturns.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0040",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad er hovedstaden i Sverige?",
+    "korrekt": "Stockholm",
+    "forkerte": [],
+    "forklaring": "Stockholm er bygget på 14 øer, hvor Mälaren møder Østersøen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0041",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad er hovedstaden i Spanien?",
+    "korrekt": "Madrid",
+    "forkerte": [],
+    "forklaring": "Madrid ligger midt i landet i godt 650 meters højde.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0042",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "I hvilket land ligger inkabyen Machu Picchu?",
+    "korrekt": "Peru",
+    "forkerte": [],
+    "forklaring": "Byen ligger højt i Andesbjergene og blev kendt for omverdenen i 1911.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0043",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilken flod løber gennem London?",
+    "korrekt": "Themsen",
+    "forkerte": [],
+    "forklaring": "Themsen er Englands længste flod.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0044",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvilken by kaldes 'Den evige stad'?",
+    "korrekt": "Rom",
+    "forkerte": [],
+    "forklaring": "Tilnavnet stammer fra antikken, hvor man mente, at Rom ville bestå for evigt.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0045",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad er den største by på Fyn?",
+    "korrekt": "Odense",
+    "forkerte": [],
+    "forklaring": "Odense er Danmarks tredjestørste by og H.C. Andersens fødeby.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0046",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvilken dansk ø kaldes 'Solskinsøen'?",
+    "korrekt": "Bornholm",
+    "forkerte": [],
+    "forklaring": "Bornholm har typisk flere solskinstimer end resten af landet.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0047",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilket hav ligger mellem Europa og Afrika?",
+    "korrekt": "Middelhavet",
+    "forkerte": [],
+    "forklaring": "Ved Gibraltarstrædet er der kun omkring 14 km mellem de to kontinenter.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0048",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "I hvilket land ligger tempelanlægget Angkor Wat?",
+    "korrekt": "Cambodja",
+    "forkerte": [],
+    "forklaring": "Angkor Wat er verdens største religiøse bygningsværk og er med i Cambodjas flag.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0049",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad er hovedstaden i Island?",
+    "korrekt": "Reykjavik",
+    "forkerte": [],
+    "forklaring": "Reykjavik er verdens nordligste hovedstad i et selvstændigt land.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0050",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "På hvilket kontinent ligger Egypten?",
+    "korrekt": "Afrika",
+    "forkerte": [],
+    "forklaring": "En lille del af Egypten, Sinaihalvøen, ligger dog i Asien.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0051",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den store vandreklit syd for Skagen?",
+    "korrekt": "Råbjerg Mile",
+    "forkerte": [],
+    "forklaring": "Klitten flytter sig omkring 15 meter om året mod nordøst.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0052",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad er hovedstaden i Skotland?",
+    "korrekt": "Edinburgh",
+    "forkerte": [],
+    "forklaring": "Edinburgh Castle ligger på en udslukt vulkan midt i byen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0053",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad er hovedstaden i Polen?",
+    "korrekt": "Warszawa",
+    "forkerte": [],
+    "forklaring": "Byens gamle bydel blev genopbygget efter at være blevet næsten totalt ødelagt under Anden Verdenskrig.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0054",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvilken amerikansk delstat er den største målt på areal?",
+    "korrekt": "Alaska",
+    "forkerte": [],
+    "forklaring": "USA købte Alaska af Rusland i 1867.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0055",
+    "kategori": "geografi",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder farvandet mellem Sjælland og Sverige?",
+    "korrekt": "Øresund",
+    "forkerte": [],
+    "forklaring": "Mellem Helsingør og Helsingborg er der kun omkring 4 km over Øresund.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0056",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder det højeste bjerg i Alperne?",
+    "korrekt": "Mont Blanc",
+    "forkerte": [],
+    "forklaring": "Mont Blanc ligger på grænsen mellem Frankrig og Italien og er godt 4.800 meter højt.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0057",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad regnes for Danmarks ældste by?",
+    "korrekt": "Ribe",
+    "forkerte": [],
+    "forklaring": "Ribe blev grundlagt som markedsplads i begyndelsen af 700-tallet.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0058",
+    "kategori": "geografi",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad er hovedstaden i Argentina?",
+    "korrekt": "Buenos Aires",
+    "forkerte": [],
+    "forklaring": "Navnet betyder 'gode vinde' på spansk.",
+    "status": "godkendt"
+  },
+  {
+    "id": "geo-0059",
+    "kategori": "geografi",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad er den største ø i Middelhavet?",
+    "korrekt": "Sicilien",
+    "forkerte": [],
+    "forklaring": "Sicilien er hjem for Etna, en af Europas mest aktive vulkaner.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0040",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilken dansk dronning abdicerede i januar 2024?",
+    "korrekt": "Margrethe 2.",
+    "forkerte": [],
+    "forklaring": "Hun havde været dronning i 52 år og overlod tronen til sin søn, Frederik 10.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0041",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "I hvilken by ligger Vikingeskibsmuseet med de fem Skuldelev-skibe?",
+    "korrekt": "Roskilde",
+    "forkerte": [],
+    "forklaring": "Skibene blev sænket i Roskilde Fjord omkring år 1070 for at spærre sejlrenden.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0042",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvilket år blev Danmark besat af Tyskland?",
+    "korrekt": "1940",
+    "forkerte": [],
+    "forklaring": "Besættelsen begyndte den 9. april 1940 tidligt om morgenen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0043",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hed Harald Blåtands far?",
+    "korrekt": "Gorm den Gamle",
+    "forkerte": [],
+    "forklaring": "Gorm rejste den lille Jellingsten for sin hustru Thyra.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0044",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvilket år åbnede Øresundsbroen?",
+    "korrekt": "2000",
+    "forkerte": [],
+    "forklaring": "Broen åbnede den 1. juli 2000 og forbinder København og Malmø.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0045",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvilket år åbnede Storebæltsbroen for biltrafik?",
+    "korrekt": "1998",
+    "forkerte": [],
+    "forklaring": "Togene kunne køre gennem tunnelen allerede året før, i 1997.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0046",
+    "kategori": "historie",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvem blev statsminister i den første regering efter befrielsen i maj 1945?",
+    "korrekt": "Vilhelm Buhl",
+    "forkerte": [],
+    "forklaring": "Befrielsesregeringen bestod af både de gamle partier og folk fra modstandsbevægelsen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0047",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvilken konge lod Rosenborg Slot bygge?",
+    "korrekt": "Christian 4.",
+    "forkerte": [],
+    "forklaring": "Rosenborg blev bygget som lystslot i starten af 1600-tallet og rummer i dag kronjuvelerne.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0048",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilken amerikansk præsident blev skudt i Dallas i 1963?",
+    "korrekt": "John F. Kennedy",
+    "forkerte": [],
+    "forklaring": "Kennedy blev skudt den 22. november 1963, mens han kørte i åben bil gennem byen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0049",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvilket år nåede Christoffer Columbus Amerika første gang?",
+    "korrekt": "1492",
+    "forkerte": [],
+    "forklaring": "Columbus troede selv, at han var nået til Asien.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0050",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvem stod i spidsen for den russiske revolution i 1917 og blev Sovjetstatens første leder?",
+    "korrekt": "Lenin",
+    "forkerte": [],
+    "forklaring": "Hans rigtige navn var Vladimir Uljanov.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0051",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilket år sluttede Anden Verdenskrig?",
+    "korrekt": "1945",
+    "forkerte": [],
+    "forklaring": "Krigen sluttede i Europa i maj og i Asien i september 1945.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0052",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvem blev Danmarks første kvindelige statsminister?",
+    "korrekt": "Helle Thorning-Schmidt",
+    "forkerte": [],
+    "forklaring": "Hun blev statsminister i 2011.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0053",
+    "kategori": "historie",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hed den britiske dronning, der regerede fra 1952 til 2022?",
+    "korrekt": "Elizabeth 2.",
+    "forkerte": [],
+    "forklaring": "Hun regerede i 70 år – længere end nogen anden britisk monark.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0054",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad kaldes den mur, romerne byggede tværs over Nordengland?",
+    "korrekt": "Hadrians mur",
+    "forkerte": [],
+    "forklaring": "Muren blev bygget fra år 122 og var omkring 118 km lang.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0055",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Til hvilket land flygtede de fleste danske jøder i oktober 1943?",
+    "korrekt": "Sverige",
+    "forkerte": [],
+    "forklaring": "Over 7.000 jøder blev sejlet over Øresund i fiskerbåde og andre småbåde.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0056",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvem var den græske filosof Platons lærer?",
+    "korrekt": "Sokrates",
+    "forkerte": [],
+    "forklaring": "Sokrates skrev ikke selv noget ned – vi kender ham mest gennem Platons værker.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0057",
+    "kategori": "historie",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvilket år blev de første kvinder valgt til Folketinget?",
+    "korrekt": "1918",
+    "forkerte": [],
+    "forklaring": "Fire kvinder blev valgt til Folketinget og fem til Landstinget ved det første valg, hvor kvinder kunne stille op.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0058",
+    "kategori": "historie",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvilke dyr havde Hannibal med, da han krydsede Alperne?",
+    "korrekt": "Elefanter",
+    "forkerte": [],
+    "forklaring": "Hannibal fra Kartago gik over Alperne i 218 f.Kr. for at angribe Rom.",
+    "status": "godkendt"
+  },
+  {
+    "id": "his-0059",
+    "kategori": "historie",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvilket år mistede Danmark Norge?",
+    "korrekt": "1814",
+    "forkerte": [],
+    "forklaring": "Ved freden i Kiel måtte Danmark afstå Norge til Sverige efter Napoleonskrigene.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0039",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den kolde spanske tomatsuppe?",
+    "korrekt": "Gazpacho",
+    "forkerte": [],
+    "forklaring": "Gazpacho stammer fra Andalusien, hvor sommeren er meget varm.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0040",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den italienske ret med ris kogt cremet i bouillon?",
+    "korrekt": "Risotto",
+    "forkerte": [],
+    "forklaring": "Til risotto bruges særlige rissorter som arborio.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0041",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilken frugt laves vin af?",
+    "korrekt": "Druer",
+    "forkerte": [],
+    "forklaring": "Farven på rødvin kommer fra skallerne på de blå druer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0042",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den danske ret med stegt fiskefilet, rejer og asparges på brød?",
+    "korrekt": "Stjerneskud",
+    "forkerte": [],
+    "forklaring": "Retten blev populær i 1950'erne og ses tit på frokostkort.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0043",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder de spanske friturebagte dejstænger, man dypper i chokolade?",
+    "korrekt": "Churros",
+    "forkerte": [],
+    "forklaring": "Churros spises ofte til morgenmad i Spanien.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0044",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den græske dip med yoghurt, agurk og hvidløg?",
+    "korrekt": "Tzatziki",
+    "forkerte": [],
+    "forklaring": "Tzatziki serveres ofte til grillet kød og pitabrød.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0045",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad kaldes kød fra en ung ko?",
+    "korrekt": "Kalvekød",
+    "forkerte": [],
+    "forklaring": "Kalvekød er lysere og mildere end oksekød.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0046",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den mexicanske foldede majspandekage med fyld?",
+    "korrekt": "Taco",
+    "forkerte": [],
+    "forklaring": "Tacos har været spist i Mexico i flere hundrede år.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0047",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvilket krydderi giver karry sin gule farve?",
+    "korrekt": "Gurkemeje",
+    "forkerte": [],
+    "forklaring": "Gurkemeje kaldes også turmeric og kommer fra en rod i ingefærfamilien.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0048",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den tyske ret af syrnet, finsnittet hvidkål?",
+    "korrekt": "Surkål",
+    "forkerte": [],
+    "forklaring": "På tysk hedder den Sauerkraut og spises tit til pølser.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0049",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den belgiske ret med muslinger og pommes frites?",
+    "korrekt": "Moules frites",
+    "forkerte": [],
+    "forklaring": "Muslingerne koges typisk i hvidvin med løg og persille.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0050",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad kaldes den danske kryddersnaps, der ofte er smagt til med kommen?",
+    "korrekt": "Akvavit",
+    "forkerte": [],
+    "forklaring": "Navnet kommer af latin 'aqua vitae' – livets vand.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0051",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvilken frugt er hovedingrediensen i en piña colada?",
+    "korrekt": "Ananas",
+    "forkerte": [],
+    "forklaring": "Piña colada betyder 'silet ananas' på spansk og er nationaldrink i Puerto Rico.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0052",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den ungarske gryderet med paprika?",
+    "korrekt": "Gullasch",
+    "forkerte": [],
+    "forklaring": "Gullasch blev oprindeligt lavet af ungarske kvæghyrder over bål.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0053",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilken drik brygges af malt, humle, gær og vand?",
+    "korrekt": "Øl",
+    "forkerte": [],
+    "forklaring": "Humlen giver bitterhed og holder øllet frisk længere.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0054",
+    "kategori": "mad_drikke",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder kaffedrinken med whisky, sukker og flødeskum på toppen?",
+    "korrekt": "Irish coffee",
+    "forkerte": [],
+    "forklaring": "Drinken blev efter sigende opfundet i Irland i 1940'erne til frosne flypassagerer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0055",
+    "kategori": "mad_drikke",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvilke bønner laves tofu af?",
+    "korrekt": "Sojabønner",
+    "forkerte": [],
+    "forklaring": "Tofu laves lidt som ost – sojamælk koaguleres og presses.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0056",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Fra hvilket land kommer pastaretten carbonara?",
+    "korrekt": "Italien",
+    "forkerte": [],
+    "forklaring": "Den klassiske carbonara laves uden fløde – kun æg, ost, guanciale og peber.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0057",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder de runde danske kugler af dej, som bages i en særlig pande op til jul?",
+    "korrekt": "Æbleskiver",
+    "forkerte": [],
+    "forklaring": "Navnet tyder på, at der oprindeligt var æblestykker i dem.",
+    "status": "godkendt"
+  },
+  {
+    "id": "mad-0058",
+    "kategori": "mad_drikke",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den engelske ret med friturestegt fisk og pommes frites?",
+    "korrekt": "Fish and chips",
+    "forkerte": [],
+    "forklaring": "Retten serveres traditionelt med salt og maltedikke.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0039",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad kaldes en ung hest?",
+    "korrekt": "Føl",
+    "forkerte": [],
+    "forklaring": "Et føl kan stå og gå få timer efter fødslen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0040",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad kaldes en ung ko?",
+    "korrekt": "Kalv",
+    "forkerte": [],
+    "forklaring": "En hunkalv, der endnu ikke har fået kalv, kaldes en kvie.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0041",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad er verdens største pattedyr?",
+    "korrekt": "Blåhval",
+    "forkerte": [],
+    "forklaring": "Blåhvalen kan blive omkring 30 meter lang og er det største dyr, der nogensinde har levet.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0042",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad kaldes et dyr, der kun spiser planter?",
+    "korrekt": "Planteæder",
+    "forkerte": [],
+    "forklaring": "Køer, heste og kaniner er planteædere.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0043",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilket dyr kaldes 'junglens konge'?",
+    "korrekt": "Løven",
+    "forkerte": [],
+    "forklaring": "Løver lever faktisk mest på savannen og ikke i junglen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0044",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilken fugl er et symbol på fred?",
+    "korrekt": "Duen",
+    "forkerte": [],
+    "forklaring": "Duen med en olivengren stammer fra fortællingen om Noas ark.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0045",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad kaldes det, når pindsvinet sover hele vinteren?",
+    "korrekt": "Dvale",
+    "forkerte": [],
+    "forklaring": "Under dvalen falder pindsvinets kropstemperatur til få grader.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0046",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilket dyr har den længste hals?",
+    "korrekt": "Giraffen",
+    "forkerte": [],
+    "forklaring": "En giraf har samme antal halshvirvler som et menneske – syv.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0047",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad kaldes en ung gås?",
+    "korrekt": "Gæsling",
+    "forkerte": [],
+    "forklaring": "Gæslinger følger det første, de ser, når de klækkes – oftest moren.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0048",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvilket dansk træ kendes på sin hvide stamme?",
+    "korrekt": "Birk",
+    "forkerte": [],
+    "forklaring": "Birkens bark blev tidligere brugt til at tænde op med og til at lave beholdere.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0049",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvor mange øjne har de fleste edderkopper?",
+    "korrekt": "8",
+    "forkerte": [],
+    "forklaring": "Trods de mange øjne ser mange edderkopper ret dårligt og bruger i stedet vibrationer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0050",
+    "kategori": "natur",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvilken sælart er den mest almindelige i danske farvande?",
+    "korrekt": "Spættet sæl",
+    "forkerte": [],
+    "forklaring": "Den anden danske sælart er gråsælen, som er større.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0051",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilket havdyr har otte arme og kan sprøjte blæk?",
+    "korrekt": "Blæksprutte",
+    "forkerte": [],
+    "forklaring": "Blækket skjuler blæksprutten, så den kan flygte fra fjender.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0052",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad kaldes processen, hvor planter laver sukker ved hjælp af sollys?",
+    "korrekt": "Fotosyntese",
+    "forkerte": [],
+    "forklaring": "Fotosyntesen er grunden til, at der er ilt i atmosfæren.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0053",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvilken fugl kan flyve baglæns?",
+    "korrekt": "Kolibri",
+    "forkerte": [],
+    "forklaring": "Kolibrien kan slå med vingerne mere end 50 gange i sekundet.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0054",
+    "kategori": "natur",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilket dyr bygger dæmninger i åer og floder?",
+    "korrekt": "Bæver",
+    "forkerte": [],
+    "forklaring": "Bæveren blev genudsat i Danmark i 1999 i Klosterheden i Vestjylland.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0055",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad kaldes hannen hos rådyr?",
+    "korrekt": "Buk",
+    "forkerte": [],
+    "forklaring": "Bukken fælder sit gevir hvert efterår og får et nyt.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0056",
+    "kategori": "natur",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den svamp, der er skyld i flest dødelige svampeforgiftninger i Danmark?",
+    "korrekt": "Grøn fluesvamp",
+    "forkerte": [],
+    "forklaring": "Den kan ligne spiselige svampe, og bare en enkelt kan være livsfarlig.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0057",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den lille havefugl med orangerødt bryst?",
+    "korrekt": "Rødhals",
+    "forkerte": [],
+    "forklaring": "Rødhalsen synger også om vinteren og er tit nysgerrig over for haveejere.",
+    "status": "godkendt"
+  },
+  {
+    "id": "nat-0058",
+    "kategori": "natur",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad kaldes det forstenede træharpiks, man kan finde på den jyske vestkyst?",
+    "korrekt": "Rav",
+    "forkerte": [],
+    "forklaring": "Rav er millioner af år gammelt og kan indeholde indkapslede insekter.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0038",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvilket land vandt VM i fodbold for herrer i 2022?",
+    "korrekt": "Argentina",
+    "forkerte": [],
+    "forklaring": "Argentina slog Frankrig i finalen efter straffespark, og Lionel Messi fik endelig sin VM-titel.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0039",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvor mange point får et hold for en sejr i de fleste fodboldligaer?",
+    "korrekt": "3",
+    "forkerte": [],
+    "forklaring": "Før 1990'erne gav en sejr ofte kun 2 point.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0040",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilken sport forbindes med Wimbledon?",
+    "korrekt": "Tennis",
+    "forkerte": [],
+    "forklaring": "Wimbledon er verdens ældste tennisturnering og blev første gang spillet i 1877.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0041",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad kaldes det, når en spiller scorer tre mål i samme kamp?",
+    "korrekt": "Hattrick",
+    "forkerte": [],
+    "forklaring": "Udtrykket kommer fra cricket, hvor en spiller fik en hat for at tage tre wickets i træk.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0042",
+    "kategori": "sport",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvilken dansk fodboldspiller vandt Ballon d'Or som Europas bedste i 1977?",
+    "korrekt": "Allan Simonsen",
+    "forkerte": [],
+    "forklaring": "Simonsen spillede dengang for Borussia Mönchengladbach.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0043",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "I hvilken sport spiller man med en puck?",
+    "korrekt": "Ishockey",
+    "forkerte": [],
+    "forklaring": "Pucken er lavet af hårdt gummi og fryses ofte før kampen, så den ikke hopper.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0044",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvor mange spillere har et basketballhold på banen ad gangen?",
+    "korrekt": "5",
+    "forkerte": [],
+    "forklaring": "Basketball blev opfundet i 1891 af James Naismith, der brugte en ferskenkurv som kurv.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0045",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilken by var vært for sommer-OL i 2024?",
+    "korrekt": "Paris",
+    "forkerte": [],
+    "forklaring": "Det var tredje gang, Paris var vært for sommer-OL.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0046",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvem stod på mål for Danmark, da landsholdet vandt EM i 1992?",
+    "korrekt": "Peter Schmeichel",
+    "forkerte": [],
+    "forklaring": "Schmeichel reddede et straffespark mod Holland i semifinalen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0047",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvor mange kilometer er et halvmaraton cirka?",
+    "korrekt": "21 km",
+    "forkerte": [],
+    "forklaring": "Den præcise distance er 21,0975 km – halvdelen af et maratonløb.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0048",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "I hvilken sport kan man lave en 'hole in one'?",
+    "korrekt": "Golf",
+    "forkerte": [],
+    "forklaring": "En hole in one betyder, at bolden går i hullet med første slag.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0049",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvilket land regnes for moderne fodbolds hjemland?",
+    "korrekt": "England",
+    "forkerte": [],
+    "forklaring": "De første fælles fodboldregler blev skrevet i London i 1863.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0050",
+    "kategori": "sport",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvad er det højeste antal point, man kan score i én tur ved snookerbordet under normale forhold?",
+    "korrekt": "147",
+    "forkerte": [],
+    "forklaring": "Et 'maximum break' kræver alle 15 røde med sort efter hver og derefter alle farverne.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0051",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvilket land har vundet flest OL-medaljer i alt i sommer-OL?",
+    "korrekt": "USA",
+    "forkerte": [],
+    "forklaring": "USA har vundet over 2.500 medaljer ved sommer-OL.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0052",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "I hvilken sport vandt Pernille Blume OL-guld i 2016?",
+    "korrekt": "Svømning",
+    "forkerte": [],
+    "forklaring": "Hun vandt 50 meter fri i Rio de Janeiro.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0053",
+    "kategori": "sport",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvor mange hold deltog i VM i fodbold for herrer i 2022?",
+    "korrekt": "32",
+    "forkerte": [],
+    "forklaring": "Fra VM i 2026 udvides turneringen til 48 hold.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0054",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilken sport spilles med tunge sten, der glider hen over isen?",
+    "korrekt": "Curling",
+    "forkerte": [],
+    "forklaring": "Spillerne fejer isen foran stenen for at styre den og få den længere.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0055",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilken sport er Magnus Carlsen verdensberømt for?",
+    "korrekt": "Skak",
+    "forkerte": [],
+    "forklaring": "Carlsen fra Norge blev verdensmester første gang i 2013.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0056",
+    "kategori": "sport",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder vintersportsgrenen, der kombinerer langrend og skydning?",
+    "korrekt": "Skiskydning",
+    "forkerte": [],
+    "forklaring": "Hver bom på skydebanen giver en strafrunde eller et tidstillæg.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spo-0057",
+    "kategori": "sport",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilket redskab bruger man til at ramme bolden i baseball?",
+    "korrekt": "Bat",
+    "forkerte": [],
+    "forklaring": "Battet er typisk lavet af træ eller aluminium.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0040",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den danske konge, der overtog tronen i januar 2024?",
+    "korrekt": "Frederik 10.",
+    "forkerte": [],
+    "forklaring": "Han blev udråbt fra Christiansborgs balkon den 14. januar 2024.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0041",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder aftenen den 10. november, hvor mange spiser and?",
+    "korrekt": "Mortensaften",
+    "forkerte": [],
+    "forklaring": "Aftenen er opkaldt efter Sankt Martin, som ifølge legenden blev afsløret af skræppende gæs.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0042",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilken højtid fejrer Jesu opstandelse?",
+    "korrekt": "Påske",
+    "forkerte": [],
+    "forklaring": "Påskedag falder altid på en søndag mellem 22. marts og 25. april.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0043",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder den officielle ordbog, der fastlægger dansk retskrivning?",
+    "korrekt": "Retskrivningsordbogen",
+    "forkerte": [],
+    "forklaring": "Den udgives af Dansk Sprognævn.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0044",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvilken dato fejres Lucia?",
+    "korrekt": "13. december",
+    "forkerte": [],
+    "forklaring": "Luciaoptoget med lys i håret kom til Danmark fra Sverige under besættelsen.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0045",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder bonden, der vågner op i baronens seng i Holbergs komedie?",
+    "korrekt": "Jeppe",
+    "forkerte": [],
+    "forklaring": "Stykket er 'Jeppe på Bjerget' fra 1722.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0046",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvem skrev digtet 'Guldhornene'?",
+    "korrekt": "Adam Oehlenschläger",
+    "forkerte": [],
+    "forklaring": "Digtet fra 1802 regnes for begyndelsen på romantikken i Danmark.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0047",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad kaldes de tegn, vikingerne skrev med?",
+    "korrekt": "Runer",
+    "forkerte": [],
+    "forklaring": "Runealfabetet kaldes futhark efter de første seks tegn.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0048",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder det sprog, de fleste taler i Grønland?",
+    "korrekt": "Grønlandsk",
+    "forkerte": [],
+    "forklaring": "På grønlandsk hedder sproget kalaallisut.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0049",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder festen den 31. oktober med græskar og udklædning?",
+    "korrekt": "Halloween",
+    "forkerte": [],
+    "forklaring": "Halloween har rødder i en gammel keltisk høstfest.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0050",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder kristendommens hellige bog?",
+    "korrekt": "Bibelen",
+    "forkerte": [],
+    "forklaring": "Bibelen består af Det Gamle og Det Nye Testamente.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0051",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvilken dato er Valdemarsdag?",
+    "korrekt": "15. juni",
+    "forkerte": [],
+    "forklaring": "Ifølge sagnet faldt Dannebrog ned fra himlen denne dag i 1219.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0052",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad kaldes et ord med den modsatte betydning af et andet ord?",
+    "korrekt": "Antonym",
+    "forkerte": [],
+    "forklaring": "Ord med samme betydning kaldes synonymer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0053",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad siger man for 'tak' på tysk?",
+    "korrekt": "Danke",
+    "forkerte": [],
+    "forklaring": "'Mange tak' hedder 'Danke schön'.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0054",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvem designede PH-lampen?",
+    "korrekt": "Poul Henningsen",
+    "forkerte": [],
+    "forklaring": "PH-lampen blev designet, så lyset blev blødt og uden blænding.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0055",
+    "kategori": "sprog_kultur",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "I hvilken by ligger frilandsmuseet Den Gamle By?",
+    "korrekt": "Aarhus",
+    "forkerte": [],
+    "forklaring": "Museet åbnede i 1914 som verdens første frilandsmuseum for byhuse.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0056",
+    "kategori": "sprog_kultur",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad kaldes kalenderen, hvor man åbner én låge om dagen i december?",
+    "korrekt": "Julekalender",
+    "forkerte": [],
+    "forklaring": "Mange børn følger også med i en julekalender på tv.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0057",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad betyder det latinske 'veni, vidi, vici'?",
+    "korrekt": "Jeg kom, jeg så, jeg sejrede",
+    "forkerte": [],
+    "forklaring": "Ordene tilskrives Julius Cæsar efter et hurtigt slag i 47 f.Kr.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0058",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad kaldes en person, der taler mange sprog?",
+    "korrekt": "Polyglot",
+    "forkerte": [],
+    "forklaring": "Ordet kommer fra græsk og betyder 'mange tunger'.",
+    "status": "godkendt"
+  },
+  {
+    "id": "spr-0059",
+    "kategori": "sprog_kultur",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvem skrev 'Midsommervisen', der synges ved sankthansbålet?",
+    "korrekt": "Holger Drachmann",
+    "forkerte": [],
+    "forklaring": "Visen er fra 1885 og begynder 'Vi elsker vort land'.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0039",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvem skrev eventyret 'Den grimme ælling'?",
+    "korrekt": "H.C. Andersen",
+    "forkerte": [],
+    "forklaring": "Mange mener, at eventyret er en slags selvbiografi om Andersens egen opvækst.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0040",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder Anders Ands kæreste?",
+    "korrekt": "Andersine",
+    "forkerte": [],
+    "forklaring": "Andersine optrådte første gang i 1940.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0041",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "I hvilken by blev H.C. Andersen født?",
+    "korrekt": "Odense",
+    "forkerte": [],
+    "forklaring": "Han blev født i 1805, og hans barndomshjem kan besøges i dag.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0042",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Ved hvilken kaj i København sidder Den lille havfrue?",
+    "korrekt": "Langelinie",
+    "forkerte": [],
+    "forklaring": "Statuen blev lavet af Edvard Eriksen og opsat i 1913.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0043",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvem udgav albummet 'Thriller' i 1982?",
+    "korrekt": "Michael Jackson",
+    "forkerte": [],
+    "forklaring": "'Thriller' regnes for et af de bedst sælgende album nogensinde.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0044",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder Batmans by?",
+    "korrekt": "Gotham City",
+    "forkerte": [],
+    "forklaring": "Batmans rigtige navn er Bruce Wayne.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0045",
+    "kategori": "underholdning",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvilken dansk instruktør lavede filmen 'Dancer in the Dark'?",
+    "korrekt": "Lars von Trier",
+    "forkerte": [],
+    "forklaring": "Filmen med Björk vandt Guldpalmen i Cannes i 2000.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0046",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder Tintins hund på dansk?",
+    "korrekt": "Terry",
+    "forkerte": [],
+    "forklaring": "På fransk hedder hunden Milou.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0047",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvem malede 'Solsikker'?",
+    "korrekt": "Vincent van Gogh",
+    "forkerte": [],
+    "forklaring": "Van Gogh malede flere versioner af motivet i Arles i Sydfrankrig.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0048",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder Disney-filmen om løveungen Simba?",
+    "korrekt": "Løvernes Konge",
+    "forkerte": [],
+    "forklaring": "Filmen kom i 1994, og musikken er bl.a. skrevet af Elton John.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0049",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvem skrev 'Ringenes Herre'?",
+    "korrekt": "J.R.R. Tolkien",
+    "forkerte": [],
+    "forklaring": "Tolkien var professor i oldengelsk ved universitetet i Oxford.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0050",
+    "kategori": "underholdning",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder Pippi Langstrømpes hest på dansk?",
+    "korrekt": "Lille Onkel",
+    "forkerte": [],
+    "forklaring": "Pippi er så stærk, at hun kan løfte hesten med ét greb.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0051",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvem var forsanger i Gasolin'?",
+    "korrekt": "Kim Larsen",
+    "forkerte": [],
+    "forklaring": "Gasolin' var et af Danmarks største rockbands i 1970'erne.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0052",
+    "kategori": "underholdning",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvilken dansk film, baseret på en fortælling af Karen Blixen, vandt Oscar i 1988?",
+    "korrekt": "Babettes gæstebud",
+    "forkerte": [],
+    "forklaring": "Det var den første danske film, der vandt Oscar for bedste udenlandske film.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0053",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvem skrev 'Romeo og Julie'?",
+    "korrekt": "William Shakespeare",
+    "forkerte": [],
+    "forklaring": "Stykket foregår i den italienske by Verona.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0054",
+    "kategori": "underholdning",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder troldmandsskolen i Harry Potter?",
+    "korrekt": "Hogwarts",
+    "forkerte": [],
+    "forklaring": "Skolen har fire kollegier: Gryffindor, Slytherin, Hufflepuff og Ravenclaw.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0055",
+    "kategori": "underholdning",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvem komponerede 'De fire årstider'?",
+    "korrekt": "Antonio Vivaldi",
+    "forkerte": [],
+    "forklaring": "Vivaldi var præst og blev kaldt 'den røde præst' på grund af sit røde hår.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0056",
+    "kategori": "underholdning",
+    "niveau": 4,
+    "type": "fri",
+    "spoergsmaal": "Hvem tegnede tegneserien 'Valhalla'?",
+    "korrekt": "Peter Madsen",
+    "forkerte": [],
+    "forklaring": "Serien blev også til tegnefilmen 'Valhalla' fra 1986.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0057",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder Yvonnes mand i Olsen-banden?",
+    "korrekt": "Kjeld",
+    "forkerte": [],
+    "forklaring": "Kjeld blev spillet af Poul Bundgaard.",
+    "status": "godkendt"
+  },
+  {
+    "id": "und-0058",
+    "kategori": "underholdning",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvilken forfatter skabte detektiven Hercule Poirot?",
+    "korrekt": "Agatha Christie",
+    "forkerte": [],
+    "forklaring": "Poirot er belgisk og elsker orden og 'de små grå celler'.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0039",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilken planet er mest kendt for sine store ringe?",
+    "korrekt": "Saturn",
+    "forkerte": [],
+    "forklaring": "Ringene består mest af is og sten og er kun omkring 10 meter tykke mange steder.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0040",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad er det kemiske symbol for jern?",
+    "korrekt": "Fe",
+    "forkerte": [],
+    "forklaring": "Fe kommer af det latinske ord for jern, ferrum.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0041",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilken gas skal vi indånde for at overleve?",
+    "korrekt": "Ilt",
+    "forkerte": [],
+    "forklaring": "Luften, vi indånder, består dog mest af kvælstof – omkring 78 %.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0042",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvor mange grader er en ret vinkel?",
+    "korrekt": "90",
+    "forkerte": [],
+    "forklaring": "En hel cirkel er 360 grader.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0043",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad kaldes Jordens naturlige satellit?",
+    "korrekt": "Månen",
+    "forkerte": [],
+    "forklaring": "Månen er omkring 384.000 km væk fra Jorden.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0044",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvilket organ bruger vi til at trække vejret med?",
+    "korrekt": "Lungerne",
+    "forkerte": [],
+    "forklaring": "Et voksent menneske trækker vejret omkring 20.000 gange i døgnet.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0045",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Ved hvilken temperatur fryser vand til is?",
+    "korrekt": "0 °C",
+    "forkerte": [],
+    "forklaring": "Saltvand fryser ved en lavere temperatur end ferskvand.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0046",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvem fik patent på telefonen i 1876?",
+    "korrekt": "Alexander Graham Bell",
+    "forkerte": [],
+    "forklaring": "Bell var oprindeligt lærer for døve.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0047",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvad kaldes den almindelige form for celledeling, hvor der dannes to ens celler?",
+    "korrekt": "Mitose",
+    "forkerte": [],
+    "forklaring": "Ved meiose dannes kønsceller med halvt så mange kromosomer.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0048",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvor mange sider har en sekskant?",
+    "korrekt": "6",
+    "forkerte": [],
+    "forklaring": "Bier bygger deres voksceller som sekskanter, fordi det udnytter pladsen bedst.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0049",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvilken planet ligger længst væk fra Solen?",
+    "korrekt": "Neptun",
+    "forkerte": [],
+    "forklaring": "Et år på Neptun varer omkring 165 jordår.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0050",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvem opdagede penicillinen i 1928?",
+    "korrekt": "Alexander Fleming",
+    "forkerte": [],
+    "forklaring": "Fleming opdagede ved et tilfælde, at en skimmelsvamp dræbte bakterier i en petriskål.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0051",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvilken enhed måles lydstyrke i?",
+    "korrekt": "Decibel",
+    "forkerte": [],
+    "forklaring": "Hver gang lydstyrken stiger med 10 decibel, opleves lyden omtrent dobbelt så høj.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0052",
+    "kategori": "videnskab",
+    "niveau": 1,
+    "type": "fri",
+    "spoergsmaal": "Hvad hedder kraften, der får ting til at falde mod jorden?",
+    "korrekt": "Tyngdekraften",
+    "forkerte": [],
+    "forklaring": "På Månen er tyngdekraften kun omkring en sjettedel af Jordens.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0053",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvilket år landede de første mennesker på Månen?",
+    "korrekt": "1969",
+    "forkerte": [],
+    "forklaring": "I alt har 12 mennesker gået på Månen, alle mellem 1969 og 1972.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0054",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad kaldes et tal, der kun kan deles med 1 og sig selv?",
+    "korrekt": "Primtal",
+    "forkerte": [],
+    "forklaring": "2 er det eneste lige primtal.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0055",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvem var den første kvinde, der fik Nobelprisen?",
+    "korrekt": "Marie Curie",
+    "forkerte": [],
+    "forklaring": "Hun fik Nobelprisen to gange – i fysik i 1903 og i kemi i 1911.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0056",
+    "kategori": "videnskab",
+    "niveau": 3,
+    "type": "fri",
+    "spoergsmaal": "Hvor mange kromosomer har et menneske normalt i hver celle?",
+    "korrekt": "46",
+    "forkerte": [],
+    "forklaring": "De 46 kromosomer er fordelt i 23 par – et sæt fra hver forælder.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0057",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad bevæger sig med omkring 300.000 km i sekundet?",
+    "korrekt": "Lys",
+    "forkerte": [],
+    "forklaring": "Lyset kan nå rundt om Jorden omkring 7,5 gange på ét sekund.",
+    "status": "godkendt"
+  },
+  {
+    "id": "vid-0058",
+    "kategori": "videnskab",
+    "niveau": 2,
+    "type": "fri",
+    "spoergsmaal": "Hvad er kvadratroden af 144?",
+    "korrekt": "12",
+    "forkerte": [],
+    "forklaring": "144 kaldes også et gros – 12 dusin.",
+    "status": "godkendt"
+  }
 ]

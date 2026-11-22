@@ -18,7 +18,8 @@ const SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/d
 const QR_JS = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
 
 let ALL = [];      // hele banken (til udfordrings-links)
-let BANK = [];     // kun spilbare spørgsmål
+let BANK = [];     // kun spilbare spørgsmål (alle typer)
+let BANK_MC = [];  // spilbare med svarmuligheder (mc + sandt/falsk)
 let cleanup = null;
 let installPrompt = null;
 let wakeLock = null;
@@ -71,24 +72,25 @@ function shuffle(arr, rnd = Math.random) {
 }
 
 /* ---------- Udvælgelse af spørgsmål ---------- */
-function pick({ kat = null, niv = null, n = 10, rnd = Math.random, exclude = new Set() } = {}) {
-  const pool = BANK.filter(q => !exclude.has(q.id) && (!kat || kat.includes(q.kategori)) && (!niv || q.niveau === niv));
+function pick({ kat = null, niv = null, n = 10, rnd = Math.random, exclude = new Set(), alle = false } = {}) {
+  const pool = (alle ? BANK : BANK_MC).filter(q => !exclude.has(q.id) && (!kat || kat.includes(q.kategori)) && (!niv || q.niveau === niv));
   return shuffle(pool, rnd).slice(0, n);
 }
 function levelsFor(n) {
   const pattern = [1, 2, 1, 2, 3, 2, 3, 1, 4, 3];
   return Array.from({ length: n }, (_, i) => pattern[i % pattern.length]).sort((a, b) => a - b);
 }
-function pickMixed({ kat = null, levels = levelsFor(10), rnd = Math.random, exclude = new Set() } = {}) {
+function pickMixed({ kat = null, levels = levelsFor(10), rnd = Math.random, exclude = new Set(), alle = false } = {}) {
   const used = new Set(exclude), out = [];
   for (const lv of levels) {
-    const q = pick({ kat, niv: lv, n: 1, rnd, exclude: used })[0] || pick({ kat, n: 1, rnd, exclude: used })[0];
+    const q = pick({ kat, niv: lv, n: 1, rnd, exclude: used, alle })[0] || pick({ kat, n: 1, rnd, exclude: used, alle })[0];
     if (q) { used.add(q.id); out.push(q); }
   }
   return out;
 }
-function pickSet({ kat, niv, n, rnd }) { return niv ? pick({ kat, niv, n, rnd }) : pickMixed({ kat, levels: levelsFor(n), rnd }); }
+function pickSet({ kat, niv, n, rnd, alle = false }) { return niv ? pick({ kat, niv, n, rnd, alle }) : pickMixed({ kat, levels: levelsFor(n), rnd, alle }); }
 function optionsFor(q, rnd = Math.random) {
+  if (q.type === 'fri') return { opts: [], correct: -1 };
   if (q.type === 'sandt_falsk') return { opts: ['Sandt', 'Falsk'], correct: q.korrekt === 'Sandt' ? 0 : 1 };
   const opts = shuffle([q.korrekt, ...q.forkerte], rnd);
   return { opts, correct: opts.indexOf(q.korrekt) };
@@ -234,6 +236,115 @@ function recap(results) {
     <div>${esc(r.q.spoergsmaal)}<small>${esc(r.q.korrekt)}</small></div></li>`).join('')}</ul>`;
 }
 
+const INSTALL_SNOOZE_KEY = 'quizjagten-install-dismissed-until';
+function isStandalone() {
+  return Boolean(window.matchMedia?.('(display-mode: standalone)').matches || navigator.standalone === true || store.get('quizjagten-installed', false));
+}
+function installHelpText() {
+  const ua = navigator.userAgent || '';
+  const ios = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (ios) return 'På iPhone eller iPad: Åbn siden i Safari, tryk på Del, vælg “Føj til hjemmeskærm”, og tryk derefter på “Tilføj”.';
+  if (/Android/i.test(ua)) return 'På Android: Åbn browserens menu (⋮), og vælg “Installer app” eller “Føj til startskærm”.';
+  return 'Åbn browserens menu eller installationsikonet ved adresselinjen, og vælg “Installer Quizjagten”.';
+}
+function installPopupStyles() {
+  if ($('#quiz-install-styles')) return;
+  const style = document.createElement('style');
+  style.id = 'quiz-install-styles';
+  style.textContent = `
+    .quiz-install-backdrop{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:18px;background:rgba(5,7,20,.78);backdrop-filter:blur(8px);animation:quiz-install-in .18s ease-out}
+    .quiz-install-card{position:relative;width:min(100%,460px);padding:26px;border:1px solid rgba(255,255,255,.14);border-radius:24px;background:#222c73;color:#f5f3ff;box-shadow:0 24px 80px rgba(0,0,0,.5)}
+    .quiz-install-close{position:absolute;top:12px;right:12px;width:38px;height:38px;border:0;border-radius:50%;background:rgba(255,255,255,.1);color:#fff;font-size:1.4rem;cursor:pointer}
+    .quiz-install-mark{display:grid;place-items:center;width:56px;height:56px;margin:0 0 14px;border-radius:17px;background:#ffc933;color:#17205a;font-size:1.8rem}
+    .quiz-install-card h2{margin:0 38px 8px 0;font-size:1.55rem;line-height:1.15}
+    .quiz-install-card p{margin:0 0 18px;color:#d5d8f2;line-height:1.5}
+    .quiz-install-actions{display:grid;gap:9px}
+    .quiz-install-actions .btn{margin:0}
+    .quiz-install-later{border:0;background:transparent;color:#d5d8f2;padding:9px;cursor:pointer;font:inherit}
+    @keyframes quiz-install-in{from{opacity:0}to{opacity:1}}
+    @media(prefers-reduced-motion:reduce){.quiz-install-backdrop{animation:none}}
+  `;
+  document.head.appendChild(style);
+}
+function closeInstallPopup(snooze = true) {
+  $('#quiz-install-backdrop')?.remove();
+  if (snooze) store.set(INSTALL_SNOOZE_KEY, Date.now() + 7 * 864e5);
+}
+function showInstallPopup() {
+  if (isStandalone() || $('#quiz-install-backdrop')) return;
+  installPopupStyles();
+  const backdrop = document.createElement('div');
+  backdrop.id = 'quiz-install-backdrop';
+  backdrop.className = 'quiz-install-backdrop';
+  const dialog = document.createElement('section');
+  dialog.className = 'quiz-install-card';
+  dialog.setAttribute('role', 'dialog');
+  dialog.setAttribute('aria-modal', 'true');
+  dialog.setAttribute('aria-labelledby', 'quiz-install-title');
+  const close = document.createElement('button');
+  close.className = 'quiz-install-close';
+  close.type = 'button';
+  close.setAttribute('aria-label', 'Luk installationsvejledningen');
+  close.textContent = '×';
+  close.onclick = () => closeInstallPopup();
+  const mark = document.createElement('div');
+  mark.className = 'quiz-install-mark';
+  mark.setAttribute('aria-hidden', 'true');
+  mark.textContent = '↓';
+  const title = document.createElement('h2');
+  title.id = 'quiz-install-title';
+  title.textContent = 'Hent Quizjagten';
+  const description = document.createElement('p');
+  description.textContent = installPrompt
+    ? 'Installér quizzen på din enhed, så den ligger klar på hjemmeskærmen og kan åbnes som en app.'
+    : installHelpText();
+  const actions = document.createElement('div');
+  actions.className = 'quiz-install-actions';
+  if (installPrompt) {
+    const installButton = document.createElement('button');
+    installButton.className = 'btn primary';
+    installButton.type = 'button';
+    installButton.textContent = 'Installér Quizjagten';
+    installButton.onclick = async () => {
+      const promptEvent = installPrompt;
+      if (!promptEvent) return closeInstallPopup();
+      installButton.disabled = true;
+      try {
+        await promptEvent.prompt();
+        const choice = await promptEvent.userChoice;
+        if (choice?.outcome === 'accepted') store.set('quizjagten-installed', true);
+      } catch { /* browseren kan afvise prompten */ }
+      installPrompt = null;
+      closeInstallPopup();
+    };
+    actions.append(installButton);
+  } else {
+    const doneButton = document.createElement('button');
+    doneButton.className = 'btn primary';
+    doneButton.type = 'button';
+    doneButton.textContent = 'Forstået';
+    doneButton.onclick = () => closeInstallPopup();
+    actions.append(doneButton);
+  }
+  const later = document.createElement('button');
+  later.className = 'quiz-install-later';
+  later.type = 'button';
+  later.textContent = 'Ikke nu';
+  later.onclick = () => closeInstallPopup();
+  actions.append(later);
+  dialog.append(close, mark, title, description, actions);
+  backdrop.append(dialog);
+  backdrop.addEventListener('click', event => { if (event.target === backdrop) closeInstallPopup(); });
+  backdrop.addEventListener('keydown', event => { if (event.key === 'Escape') closeInstallPopup(); });
+  document.body.append(backdrop);
+  (installPrompt ? actions.querySelector('.btn') : close).focus();
+}
+function scheduleInstallPopup() {
+  if (isStandalone() || Date.now() < Number(store.get(INSTALL_SNOOZE_KEY, 0))) return;
+  clearTimeout(scheduleInstallPopup.timer);
+  scheduleInstallPopup.timer = setTimeout(showInstallPopup, 1800);
+}
+
 /* ---------- Forside ---------- */
 function home() {
   history.replaceState(null, '', location.pathname);
@@ -263,9 +374,11 @@ function home() {
   </div>`);
   const routes = { dag: dagens, traen: traening, surv: survival, spoerg: spoergSetup, duel: duelSetup, udfordr: udfordrSetup, host: liveHostSetup, join: () => liveJoin(), qm: quizmasterSetup };
   $$('.mode').forEach(b => b.onclick = () => BANK.length || ['join'].includes(b.dataset.m) ? routes[b.dataset.m]() : toast('Der er ingen spørgsmål endnu'));
-  if (installPrompt) {
-    const btn = $('#install'); btn.hidden = false;
-    btn.onclick = async () => { installPrompt.prompt(); await installPrompt.userChoice; installPrompt = null; btn.hidden = true; };
+  const installBtn = $('#install');
+  if (!isStandalone()) {
+    installBtn.hidden = false;
+    installBtn.onclick = showInstallPopup;
+    scheduleInstallPopup();
   }
 }
 
@@ -400,7 +513,7 @@ function spoergPlay(s, players) {
   function show() {
     const p = scored ? players[turn] : null;
     const niv = p && p.niv !== 'std' ? +p.niv : s.niv;
-    const q = pick({ kat: s.kat, niv, n: 1, exclude: used })[0];
+    const q = pick({ kat: s.kat, niv, n: 1, exclude: used, alle: true })[0];
     if (!q) { toast('Der er ikke flere spørgsmål med de valg'); return finish(); }
     used.add(q.id);
     const board = scored ? `<div class="teams">${players.map((x, i) =>
@@ -592,7 +705,7 @@ function quizmasterSetup() {
   $('#go').onclick = () => {
     const names = teams().map((t, i) => t.value.trim() || `Hold ${i + 1}`);
     store.set('qm-hold', names);
-    const qs = pickSet(readSetup());
+    const qs = pickSet({ ...readSetup(), alle: true });
     if (!qs.length) return toast('Ingen spørgsmål passer – vælg flere emner');
     quizmasterPlay(names, qs);
   };
@@ -607,12 +720,12 @@ async function quizmasterPlay(names, qs) {
     await new Promise(res => {
       render(`<div class="screen wide">${topbar(`Spørgsmål ${i + 1} af ${qs.length}`, '', i / qs.length * 100)}${board()}
         <div class="qmeta"><span>${esc(KAT[q.kategori])} · ${POINT[q.niveau]} point</span>${dots(q.niveau)}</div>
-        <h2 class="question">${esc(q.spoergsmaal)}</h2>${tilesHtml(opts)}
+        <h2 class="question">${esc(q.spoergsmaal)}</h2>${opts.length ? tilesHtml(opts) : ''}
         <div id="after"><button class="btn primary" id="show">Vis svar</button></div></div>`);
       $$('.tile').forEach(t => t.disabled = true);
       $('#show').onclick = () => {
         markTiles(-1, correct);
-        $('#after').innerHTML = `<p class="explain" style="margin-top:18px">${esc(q.forklaring)}</p>
+        $('#after').innerHTML = `${opts.length ? '' : `<div class="answer">${esc(q.korrekt)}</div>`}<p class="explain" style="margin-top:18px">${esc(q.forklaring)}</p>
           <div class="field"><span class="lbl">Hvem svarede rigtigt?</span><div class="row" style="flex-wrap:wrap">
           ${names.map((n, j) => `<button class="toggle-team" data-j="${j}" aria-pressed="false">${esc(n)}</button>`).join('')}</div></div>
           <button class="btn primary" id="next">${i === qs.length - 1 ? 'Se vinderen' : 'Næste spørgsmål'}</button>${reportHtml()}`;
@@ -864,7 +977,20 @@ async function livePlayer(code, name) {
 }
 
 /* ---------- Opstart ---------- */
-window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installPrompt = e; if ($('#install')) home(); });
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  installPrompt = e;
+  const btn = $('#install');
+  if (btn) btn.hidden = false;
+  if ($('#quiz-install-backdrop')) { closeInstallPopup(false); showInstallPopup(); }
+});
+window.addEventListener('appinstalled', () => {
+  installPrompt = null;
+  store.set('quizjagten-installed', true);
+  const btn = $('#install');
+  if (btn) btn.hidden = true;
+  closeInstallPopup(false);
+});
 
 async function init() {
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => { });
@@ -876,6 +1002,7 @@ async function init() {
     return;
   }
   BANK = ALL.filter(q => q.status === 'godkendt' || (CFG.VIS_KLADDER && q.status === 'kladde'));
+  BANK_MC = BANK.filter(q => q.type !== 'fri');
   document.title = CFG.APP_NAVN;
   const p = new URLSearchParams(location.search);
   if (p.has('duel')) return receiveChallenge(p);
