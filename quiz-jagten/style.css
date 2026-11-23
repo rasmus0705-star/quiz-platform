@@ -112,6 +112,10 @@ button, input, select { font: inherit; color: inherit; }
 .field { margin: 18px 0 0; }
 .field > label, .field > .lbl { display: block; font-weight: 600; margin-bottom: 8px; }
 .field .hint { color: var(--daemp); font-size: .9rem; margin: 6px 0 0; }
+.auto-next { display: flex; align-items: flex-start; gap: 12px; margin: 20px 0; padding: 15px; border: 1px solid var(--border); background: var(--tavle); border-radius: 14px; cursor: pointer; }
+.auto-next input { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--guld); flex: 0 0 auto; }
+.auto-next strong { display: block; }
+.auto-next .hint { margin-bottom: 0; }
 input[type=text], select {
   width: 100%; padding: 13px 14px; border-radius: 12px; border: 2px solid var(--tavle2);
   background: var(--tavle);
@@ -175,6 +179,15 @@ p.lead { color: var(--daemp); margin: 0; }
 .wait { text-align: center; padding: 18vh 0; }
 .wait h1 { font-size: 2.2rem; margin: 0 0 8px; }
 .wait p { color: var(--daemp); }
+.lead-title { margin: 24px 0 6px; font-size: 1.25rem; }
+.lead-bubbles { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px; margin: 12px 0 20px; }
+.lead-bubble { width: var(--bubble-size); height: var(--bubble-size); flex: 0 0 var(--bubble-size); border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; padding: 12px; text-align: center; overflow-wrap: anywhere; background: hsl(var(--bubble-hue) 70% 42%); border: 2px solid rgba(255,255,255,.35); box-shadow: 0 8px 24px rgba(0,0,0,.2); font-size: clamp(.7rem, 1.5vw, 1rem); }
+.lead-bubble strong { max-width: 100%; }
+.lead-bubble span { font-variant-numeric: tabular-nums; }
+.lead-bubble.leader { background: var(--guld); color: var(--nat); border: 4px solid #fff; box-shadow: 0 0 0 4px rgba(232,200,74,.35), 0 10px 28px rgba(0,0,0,.25); }
+.auto-countdown { padding: 12px 16px; text-align: center; border-radius: 12px; background: var(--fog); color: var(--papir); font-size: 1.1rem; }
+.auto-countdown b { color: var(--guld); font-size: 1.3em; }
+@media (max-width: 560px) { .lead-bubble { width: min(var(--bubble-size), 35vw); height: min(var(--bubble-size), 35vw); flex-basis: min(var(--bubble-size), 35vw); } }
 
 #toast {
   position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 140%);

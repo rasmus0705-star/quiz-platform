@@ -205,11 +205,11 @@ function ask(q, { head = '', rnd = Math.random, next = 'Næste' } = {}) {
 /* Opsætning: kategorier, niveau, antal */
 function setupFields({ count = true, defaultN = 10, mixedLabel = 'Blandet' } = {}) {
   return `
-  <div class="field"><span class="lbl">Emner</span><div class="chips" id="kats">
+  <div class="field"><span class="lbl">Emner</span><small class="hint">Vælg de emner, du vil have spørgsmål fra. Vælg alle for en blandet quiz.</small><div class="chips" id="kats">
     ${Object.entries(KAT).map(([k, v]) => `<button class="chip" data-k="${k}" aria-pressed="true">${v}</button>`).join('')}
   </div></div>
-  <div class="field"><span class="lbl">Sværhedsgrad</span>${seg('niv', [['mix', mixedLabel], ['1', 'Let'], ['2', 'Middel'], ['3', 'Svær'], ['4', 'Ekspert']], 'mix')}</div>
-  ${count ? `<div class="field"><span class="lbl">Antal spørgsmål</span>${seg('n', [['5', '5'], ['10', '10'], ['15', '15'], ['20', '20']], String(defaultN))}</div>` : ''}`;
+  <div class="field"><span class="lbl">Sværhedsgrad</span><small class="hint">Vælg niveau, eller bland alle niveauer.</small>${seg('niv', [['mix', mixedLabel], ['1', 'Let'], ['2', 'Middel'], ['3', 'Svær'], ['4', 'Ekspert']], 'mix')}</div>
+  ${count ? `<div class="field"><span class="lbl">Antal spørgsmål</span><small class="hint">Hvor mange spørgsmål quizzen skal indeholde.</small>${seg('n', [['5', '5'], ['10', '10'], ['15', '15'], ['20', '20']], String(defaultN))}</div>` : ''}`;
 }
 function seg(id, items, val) {
   return `<div class="seg" id="${id}" role="group">${items.map(([v, l]) => `<button data-v="${v}" aria-pressed="${v === val}">${l}</button>`).join('')}</div>`;
@@ -811,11 +811,12 @@ function liveHostSetup() {
   render(`<div class="screen">${topbar()}<h1 class="title">Live på storskærm</h1>
     <p class="lead">Vis denne skærm på TV eller computer. Deltagerne svarer på deres egen telefon – hurtige svar giver flest point.</p>
     ${setupFields({ defaultN: 15 })}
-    <div class="field"><span class="lbl">Sekunder pr. spørgsmål</span>${seg('sek', [['10', '10'], ['20', '20'], ['30', '30']], String(CFG.LIVE_SEKUNDER))}</div>
+    <div class="field"><span class="lbl">Sekunder pr. spørgsmål</span><small class="hint">Hvor lang tid deltagerne har til hvert svar.</small>${seg('sek', [['10', '10'], ['20', '20'], ['30', '30']], String(CFG.LIVE_SEKUNDER))}</div>
+    <label class="auto-next"><input id="auto-next" type="checkbox" checked><span><strong>Gå automatisk videre</strong><small class="hint">Vis først svar og stilling. Gå videre efter 7 sekunder, når alle har svaret eller tiden er gået.</small></span></label>
     <button class="btn primary" id="go">Opret rum</button></div>`);
   bindSetup();
   $('#go').onclick = () => {
-    const s = readSetup(); s.sek = +segVal('sek');
+    const s = readSetup(); s.sek = +segVal('sek'); s.autoNext = $('#auto-next').checked;
     s.qs = pickSet(s);
     if (!s.qs.length) return toast('Ingen spørgsmål passer – vælg flere emner');
     liveHost(s).catch(e => { toast(e.message); goHome(); });
@@ -829,9 +830,9 @@ async function liveHost(s) {
   const ch = sb.channel('quiz-' + code, { config: { broadcast: { self: false }, presence: { key: 'host' } } });
   const players = {};             // id -> {name, score, online}
   let st = { phase: 'lobby' };    // offentlig tilstand
-  let answers = {}, qStart = 0, tick = null, cur = null;
+  let answers = {}, qStart = 0, tick = null, autoTimer = null, cur = null;
   keepAwake();
-  cleanup = () => { clearInterval(tick); sb.removeChannel(ch); };
+  cleanup = () => { clearInterval(tick); clearTimeout(autoTimer); sb.removeChannel(ch); };
 
   const send = payload => ch.send({ type: 'broadcast', event: 'state', payload });
   const publicState = () => st.phase === 'q' ? { ...st, remaining: Math.max(0, st.deadline - Date.now()) } : st;
@@ -854,7 +855,7 @@ async function liveHost(s) {
     answers[a.id] = { choice: a.choice, ms: Date.now() - qStart };
     if (!players[a.id]) players[a.id] = { name: String(a.name || 'Gæst').slice(0, 16), score: 0, online: true };
     updateCount();
-    if (online().every(([id]) => answers[id])) reveal();
+    if (online().length && online().every(([id]) => answers[id])) reveal('all');
   });
 
   await new Promise((res, rej) => ch.subscribe(async status => {
@@ -892,16 +893,16 @@ async function liveHost(s) {
       <h2 class="question">${esc(st.text)}</h2>${tilesHtml(opts)}
       <p class="explain" id="cnt" style="margin-top:18px"></p><button class="btn" id="now">Vis svar nu</button></div>`);
     $$('.tile').forEach(t => t.disabled = true);
-    $('#now').onclick = reveal;
+    $('#now').onclick = () => reveal('manual');
     updateCount();
     clearInterval(tick);
-    const upd = () => { const left = Math.ceil((st.deadline - Date.now()) / 1000); if ($('#t')) $('#t').textContent = Math.max(0, left); if (left <= 0) reveal(); };
+    const upd = () => { const left = Math.ceil((st.deadline - Date.now()) / 1000); if ($('#t')) $('#t').textContent = Math.max(0, left); if (left <= 0) reveal('timeout'); };
     upd(); tick = setInterval(upd, 250);
   }
   function updateCount() {
     if ($('#cnt')) $('#cnt').textContent = `${Object.keys(answers).length} af ${online().length} har svaret`;
   }
-  function reveal() {
+  function reveal(cause = 'manual') {
     if (st.phase !== 'q') return;
     clearInterval(tick);
     const correct = st._correct, gained = {}, counts = st.opts.map(() => 0);
@@ -917,15 +918,33 @@ async function liveHost(s) {
     const last = st.qi === st.total - 1;
     st = { phase: 'reveal', qi: st.qi, total: st.total, opts: st.opts, correct, gained, ranking: rank, last };
     send(st);
+    const maxScore = Math.max(1, ...rank.map(r => r.score));
+    const bubbles = rank.map((r, i) => {
+      const size = Math.round(100 + 95 * Math.sqrt(r.score / maxScore));
+      return `<div class="lead-bubble${i === 0 ? ' leader' : ''}" style="--bubble-size:${size}px;--bubble-hue:${Math.round(i * 360 / Math.max(1, rank.length))}" aria-label="${i + 1}. plads: ${esc(r.name)}, ${r.score} point"><strong>${i + 1}. ${esc(r.name)}</strong><span>${r.score} point</span></div>`;
+    }).join('');
+    const autoCountdown = s.autoNext ? `<p class="auto-countdown" id="auto-countdown" aria-live="polite">${cause === 'all' ? 'Alle har svaret' : cause === 'timeout' ? 'Tiden er gået' : 'Svarene er vist'} · næste spørgsmål om <b>7</b> sek.</p>` : '';
     render(`<div class="screen wide">${topbar(`Spørgsmål ${st.qi + 1} af ${st.total}`, '', (st.qi + 1) / st.total * 100)}
       <h2 class="question">${esc(cur.spoergsmaal)}</h2>
       <div class="tiles">${st.opts.map((o, i) => `<button class="tile a${i} ${i === correct ? 'right' : 'dim'}" disabled>
         <span class="shape" aria-hidden="true">${SHAPES[i]}</span><span>${esc(o)}</span><span class="cnt">${counts[i]}</span></button>`).join('')}</div>
       <p class="explain" style="margin-top:18px">${esc(cur.forklaring)}</p>
+      <h3 class="lead-title">Stilling</h3><div class="lead-bubbles">${bubbles}</div>
       <ol class="board">${rank.slice(0, 5).map(r => `<li>${esc(r.name)}${gained[r.id] ? `<span class="g">+${gained[r.id]}</span>` : ''}<span class="p">${r.score}</span></li>`).join('')}</ol>
+      ${autoCountdown}
       <button class="btn primary" id="next">${last ? 'Se vinderen' : 'Næste spørgsmål'}</button>${reportHtml()}</div>`);
     bindReport(cur);
-    $('#next').onclick = () => last ? finish() : nextQ(st.qi + 1);
+    const advance = () => { clearTimeout(autoTimer); autoTimer = null; last ? finish() : nextQ(st.qi + 1); };
+    $('#next').onclick = advance;
+    if (s.autoNext) {
+      let left = 7;
+      autoTimer = setInterval(() => {
+        left--;
+        const counter = $('#auto-countdown');
+        if (counter) counter.innerHTML = `Næste spørgsmål om <b>${left}</b> sek.`;
+        if (left <= 0) advance();
+      }, 1000);
+    }
   }
   function finish() {
     st = { phase: 'end', ranking: ranking(players) };
