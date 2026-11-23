@@ -28,6 +28,7 @@ let liveScoreboardHost = null;
 let liveScoreboardFullscreen = false;
 let scoreboardReady = false;
 let pendingScoreboardMessage = null;
+let lastScoreboardMessage = null;
 
 /* ---------- Hjælpere ---------- */
 const app = document.getElementById('app');
@@ -55,13 +56,18 @@ function ensureScoreboardFrame() {
     liveScoreboardFrame.title = 'Animeret live-scoreboard';
     liveScoreboardFrame.allow = 'fullscreen';
     liveScoreboardFrame.allowFullscreen = true;
-    liveScoreboardFrame.src = 'scoreboard.html?embed=1&v=12';
+    liveScoreboardFrame.addEventListener('load', () => {
+      scoreboardReady = false;
+      liveScoreboardFrame.contentWindow.postMessage({ type: 'quizjagten-sync' }, location.origin);
+    });
+    liveScoreboardFrame.src = 'scoreboard.html?embed=1&v=13';
     ensureScoreboardHost().append(liveScoreboardFrame);
   }
   return liveScoreboardFrame;
 }
 function sendScoreboardMessage(message) {
   ensureScoreboardFrame();
+  lastScoreboardMessage = message;
   pendingScoreboardMessage = message;
   if (scoreboardReady) {
     liveScoreboardFrame.contentWindow.postMessage(message, location.origin);
@@ -88,7 +94,10 @@ window.addEventListener('message', event => {
   if (event.source !== liveScoreboardFrame?.contentWindow || event.origin !== location.origin) return;
   if (event.data?.type === 'quizjagten-ready') {
     scoreboardReady = true;
-    if (pendingScoreboardMessage) sendScoreboardMessage(pendingScoreboardMessage);
+    if (lastScoreboardMessage) {
+      liveScoreboardFrame.contentWindow.postMessage(lastScoreboardMessage, location.origin);
+      pendingScoreboardMessage = null;
+    }
   }
   if (event.data?.type === 'quizjagten-exit-fullscreen') document.exitFullscreen?.();
 });
@@ -98,6 +107,7 @@ function destroyScoreboard() {
   liveScoreboardFrame = null;
   scoreboardReady = false;
   pendingScoreboardMessage = null;
+  lastScoreboardMessage = null;
   liveScoreboardFullscreen = false;
   if (liveScoreboardHost) liveScoreboardHost.hidden = true;
 }
@@ -961,7 +971,7 @@ async function liveHost(s) {
     st = { phase: 'q', qi: i, total: s.qs.length, text: cur.spoergsmaal, kat: KAT[cur.kategori], niv: cur.niveau, opts, deadline: qStart + s.sek * 1000, sek: s.sek };
     st._correct = correct; // sendes ikke (fjernes i publicState nedenfor)
     send(stripPrivate(publicState()));
-    render(`<div class="screen wide">${topbar(`Spørgsmål ${i + 1} af ${s.qs.length}`, '<span class="timer" id="t"></span>', i / s.qs.length * 100)}
+    render(`<div class="screen wide live-host-screen">${topbar(`Spørgsmål ${i + 1} af ${s.qs.length}`, '<span class="timer" id="t"></span>', i / s.qs.length * 100)}
       <div class="live-question-layout"><aside class="live-question-panel"><div class="qmeta"><span>${esc(st.kat)}</span>${dots(st.niv)}</div>
         <h2 class="live-side-question">${esc(st.text)}</h2>${tilesHtml(opts)}
         <p class="explain" id="cnt"></p><button class="btn" id="now">Vis svar nu</button></aside>
@@ -1004,7 +1014,7 @@ async function liveHost(s) {
       from: p.score - (gained[id] || 0), streak: streaks[id] || 0
     }));
     const autoCountdown = s.autoNext ? `<p class="auto-countdown" id="auto-countdown" aria-live="polite">${cause === 'all' ? 'Alle har svaret' : cause === 'timeout' ? 'Tiden er gået' : 'Svarene er vist'} · næste spørgsmål om <b>7</b> sek.</p>` : '';
-    render(`<div class="screen wide live-reveal">${topbar(`Spørgsmål ${st.qi + 1} af ${st.total}`, '', (st.qi + 1) / st.total * 100)}
+    render(`<div class="screen wide live-reveal live-host-screen">${topbar(`Spørgsmål ${st.qi + 1} af ${st.total}`, '', (st.qi + 1) / st.total * 100)}
       <div class="live-question-layout"><aside class="live-question-panel"><p class="reveal-question">${esc(cur.spoergsmaal)}</p>
         <div class="answer-reveal"><strong>Rigtigt svar:</strong> ${esc(st.opts[correct])}</div>
         <button class="btn graphic-fullscreen" id="graphic-fullscreen">⛶ Vis kun grafikken</button>
