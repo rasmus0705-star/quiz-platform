@@ -180,6 +180,14 @@ p.lead { color: var(--daemp); margin: 0; }
 .wait h1 { font-size: 2.2rem; margin: 0 0 8px; }
 .wait p { color: var(--daemp); }
 .lead-title { margin: 24px 0 6px; font-size: 1.25rem; }
+.scoreboard-frame-wrap { width: 100%; margin: 12px 0 20px; overflow: hidden; border: 1px solid var(--border); border-radius: 16px; background: #0b0d1a; }
+.scoreboard-frame-wrap iframe { display: block; width: 100%; height: min(58vh, 620px); min-height: 360px; border: 0; }
+.answer-reveal { display: inline-block; padding: 9px 14px; margin: 0 0 10px; border-radius: 10px; color: var(--nat); background: var(--guld); font-weight: 800; }
+.reveal-tiles { grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; }
+.wide .reveal-tiles .tile { min-height: 62px; padding: 10px 12px; font-size: clamp(.9rem, 1.3vw, 1.15rem); }
+.answer-explanation { margin: 8px 0 12px; color: var(--daemp); }
+.answer-explanation summary { cursor: pointer; width: fit-content; text-decoration: underline; }
+.answer-explanation p { margin: 6px 0; max-width: 75ch; }
 .lead-bubbles { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px; margin: 12px 0 20px; }
 .lead-bubble { width: var(--bubble-size); height: var(--bubble-size); flex: 0 0 var(--bubble-size); border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; padding: 12px; text-align: center; overflow-wrap: anywhere; background: hsl(var(--bubble-hue) 70% 42%); border: 2px solid rgba(255,255,255,.35); box-shadow: 0 8px 24px rgba(0,0,0,.2); font-size: clamp(.7rem, 1.5vw, 1rem); }
 .lead-bubble strong { max-width: 100%; }
@@ -188,6 +196,7 @@ p.lead { color: var(--daemp); margin: 0; }
 .auto-countdown { padding: 12px 16px; text-align: center; border-radius: 12px; background: var(--fog); color: var(--papir); font-size: 1.1rem; }
 .auto-countdown b { color: var(--guld); font-size: 1.3em; }
 @media (max-width: 560px) { .lead-bubble { width: min(var(--bubble-size), 35vw); height: min(var(--bubble-size), 35vw); flex-basis: min(var(--bubble-size), 35vw); } }
+@media (max-width: 720px) { .reveal-tiles { grid-template-columns: 1fr 1fr; } .scoreboard-frame-wrap iframe { height: 55vh; min-height: 330px; } }
 
 #toast {
   position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 140%);

@@ -830,7 +830,7 @@ async function liveHost(s) {
   const ch = sb.channel('quiz-' + code, { config: { broadcast: { self: false }, presence: { key: 'host' } } });
   const players = {};             // id -> {name, score, online}
   let st = { phase: 'lobby' };    // offentlig tilstand
-  let answers = {}, qStart = 0, tick = null, autoTimer = null, cur = null;
+  let answers = {}, qStart = 0, tick = null, autoTimer = null, cur = null, streaks = {};
   keepAwake();
   cleanup = () => { clearInterval(tick); clearTimeout(autoTimer); sb.removeChannel(ch); };
 
@@ -910,30 +910,36 @@ async function liveHost(s) {
       if (a.choice >= 0 && a.choice < counts.length) counts[a.choice]++;
       logAnswer(cur.id, a.choice === correct);
       if (a.choice === correct) {
-        const pts = Math.round(500 + 500 * Math.max(0, 1 - a.ms / (s.sek * 1000)));
+        streaks[id] = (streaks[id] || 0) + 1;
+        const bonus = streaks[id] >= 2 ? 100 * Math.min(streaks[id], 5) : 0;
+        const pts = Math.round(500 + 500 * Math.max(0, 1 - a.ms / (s.sek * 1000))) + bonus;
         gained[id] = pts; players[id].score += pts;
-      }
+      } else streaks[id] = 0;
     }
+    for (const id of Object.keys(players)) if (!answers[id]) streaks[id] = 0;
     const rank = ranking(players);
     const last = st.qi === st.total - 1;
     st = { phase: 'reveal', qi: st.qi, total: st.total, opts: st.opts, correct, gained, ranking: rank, last };
     send(st);
-    const maxScore = Math.max(1, ...rank.map(r => r.score));
-    const bubbles = rank.map((r, i) => {
-      const size = Math.round(100 + 95 * Math.sqrt(r.score / maxScore));
-      return `<div class="lead-bubble${i === 0 ? ' leader' : ''}" style="--bubble-size:${size}px;--bubble-hue:${Math.round(i * 360 / Math.max(1, rank.length))}" aria-label="${i + 1}. plads: ${esc(r.name)}, ${r.score} point"><strong>${i + 1}. ${esc(r.name)}</strong><span>${r.score} point</span></div>`;
-    }).join('');
+    const boardPlayers = Object.entries(players).map(([id, p]) => ({
+      id, name: p.name, score: p.score, gain: gained[id] || 0,
+      from: p.score - (gained[id] || 0), streak: streaks[id] || 0
+    }));
     const autoCountdown = s.autoNext ? `<p class="auto-countdown" id="auto-countdown" aria-live="polite">${cause === 'all' ? 'Alle har svaret' : cause === 'timeout' ? 'Tiden er gået' : 'Svarene er vist'} · næste spørgsmål om <b>7</b> sek.</p>` : '';
     render(`<div class="screen wide">${topbar(`Spørgsmål ${st.qi + 1} af ${st.total}`, '', (st.qi + 1) / st.total * 100)}
       <h2 class="question">${esc(cur.spoergsmaal)}</h2>
-      <div class="tiles">${st.opts.map((o, i) => `<button class="tile a${i} ${i === correct ? 'right' : 'dim'}" disabled>
+      <div class="answer-reveal"><strong>Rigtigt svar:</strong> ${esc(st.opts[correct])}</div>
+      <div class="tiles reveal-tiles">${st.opts.map((o, i) => `<button class="tile a${i} ${i === correct ? 'right' : 'dim'}" disabled>
         <span class="shape" aria-hidden="true">${SHAPES[i]}</span><span>${esc(o)}</span><span class="cnt">${counts[i]}</span></button>`).join('')}</div>
-      <p class="explain" style="margin-top:18px">${esc(cur.forklaring)}</p>
-      <h3 class="lead-title">Stilling</h3><div class="lead-bubbles">${bubbles}</div>
-      <ol class="board">${rank.slice(0, 5).map(r => `<li>${esc(r.name)}${gained[r.id] ? `<span class="g">+${gained[r.id]}</span>` : ''}<span class="p">${r.score}</span></li>`).join('')}</ol>
+      <details class="answer-explanation"><summary>Forklaring</summary><p>${esc(cur.forklaring)}</p></details>
+      <div class="scoreboard-frame-wrap"><iframe id="scoreboard-frame" title="Animeret live-scoreboard" src="scoreboard.html?embed=1" loading="eager"></iframe></div>
       ${autoCountdown}
       <button class="btn primary" id="next">${last ? 'Se vinderen' : 'Næste spørgsmål'}</button>${reportHtml()}</div>`);
     bindReport(cur);
+    const board = $('#scoreboard-frame');
+    board.addEventListener('load', () => board.contentWindow.postMessage({
+      type: 'quizjagten-round', round: st.qi + 1, last, players: boardPlayers
+    }, location.origin), { once: true });
     const advance = () => { clearTimeout(autoTimer); autoTimer = null; last ? finish() : nextQ(st.qi + 1); };
     $('#next').onclick = advance;
     if (s.autoNext) {

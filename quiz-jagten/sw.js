@@ -1,6 +1,6 @@
 ﻿'use strict';
-const CACHE = 'quizjagten-shell-v6';
-const SHELL = ['./', './index.html', './style.css', './config.js', './app.js', './questions.json', './manifest.webmanifest', './icon.svg', './fonts/fonts.css', './fonts/inter-latin-400-normal.woff2', './fonts/inter-latin-600-normal.woff2', './fonts/inter-latin-700-normal.woff2', './fonts/syne-latin-700-normal.woff2', './fonts/syne-latin-800-normal.woff2'];
+const CACHE = 'quizjagten-shell-v7';
+const SHELL = ['./', './index.html', './style.css', './config.js', './app.js', './scoreboard.html', './questions.json', './manifest.webmanifest', './icon.svg', './fonts/fonts.css', './fonts/inter-latin-400-normal.woff2', './fonts/inter-latin-600-normal.woff2', './fonts/inter-latin-700-normal.woff2', './fonts/syne-latin-700-normal.woff2', './fonts/syne-latin-800-normal.woff2'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
