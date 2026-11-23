@@ -830,9 +830,9 @@ async function liveHost(s) {
   const ch = sb.channel('quiz-' + code, { config: { broadcast: { self: false }, presence: { key: 'host' } } });
   const players = {};             // id -> {name, score, online}
   let st = { phase: 'lobby' };    // offentlig tilstand
-  let answers = {}, qStart = 0, tick = null, autoTimer = null, cur = null, streaks = {};
+  let answers = {}, qStart = 0, tick = null, autoTimer = null, cur = null, streaks = {}, removeGraphicListeners = () => {};
   keepAwake();
-  cleanup = () => { clearInterval(tick); clearTimeout(autoTimer); sb.removeChannel(ch); };
+  cleanup = () => { clearInterval(tick); clearTimeout(autoTimer); removeGraphicListeners(); sb.removeChannel(ch); };
 
   const send = payload => ch.send({ type: 'broadcast', event: 'state', payload });
   const publicState = () => st.phase === 'q' ? { ...st, remaining: Math.max(0, st.deadline - Date.now()) } : st;
@@ -928,7 +928,7 @@ async function liveHost(s) {
     const autoCountdown = s.autoNext ? `<p class="auto-countdown" id="auto-countdown" aria-live="polite">${cause === 'all' ? 'Alle har svaret' : cause === 'timeout' ? 'Tiden er gået' : 'Svarene er vist'} · næste spørgsmål om <b>7</b> sek.</p>` : '';
     render(`<div class="screen wide live-reveal">${topbar(`Spørgsmål ${st.qi + 1} af ${st.total}`, '', (st.qi + 1) / st.total * 100)}
       <p class="reveal-question">${esc(cur.spoergsmaal)}</p>
-      <div class="answer-reveal"><strong>Rigtigt svar:</strong> ${esc(st.opts[correct])}</div>
+      <div class="reveal-controls"><div class="answer-reveal"><strong>Rigtigt svar:</strong> ${esc(st.opts[correct])}</div><button class="btn graphic-fullscreen" id="graphic-fullscreen">⛶ Vis kun grafikken</button></div>
       <div class="scoreboard-frame-wrap"><iframe id="scoreboard-frame" title="Animeret live-scoreboard" src="scoreboard.html?embed=1" allow="fullscreen" allowfullscreen loading="eager"></iframe></div>
       ${autoCountdown}
       <button class="btn primary" id="next">${last ? 'Se vinderen' : 'Næste spørgsmål'}</button>${reportHtml()}
@@ -940,7 +940,22 @@ async function liveHost(s) {
     board.addEventListener('load', () => board.contentWindow.postMessage({
       type: 'quizjagten-round', round: st.qi + 1, last, players: boardPlayers
     }, location.origin), { once: true });
-    const advance = () => { clearTimeout(autoTimer); autoTimer = null; last ? finish() : nextQ(st.qi + 1); };
+    $('#graphic-fullscreen').onclick = async () => {
+      try {
+        await board.requestFullscreen();
+        board.contentWindow.postMessage({ type: 'quizjagten-graphic-mode', enabled: true }, location.origin);
+      } catch { toast('Fuld skærm understøttes ikke i denne browser'); }
+    };
+    const syncGraphicMode = () => {
+      if (!document.fullscreenElement && board.isConnected) board.contentWindow.postMessage({ type: 'quizjagten-graphic-mode', enabled: false }, location.origin);
+    };
+    const exitGraphicMode = event => {
+      if (event.source === board.contentWindow && event.origin === location.origin && event.data?.type === 'quizjagten-exit-fullscreen') document.exitFullscreen?.();
+    };
+    document.addEventListener('fullscreenchange', syncGraphicMode);
+    window.addEventListener('message', exitGraphicMode);
+    removeGraphicListeners = () => { document.removeEventListener('fullscreenchange', syncGraphicMode); window.removeEventListener('message', exitGraphicMode); };
+    const advance = () => { clearTimeout(autoTimer); autoTimer = null; removeGraphicListeners(); removeGraphicListeners = () => {}; last ? finish() : nextQ(st.qi + 1); };
     $('#next').onclick = advance;
     if (s.autoNext) {
       let left = 7;

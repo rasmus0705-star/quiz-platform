@@ -182,6 +182,9 @@ p.lead { color: var(--daemp); margin: 0; }
 .lead-title { margin: 24px 0 6px; font-size: 1.25rem; }
 .live-reveal { padding-top: 10px; }
 .reveal-question { max-width: 90ch; margin: 5px 0 8px; color: var(--daemp); font-size: clamp(1rem, 1.55vw, 1.45rem); line-height: 1.3; }
+.reveal-controls { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 14px; }
+.graphic-fullscreen { background: linear-gradient(135deg, #7c5cff, #5e35b1); border: 1px solid #a98cff; color: #fff; font-weight: 800; box-shadow: 0 0 20px rgba(124,92,255,.26); }
+.graphic-fullscreen:hover:not(:disabled) { border-color: #d4c7ff; background: #6d4bd6; }
 .scoreboard-frame-wrap { width: 100%; margin: 6px 0 10px; overflow: hidden; border: 1px solid var(--border); border-radius: 16px; background: #0b0d1a; }
 .scoreboard-frame-wrap iframe { display: block; width: 100%; height: min(70vh, 850px); min-height: 360px; border: 0; }
 .answer-reveal { display: inline-block; padding: 6px 11px; margin: 0 0 4px; border-radius: 9px; color: var(--nat); background: var(--guld); font-weight: 800; font-size: .95rem; }
