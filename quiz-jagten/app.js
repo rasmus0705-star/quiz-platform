@@ -23,6 +23,10 @@ let BANK_MC = [];  // spilbare med svarmuligheder (mc + sandt/falsk)
 let cleanup = null;
 let installPrompt = null;
 let wakeLock = null;
+let liveScoreboardFrame = null;
+let liveScoreboardHost = null;
+let liveScoreboardFullscreen = false;
+let pendingScoreboardMessage = null;
 
 /* ---------- Hjælpere ---------- */
 const app = document.getElementById('app');
@@ -34,13 +38,75 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { } }
 };
 
+function ensureScoreboardHost() {
+  if (!liveScoreboardHost) {
+    liveScoreboardHost = document.createElement('div');
+    liveScoreboardHost.id = 'live-scoreboard-host';
+    liveScoreboardHost.hidden = true;
+    document.body.append(liveScoreboardHost);
+  }
+  return liveScoreboardHost;
+}
+function ensureScoreboardFrame() {
+  if (!liveScoreboardFrame) {
+    liveScoreboardFrame = document.createElement('iframe');
+    liveScoreboardFrame.id = 'scoreboard-frame';
+    liveScoreboardFrame.title = 'Animeret live-scoreboard';
+    liveScoreboardFrame.allow = 'fullscreen';
+    liveScoreboardFrame.allowFullscreen = true;
+    liveScoreboardFrame.addEventListener('load', () => {
+      if (pendingScoreboardMessage) liveScoreboardFrame.contentWindow.postMessage(pendingScoreboardMessage, location.origin);
+    });
+    liveScoreboardFrame.src = 'scoreboard.html?embed=1';
+    ensureScoreboardHost().append(liveScoreboardFrame);
+  }
+  return liveScoreboardFrame;
+}
+function sendScoreboardMessage(message) {
+  const frame = ensureScoreboardFrame();
+  if (frame.contentDocument?.readyState === 'complete') frame.contentWindow.postMessage(message, location.origin);
+  else pendingScoreboardMessage = message;
+}
+function syncScoreboardFullscreen() {
+  if (!liveScoreboardFrame) return;
+  if (document.fullscreenElement === liveScoreboardFrame) {
+    liveScoreboardFullscreen = true;
+    liveScoreboardHost.hidden = false;
+    sendScoreboardMessage({ type: 'quizjagten-graphic-mode', enabled: true });
+    return;
+  }
+  if (!liveScoreboardFullscreen) return;
+  liveScoreboardFullscreen = false;
+  sendScoreboardMessage({ type: 'quizjagten-graphic-mode', enabled: false });
+  const slot = $('#scoreboard-frame-slot');
+  if (slot) slot.append(liveScoreboardFrame);
+  liveScoreboardHost.hidden = true;
+}
+document.addEventListener('fullscreenchange', syncScoreboardFullscreen);
+window.addEventListener('message', event => {
+  if (event.source === liveScoreboardFrame?.contentWindow && event.origin === location.origin && event.data?.type === 'quizjagten-exit-fullscreen') document.exitFullscreen?.();
+});
+function destroyScoreboard() {
+  if (document.fullscreenElement === liveScoreboardFrame) document.exitFullscreen?.();
+  liveScoreboardFrame?.remove();
+  liveScoreboardFrame = null;
+  pendingScoreboardMessage = null;
+  liveScoreboardFullscreen = false;
+  if (liveScoreboardHost) liveScoreboardHost.hidden = true;
+}
+
 function render(html) {
+  if (liveScoreboardFrame && app.contains(liveScoreboardFrame)) ensureScoreboardHost().append(liveScoreboardFrame);
   app.innerHTML = html;
+  const slot = $('#scoreboard-frame-slot');
+  if (slot && liveScoreboardFrame && !liveScoreboardFullscreen) slot.append(liveScoreboardFrame);
+  if (!liveScoreboardFullscreen && liveScoreboardHost) liveScoreboardHost.hidden = true;
   window.scrollTo(0, 0);
   $$('[data-home]').forEach(b => b.addEventListener('click', goHome));
 }
 function goHome() {
   if (cleanup) { try { cleanup(); } catch { } cleanup = null; }
+  destroyScoreboard();
   releaseWake();
   home();
 }
@@ -830,9 +896,9 @@ async function liveHost(s) {
   const ch = sb.channel('quiz-' + code, { config: { broadcast: { self: false }, presence: { key: 'host' } } });
   const players = {};             // id -> {name, score, online}
   let st = { phase: 'lobby' };    // offentlig tilstand
-  let answers = {}, qStart = 0, tick = null, autoTimer = null, cur = null, streaks = {}, removeGraphicListeners = () => {};
+  let answers = {}, qStart = 0, tick = null, autoTimer = null, cur = null, streaks = {};
   keepAwake();
-  cleanup = () => { clearInterval(tick); clearTimeout(autoTimer); removeGraphicListeners(); sb.removeChannel(ch); };
+  cleanup = () => { clearInterval(tick); clearTimeout(autoTimer); sb.removeChannel(ch); };
 
   const send = payload => ch.send({ type: 'broadcast', event: 'state', payload });
   const publicState = () => st.phase === 'q' ? { ...st, remaining: Math.max(0, st.deadline - Date.now()) } : st;
@@ -889,9 +955,14 @@ async function liveHost(s) {
     st._correct = correct; // sendes ikke (fjernes i publicState nedenfor)
     send(stripPrivate(publicState()));
     render(`<div class="screen wide">${topbar(`Spørgsmål ${i + 1} af ${s.qs.length}`, '<span class="timer" id="t"></span>', i / s.qs.length * 100)}
-      <div class="qmeta"><span>${esc(st.kat)}</span>${dots(st.niv)}</div>
-      <h2 class="question">${esc(st.text)}</h2>${tilesHtml(opts)}
-      <p class="explain" id="cnt" style="margin-top:18px"></p><button class="btn" id="now">Vis svar nu</button></div>`);
+      <div class="live-question-layout"><aside class="live-question-panel"><div class="qmeta"><span>${esc(st.kat)}</span>${dots(st.niv)}</div>
+        <h2 class="live-side-question">${esc(st.text)}</h2>${tilesHtml(opts)}
+        <p class="explain" id="cnt"></p><button class="btn" id="now">Vis svar nu</button></aside>
+        <div class="scoreboard-frame-wrap" id="scoreboard-frame-slot"></div></div></div>`);
+    const standingPlayers = Object.entries(players).map(([id, p]) => ({ id, name: p.name, score: p.score, gain: 0, from: p.score, streak: streaks[id] || 0 }));
+    const frame = ensureScoreboardFrame();
+    if (!liveScoreboardFullscreen) $('#scoreboard-frame-slot').append(frame);
+    sendScoreboardMessage({ type: 'quizjagten-standings', round: i + 1, players: standingPlayers });
     $$('.tile').forEach(t => t.disabled = true);
     $('#now').onclick = () => reveal('manual');
     updateCount();
@@ -927,35 +998,32 @@ async function liveHost(s) {
     }));
     const autoCountdown = s.autoNext ? `<p class="auto-countdown" id="auto-countdown" aria-live="polite">${cause === 'all' ? 'Alle har svaret' : cause === 'timeout' ? 'Tiden er gået' : 'Svarene er vist'} · næste spørgsmål om <b>7</b> sek.</p>` : '';
     render(`<div class="screen wide live-reveal">${topbar(`Spørgsmål ${st.qi + 1} af ${st.total}`, '', (st.qi + 1) / st.total * 100)}
-      <p class="reveal-question">${esc(cur.spoergsmaal)}</p>
-      <div class="reveal-controls"><div class="answer-reveal"><strong>Rigtigt svar:</strong> ${esc(st.opts[correct])}</div><button class="btn graphic-fullscreen" id="graphic-fullscreen">⛶ Vis kun grafikken</button></div>
-      <div class="scoreboard-frame-wrap"><iframe id="scoreboard-frame" title="Animeret live-scoreboard" src="scoreboard.html?embed=1" allow="fullscreen" allowfullscreen loading="eager"></iframe></div>
-      ${autoCountdown}
-      <button class="btn primary" id="next">${last ? 'Se vinderen' : 'Næste spørgsmål'}</button>${reportHtml()}
-      <details class="answer-explanation"><summary>Vis svarfordeling og forklaring</summary><div class="tiles reveal-tiles">${st.opts.map((o, i) => `<button class="tile a${i} ${i === correct ? 'right' : 'dim'}" disabled>
+      <div class="live-question-layout"><aside class="live-question-panel"><p class="reveal-question">${esc(cur.spoergsmaal)}</p>
+        <div class="answer-reveal"><strong>Rigtigt svar:</strong> ${esc(st.opts[correct])}</div>
+        <button class="btn graphic-fullscreen" id="graphic-fullscreen">⛶ Vis kun grafikken</button>
+        <details class="answer-explanation"><summary>Vis svarfordeling og forklaring</summary><div class="tiles reveal-tiles">${st.opts.map((o, i) => `<button class="tile a${i} ${i === correct ? 'right' : 'dim'}" disabled>
         <span class="shape" aria-hidden="true">${SHAPES[i]}</span><span>${esc(o)}</span><span class="cnt">${counts[i]}</span></button>`).join('')}</div>
-      <p>${esc(cur.forklaring)}</p></details></div>`);
+        <p>${esc(cur.forklaring)}</p></details></aside><div class="scoreboard-frame-wrap" id="scoreboard-frame-slot"></div></div>
+      ${autoCountdown}
+      <button class="btn primary" id="next">${last ? 'Se vinderen' : 'Næste spørgsmål'}</button>${reportHtml()}</div>`);
     bindReport(cur);
-    const board = $('#scoreboard-frame');
-    board.addEventListener('load', () => board.contentWindow.postMessage({
-      type: 'quizjagten-round', round: st.qi + 1, last, players: boardPlayers
-    }, location.origin), { once: true });
+    const board = ensureScoreboardFrame();
+    if (!liveScoreboardFullscreen) $('#scoreboard-frame-slot').append(board);
+    sendScoreboardMessage({ type: 'quizjagten-round', round: st.qi + 1, last, players: boardPlayers });
     $('#graphic-fullscreen').onclick = async () => {
       try {
+        ensureScoreboardHost().hidden = false;
+        ensureScoreboardHost().append(board);
         await board.requestFullscreen();
         board.contentWindow.postMessage({ type: 'quizjagten-graphic-mode', enabled: true }, location.origin);
-      } catch { toast('Fuld skærm understøttes ikke i denne browser'); }
+      } catch {
+        const slot = $('#scoreboard-frame-slot');
+        if (slot) slot.append(board);
+        ensureScoreboardHost().hidden = true;
+        toast('Fuld skærm understøttes ikke i denne browser');
+      }
     };
-    const syncGraphicMode = () => {
-      if (!document.fullscreenElement && board.isConnected) board.contentWindow.postMessage({ type: 'quizjagten-graphic-mode', enabled: false }, location.origin);
-    };
-    const exitGraphicMode = event => {
-      if (event.source === board.contentWindow && event.origin === location.origin && event.data?.type === 'quizjagten-exit-fullscreen') document.exitFullscreen?.();
-    };
-    document.addEventListener('fullscreenchange', syncGraphicMode);
-    window.addEventListener('message', exitGraphicMode);
-    removeGraphicListeners = () => { document.removeEventListener('fullscreenchange', syncGraphicMode); window.removeEventListener('message', exitGraphicMode); };
-    const advance = () => { clearTimeout(autoTimer); autoTimer = null; removeGraphicListeners(); removeGraphicListeners = () => {}; last ? finish() : nextQ(st.qi + 1); };
+    const advance = () => { clearTimeout(autoTimer); autoTimer = null; last ? finish() : nextQ(st.qi + 1); };
     $('#next').onclick = advance;
     if (s.autoNext) {
       let left = 7;

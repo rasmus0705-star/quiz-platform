@@ -319,9 +319,20 @@ function applyExternalRound(data){
   C[concept].init();
   if(!muted){audioInit();if(AC&&AC.state==='suspended')AC.resume();sfx.suspense();}
 }
+function applyExternalStandings(data){
+  if(!data||!Array.isArray(data.players)||!data.players.length)return;
+  teams=data.players.map((p,i)=>{
+    const [color]=PALETTE[i%PALETTE.length],score=Math.max(0,Number(p.score)||0);
+    return{i,name:String(p.name||'Gæst').slice(0,18),color,score,from:score,disp:score,vis:score,gain:0,streak:Math.max(0,Number(p.streak)||0),pulse:0,charge:0,boost:0,hit:0,x:0,y:0,vx:0,vy:0,r:30,rv:0,rot:Math.random()*6,waves:[],waveT:0};
+  });
+  const high=Math.max(...teams.map(t=>t.score)),leaders=teams.map((t,i)=>t.score===high?i:-1).filter(i=>i>=0);
+  round=Math.max(1,Number(data.round)||1);leaderIdx=high>0&&leaders.length===1?leaders[0]:-1;winner=-1;gameOver=false;
+  particles=[];floaters=[];banner=null;phase='idle';phaseT=0;C[concept].init();
+}
 if(EXTERNAL)window.addEventListener('message',event=>{
   if(event.source!==parent||event.origin!==location.origin)return;
   if(event.data?.type==='quizjagten-round')applyExternalRound(event.data);
+  if(event.data?.type==='quizjagten-standings')applyExternalStandings(event.data);
   if(event.data?.type==='quizjagten-graphic-mode')document.body.classList.toggle('graphic-fullscreen',!!event.data.enabled);
 });
 
