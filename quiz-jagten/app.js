@@ -55,7 +55,7 @@ function ensureScoreboardFrame() {
     liveScoreboardFrame.title = 'Animeret live-scoreboard';
     liveScoreboardFrame.allow = 'fullscreen';
     liveScoreboardFrame.allowFullscreen = true;
-    liveScoreboardFrame.src = 'scoreboard.html?embed=1';
+    liveScoreboardFrame.src = 'scoreboard.html?embed=1&v=12';
     ensureScoreboardHost().append(liveScoreboardFrame);
   }
   return liveScoreboardFrame;
