@@ -1,0 +1,34 @@
+name: Translate Quizjagten questions to English
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Generate English question bank
+        working-directory: quiz-jagten
+        env:
+          DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
+        run: python tools/translate_questions_deepl.py
+      - name: Commit translated questions
+        run: |
+          if git diff --quiet -- quiz-jagten/questions.en.json; then
+            echo "No translation changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add quiz-jagten/questions.en.json
+          git commit -m "Add English Quizjagten question bank"
+          git push

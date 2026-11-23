@@ -1,5 +1,5 @@
 ﻿'use strict';
-const CACHE = 'quizjagten-shell-v13';
+const CACHE = 'quizjagten-shell-v14';
 const SHELL = ['./', './index.html', './style.css', './config.js', './app.js', './scoreboard.html', './questions.json', './manifest.webmanifest', './icon.svg', './fonts/fonts.css', './fonts/inter-latin-400-normal.woff2', './fonts/inter-latin-600-normal.woff2', './fonts/inter-latin-700-normal.woff2', './fonts/syne-latin-700-normal.woff2', './fonts/syne-latin-800-normal.woff2'];
 
 self.addEventListener('install', event => {
@@ -14,7 +14,7 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
-  if (url.pathname.endsWith('/questions.json')) {
+  if (/\/questions(?:\.en)?\.json$/.test(url.pathname)) {
     event.respondWith((async () => {
       try {
         const response = await fetch(request);

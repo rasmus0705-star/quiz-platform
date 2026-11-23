@@ -11,7 +11,9 @@ const KAT = {
   historie: 'Historie', geografi: 'Geografi', natur: 'Natur', sport: 'Sport',
   underholdning: 'Underholdning', videnskab: 'Videnskab', sprog_kultur: 'Sprog & kultur', mad_drikke: 'Mad & drikke', blandet: 'Blandet'
 };
+const KAT_EN = { historie: 'History', geografi: 'Geography', natur: 'Nature', sport: 'Sports', underholdning: 'Entertainment', videnskab: 'Science', sprog_kultur: 'Language & culture', mad_drikke: 'Food & drink', blandet: 'Mixed' };
 const NIV = { 1: 'Let', 2: 'Middel', 3: 'Svær', 4: 'Ekspert' };
+const NIV_EN = { 1: 'Easy', 2: 'Medium', 3: 'Hard', 4: 'Expert' };
 const POINT = { 1: 1, 2: 2, 3: 3, 4: 5 };
 const SHAPES = ['▲', '◆', '●', '■'];
 const SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js';
@@ -20,6 +22,9 @@ const QR_JS = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.
 let ALL = [];      // hele banken (til udfordrings-links)
 let BANK = [];     // kun spilbare spørgsmål (alle typer)
 let BANK_MC = [];  // spilbare med svarmuligheder (mc + sandt/falsk)
+let BANK_DA = [];
+let BANK_EN = null;
+let quizLanguage = 'da';
 let cleanup = null;
 let installPrompt = null;
 let wakeLock = null;
@@ -174,10 +179,13 @@ function pickMixed({ kat = null, levels = levelsFor(10), rnd = Math.random, excl
 function pickSet({ kat, niv, n, rnd, alle = false }) { return niv ? pick({ kat, niv, n, rnd, alle }) : pickMixed({ kat, levels: levelsFor(n), rnd, alle }); }
 function optionsFor(q, rnd = Math.random) {
   if (q.type === 'fri') return { opts: [], correct: -1 };
-  if (q.type === 'sandt_falsk') return { opts: ['Sandt', 'Falsk'], correct: q.korrekt === 'Sandt' ? 0 : 1 };
+  if (q.type === 'sandt_falsk') return { opts: quizLanguage === 'en' ? ['True', 'False'] : ['Sandt', 'Falsk'], correct: q.korrekt === (quizLanguage === 'en' ? 'True' : 'Sandt') ? 0 : 1 };
   const opts = shuffle([q.korrekt, ...q.forkerte], rnd);
   return { opts, correct: opts.indexOf(q.korrekt) };
 }
+const categoryName = key => (quizLanguage === 'en' ? KAT_EN : KAT)[key] || key;
+const difficultyName = level => (quizLanguage === 'en' ? NIV_EN : NIV)[level];
+const numberLocale = () => quizLanguage === 'en' ? 'en-GB' : 'da-DK';
 
 /* ---------- Statistik og fejlmeldinger (Supabase, valgfrit) ---------- */
 const SB_OK = !!(CFG.SUPABASE_URL && CFG.SUPABASE_ANON_KEY);
@@ -243,7 +251,7 @@ function bindReport(q) {
 }
 
 /* ---------- UI-byggeklodser ---------- */
-const dots = n => `<span class="niv" aria-label="Sværhedsgrad: ${NIV[n]}">${[1, 2, 3, 4].map(i => `<b class="${i <= n ? 'on' : ''}"></b>`).join('')}<em>${NIV[n]}</em></span>`;
+const dots = n => `<span class="niv" aria-label="${quizLanguage === 'en' ? 'Difficulty' : 'Sværhedsgrad'}: ${(quizLanguage === 'en' ? NIV_EN : NIV)[n]}">${[1, 2, 3, 4].map(i => `<b class="${i <= n ? 'on' : ''}"></b>`).join('')}<em>${(quizLanguage === 'en' ? NIV_EN : NIV)[n]}</em></span>`;
 const topbar = (info = '', score = '', progress = null) => `
   <div class="top"><button class="x" data-home aria-label="Til forsiden">✕</button>
     <div class="info">${info}${progress !== null ? `<div class="progress"><i style="width:${progress}%"></i></div>` : ''}</div>
@@ -266,7 +274,7 @@ function ask(q, { head = '', rnd = Math.random, next = 'Næste' } = {}) {
     const { opts, correct } = optionsFor(q, rnd);
     const t0 = performance.now();
     render(`<div class="screen">${head}
-      <div class="qmeta"><span>${esc(KAT[q.kategori] || q.kategori)}</span>${dots(q.niveau)}</div>
+      <div class="qmeta"><span>${esc(categoryName(q.kategori))}</span>${dots(q.niveau)}</div>
       <h2 class="question">${esc(q.spoergsmaal)}</h2>
       ${tilesHtml(opts)}
       <div id="after" aria-live="polite"></div></div>`);
@@ -276,8 +284,9 @@ function ask(q, { head = '', rnd = Math.random, next = 'Næste' } = {}) {
       logAnswer(q.id, ok);
       navigator.vibrate?.(ok ? 40 : [60, 40, 60]);
       const label = typeof next === 'function' ? next(ok) : next;
-      $('#after').innerHTML = `<div class="verdict ${ok ? 'ok' : 'no'}">${ok ? 'Rigtigt' : 'Forkert'}</div>
-        <p class="explain">${esc(q.forklaring)}</p><button class="btn primary" id="next">${label}</button>${reportHtml()}`;
+      const nextLabel = quizLanguage === 'en' ? ({ 'Næste': 'Next', 'Se resultat': 'See results' }[label] || label) : label;
+      $('#after').innerHTML = `<div class="verdict ${ok ? 'ok' : 'no'}">${ok ? (quizLanguage === 'en' ? 'Correct' : 'Rigtigt') : (quizLanguage === 'en' ? 'Incorrect' : 'Forkert')}</div>
+        <p class="explain">${esc(q.forklaring)}</p><button class="btn primary" id="next">${nextLabel}</button>${reportHtml()}`;
       bindReport(q);
       $('#next').focus();
       $('#next').onclick = () => resolve({ q, ok, ms });
@@ -439,6 +448,7 @@ function home() {
     <nav class="home-nav" aria-label="Hovedmenu">
       <a class="home-logo" href="#" aria-label="Quizjagten forsiden">Quizjagten</a>
       <div class="home-nav-links">
+        ${BANK_EN ? `<label class="language-picker"><span>Sprog / Language</span><select id="quiz-language" aria-label="Vælg quizsprog"><option value="da" ${quizLanguage === 'da' ? 'selected' : ''}>Dansk</option><option value="en" ${quizLanguage === 'en' ? 'selected' : ''}>English</option></select></label>` : ''}
         <a href="#spiltyper">Spiltyper</a>
         <a href="#saadan">S&aring;dan spiller du</a>
         <a href="#kilder">Kilder</a>
@@ -448,12 +458,12 @@ function home() {
     <section class="home-hero">
       <div class="hero-eyebrow"><span></span> Almen viden &middot; 9 emner &middot; solo og selskab</div>
       <h1 class="home-title"><span class="line-dim">Velkommen til</span><span class="line-gold">Quizjagten</span></h1>
-      <p class="home-sub">Spil alene eller sammen med vennerne. V&aelig;lg blandt ${BANK.length.toLocaleString('da-DK')} sp&oslash;rgsm&aring;l i 9 emner.</p>
+      <p class="home-sub">Spil alene eller sammen med vennerne. V&aelig;lg blandt ${BANK.length.toLocaleString(numberLocale())} sp&oslash;rgsm&aring;l i 9 emner.</p>
       <div class="home-actions">
         <button class="home-primary hero-cta">Spil dagens quiz <span aria-hidden="true">&rarr;</span></button>
         <a class="home-ghost" href="#spiltyper">V&aelig;lg spiltyper</a>
       </div>
-      <div class="home-proof"><span>${BANK.length.toLocaleString('da-DK')} sp&oslash;rgsm&aring;l</span><i></i><span>9 emner</span><i></i><span>Alene eller sammen</span></div>
+      <div class="home-proof"><span>${BANK.length.toLocaleString(numberLocale())} sp&oslash;rgsm&aring;l</span><i></i><span>9 emner</span><i></i><span>Alene eller sammen</span></div>
     </section>
     <section class="home-content" id="spiltyper">
       <div class="home-section-heading">
@@ -498,6 +508,15 @@ function home() {
     </footer>
   </div>`);
   const routes = { dag: dagens, traen: traening, surv: survival, spoerg: spoergSetup, duel: duelSetup, udfordr: udfordrSetup, host: liveHostSetup, join: () => liveJoin(), qm: quizmasterSetup };
+  $('#quiz-language')?.addEventListener('change', event => {
+    quizLanguage = event.target.value;
+    document.documentElement.lang = quizLanguage;
+    store.set('quizjagten-language', quizLanguage);
+    ALL = quizLanguage === 'en' ? BANK_EN : BANK_DA;
+    BANK = ALL.filter(q => q.status === 'godkendt' || (CFG.VIS_KLADDER && q.status === 'kladde'));
+    BANK_MC = BANK.filter(q => q.type !== 'fri');
+    home();
+  });
   $$('.mode').forEach(b => b.onclick = () => BANK.length || ['join'].includes(b.dataset.m) ? routes[b.dataset.m]() : toast('Der er ingen sp\u00f8rgsm\u00e5l endnu'));
   $('.hero-cta').onclick = () => routes.dag();
   const installBtn = $('#install');
@@ -586,7 +605,7 @@ function survival() {
       const q = pick({ niv: lv, n: 1, exclude: used })[0] || pick({ n: 1, exclude: used })[0];
       if (!q) break;
       used.add(q.id);
-      last = await ask(q, { head: topbar(`Survival · ${NIV[lv]}`, `${streak} i træk`), next: ok => ok ? 'Næste' : 'Se resultat' });
+      last = await ask(q, { head: topbar(`Survival · ${difficultyName(lv)}`, `${streak} ${quizLanguage === 'en' ? 'in a row' : 'i træk'}`), next: ok => ok ? 'Næste' : 'Se resultat' });
       if (!last.ok) break;
       streak++;
     }
@@ -646,7 +665,7 @@ function spoergPlay(s, players) {
       `<span class="team ${i === turn ? 'turn' : ''}">${esc(x.name)}<b>${x.score}</b></span>`).join('')}</div>` : '';
     render(`<div class="screen">${topbar(scored ? '' : `Spørgsmål ${asked + 1}`)}${board}
       ${p ? `<p class="turnlbl">Spørgsmål til</p><h2 class="turnname">${esc(p.name)}</h2>` : ''}
-      <div class="qmeta"><span>${esc(KAT[q.kategori] || q.kategori)}${scored ? ` · ${POINT[q.niveau]} point` : ''}</span>${dots(q.niveau)}</div>
+      <div class="qmeta"><span>${esc(categoryName(q.kategori))}${scored ? ` · ${POINT[q.niveau]} ${quizLanguage === 'en' ? 'points' : 'point'}` : ''}</span>${dots(q.niveau)}</div>
       <h2 class="question">${esc(q.spoergsmaal)}</h2>
       <div id="hintbox"></div>
       <div id="after"><button class="btn primary" id="show">Vis svar</button>
@@ -845,7 +864,7 @@ async function quizmasterPlay(names, qs) {
     const q = qs[i], { opts, correct } = optionsFor(q);
     await new Promise(res => {
       render(`<div class="screen wide">${topbar(`Spørgsmål ${i + 1} af ${qs.length}`, '', i / qs.length * 100)}${board()}
-        <div class="qmeta"><span>${esc(KAT[q.kategori])} · ${POINT[q.niveau]} point</span>${dots(q.niveau)}</div>
+        <div class="qmeta"><span>${esc(categoryName(q.kategori))} · ${POINT[q.niveau]} ${quizLanguage === 'en' ? 'points' : 'point'}</span>${dots(q.niveau)}</div>
         <h2 class="question">${esc(q.spoergsmaal)}</h2>${opts.length ? tilesHtml(opts) : ''}
         <div id="after"><button class="btn primary" id="show">Vis svar</button></div></div>`);
       $$('.tile').forEach(t => t.disabled = true);
@@ -968,7 +987,7 @@ async function liveHost(s) {
     cur = s.qs[i];
     const { opts, correct } = optionsFor(cur);
     answers = {}; qStart = Date.now();
-    st = { phase: 'q', qi: i, total: s.qs.length, text: cur.spoergsmaal, kat: KAT[cur.kategori], niv: cur.niveau, opts, deadline: qStart + s.sek * 1000, sek: s.sek };
+    st = { phase: 'q', qi: i, total: s.qs.length, text: cur.spoergsmaal, kat: categoryName(cur.kategori), niv: cur.niveau, opts, deadline: qStart + s.sek * 1000, sek: s.sek };
     st._correct = correct; // sendes ikke (fjernes i publicState nedenfor)
     send(stripPrivate(publicState()));
     render(`<div class="screen wide live-host-screen">${topbar(`Spørgsmål ${i + 1} af ${s.qs.length}`, '<span class="timer" id="t"></span>', i / s.qs.length * 100)}
@@ -1164,11 +1183,19 @@ async function init() {
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => { });
   try {
     const res = await fetch('questions.json', { cache: 'no-cache' });
-    ALL = await res.json();
+    BANK_DA = await res.json();
   } catch {
     render(`<div class="screen"><h1 class="title">Spørgsmålene kunne ikke hentes</h1><p class="lead">Tjek forbindelsen og genindlæs siden.</p></div>`);
     return;
   }
+  try {
+    const en = await fetch('questions.en.json', { cache: 'no-cache' });
+    if (en.ok) BANK_EN = await en.json();
+  } catch { /* English bank is generated separately and is optional. */ }
+  if (!BANK_EN) quizLanguage = 'da';
+  else if (store.get('quizjagten-language', 'da') === 'en') quizLanguage = 'en';
+  document.documentElement.lang = quizLanguage;
+  ALL = quizLanguage === 'en' ? BANK_EN : BANK_DA;
   BANK = ALL.filter(q => q.status === 'godkendt' || (CFG.VIS_KLADDER && q.status === 'kladde'));
   BANK_MC = BANK.filter(q => q.type !== 'fri');
   document.title = CFG.APP_NAVN;
