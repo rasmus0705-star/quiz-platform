@@ -28,8 +28,14 @@ kbd{background:var(--panel);border:1px solid var(--line);border-radius:5px;paddi
 body.embedded header h1{font-size:16px}body.embedded header h1 span{font-size:12px}
 body.embedded #next,body.embedded #auto,body.embedded #nTeams,body.embedded #reset{display:none}
 body.embedded header{padding:10px 14px 8px}body.embedded .tabs{padding:0 14px}body.embedded #stageWrap{padding:8px 14px}
-body.embedded #stage{max-height:60vh}body.embedded #desc{font-size:13px;padding:2px 14px}
-@media(max-width:600px){body.embedded #stage{aspect-ratio:4/3;max-height:48vh}body.embedded .tabs{gap:4px}body.embedded .tab{padding:7px 9px;font-size:12px}}
+body.embedded #tips{display:none}body.embedded #stage{height:calc(100vh - 175px);aspect-ratio:auto;max-height:none}body.embedded #desc{font-size:12px;line-height:1.35;padding:2px 14px;max-height:34px;overflow:hidden}
+#fullscreen-exit{display:none;position:fixed;z-index:5;top:14px;right:14px;border:1px solid rgba(255,255,255,.4);background:rgba(11,13,26,.82);color:#fff;border-radius:999px;padding:10px 16px;font-size:15px;font-weight:800;cursor:pointer;backdrop-filter:blur(8px)}
+html:fullscreen,html:fullscreen body{width:100%;height:100%;overflow:hidden;background:#070914}
+html:fullscreen header,html:fullscreen .tabs,html:fullscreen #desc,html:fullscreen #tips{display:none!important}
+html:fullscreen #stageWrap{position:fixed;inset:0;padding:0}
+html:fullscreen #stage{width:100vw;height:100vh;max-height:none;aspect-ratio:auto;border:0;border-radius:0}
+html:fullscreen #fullscreen-exit{display:block}
+@media(max-width:600px){body.embedded header{padding:6px 10px}body.embedded .tabs{gap:4px}body.embedded .tab{padding:6px 8px;font-size:11px}body.embedded #stage{height:calc(100vh - 150px)}}
 </style>
 </head>
 <body>
@@ -40,6 +46,7 @@ body.embedded #stage{max-height:60vh}body.embedded #desc{font-size:13px;padding:
     <button class="b" id="auto">Auto: fra</button>
     <select id="nTeams" aria-label="Antal hold"></select>
     <button class="b on" id="snd">Lyd: til</button>
+    <button class="b" id="fullscreen">⛶ Fuld skærm</button>
     <button class="b" id="reset">Nulstil</button>
   </div>
 </header>
@@ -47,6 +54,7 @@ body.embedded #stage{max-height:60vh}body.embedded #desc{font-size:13px;padding:
 <div id="stageWrap"><canvas id="stage"></canvas></div>
 <div id="desc"></div>
   <div id="tips"><kbd>Mellemrum</kbd> næste runde · <kbd>1</kbd>–<kbd>5</kbd> skift visning · Opladning, pointanimationer, førerbanner, konfetti, stimebonus og lyd.</div>
+<button id="fullscreen-exit" type="button">Luk fuld skærm ✕</button>
 
 <script>
 const cv=document.getElementById('stage'),ctx=cv.getContext('2d');
@@ -365,6 +373,10 @@ document.getElementById('reset').onclick=()=>{setAuto(false);makeTeams(+sel.valu
 document.getElementById('snd').textContent='Lyd: '+(muted?'fra':'til');
 document.getElementById('snd').classList.toggle('on',!muted);
 document.getElementById('snd').onclick=e=>{muted=!muted;if(EXTERNAL)localStorage.setItem('quizjagten-board-muted',String(muted));e.target.textContent='Lyd: '+(muted?'fra':'til');e.target.classList.toggle('on',!muted);if(!muted){audioInit();AC?.resume();}};
+const fullscreenButton=document.getElementById('fullscreen');
+async function toggleFullscreen(){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{fullscreenButton.textContent='Fuld skærm understøttes ikke';setTimeout(()=>fullscreenButton.textContent='⛶ Fuld skærm',2200);}}
+fullscreenButton.onclick=toggleFullscreen;
+document.getElementById('fullscreen-exit').onclick=()=>document.exitFullscreen?.();
 sel.onchange=()=>{setAuto(false);makeTeams(+sel.value);};
 window.addEventListener('keydown',e=>{if(e.code==='Space'&&!EXTERNAL){e.preventDefault();nextRound();}const i=+e.key;if(i>=1&&i<=5)setConcept(ORDER[i-1]);});
 resize();makeTeams(5);const savedConcept=localStorage.getItem('quizjagten-board-concept');setConcept(EXTERNAL&&ORDER.includes(savedConcept)?savedConcept:'bubbles');requestAnimationFrame(frame);

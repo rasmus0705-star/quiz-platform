@@ -926,15 +926,15 @@ async function liveHost(s) {
       from: p.score - (gained[id] || 0), streak: streaks[id] || 0
     }));
     const autoCountdown = s.autoNext ? `<p class="auto-countdown" id="auto-countdown" aria-live="polite">${cause === 'all' ? 'Alle har svaret' : cause === 'timeout' ? 'Tiden er gået' : 'Svarene er vist'} · næste spørgsmål om <b>7</b> sek.</p>` : '';
-    render(`<div class="screen wide">${topbar(`Spørgsmål ${st.qi + 1} af ${st.total}`, '', (st.qi + 1) / st.total * 100)}
-      <h2 class="question">${esc(cur.spoergsmaal)}</h2>
+    render(`<div class="screen wide live-reveal">${topbar(`Spørgsmål ${st.qi + 1} af ${st.total}`, '', (st.qi + 1) / st.total * 100)}
+      <p class="reveal-question">${esc(cur.spoergsmaal)}</p>
       <div class="answer-reveal"><strong>Rigtigt svar:</strong> ${esc(st.opts[correct])}</div>
-      <div class="tiles reveal-tiles">${st.opts.map((o, i) => `<button class="tile a${i} ${i === correct ? 'right' : 'dim'}" disabled>
-        <span class="shape" aria-hidden="true">${SHAPES[i]}</span><span>${esc(o)}</span><span class="cnt">${counts[i]}</span></button>`).join('')}</div>
-      <details class="answer-explanation"><summary>Forklaring</summary><p>${esc(cur.forklaring)}</p></details>
-      <div class="scoreboard-frame-wrap"><iframe id="scoreboard-frame" title="Animeret live-scoreboard" src="scoreboard.html?embed=1" loading="eager"></iframe></div>
+      <div class="scoreboard-frame-wrap"><iframe id="scoreboard-frame" title="Animeret live-scoreboard" src="scoreboard.html?embed=1" allow="fullscreen" allowfullscreen loading="eager"></iframe></div>
       ${autoCountdown}
-      <button class="btn primary" id="next">${last ? 'Se vinderen' : 'Næste spørgsmål'}</button>${reportHtml()}</div>`);
+      <button class="btn primary" id="next">${last ? 'Se vinderen' : 'Næste spørgsmål'}</button>${reportHtml()}
+      <details class="answer-explanation"><summary>Vis svarfordeling og forklaring</summary><div class="tiles reveal-tiles">${st.opts.map((o, i) => `<button class="tile a${i} ${i === correct ? 'right' : 'dim'}" disabled>
+        <span class="shape" aria-hidden="true">${SHAPES[i]}</span><span>${esc(o)}</span><span class="cnt">${counts[i]}</span></button>`).join('')}</div>
+      <p>${esc(cur.forklaring)}</p></details></div>`);
     bindReport(cur);
     const board = $('#scoreboard-frame');
     board.addEventListener('load', () => board.contentWindow.postMessage({
