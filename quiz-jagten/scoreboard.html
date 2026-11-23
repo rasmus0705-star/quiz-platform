@@ -335,6 +335,7 @@ if(EXTERNAL)window.addEventListener('message',event=>{
   if(event.data?.type==='quizjagten-standings')applyExternalStandings(event.data);
   if(event.data?.type==='quizjagten-graphic-mode')document.body.classList.toggle('graphic-fullscreen',!!event.data.enabled);
 });
+if(EXTERNAL)parent.postMessage({type:'quizjagten-ready'},location.origin);
 
 /* ---------- loop ---------- */
 function update(dt){
@@ -371,7 +372,8 @@ function render(time){
   ctx.textBaseline='middle';
   font(13,700);ctx.textAlign='left';ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillText(round?'Spørgsmål '+round:'Klar',16,22);
   if(phase==='suspense'){const dots='.'.repeat(1+Math.floor(phaseT/250)%3);font(clamp(H*.045,14,26),800);ctx.textAlign='center';ctx.fillStyle='#ffd23f';ctx.fillText('Svarene tælles op'+dots,W/2,26);}
-  if(round===0&&phase==='idle'){font(clamp(H*.035,13,20),700);ctx.textAlign='center';ctx.fillStyle=`rgba(255,255,255,${.5+.4*Math.sin(time*3)})`;ctx.fillText('Tryk mellemrum eller "Næste spørgsmål"',W/2,H*.09);}
+  if(EXTERNAL&&teams.length===0){font(clamp(H*.04,16,26),800);ctx.textAlign='center';ctx.fillStyle='rgba(255,255,255,.72)';ctx.fillText('Venter på quizdeltagere …',W/2,H/2);}
+  else if(round===0&&phase==='idle'){font(clamp(H*.035,13,20),700);ctx.textAlign='center';ctx.fillStyle=`rgba(255,255,255,${.5+.4*Math.sin(time*3)})`;ctx.fillText('Tryk mellemrum eller "Næste spørgsmål"',W/2,H*.09);}
   if(banner&&banner.t>0){const T=banner.t,end=banner.big?4:2.6,inP=clamp(T/.35,0,1),out=T>end-.4?clamp((T-(end-.4))/.4,0,1):0,sc=easeOutBack(inP)*(1-out*.2),fs=clamp(H*(banner.big?.1:.065),18,banner.big?64:40);
     ctx.save();ctx.globalAlpha=1-out;ctx.translate(W/2,banner.big?H*.45:H*.17);ctx.scale(sc,sc);font(fs,900);const tw=ctx.measureText(banner.text).width;ctx.shadowColor=banner.color;ctx.shadowBlur=40;rr(-tw/2-28,-fs*.8,tw+56,fs*1.6,fs*.5);ctx.fillStyle=banner.color;ctx.fill();ctx.shadowBlur=0;ctx.lineWidth=3;ctx.strokeStyle='#fff';ctx.stroke();ctx.fillStyle='#0b0d1a';ctx.textAlign='center';ctx.fillText(banner.text,0,fs*.05);ctx.restore();}
   if(flash>0){ctx.fillStyle=`rgba(255,255,255,${flash*.28})`;ctx.fillRect(0,0,W,H);}
@@ -400,7 +402,7 @@ document.getElementById('fullscreen-exit').onclick=()=>{
 };
 sel.onchange=()=>{setAuto(false);makeTeams(+sel.value);};
 window.addEventListener('keydown',e=>{if(e.code==='Space'&&!EXTERNAL){e.preventDefault();nextRound();}const i=+e.key;if(i>=1&&i<=5)setConcept(ORDER[i-1]);});
-resize();makeTeams(5);const savedConcept=localStorage.getItem('quizjagten-board-concept');setConcept(EXTERNAL&&ORDER.includes(savedConcept)?savedConcept:'bubbles');requestAnimationFrame(frame);
+resize();if(!EXTERNAL)makeTeams(5);const savedConcept=localStorage.getItem('quizjagten-board-concept');setConcept(EXTERNAL&&ORDER.includes(savedConcept)?savedConcept:'bubbles');requestAnimationFrame(frame);
 </script>
 </body>
 </html>

@@ -26,6 +26,7 @@ let wakeLock = null;
 let liveScoreboardFrame = null;
 let liveScoreboardHost = null;
 let liveScoreboardFullscreen = false;
+let scoreboardReady = false;
 let pendingScoreboardMessage = null;
 
 /* ---------- Hjælpere ---------- */
@@ -54,18 +55,18 @@ function ensureScoreboardFrame() {
     liveScoreboardFrame.title = 'Animeret live-scoreboard';
     liveScoreboardFrame.allow = 'fullscreen';
     liveScoreboardFrame.allowFullscreen = true;
-    liveScoreboardFrame.addEventListener('load', () => {
-      if (pendingScoreboardMessage) liveScoreboardFrame.contentWindow.postMessage(pendingScoreboardMessage, location.origin);
-    });
     liveScoreboardFrame.src = 'scoreboard.html?embed=1';
     ensureScoreboardHost().append(liveScoreboardFrame);
   }
   return liveScoreboardFrame;
 }
 function sendScoreboardMessage(message) {
-  const frame = ensureScoreboardFrame();
-  if (frame.contentDocument?.readyState === 'complete') frame.contentWindow.postMessage(message, location.origin);
-  else pendingScoreboardMessage = message;
+  ensureScoreboardFrame();
+  pendingScoreboardMessage = message;
+  if (scoreboardReady) {
+    liveScoreboardFrame.contentWindow.postMessage(message, location.origin);
+    pendingScoreboardMessage = null;
+  }
 }
 function syncScoreboardFullscreen() {
   if (!liveScoreboardFrame) return;
@@ -84,12 +85,18 @@ function syncScoreboardFullscreen() {
 }
 document.addEventListener('fullscreenchange', syncScoreboardFullscreen);
 window.addEventListener('message', event => {
-  if (event.source === liveScoreboardFrame?.contentWindow && event.origin === location.origin && event.data?.type === 'quizjagten-exit-fullscreen') document.exitFullscreen?.();
+  if (event.source !== liveScoreboardFrame?.contentWindow || event.origin !== location.origin) return;
+  if (event.data?.type === 'quizjagten-ready') {
+    scoreboardReady = true;
+    if (pendingScoreboardMessage) sendScoreboardMessage(pendingScoreboardMessage);
+  }
+  if (event.data?.type === 'quizjagten-exit-fullscreen') document.exitFullscreen?.();
 });
 function destroyScoreboard() {
   if (document.fullscreenElement === liveScoreboardFrame) document.exitFullscreen?.();
   liveScoreboardFrame?.remove();
   liveScoreboardFrame = null;
+  scoreboardReady = false;
   pendingScoreboardMessage = null;
   liveScoreboardFullscreen = false;
   if (liveScoreboardHost) liveScoreboardHost.hidden = true;
