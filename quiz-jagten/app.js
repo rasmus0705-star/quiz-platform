@@ -32,7 +32,7 @@ let liveScoreboardFrame = null;
 let liveScoreboardHost = null;
 let liveScoreboardFullscreen = false;
 let scoreboardReady = false;
-let pendingScoreboardMessage = null;
+let pendingScoreboardMessages = [];
 let lastScoreboardMessage = null;
 
 /* ---------- Hjælpere ---------- */
@@ -65,7 +65,7 @@ function ensureScoreboardFrame() {
       scoreboardReady = false;
       liveScoreboardFrame.contentWindow.postMessage({ type: 'quizjagten-sync' }, location.origin);
     });
-    liveScoreboardFrame.src = 'scoreboard.html?embed=1&v=13';
+    liveScoreboardFrame.src = 'scoreboard.html?embed=1&v=14';
     ensureScoreboardHost().append(liveScoreboardFrame);
   }
   return liveScoreboardFrame;
@@ -73,11 +73,8 @@ function ensureScoreboardFrame() {
 function sendScoreboardMessage(message) {
   ensureScoreboardFrame();
   lastScoreboardMessage = message;
-  pendingScoreboardMessage = message;
-  if (scoreboardReady) {
-    liveScoreboardFrame.contentWindow.postMessage(message, location.origin);
-    pendingScoreboardMessage = null;
-  }
+  if (scoreboardReady) liveScoreboardFrame.contentWindow.postMessage(message, location.origin);
+  else pendingScoreboardMessages.push(message);
 }
 function syncScoreboardFullscreen() {
   if (!liveScoreboardFrame) return;
@@ -99,10 +96,10 @@ window.addEventListener('message', event => {
   if (event.source !== liveScoreboardFrame?.contentWindow || event.origin !== location.origin) return;
   if (event.data?.type === 'quizjagten-ready') {
     scoreboardReady = true;
-    if (lastScoreboardMessage) {
-      liveScoreboardFrame.contentWindow.postMessage(lastScoreboardMessage, location.origin);
-      pendingScoreboardMessage = null;
-    }
+    const queued = pendingScoreboardMessages.length > 0;
+    for (const message of pendingScoreboardMessages) liveScoreboardFrame.contentWindow.postMessage(message, location.origin);
+    pendingScoreboardMessages = [];
+    if (!queued && lastScoreboardMessage) liveScoreboardFrame.contentWindow.postMessage(lastScoreboardMessage, location.origin);
   }
   if (event.data?.type === 'quizjagten-exit-fullscreen') document.exitFullscreen?.();
 });
@@ -111,7 +108,7 @@ function destroyScoreboard() {
   liveScoreboardFrame?.remove();
   liveScoreboardFrame = null;
   scoreboardReady = false;
-  pendingScoreboardMessage = null;
+  pendingScoreboardMessages = [];
   lastScoreboardMessage = null;
   liveScoreboardFullscreen = false;
   if (liveScoreboardHost) liveScoreboardHost.hidden = true;
@@ -933,8 +930,13 @@ async function liveHost(s) {
   const players = {};             // id -> {name, score, online}
   let st = { phase: 'lobby' };    // offentlig tilstand
   let answers = {}, qStart = 0, tick = null, autoTimer = null, cur = null, streaks = {};
+  let boardView = store.get('quizjagten-board-view', 'split'), controlsTimer = null;
   keepAwake();
-  cleanup = () => { clearInterval(tick); clearTimeout(autoTimer); sb.removeChannel(ch); };
+  const setBoardView = mode => { if (!['question','split','graphic'].includes(mode)) return; boardView=mode; store.set('quizjagten-board-view',mode); const layout=$('.live-question-layout'); if(layout)layout.dataset.view=mode; const progress=$('.live-question-progress'); if(progress)progress.hidden=mode==='graphic'; sendScoreboardMessage({type:'quizjagten-view-mode',mode}); };
+  const showControls=()=>{document.body.classList.remove('live-controls-hidden');clearTimeout(controlsTimer);controlsTimer=setTimeout(()=>document.body.classList.add('live-controls-hidden'),2600);};
+  const onHostKey=e=>{if(e.altKey||e.ctrlKey||e.metaKey||/^(INPUT|TEXTAREA|SELECT)$/.test(e.target?.tagName||'')||e.target?.isContentEditable||!['q','reveal'].includes(st.phase))return;const k=e.key.toLowerCase();if(e.code==='Space'){e.preventDefault();(st.phase==='q'?$('#now'):$('#next'))?.click();}else if(k==='g'){e.preventDefault();setBoardView(({question:'split',split:'graphic',graphic:'question'})[boardView]||'split');}else if(k==='v')sendScoreboardMessage({type:'quizjagten-cycle-concept'});else if(k==='m')sendScoreboardMessage({type:'quizjagten-toggle-sound'});else if(/^[1-5]$/.test(k))sendScoreboardMessage({type:'quizjagten-set-concept',index:Number(k)-1});};
+  document.addEventListener('keydown',onHostKey); document.addEventListener('mousemove',showControls); showControls();
+  cleanup = () => { clearInterval(tick); clearTimeout(autoTimer); clearTimeout(controlsTimer); document.removeEventListener('keydown',onHostKey); document.removeEventListener('mousemove',showControls); document.body.classList.remove('live-controls-hidden'); sb.removeChannel(ch); };
 
   const send = payload => ch.send({ type: 'broadcast', event: 'state', payload });
   const publicState = () => st.phase === 'q' ? { ...st, remaining: Math.max(0, st.deadline - Date.now()) } : st;
@@ -990,15 +992,16 @@ async function liveHost(s) {
     st = { phase: 'q', qi: i, total: s.qs.length, text: cur.spoergsmaal, kat: categoryName(cur.kategori), niv: cur.niveau, opts, deadline: qStart + s.sek * 1000, sek: s.sek };
     st._correct = correct; // sendes ikke (fjernes i publicState nedenfor)
     send(stripPrivate(publicState()));
-    render(`<div class="screen wide live-host-screen">${topbar(`Spørgsmål ${i + 1} af ${s.qs.length}`, '<span class="timer" id="t"></span>', i / s.qs.length * 100)}
-      <div class="live-question-layout"><aside class="live-question-panel"><div class="qmeta"><span>${esc(st.kat)}</span>${dots(st.niv)}</div>
-        <h2 class="live-side-question">${esc(st.text)}</h2>${tilesHtml(opts)}
-        <p class="explain" id="cnt"></p><button class="btn" id="now">Vis svar nu</button></aside>
+    const progress=Array.from({length:s.qs.length},(_,n)=>`<i class="${n<i?'done':n===i?'current':''}"></i>`).join('');
+    let hue=0;for(const ch of st.kat)hue=(hue*31+ch.charCodeAt(0))%360;
+    render(`<div class="screen wide live-host-screen">${topbar(`Spørgsmål ${i+1} af ${s.qs.length}`, '<span class="timer" id="t"></span>')}
+      <div class="live-question-progress" aria-label="Spørgsmål ${i+1} af ${s.qs.length}">${progress}</div>
+      <div class="live-question-layout" data-view="${boardView}"><aside class="live-question-panel" style="--topic-hue:${hue}"><div class="qmeta"><span>${esc(st.kat)}</span>${dots(st.niv)}</div>
+        <h2 class="live-side-question">${esc(st.text)}</h2>${tilesHtml(opts)}<p class="explain" id="cnt"></p><div class="live-answer-avatars" id="answer-avatars"></div><button class="btn host-control" id="now">Vis svar nu</button></aside>
         <div class="scoreboard-frame-wrap" id="scoreboard-frame-slot"></div></div></div>`);
-    const standingPlayers = Object.entries(players).map(([id, p]) => ({ id, name: p.name, score: p.score, gain: 0, from: p.score, streak: streaks[id] || 0 }));
-    const frame = ensureScoreboardFrame();
-    if (!liveScoreboardFullscreen) $('#scoreboard-frame-slot').append(frame);
-    sendScoreboardMessage({ type: 'quizjagten-standings', round: i + 1, players: standingPlayers });
+    const standingPlayers=Object.entries(players).map(([id,p])=>({id,name:p.name,score:p.score,gain:0,from:p.score,streak:streaks[id]||0,answered:false}));
+    const frame=ensureScoreboardFrame();if(!liveScoreboardFullscreen)$('#scoreboard-frame-slot').append(frame);setBoardView(boardView);
+    sendScoreboardMessage({type:'quizjagten-question',round:i+1,total:s.qs.length,text:st.text,category:st.kat,options:opts,deadline:st.deadline,seconds:s.sek,players:standingPlayers});
     $$('.tile').forEach(t => t.disabled = true);
     $('#now').onclick = () => reveal('manual');
     updateCount();
@@ -1007,7 +1010,10 @@ async function liveHost(s) {
     upd(); tick = setInterval(upd, 250);
   }
   function updateCount() {
+    const statuses=Object.entries(players).map(([id,p])=>({id,name:p.name,answered:!!answers[id]}));
     if ($('#cnt')) $('#cnt').textContent = `${Object.keys(answers).length} af ${online().length} har svaret`;
+    const avatars=$('#answer-avatars'); if(avatars)avatars.innerHTML=statuses.map(p=>`<span class="live-answer-avatar ${p.answered?'answered':''}" title="${esc(p.name)}">${p.answered?'✓':esc(p.name.slice(0,2).toUpperCase())}</span>`).join('');
+    sendScoreboardMessage({type:'quizjagten-answer-status',players:statuses});
   }
   function reveal(cause = 'manual') {
     if (st.phase !== 'q') return;
@@ -1028,15 +1034,17 @@ async function liveHost(s) {
     const last = st.qi === st.total - 1;
     st = { phase: 'reveal', qi: st.qi, total: st.total, opts: st.opts, correct, gained, ranking: rank, last };
     send(st);
-    const boardPlayers = Object.entries(players).map(([id, p]) => ({
-      id, name: p.name, score: p.score, gain: gained[id] || 0,
-      from: p.score - (gained[id] || 0), streak: streaks[id] || 0
-    }));
+    const fastestEntry=Object.entries(answers).sort((a,b)=>a[1].ms-b[1].ms)[0];
+    const fastest=fastestEntry?{id:fastestEntry[0],name:players[fastestEntry[0]]?.name||'Gæst',ms:fastestEntry[1].ms}:null;
+    const boardPlayers=Object.entries(players).map(([id,p])=>({id,name:p.name,score:p.score,gain:gained[id]||0,from:p.score-(gained[id]||0),streak:streaks[id]||0,answered:!!answers[id],choice:answers[id]?.choice??-1,correct:answers[id]?.choice===correct}));
     const autoCountdown = s.autoNext ? `<p class="auto-countdown" id="auto-countdown" aria-live="polite">${cause === 'all' ? 'Alle har svaret' : cause === 'timeout' ? 'Tiden er gået' : 'Svarene er vist'} · næste spørgsmål om <b>7</b> sek.</p>` : '';
-    render(`<div class="screen wide live-reveal live-host-screen">${topbar(`Spørgsmål ${st.qi + 1} af ${st.total}`, '', (st.qi + 1) / st.total * 100)}
-      <div class="live-question-layout"><aside class="live-question-panel"><p class="reveal-question">${esc(cur.spoergsmaal)}</p>
-        <div class="answer-reveal"><strong>Rigtigt svar:</strong> ${esc(st.opts[correct])}</div>
-        <button class="btn graphic-fullscreen" id="graphic-fullscreen">⛶ Vis kun grafikken</button>
+    const progress=Array.from({length:st.total},(_,n)=>`<i class="${n<=st.qi?'done':''}"></i>`).join('');
+    const fastestHtml=fastest?`<p class="fastest-answer">Hurtigst: <strong>${esc(fastest.name)}</strong> · ${(fastest.ms/1000).toFixed(2)} sek.</p>`:'<p class="fastest-answer">Ingen nåede at svare</p>';
+    render(`<div class="screen wide live-reveal live-host-screen">${topbar(`Spørgsmål ${st.qi+1} af ${st.total}`, '')}
+      <div class="live-question-progress" aria-label="Spørgsmål ${st.qi+1} af ${st.total}">${progress}</div>
+      <div class="live-question-layout" data-view="${boardView}"><aside class="live-question-panel"><p class="reveal-question">${esc(cur.spoergsmaal)}</p>
+        <div class="answer-reveal"><strong>Rigtigt svar:</strong> ${esc(st.opts[correct])}</div>${fastestHtml}
+        <button class="btn graphic-fullscreen host-control" id="graphic-fullscreen">⛶ Vis kun grafikken</button>
         <details class="answer-explanation"><summary>Vis svarfordeling og forklaring</summary><div class="tiles reveal-tiles">${st.opts.map((o, i) => `<button class="tile a${i} ${i === correct ? 'right' : 'dim'}" disabled>
         <span class="shape" aria-hidden="true">${SHAPES[i]}</span><span>${esc(o)}</span><span class="cnt">${counts[i]}</span></button>`).join('')}</div>
         <p>${esc(cur.forklaring)}</p></details></aside><div class="scoreboard-frame-wrap" id="scoreboard-frame-slot"></div></div>
@@ -1045,8 +1053,10 @@ async function liveHost(s) {
     bindReport(cur);
     const board = ensureScoreboardFrame();
     if (!liveScoreboardFullscreen) $('#scoreboard-frame-slot').append(board);
-    sendScoreboardMessage({ type: 'quizjagten-round', round: st.qi + 1, last, players: boardPlayers });
+    setBoardView(boardView);
+    sendScoreboardMessage({type:'quizjagten-round',round:st.qi+1,total:st.total,last,question:cur.spoergsmaal,category:categoryName(cur.kategori),options:st.opts,correct,counts,fastest,nextIn:s.autoNext?7:0,players:boardPlayers});
     $('#graphic-fullscreen').onclick = async () => {
+      setBoardView('graphic');
       try {
         ensureScoreboardHost().hidden = false;
         ensureScoreboardHost().append(board);
@@ -1060,11 +1070,13 @@ async function liveHost(s) {
       }
     };
     const advance = () => { clearTimeout(autoTimer); autoTimer = null; last ? finish() : nextQ(st.qi + 1); };
-    $('#next').onclick = advance;
+    $('#next').classList.add('host-control'); $('#next').onclick = advance;
     if (s.autoNext) {
       let left = 7;
+      sendScoreboardMessage({type:'quizjagten-countdown',seconds:left});
       autoTimer = setInterval(() => {
         left--;
+        sendScoreboardMessage({type:'quizjagten-countdown',seconds:Math.max(0,left)});
         const counter = $('#auto-countdown');
         if (counter) counter.innerHTML = `Næste spørgsmål om <b>${left}</b> sek.`;
         if (left <= 0) advance();
@@ -1078,7 +1090,10 @@ async function liveHost(s) {
     const r = st.ranking;
     render(`<div class="screen wide">${topbar()}<h1 class="title">${r.length ? esc(r[0].name) + ' vinder' : 'Spillet er slut'}</h1>
       <ol class="board">${r.map(x => `<li>${esc(x.name)}<span class="p">${x.score}</span></li>`).join('')}</ol>
-      <button class="btn primary" id="again">Nyt spil</button><button class="btn" data-home>Til forsiden</button></div>`);
+      <div class="final-scoreboard-wrap" id="scoreboard-frame-slot"></div><button class="btn primary" id="again">Nyt spil</button><button class="btn" data-home>Til forsiden</button></div>`);
+    const frame=ensureScoreboardFrame();if(!liveScoreboardFullscreen)$('#scoreboard-frame-slot').append(frame);
+    sendScoreboardMessage({type:'quizjagten-view-mode',mode:'graphic'});
+    sendScoreboardMessage({type:'quizjagten-standings',round:s.qs.length,players:r.map(x=>({id:x.id,name:x.name,score:x.score,from:x.score,gain:0,streak:0}))});
     $('#again').onclick = () => { goHome(); liveHostSetup(); };
   }
   lobby();
