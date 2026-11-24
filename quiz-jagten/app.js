@@ -65,7 +65,7 @@ function ensureScoreboardFrame() {
       scoreboardReady = false;
       liveScoreboardFrame.contentWindow.postMessage({ type: 'quizjagten-sync' }, location.origin);
     });
-    liveScoreboardFrame.src = 'scoreboard.html?embed=1&v=14';
+    liveScoreboardFrame.src = 'scoreboard.html?embed=1&v=15';
     ensureScoreboardHost().append(liveScoreboardFrame);
   }
   return liveScoreboardFrame;
