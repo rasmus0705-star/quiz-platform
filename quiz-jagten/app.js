@@ -65,7 +65,7 @@ function ensureScoreboardFrame() {
       scoreboardReady = false;
       liveScoreboardFrame.contentWindow.postMessage({ type: 'quizjagten-sync' }, location.origin);
     });
-    liveScoreboardFrame.src = 'scoreboard.html?embed=1&v=15';
+    liveScoreboardFrame.src = 'scoreboard.html?embed=1&v=16';
     ensureScoreboardHost().append(liveScoreboardFrame);
   }
   return liveScoreboardFrame;
@@ -931,10 +931,54 @@ async function liveHost(s) {
   let st = { phase: 'lobby' };    // offentlig tilstand
   let answers = {}, qStart = 0, tick = null, autoTimer = null, cur = null, streaks = {};
   let boardView = store.get('quizjagten-board-view', 'split'), controlsTimer = null;
+  if (!['question', 'split', 'graphic'].includes(boardView)) boardView = 'split';
+  const boardConcepts = ['bubbles', 'rockets', 'tug', 'cores', 'mountain'];
+  const boardLabels = ['Bobler', 'Rumkapløb', 'Tovtrækning', 'Energikerner', 'Bjergetape'];
+  let boardMuted = localStorage.getItem('quizjagten-board-muted') !== 'false';
   keepAwake();
-  const setBoardView = mode => { if (!['question','split','graphic'].includes(mode)) return; boardView=mode; store.set('quizjagten-board-view',mode); const layout=$('.live-question-layout'); if(layout)layout.dataset.view=mode; const progress=$('.live-question-progress'); if(progress)progress.hidden=mode==='graphic'; sendScoreboardMessage({type:'quizjagten-view-mode',mode}); };
+  const liveHostToolbar = () => `<div class="live-host-toolbar host-control" aria-label="Værtskontroller">
+    <label>Visning <select id="live-view-select"><option value="question">Spørgsmål</option><option value="split">Delt</option><option value="graphic">Grafik</option></select></label>
+    <label>Grafik <select id="live-concept-select">${boardConcepts.map((key,i)=>`<option value="${key}">${boardLabels[i]}</option>`).join('')}</select></label>
+    <button class="btn" type="button" id="live-sound-toggle"></button><span class="live-shortcuts">G: visning · V: grafik · 1–5: vælg · M: lyd · mellemrum: fortsæt</span>
+  </div>`;
+  const setBoardView = mode => {
+    if (!['question','split','graphic'].includes(mode)) return;
+    boardView=mode; store.set('quizjagten-board-view',mode);
+    const layout=$('.live-question-layout'); if(layout)layout.dataset.view=mode;
+    const progress=$('.live-question-progress'); if(progress){progress.hidden=mode==='graphic';progress.dataset.view=mode;}
+    const select=$('#live-view-select'); if(select)select.value=mode;
+    sendScoreboardMessage({type:'quizjagten-view-mode',mode});
+  };
+  const setBoardConcept = index => {
+    if (!Number.isInteger(index) || !boardConcepts[index]) return;
+    const select=$('#live-concept-select'); if(select)select.value=boardConcepts[index];
+    sendScoreboardMessage({type:'quizjagten-set-concept',index});
+  };
+  const toggleBoardSound = () => {
+    boardMuted=!boardMuted;
+    const button=$('#live-sound-toggle'); if(button)button.textContent=`Lyd: ${boardMuted?'fra':'til'}`;
+    sendScoreboardMessage({type:'quizjagten-toggle-sound'});
+  };
+  const bindLiveToolbar = () => {
+    const view=$('#live-view-select'),concept=$('#live-concept-select'),sound=$('#live-sound-toggle');
+    if(view){view.value=boardView;view.onchange=()=>setBoardView(view.value);}
+    const current=localStorage.getItem('quizjagten-board-concept')||'bubbles';
+    if(concept){concept.value=boardConcepts.includes(current)?current:'bubbles';concept.onchange=()=>setBoardConcept(boardConcepts.indexOf(concept.value));}
+    if(sound){sound.textContent=`Lyd: ${boardMuted?'fra':'til'}`;sound.onclick=toggleBoardSound;}
+    showControls();
+  };
   const showControls=()=>{document.body.classList.remove('live-controls-hidden');clearTimeout(controlsTimer);controlsTimer=setTimeout(()=>document.body.classList.add('live-controls-hidden'),2600);};
-  const onHostKey=e=>{if(e.altKey||e.ctrlKey||e.metaKey||/^(INPUT|TEXTAREA|SELECT)$/.test(e.target?.tagName||'')||e.target?.isContentEditable||!['q','reveal'].includes(st.phase))return;const k=e.key.toLowerCase();if(e.code==='Space'){e.preventDefault();(st.phase==='q'?$('#now'):$('#next'))?.click();}else if(k==='g'){e.preventDefault();setBoardView(({question:'split',split:'graphic',graphic:'question'})[boardView]||'split');}else if(k==='v')sendScoreboardMessage({type:'quizjagten-cycle-concept'});else if(k==='m')sendScoreboardMessage({type:'quizjagten-toggle-sound'});else if(/^[1-5]$/.test(k))sendScoreboardMessage({type:'quizjagten-set-concept',index:Number(k)-1});};
+  const onHostKey=e=>{
+    if(e.altKey||e.ctrlKey||e.metaKey||/^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(e.target?.tagName||'')||e.target?.isContentEditable||!['q','reveal'].includes(st.phase))return;
+    const k=e.key.toLowerCase();
+    if(e.code==='Space'){e.preventDefault();(st.phase==='q'?$('#now'):$('#next'))?.click();}
+    else if(k==='g'){e.preventDefault();setBoardView(({question:'split',split:'graphic',graphic:'question'})[boardView]||'split');}
+    else if(k==='v'){const current=localStorage.getItem('quizjagten-board-concept')||'bubbles';setBoardConcept((boardConcepts.indexOf(current)+1)%boardConcepts.length);}
+    else if(k==='m')toggleBoardSound();
+    else if(/^[1-5]$/.test(k))setBoardConcept(Number(k)-1);
+    else return;
+    showControls();
+  };
   document.addEventListener('keydown',onHostKey); document.addEventListener('mousemove',showControls); showControls();
   cleanup = () => { clearInterval(tick); clearTimeout(autoTimer); clearTimeout(controlsTimer); document.removeEventListener('keydown',onHostKey); document.removeEventListener('mousemove',showControls); document.body.classList.remove('live-controls-hidden'); sb.removeChannel(ch); };
 
@@ -955,10 +999,17 @@ async function liveHost(s) {
   });
   ch.on('broadcast', { event: 'hello' }, () => send(stripPrivate(publicState())));
   ch.on('broadcast', { event: 'answer' }, ({ payload: a }) => {
-    if (st.phase !== 'q' || a.qi !== st.qi || answers[a.id] || !Number.isInteger(a.choice)) return;
-    answers[a.id] = { choice: a.choice, ms: Date.now() - qStart };
-    if (!players[a.id]) players[a.id] = { name: String(a.name || 'Gæst').slice(0, 16), score: 0, online: true };
+    if (!a || typeof a.id !== 'string' || !a.id || !Number.isInteger(a.qi) || !Number.isInteger(a.choice)) return;
+    if (st.phase !== 'q' || a.qi !== st.qi) return;
+    if (Date.now() >= st.deadline) { reveal('timeout'); return; }
+    const player = players[a.id];
+    if (!player?.online || a.choice < 0 || a.choice >= st.opts.length) return;
+    const nonce = typeof a.nonce === 'string' && a.nonce.length <= 100 ? a.nonce : '';
+    const acknowledge = accepted => ch.send({ type: 'broadcast', event: 'answer-ack', payload: { id: a.id, qi: st.qi, nonce, choice: accepted.choice } });
+    if (answers[a.id]) { if (answers[a.id].nonce === nonce) acknowledge(answers[a.id]); return; }
+    answers[a.id] = { choice: a.choice, ms: Date.now() - qStart, nonce };
     updateCount();
+    acknowledge(answers[a.id]);
     if (online().length && online().every(([id]) => answers[id])) reveal('all');
   });
 
@@ -995,10 +1046,12 @@ async function liveHost(s) {
     const progress=Array.from({length:s.qs.length},(_,n)=>`<i class="${n<i?'done':n===i?'current':''}"></i>`).join('');
     let hue=0;for(const ch of st.kat)hue=(hue*31+ch.charCodeAt(0))%360;
     render(`<div class="screen wide live-host-screen">${topbar(`Spørgsmål ${i+1} af ${s.qs.length}`, '<span class="timer" id="t"></span>')}
-      <div class="live-question-progress" aria-label="Spørgsmål ${i+1} af ${s.qs.length}">${progress}</div>
+      ${liveHostToolbar()}
+      <div class="live-question-progress" data-view="${boardView}" style="--question-count:${s.qs.length}" aria-label="Spørgsmål ${i+1} af ${s.qs.length}">${progress}</div>
       <div class="live-question-layout" data-view="${boardView}"><aside class="live-question-panel" style="--topic-hue:${hue}"><div class="qmeta"><span>${esc(st.kat)}</span>${dots(st.niv)}</div>
         <h2 class="live-side-question">${esc(st.text)}</h2>${tilesHtml(opts)}<p class="explain" id="cnt"></p><div class="live-answer-avatars" id="answer-avatars"></div><button class="btn host-control" id="now">Vis svar nu</button></aside>
         <div class="scoreboard-frame-wrap" id="scoreboard-frame-slot"></div></div></div>`);
+    bindLiveToolbar();
     const standingPlayers=Object.entries(players).map(([id,p])=>({id,name:p.name,score:p.score,gain:0,from:p.score,streak:streaks[id]||0,answered:false}));
     const frame=ensureScoreboardFrame();if(!liveScoreboardFullscreen)$('#scoreboard-frame-slot').append(frame);setBoardView(boardView);
     sendScoreboardMessage({type:'quizjagten-question',round:i+1,total:s.qs.length,text:st.text,category:st.kat,options:opts,deadline:st.deadline,seconds:s.sek,players:standingPlayers});
@@ -1032,7 +1085,8 @@ async function liveHost(s) {
     for (const id of Object.keys(players)) if (!answers[id]) streaks[id] = 0;
     const rank = ranking(players);
     const last = st.qi === st.total - 1;
-    st = { phase: 'reveal', qi: st.qi, total: st.total, opts: st.opts, correct, gained, ranking: rank, last };
+    const revealedAnswers = Object.fromEntries(Object.entries(answers).map(([id, answer]) => [id, answer.choice]));
+    st = { phase: 'reveal', qi: st.qi, total: st.total, opts: st.opts, correct, gained, ranking: rank, answers: revealedAnswers, last };
     send(st);
     const fastestEntry=Object.entries(answers).sort((a,b)=>a[1].ms-b[1].ms)[0];
     const fastest=fastestEntry?{id:fastestEntry[0],name:players[fastestEntry[0]]?.name||'Gæst',ms:fastestEntry[1].ms}:null;
@@ -1041,7 +1095,8 @@ async function liveHost(s) {
     const progress=Array.from({length:st.total},(_,n)=>`<i class="${n<=st.qi?'done':''}"></i>`).join('');
     const fastestHtml=fastest?`<p class="fastest-answer">Hurtigst: <strong>${esc(fastest.name)}</strong> · ${(fastest.ms/1000).toFixed(2)} sek.</p>`:'<p class="fastest-answer">Ingen nåede at svare</p>';
     render(`<div class="screen wide live-reveal live-host-screen">${topbar(`Spørgsmål ${st.qi+1} af ${st.total}`, '')}
-      <div class="live-question-progress" aria-label="Spørgsmål ${st.qi+1} af ${st.total}">${progress}</div>
+      ${liveHostToolbar()}
+      <div class="live-question-progress" data-view="${boardView}" style="--question-count:${st.total}" aria-label="Spørgsmål ${st.qi+1} af ${st.total}">${progress}</div>
       <div class="live-question-layout" data-view="${boardView}"><aside class="live-question-panel"><p class="reveal-question">${esc(cur.spoergsmaal)}</p>
         <div class="answer-reveal"><strong>Rigtigt svar:</strong> ${esc(st.opts[correct])}</div>${fastestHtml}
         <button class="btn graphic-fullscreen host-control" id="graphic-fullscreen">⛶ Vis kun grafikken</button>
@@ -1050,6 +1105,7 @@ async function liveHost(s) {
         <p>${esc(cur.forklaring)}</p></details></aside><div class="scoreboard-frame-wrap" id="scoreboard-frame-slot"></div></div>
       ${autoCountdown}
       <button class="btn primary" id="next">${last ? 'Se vinderen' : 'Næste spørgsmål'}</button>${reportHtml()}</div>`);
+    bindLiveToolbar();
     bindReport(cur);
     const board = ensureScoreboardFrame();
     if (!liveScoreboardFullscreen) $('#scoreboard-frame-slot').append(board);
@@ -1119,14 +1175,37 @@ function liveJoin(code = '') {
 async function livePlayer(code, name) {
   render(`<div class="screen"><p class="loading">Forbinder …</p></div>`);
   const sb = await sbClient();
-  let id = sessionStorage.getItem('pid');
-  if (!id) { id = Math.random().toString(36).slice(2, 10); sessionStorage.setItem('pid', id); }
+  let id = sessionStorage.getItem('pid-v2');
+  if (!id) { id = crypto.randomUUID ? crypto.randomUUID().replaceAll('-', '') : Math.random().toString(36).slice(2, 18); sessionStorage.setItem('pid-v2', id); }
   const ch = sb.channel('quiz-' + code, { config: { broadcast: { self: false }, presence: { key: id } } });
-  let myChoice = {}, tick = null, gotState = false;
+  let myChoice = {}, tick = null, gotState = false, pendingAnswer = null, answerRetryTimer = null, currentState = null, answerDeadline = 0;
   keepAwake();
-  cleanup = () => { clearInterval(tick); sb.removeChannel(ch); };
+  cleanup = () => { clearInterval(tick); clearTimeout(answerRetryTimer); sb.removeChannel(ch); };
 
   const wait = (h, p) => render(`<div class="screen">${topbar(esc(name), code)}<div class="wait"><h1>${h}</h1><p>${p}</p></div></div>`);
+  function showAnswerRetry() {
+    if (!pendingAnswer) return;
+    if (currentState?.phase !== 'q' || currentState.qi !== pendingAnswer.qi || Date.now() >= answerDeadline) return wait('Tiden er gået', 'Venter på værtens resultat. Dit svar blev ikke bekræftet.');
+    render(`<div class="screen">${topbar(esc(name), code)}<div class="wait"><h1>Svaret er ikke bekræftet</h1><p>Værten har ikke bekræftet dit svar endnu. Prøv at sende det igen.</p><button class="btn primary" id="retry-answer">Prøv igen</button></div></div>`);
+    $('#retry-answer').onclick = sendPendingAnswer;
+  }
+  function sendPendingAnswer() {
+    if (!pendingAnswer) return;
+    if (currentState?.phase !== 'q' || currentState.qi !== pendingAnswer.qi || Date.now() >= answerDeadline) return wait('Tiden er gået', 'Venter på værtens resultat. Dit svar blev ikke bekræftet.');
+    const answer = pendingAnswer;
+    clearTimeout(answerRetryTimer); clearInterval(tick);
+    wait('Sender svar…', 'Venter på bekræftelse fra værten.');
+    answerRetryTimer = setTimeout(() => { if (pendingAnswer === answer) showAnswerRetry(); }, 4000);
+    ch.send({ type: 'broadcast', event: 'answer', payload: { id, name, qi: answer.qi, choice: answer.choice, nonce: answer.nonce } }).then(status => {
+      if (pendingAnswer === answer && status !== 'ok') showAnswerRetry();
+    }).catch(() => { if (pendingAnswer === answer) showAnswerRetry(); });
+  }
+
+  ch.on('broadcast', { event: 'answer-ack' }, ({ payload: ack }) => {
+    if (!ack || !pendingAnswer || ack.id !== id || ack.qi !== pendingAnswer.qi || ack.nonce !== pendingAnswer.nonce || ack.choice !== pendingAnswer.choice) return;
+    clearTimeout(answerRetryTimer); myChoice[ack.qi] = ack.choice; pendingAnswer = null;
+    if (currentState?.phase === 'q' && currentState.qi === ack.qi) wait('Svar modtaget', 'Værten har registreret dit svar. Venter på de andre…');
+  });
 
   ch.on('broadcast', { event: 'state' }, ({ payload: s }) => { gotState = true; show(s); });
   await new Promise((res, rej) => ch.subscribe(async status => {
@@ -1142,23 +1221,25 @@ async function livePlayer(code, name) {
   function show(s) {
     clearInterval(tick);
     if (s.phase === 'lobby') return wait('Du er med', 'Venter på at værten starter quizzen.');
+    currentState = s;
     if (s.phase === 'q') {
-      if (myChoice[s.qi] !== undefined) return wait('Svar sendt', 'Venter på de andre …');
+      if (pendingAnswer?.qi === s.qi) return wait('Sender svar…', 'Venter på bekræftelse fra værten.');
+      if (myChoice[s.qi] !== undefined) return wait('Svar modtaget', 'Værten har registreret dit svar. Venter på de andre…');
       const deadline = Date.now() + (s.remaining ?? s.sek * 1000);
+      answerDeadline = deadline;
       render(`<div class="screen">${topbar(`${s.qi + 1} af ${s.total}`, '<span class="timer" id="t"></span>')}
         <h2 class="question" style="font-size:1.25rem">${esc(s.text)}</h2>${tilesHtml(s.opts, 'big')}</div>`);
       const upd = () => { const left = Math.max(0, Math.ceil((deadline - Date.now()) / 1000)); if ($('#t')) $('#t').textContent = left; if (!left) { clearInterval(tick); $$('.tile').forEach(t => t.disabled = true); } };
       upd(); tick = setInterval(upd, 250);
       $$('.tile').forEach(b => b.onclick = () => {
-        myChoice[s.qi] = +b.dataset.i;
-        ch.send({ type: 'broadcast', event: 'answer', payload: { id, name, qi: s.qi, choice: +b.dataset.i } });
-        navigator.vibrate?.(30);
-        wait('Svar sendt', 'Venter på de andre …');
+        pendingAnswer = { qi: s.qi, choice: +b.dataset.i, nonce: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}` };
+        navigator.vibrate?.(30); sendPendingAnswer();
       });
       return;
     }
     if (s.phase === 'reveal') {
-      const mine = myChoice[s.qi], ok = mine === s.correct, pts = s.gained?.[id] || 0;
+      if (pendingAnswer?.qi === s.qi) { pendingAnswer = null; clearTimeout(answerRetryTimer); }
+      const mine = s.answers && Object.prototype.hasOwnProperty.call(s.answers, id) ? s.answers[id] : myChoice[s.qi], ok = mine === s.correct, pts = s.gained?.[id] || 0;
       const pos = s.ranking.findIndex(r => r.id === id) + 1;
       const me = s.ranking.find(r => r.id === id);
       navigator.vibrate?.(ok ? 40 : [60, 40, 60]);

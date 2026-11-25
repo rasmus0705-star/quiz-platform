@@ -21,3 +21,13 @@ directory. Do not put the key in `config.js`, the app, or a committed file.
 Once the English JSON file is deployed, the home page shows a **Dansk / English**
 selector. The selection is saved on the device and the English bank is cached
 for offline use.
+
+## Without DeepL
+
+The bank can also be translated manually in small batches with an editor or an AI assistant. Keep the Danish file as the source of truth, preserve the question order, IDs, categories, difficulty, status and type, and translate only the text fields (`spoergsmaal`, `korrekt`, `forkerte`, and `forklaring`). Save the result as `questions.en.json`, then run:
+
+```sh
+node tools/check-project.mjs
+```
+
+This checks ID/order parity and answer counts. Review factual names, dates and answer meanings before deploying the English bank. No translation API key is needed for this route.

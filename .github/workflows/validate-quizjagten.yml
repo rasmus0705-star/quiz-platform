@@ -1,0 +1,25 @@
+name: Validate Quizjagten
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'quiz-jagten/**'
+      - '.github/workflows/validate-quizjagten.yml'
+  pull_request:
+    paths:
+      - 'quiz-jagten/**'
+      - '.github/workflows/validate-quizjagten.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node quiz-jagten/tools/check-project.mjs

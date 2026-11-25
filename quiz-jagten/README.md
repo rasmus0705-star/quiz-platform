@@ -59,11 +59,15 @@ python -m http.server 8000
 
 ## Udgiv
 
-Mappen kan udgives som undermappe på GitHub Pages, fx `/quiz-platform/quiz-jagten/`. Stierne i appen er relative. `questions.json` indeholder en lille startbank; udvid den med spørgsmål i samme format, før du deler quizzen bredt.
+Mappen kan udgives som undermappe på GitHub Pages, fx `/quiz-platform/quiz-jagten/`. Stierne i appen er relative. `questions.json` indeholder 1.702 danske spørgsmål. Kør bankkontrollen med `node quiz-jagten/tools/check-project.mjs`, før ændringer i spørgsmål deles.
 
 ## Spørgsmålsformat
 
 Hvert spørgsmål har et id i formatet `abc-0001`, en kategori, niveau 1–4, `status` (`godkendt` eller `kladde`), spørgsmålet, korrekt svar, tre forkerte svar og en forklaring. Id-formatet bruges også ved indsendelse af statistik og fejlmeldinger.
+
+## Engelsk spørgsmålbank
+
+`questions.en.json` er valgfri og findes ikke i repoet endnu. Appen falder derfor tilbage til dansk. Den nuværende generator bruger DeepL og kræver `DEEPL_API_KEY`; en manuel oversættelse uden DeepL kan laves i kontrollerede partier, hvor spørgsmål-id’er og metadata bevares.
 
 ## Kreditering af eksterne spørgsmål
 
