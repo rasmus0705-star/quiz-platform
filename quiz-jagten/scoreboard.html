@@ -363,6 +363,7 @@ if(EXTERNAL)window.addEventListener('message',event=>{
   if(event.data?.language)setBoardLanguage(event.data.language);
   if(event.data?.type==='quizjagten-sync')parent.postMessage({type:'quizjagten-ready'},location.origin);
   if(event.data?.type==='quizjagten-question')applyExternalQuestion(event.data);
+  if(event.data?.type==='quizjagten-player-left'){const name=String(event.data.name||'');banner={text:boardLanguage==='en'?`${name} left the quiz`:`${name} har forladt quizzen`,color:'#ff8c42',t:0};}
   if(event.data?.type==='quizjagten-answer-status')applyExternalAnswerStatus(event.data);
   if(event.data?.type==='quizjagten-round')applyExternalRound(event.data);
   if(event.data?.type==='quizjagten-standings')applyExternalStandings(event.data);

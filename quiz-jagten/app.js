@@ -116,7 +116,7 @@ function ensureScoreboardFrame() {
       scoreboardReady = false;
       liveScoreboardFrame.contentWindow.postMessage({ type: 'quizjagten-sync' }, location.origin);
     });
-    liveScoreboardFrame.src = 'scoreboard.html?embed=1&v=17';
+    liveScoreboardFrame.src = 'scoreboard.html?embed=1&v=18';
     ensureScoreboardHost().append(liveScoreboardFrame);
   }
   return liveScoreboardFrame;
@@ -1045,6 +1045,7 @@ async function liveHost(s) {
 
   ch.on('presence', { event: 'sync' }, () => {
     const ps = ch.presenceState();
+    const previouslyOnline = new Set(online().map(([id]) => id));
     Object.values(players).forEach(p => p.online = false);
     for (const [id, metas] of Object.entries(ps)) {
       if (id === 'host') continue;
@@ -1052,6 +1053,9 @@ async function liveHost(s) {
       players[id] = players[id] || { name: String(m.name || 'Gæst').slice(0, 16), score: 0 };
       players[id].language = m.language === 'en' ? 'en' : 'da';
       players[id].online = true;
+    }
+    if (st.phase === 'q' || st.phase === 'reveal') {
+      for (const id of previouslyOnline) if (!players[id]?.online) sendScoreboardMessage({ type: 'quizjagten-player-left', name: players[id]?.name || 'Gæst' });
     }
     if (st.phase === 'lobby') lobby(); else if (st.phase === 'q') updateCount();
   });
@@ -1242,9 +1246,9 @@ async function livePlayer(code, name, language = quizLanguage) {
   let id = sessionStorage.getItem('pid-v2');
   if (!id) { id = crypto.randomUUID ? crypto.randomUUID().replaceAll('-', '') : Math.random().toString(36).slice(2, 18); sessionStorage.setItem('pid-v2', id); }
   const ch = sb.channel('quiz-' + code, { config: { broadcast: { self: false }, presence: { key: id } } });
-  let myChoice = {}, tick = null, gotState = false, pendingAnswer = null, answerRetryTimer = null, currentState = null, answerDeadline = 0;
+  let myChoice = {}, tick = null, gotState = false, pendingAnswer = null, answerRetryTimer = null, endTimer = null, currentState = null, answerDeadline = 0;
   keepAwake();
-  cleanup = () => { clearInterval(tick); clearTimeout(answerRetryTimer); sb.removeChannel(ch); };
+  cleanup = () => { clearInterval(tick); clearTimeout(answerRetryTimer); clearTimeout(endTimer); sb.removeChannel(ch); };
 
   const wait = (h, p) => render(`<div class="screen">${topbar(esc(name), code)}<div class="wait"><h1>${h}</h1><p>${p}</p></div></div>`);
   function showAnswerRetry() {
@@ -1272,6 +1276,16 @@ async function livePlayer(code, name, language = quizLanguage) {
   });
 
   ch.on('broadcast', { event: 'state' }, ({ payload: s }) => { gotState = true; show(s); });
+  ch.on('presence', { event: 'sync' }, () => {
+    if (!gotState || currentState?.phase === 'end') return;
+    const hostOnline = Object.values(ch.presenceState()).some(metas => metas.some(meta => meta.role === 'host'));
+    if (!hostOnline) {
+      clearInterval(tick); clearTimeout(answerRetryTimer);
+      const message = quizLanguage === 'en' ? 'The host has left the quiz.' : 'Værten har forladt quizzen.';
+      wait(quizLanguage === 'en' ? 'Quiz ended' : 'Quizzen er afsluttet', message);
+      endTimer = setTimeout(goHome, 10000);
+    }
+  });
   await new Promise((res, rej) => ch.subscribe(async status => {
     if (status === 'SUBSCRIBED') {
       await ch.track({ role: 'player', name, language });
@@ -1326,8 +1340,9 @@ async function livePlayer(code, name, language = quizLanguage) {
       releaseWake();
       const pos = s.ranking.findIndex(r => r.id === id) + 1;
       render(`<div class="screen">${topbar()}<h1 class="title">${pos === 1 ? 'Du vandt!' : pos ? `Du blev nummer ${pos}` : 'Spillet er slut'}</h1>
-        <ol class="board">${s.ranking.map(r => `<li class="${r.id === id ? 'me' : ''}">${esc(r.name)}<span class="p">${r.score}</span></li>`).join('')}</ol>
+        <ol class="board">${s.ranking.map(r => `<li class="${r.id === id ? 'me' : ''}">${esc(r.name)}<span class="p">${r.score}</span></li>`).join('')}</ol><p class="hint">${quizLanguage === 'en' ? 'This quiz will close in 10 seconds.' : 'Quizzen lukker automatisk om 10 sekunder.'}</p>
         <button class="btn" data-home>Til forsiden</button></div>`);
+      clearTimeout(endTimer); endTimer = setTimeout(goHome, 10000);
     }
   }
 }
