@@ -196,7 +196,7 @@ p.lead { color: var(--daemp); margin: 0; }
 .live-host-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; padding: 8px 10px; margin: 4px 0 10px; border: 1px solid var(--border); border-radius: 12px; background: var(--tavle); }
 .live-host-toolbar label { display: inline-flex; align-items: center; gap: 7px; color: var(--daemp); font-size: .82rem; font-weight: 700; }
 .live-host-toolbar select { min-height: 38px; padding: 6px 28px 6px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--tavle); color: var(--papir); }
-.live-host-toolbar .btn { min-height: 38px; padding: 6px 12px; }
+.live-host-toolbar .btn { display: inline-flex; width: auto; min-height: 38px; margin: 0; padding: 6px 12px; align-items: center; justify-content: center; }
 .live-shortcuts { color: var(--daemp); font-size: .75rem; }
 .host-control { transition: opacity .2s ease; }
 .live-controls-hidden .live-host-screen .host-control { opacity: 0; pointer-events: none; }

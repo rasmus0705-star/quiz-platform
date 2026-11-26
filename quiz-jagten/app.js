@@ -116,7 +116,7 @@ function ensureScoreboardFrame() {
       scoreboardReady = false;
       liveScoreboardFrame.contentWindow.postMessage({ type: 'quizjagten-sync' }, location.origin);
     });
-    liveScoreboardFrame.src = 'scoreboard.html?embed=1&v=18';
+    liveScoreboardFrame.src = 'scoreboard.html?embed=1&v=19';
     ensureScoreboardHost().append(liveScoreboardFrame);
   }
   return liveScoreboardFrame;
@@ -995,7 +995,7 @@ async function liveHost(s) {
   keepAwake();
   const liveHostToolbar = () => `<div class="live-host-toolbar host-control" aria-label="Værtskontroller">
     <label>Visning <select id="live-view-select"><option value="question">Spørgsmål</option><option value="split">Delt</option><option value="graphic">Grafik</option></select></label>
-    <label>Grafik <select id="live-concept-select">${boardConcepts.map((key,i)=>`<option value="${key}">${boardLabels[i]}</option>`).join('')}</select></label>
+    <label>${quizLanguage === 'en' ? 'Graphic style' : 'Grafiktype'} <select id="live-concept-select">${boardConcepts.map((key,i)=>`<option value="${key}">${boardLabels[i]}</option>`).join('')}</select></label>
     <button class="btn" type="button" id="live-sound-toggle"></button><span class="live-shortcuts">G: visning · V: grafik · 1–5: vælg · M: lyd · mellemrum: fortsæt</span>
   </div>`;
   const setBoardView = mode => {
