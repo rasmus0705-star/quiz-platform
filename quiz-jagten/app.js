@@ -1046,6 +1046,7 @@ async function liveHost(s) {
       if (id === 'host') continue;
       const m = metas[0] || {};
       players[id] = players[id] || { name: String(m.name || 'Gæst').slice(0, 16), score: 0 };
+      players[id].language = m.language === 'en' ? 'en' : 'da';
       players[id].online = true;
     }
     if (st.phase === 'lobby') lobby(); else if (st.phase === 'q') updateCount();
@@ -1085,7 +1086,7 @@ async function liveHost(s) {
       $('#start').onclick = () => nextQ(0);
     }
     $('#pc').textContent = list.length ? `${list.length} ${list.length === 1 ? 'deltager' : 'deltagere'}` : 'Venter på deltagere';
-    $('#names').innerHTML = list.map(([, p]) => `<span>${esc(p.name)}</span>`).join('');
+    $('#names').innerHTML = list.map(([, p]) => `<span>${esc(p.name)} <small>${p.language === 'en' ? 'EN' : 'DA'}</small></span>`).join('');
     $('#start').disabled = !list.length;
   }
 
@@ -1093,7 +1094,8 @@ async function liveHost(s) {
     cur = s.qs[i];
     const { opts, correct } = optionsFor(cur);
     answers = {}; qStart = Date.now();
-    st = { phase: 'q', qi: i, total: s.qs.length, text: cur.spoergsmaal, kat: categoryName(cur.kategori), niv: cur.niveau, opts, deadline: qStart + s.sek * 1000, sek: s.sek };
+    const optOrder = cur.type === 'sandt_falsk' ? [0, 1] : opts.map(option => option === cur.korrekt ? 0 : cur.forkerte.indexOf(option) + 1);
+    st = { phase: 'q', qi: i, qid: cur.id, lang: quizLanguage, optOrder, total: s.qs.length, text: cur.spoergsmaal, kat: categoryName(cur.kategori), niv: cur.niveau, opts, deadline: qStart + s.sek * 1000, sek: s.sek };
     st._correct = correct; // sendes ikke (fjernes i publicState nedenfor)
     send(stripPrivate(publicState()));
     const progress=Array.from({length:s.qs.length},(_,n)=>`<i class="${n<i?'done':n===i?'current':''}"></i>`).join('');
@@ -1139,7 +1141,7 @@ async function liveHost(s) {
     const rank = ranking(players);
     const last = st.qi === st.total - 1;
     const revealedAnswers = Object.fromEntries(Object.entries(answers).map(([id, answer]) => [id, answer.choice]));
-    st = { phase: 'reveal', qi: st.qi, total: st.total, opts: st.opts, correct, gained, ranking: rank, answers: revealedAnswers, last };
+    st = { phase: 'reveal', qi: st.qi, qid: cur.id, lang: quizLanguage, optOrder: st.optOrder, total: st.total, opts: st.opts, correct, gained, ranking: rank, answers: revealedAnswers, last };
     send(st);
     const fastestEntry=Object.entries(answers).sort((a,b)=>a[1].ms-b[1].ms)[0];
     const fastest=fastestEntry?{id:fastestEntry[0],name:players[fastestEntry[0]]?.name||'Gæst',ms:fastestEntry[1].ms}:null;
@@ -1214,6 +1216,7 @@ function liveJoin(code = '') {
   render(`<div class="screen">${topbar()}<h1 class="title">Deltag i live-spil</h1>
     <div class="field"><label for="code">Kode</label><input type="text" id="code" class="code" maxlength="4" autocomplete="off" value="${esc(code)}"></div>
     <div class="field"><label for="nm">Dit navn</label><input type="text" id="nm" maxlength="16" value="${esc(store.get('navn', ''))}"></div>
+    ${BANK_EN ? `<div class="field"><label for="player-language">Sprog / Language</label><select id="player-language"><option value="da" ${quizLanguage === 'da' ? 'selected' : ''}>Dansk</option><option value="en" ${quizLanguage === 'en' ? 'selected' : ''}>English</option></select></div>` : ''}
     <button class="btn primary" id="go">Deltag</button></div>`);
   (code ? $('#nm') : $('#code')).focus();
   $('#go').onclick = () => {
@@ -1221,11 +1224,15 @@ function liveJoin(code = '') {
     if (c.length !== 4) return toast('Koden har 4 bogstaver');
     if (!n) return toast('Skriv dit navn');
     store.set('navn', n);
-    livePlayer(c, n).catch(e => { toast(e.message); goHome(); });
+    quizLanguage = $('#player-language')?.value || quizLanguage;
+    document.documentElement.lang = quizLanguage;
+    store.set('quizjagten-language', quizLanguage);
+    ALL = quizLanguage === 'en' ? BANK_EN : BANK_DA;
+    livePlayer(c, n, quizLanguage).catch(e => { toast(e.message); goHome(); });
   };
 }
 
-async function livePlayer(code, name) {
+async function livePlayer(code, name, language = quizLanguage) {
   render(`<div class="screen"><p class="loading">Forbinder …</p></div>`);
   const sb = await sbClient();
   let id = sessionStorage.getItem('pid-v2');
@@ -1263,7 +1270,7 @@ async function livePlayer(code, name) {
   ch.on('broadcast', { event: 'state' }, ({ payload: s }) => { gotState = true; show(s); });
   await new Promise((res, rej) => ch.subscribe(async status => {
     if (status === 'SUBSCRIBED') {
-      await ch.track({ role: 'player', name });
+      await ch.track({ role: 'player', name, language });
       ch.send({ type: 'broadcast', event: 'hello', payload: {} });
       res();
     } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') rej(new Error('Kunne ikke forbinde'));
@@ -1271,7 +1278,16 @@ async function livePlayer(code, name) {
   wait('Du er med', 'Venter på at værten starter quizzen.');
   setTimeout(() => { if (!gotState) wait('Ingen vært endnu', `Tjek at koden ${code} er rigtig. Du kommer automatisk med, når værten åbner rummet.`); }, 5000);
 
-  function show(s) {
+  function show(incoming) {
+    let s = incoming;
+    if (incoming?.qid && incoming.lang !== language) {
+      const bank = language === 'en' ? BANK_EN : BANK_DA;
+      const translated = bank?.find(q => q.id === incoming.qid);
+      if (translated) {
+        const opts = incoming.optOrder?.map(index => index === 0 ? translated.korrekt : index > 0 ? translated.forkerte[index - 1] : '') ?? incoming.opts;
+        s = { ...incoming, text: translated.spoergsmaal, opts, lang: language };
+      }
+    }
     clearInterval(tick);
     if (s.phase === 'lobby') return wait('Du er med', 'Venter på at værten starter quizzen.');
     currentState = s;
