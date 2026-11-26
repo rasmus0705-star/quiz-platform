@@ -14,6 +14,56 @@ const KAT = {
 const KAT_EN = { historie: 'History', geografi: 'Geography', natur: 'Nature', sport: 'Sports', underholdning: 'Entertainment', videnskab: 'Science', sprog_kultur: 'Language & culture', mad_drikke: 'Food & drink', blandet: 'Mixed' };
 const NIV = { 1: 'Let', 2: 'Middel', 3: 'Svær', 4: 'Ekspert' };
 const NIV_EN = { 1: 'Easy', 2: 'Medium', 3: 'Hard', 4: 'Expert' };
+const UI_EN = {
+  'Hovedmenu':'Main menu','Til forsiden':'Go to home page','Sprog / Language':'Language','Vælg quizsprog':'Choose quiz language','Spiltyper':'Game modes','Sådan spiller du':'How to play','Kilder':'Sources','Hent app':'Get the app',
+  'Almen viden':'General knowledge','solo og selskab':'solo and group play','Velkommen til':'Welcome to','Spil alene eller sammen med vennerne. Vælg blandt':'Play solo or with friends. Choose from','spørgsmål i':'questions across','emner.':'categories.','Spil dagens quiz':'Play today’s quiz','Vælg spiltyper':'Choose a game mode','Alene eller sammen':'Solo or together','Hvad vil du spille?':'What would you like to play?','En quiz til enhver anledning':'A quiz for every occasion','Vælg en spiltype, og kom i gang med det samme.':'Choose a game mode and get started right away.','Alene':'Solo','To spillere':'Two players','Selskab':'Group play',
+  'Klaret i dag: ':'Completed today: ','af':'of','rigtige':'correct','Samme 10 spørgsmål for alle i dag':'The same 10 questions for everyone today','Træning':'Practice','Vælg selv emner og sværhedsgrad':'Choose topics and difficulty','Ét forkert svar, og det er slut. Rekord: ':'One wrong answer and it’s over. Best: ','Spørg løs':'Read aloud','Læs op og svar frit – med eller uden point og tur':'Read questions aloud and answer freely, with or without points and turns','Duel på én telefon':'Pass-and-play duel','Send telefonen frem og tilbage':'Pass the phone back and forth','Udfordr en ven':'Challenge a friend','Send et link – I får de samme spørgsmål':'Send a link — you’ll get the same questions','Live på storskærm':'Live on the big screen','Alle svarer på deres egen telefon':'Everyone answers on their own phone','Kræver Supabase-nøgler i config.js':'Requires Supabase keys in config.js','Deltag i live-spil':'Join a live game','Har du fået en kode?':'Have you received a code?','Quizmaster':'Quizmaster','Én læser op – ingen andre skærme':'One person reads aloud — no extra screens',
+  'Let at komme i gang':'Easy to get started','Vælg et spil.':'Choose a game.','Find jeres svar.':'Find your answers.','Spil en hurtig quiz alene, send en udfordring til en ven, eller lav en quiz for hele selskabet. I kan vælge emner og sværhedsgrad, når spiltypen giver mulighed for det.':'Play a quick quiz solo, challenge a friend, or host a quiz for a group. Choose topics and difficulty when the game mode allows it.','Vælg spiltype':'Choose a game mode','Dagens quiz, duel, survival og meget mere.':'Daily quiz, duel, survival, and more.','Svar på spørgsmål':'Answer questions','Få point for hvert rigtigt svar.':'Earn points for every correct answer.','Spil igen eller del':'Play again or share','Udfordr vennerne, eller fortsæt sammen.':'Challenge friends or keep playing together.','Nogle spørgsmål er oversat og bearbejdet fra':'Some questions are translated and adapted from','under':'under','Oversættelserne er redigeret.':'Translations have been edited.','Spørgsmål er hentet fra psch.dk - Trivia Quizdatabase':'Questions sourced from psch.dk - Trivia Quizdatabase',
+  'Emner':'Topics','Vælg de emner, du vil have spørgsmål fra. Vælg alle for en blandet quiz.':'Choose the topics for your questions. Select all for a mixed quiz.','Sværhedsgrad':'Difficulty','Vælg niveau, eller bland alle niveauer.':'Choose a level or mix all levels.','Blandet':'Mixed','Let':'Easy','Middel':'Medium','Svær':'Hard','Ekspert':'Expert','Antal spørgsmål':'Number of questions','Hvor mange spørgsmål quizzen skal indeholde.':'How many questions to include in the quiz.','Start':'Start','Start duel':'Start duel','Start quizzen':'Start the quiz','Næste':'Next','Næste spørgsmål':'Next question','Se resultat':'See results','Se vinderen':'See the winner','Se vindere':'See winners','Færdig':'Finished','Rigtigt':'Correct','Forkert':'Incorrect','Vis svar':'Reveal answer','Afslut og se stilling':'Finish and view standings','Stilling':'Standings','Uafgjort':'It’s a tie',' vinder':' wins',' fører':' is leading','Spørgsmål':'Question','Spørgsmål til':'Question for','Point efter sværhedsgrad: Let 1, Middel 2, Svær 3, Ekspert 5.':'Points by difficulty: Easy 1, Medium 2, Hard 3, Expert 5.','Du svarede':'You answered','Du fik':'You scored','point':'points','Rigtige svar':'Correct answers','Forklaring':'Explanation','Svaret var:':'The answer was:','Ny rekord':'New record','Slut':'Game over','Overlevelse':'Survival','Svar rigtigt så længe du kan. For hver 3 rigtige bliver det sværere. Ét forkert svar, og spillet slutter.':'Answer correctly for as long as you can. The difficulty increases every 3 correct answers. One wrong answer ends the game.','i træk':'in a row','Som valgt':'As selected','Spiller':'Player','Giv telefonen til':'Pass the phone to','Næste spiller':'Next player','Du blev nummer':'You finished in place','Udfordr en ven':'Challenge a friend','Send udfordringen':'Send the challenge','Kopiér link':'Copy link','Kopieret':'Copied','Kopiér':'Copy','Del':'Share','Du er blevet udfordret af':'You have been challenged by','Start udfordring':'Start challenge','Quizmaster':'Quizmaster','Tilføj spillere':'Add players','Spillernavn':'Player name','Tilføj':'Add','Fjern':'Remove','Point':'Points','Ingen spørgsmål passer – vælg flere emner':'No questions match — choose more topics','Der er ingen spørgsmål endnu':'There are no questions yet','Der er ingen godkendte spørgsmål endnu. Sæt status til "godkendt" i questions.json, eller slå VIS_KLADDER til i config.js.':'There are no approved questions yet. Set the status to "godkendt" in questions.json or enable VIS_KLADDER in config.js.',
+  'Meld fejl i spørgsmålet':'Report a question','Forkert svar':'Wrong answer','Uklart spørgsmål':'Unclear question','Forældet':'Out of date','Andet':'Other','Kommentar (valgfri)':'Comment (optional)','Send fejlmelding':'Send report','Tak – fejlmeldingen er sendt.':'Thanks — your report has been sent.','Fejlmeldingen blev ikke sendt – tjek forbindelsen og prøv igen':'Report not sent — check your connection and try again',
+  'Live-spil er ikke sat op':'Live play is not set up','Live på storskærm':'Live on the big screen','Vis denne skærm på TV eller computer. Deltagerne svarer på deres egen telefon – hurtige svar giver flest point.':'Show this screen on a TV or computer. Players answer on their own phones — faster answers earn more points.','Gå automatisk videre':'Advance automatically','Vis først svar og stilling. Gå videre efter 7 sekunder, når alle har svaret eller tiden er gået.':'Reveal answers and standings first. Continue after 7 seconds, once everyone has answered or time has run out.','Visning':'View','Delt':'Split','Grafik':'Graphic','Gå ind på':'Go to','og tast koden':'and enter the code','Start quizzen':'Start the quiz','sekunder pr. spørgsmål':'seconds per question','deltager':'player','deltagere':'players','Venter på deltagere':'Waiting for players','Venter på quizdeltagere …':'Waiting for quiz players…','Vis svar nu':'Reveal answers now','Alle har svaret':'Everyone has answered','Tiden er gået':'Time is up','Svarene er vist':'Answers revealed','næste spørgsmål om':'next question in','sek.':'sec.','Rigtigt svar:':'Correct answer:','Hurtigst:':'Fastest:','Ingen nåede at svare':'No one managed to answer','Vis kun grafikken':'Show graphic only','Vis svarfordeling og forklaring':'Show answer distribution and explanation','Fuld skærm understøttes ikke i denne browser':'Fullscreen is not supported in this browser','Spillet er slut':'The game is over','Nyt spil':'New game','Deltag i live-spil':'Join a live game','Kode':'Code','Dit navn':'Your name','Deltag':'Join','Koden har 4 bogstaver':'The code must have 4 letters','Skriv dit navn':'Enter your name','Forbinder …':'Connecting…','Tiden er gået':'Time is up','Venter på værtens resultat. Dit svar blev ikke bekræftet.':'Waiting for the host’s result. Your answer was not confirmed.','Svaret er ikke bekræftet':'Answer not confirmed','Værten har ikke bekræftet dit svar endnu. Prøv at sende det igen.':'The host has not confirmed your answer yet. Try sending it again.','Prøv igen':'Try again','Sender svar…':'Sending answer…','Venter på bekræftelse fra værten.':'Waiting for confirmation from the host.','Svar modtaget':'Answer received','Værten har registreret dit svar. Venter på de andre…':'The host has recorded your answer. Waiting for the others…','Du er med':'You’re in','Venter på at værten starter quizzen.':'Waiting for the host to start the quiz.','Ingen vært endnu':'No host yet','Tjek at koden':'Check that the code','er rigtig. Du kommer automatisk med, når værten åbner rummet.':'is correct. You’ll join automatically when the host opens the room.','Intet svar':'No answer','Svaret var:':'The answer was:','Du ligger nummer':'You are in place','Du vandt!':'You won!','Spørgsmålene kunne ikke hentes':'Could not load questions','Tjek forbindelsen og genindlæs siden.':'Check your connection and reload the page.','Opretter rum …':'Creating room…','Kunne ikke forbinde':'Could not connect','Kunne ikke forbinde til Supabase':'Could not connect to Supabase','Kunne ikke hente ':'Could not load ',
+  'Sekunder pr. spørgsmål':'Seconds per question','Hvor lang tid deltagerne har til hvert svar.':'How long players have to answer each question.','Gå automatisk videre':'Advance automatically','Vis først svar og stilling. Gå videre efter 7 sekunder, når alle har svaret eller tiden er gået.':'Reveal answers and standings first. Continue after 7 seconds, once everyone has answered or time has run out.','Opret rum':'Create room','Værtskontroller':'Host controls','Bobler':'Bubbles','Rumkapløb':'Space race','Tovtrækning':'Tug-of-war','Energikerner':'Energy cores','Bjergetape':'Mountain stage','G: visning · V: grafik · 1–5: vælg · M: lyd · mellemrum: fortsæt':'G: view · V: graphic · 1–5: choose · M: sound · space: continue','Lyd: ':'Sound: ','Næste spørgsmål om ':'Next question in ',' sek.':' sec.','Rigtigt svar:':'Correct answer:','Du vandt!':'You won!','Du blev nummer ':'You finished in place ','Du ligger nummer ':'You are in place ','i træk':'in a row','POINT':'POINTS',
+  'Tilbage':'Back','Til forsiden':'Home','Fuld skærm':'Fullscreen','Luk fuld skærm':'Exit fullscreen','Auto: fra':'Auto: off','Auto: til':'Auto: on','Lyd: til':'Sound: on','Lyd: fra':'Sound: off','Nulstil':'Reset','Live-scoreboard':'Live scoreboard','værtsstyret':'host controls','Næste spørgsmål ▸':'Next question ▸','Antal hold':'Number of teams','Mellemrum':'Space','næste runde':'next round','skift visning':'change view','Opladning, pointanimationer, førerbanner, konfetti, stimebonus og lyd.':'Charging, score animations, leader banner, confetti, streak bonus, and sound.','Luk fuld skærm ✕':'Exit fullscreen ✕','STILLING':'STANDINGS','Klar':'Ready','Svarene tælles op':'Counting answers','Tryk mellemrum eller "Næste spørgsmål"':'Press space or “Next question”','Første fører: ':'First in the lead: ','Ny fører: ':'New leader: ',' vinder!':' wins!','Bjergtrøjen:':'King of the mountain:','point':'points','Næste spørgsmål om ':'Next question in ',' · næste spørgsmål':' · next question','Hurtigst':'Fastest','Afventer':'Waiting','Indlæser':'Loading'
+};
+const UI_EN_ENTRIES = Object.entries(UI_EN).sort((a, b) => b[0].length - a[0].length);
+function localizeText(text) {
+  if (quizLanguage !== 'en' || !text) return text;
+  if (/^Spørgsmål \d+ af \d+$/.test(text.trim())) return text.replace(/Spørgsmål (\d+) af (\d+)/, 'Question $1 of $2');
+  if (/^\d+ af \d+$/.test(text.trim())) return text.trim().replace(/(\d+) af (\d+)/, '$1 of $2');
+  return UI_EN_ENTRIES.reduce((value, [da, en]) => {
+    if (/^[\p{L}\p{N}_]+$/u.test(da)) {
+      const escaped = da.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return value.replace(new RegExp(`(^|[^\\p{L}\\p{N}_])${escaped}(?=$|[^\\p{L}\\p{N}_])`, 'giu'), (_match, prefix) => prefix + en);
+    }
+    return value.replaceAll(da, en);
+  }, text);
+}
+function localizeTree(root) {
+  if (quizLanguage !== 'en' || !root) return;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  while (walker.nextNode()) {
+    const translated = localizeText(walker.currentNode.nodeValue);
+    if (translated !== walker.currentNode.nodeValue) walker.currentNode.nodeValue = translated;
+  }
+  const elements = [root, ...root.querySelectorAll('*')];
+  for (const el of elements) for (const attr of ['aria-label', 'title', 'placeholder']) {
+    if (el.hasAttribute(attr)) {
+      const original = el.getAttribute(attr), translated = localizeText(original);
+      if (translated !== original) el.setAttribute(attr, translated);
+    }
+  }
+}
+const uiObserver = new MutationObserver(records => {
+  if (quizLanguage !== 'en') return;
+  for (const record of records) {
+    if (record.type === 'characterData') {
+      const translated = localizeText(record.target.nodeValue);
+      if (translated !== record.target.nodeValue) record.target.nodeValue = translated;
+    }
+    else for (const node of record.addedNodes) if (node.nodeType === Node.ELEMENT_NODE || node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) localizeTree(node);
+  }
+});
+uiObserver.observe(document.body, { subtree: true, childList: true, characterData: true });
 const POINT = { 1: 1, 2: 2, 3: 3, 4: 5 };
 const SHAPES = ['▲', '◆', '●', '■'];
 const SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js';
@@ -65,16 +115,17 @@ function ensureScoreboardFrame() {
       scoreboardReady = false;
       liveScoreboardFrame.contentWindow.postMessage({ type: 'quizjagten-sync' }, location.origin);
     });
-    liveScoreboardFrame.src = 'scoreboard.html?embed=1&v=16';
+    liveScoreboardFrame.src = 'scoreboard.html?embed=1&v=17';
     ensureScoreboardHost().append(liveScoreboardFrame);
   }
   return liveScoreboardFrame;
 }
 function sendScoreboardMessage(message) {
   ensureScoreboardFrame();
-  lastScoreboardMessage = message;
-  if (scoreboardReady) liveScoreboardFrame.contentWindow.postMessage(message, location.origin);
-  else pendingScoreboardMessages.push(message);
+  const localizedMessage = { ...message, language: quizLanguage };
+  lastScoreboardMessage = localizedMessage;
+  if (scoreboardReady) liveScoreboardFrame.contentWindow.postMessage(localizedMessage, location.origin);
+  else pendingScoreboardMessages.push(localizedMessage);
 }
 function syncScoreboardFullscreen() {
   if (!liveScoreboardFrame) return;
@@ -117,6 +168,8 @@ function destroyScoreboard() {
 function render(html) {
   if (liveScoreboardFrame && app.contains(liveScoreboardFrame)) ensureScoreboardHost().append(liveScoreboardFrame);
   app.innerHTML = html;
+  document.documentElement.lang = quizLanguage;
+  localizeTree(app);
   const slot = $('#scoreboard-frame-slot');
   if (slot && liveScoreboardFrame && !liveScoreboardFullscreen) slot.append(liveScoreboardFrame);
   if (!liveScoreboardFullscreen && liveScoreboardHost) liveScoreboardHost.hidden = true;
