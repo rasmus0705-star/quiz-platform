@@ -84,6 +84,7 @@ let liveScoreboardFullscreen = false;
 let scoreboardReady = false;
 let pendingScoreboardMessages = [];
 let lastScoreboardMessage = null;
+let scoreboardSnapshot = [];
 
 /* ---------- Hjælpere ---------- */
 const app = document.getElementById('app');
@@ -124,6 +125,8 @@ function sendScoreboardMessage(message) {
   ensureScoreboardFrame();
   const localizedMessage = { ...message, language: quizLanguage };
   lastScoreboardMessage = localizedMessage;
+  if (message.type === 'quizjagten-question' || message.type === 'quizjagten-round' || message.type === 'quizjagten-standings') scoreboardSnapshot = [localizedMessage];
+  else if (message.type === 'quizjagten-answer-status' && scoreboardSnapshot[0]?.type === 'quizjagten-question') scoreboardSnapshot = [scoreboardSnapshot[0], localizedMessage];
   if (scoreboardReady) liveScoreboardFrame.contentWindow.postMessage(localizedMessage, location.origin);
   else pendingScoreboardMessages.push(localizedMessage);
 }
@@ -147,10 +150,10 @@ window.addEventListener('message', event => {
   if (event.source !== liveScoreboardFrame?.contentWindow || event.origin !== location.origin) return;
   if (event.data?.type === 'quizjagten-ready') {
     scoreboardReady = true;
-    const queued = pendingScoreboardMessages.length > 0;
     for (const message of pendingScoreboardMessages) liveScoreboardFrame.contentWindow.postMessage(message, location.origin);
     pendingScoreboardMessages = [];
-    if (!queued && lastScoreboardMessage) liveScoreboardFrame.contentWindow.postMessage(lastScoreboardMessage, location.origin);
+    const snapshot = scoreboardSnapshot.length ? scoreboardSnapshot : lastScoreboardMessage ? [lastScoreboardMessage] : [];
+    for (const message of snapshot) liveScoreboardFrame.contentWindow.postMessage(message, location.origin);
   }
   if (event.data?.type === 'quizjagten-exit-fullscreen') document.exitFullscreen?.();
 });
@@ -161,6 +164,7 @@ function destroyScoreboard() {
   scoreboardReady = false;
   pendingScoreboardMessages = [];
   lastScoreboardMessage = null;
+  scoreboardSnapshot = [];
   liveScoreboardFullscreen = false;
   if (liveScoreboardHost) liveScoreboardHost.hidden = true;
 }
