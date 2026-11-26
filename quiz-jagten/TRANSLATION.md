@@ -1,11 +1,15 @@
 # English question bank
 
-The app uses a separate, generated `questions.en.json` file. The DeepL key is
-used only by GitHub Actions and is never sent to the browser or saved in the
-repository. The English file keeps the Danish question IDs and metadata so
-daily quizzes, reports, and saved results continue to work.
+The app uses `questions.en.json`, which contains the English version of all
+1,702 questions. The app offers a **Dansk / English** selector when this file
+is available. The selected language is saved on the device, and the English
+bank is cached for offline use. Danish IDs and metadata are preserved so daily
+quizzes, reports, and saved results continue to work.
 
-## Generate the translation
+## Optional DeepL workflow
+
+DeepL is not needed for the existing English bank. Use this workflow only if
+you specifically want to regenerate it with DeepL.
 
 1. In the GitHub repository, open **Settings → Secrets and variables → Actions**.
 2. Add a repository secret named `DEEPL_API_KEY` with the DeepL API key.
@@ -18,16 +22,12 @@ keys use the Pro endpoint. For a local run, set `DEEPL_API_KEY` in the shell
 environment and run `python tools/translate_questions_deepl.py` from this
 directory. Do not put the key in `config.js`, the app, or a committed file.
 
-Once the English JSON file is deployed, the home page shows a **Dansk / English**
-selector. The selection is saved on the device and the English bank is cached
-for offline use.
+## Maintain the bank without DeepL
 
-## Without DeepL
-
-The bank can also be translated manually in small batches with an editor or an AI assistant. Keep the Danish file as the source of truth, preserve the question order, IDs, categories, difficulty, status and type, and translate only the text fields (`spoergsmaal`, `korrekt`, `forkerte`, and `forklaring`). Save the result as `questions.en.json`, then run:
+Keep the Danish file as the source of truth. Preserve question order, IDs, categories, difficulty, status, and type, and translate only the text fields (`spoergsmaal`, `korrekt`, `forkerte`, and `forklaring`). Save the result as `questions.en.json`, then run the check from the repository root:
 
 ```sh
-node tools/check-project.mjs
+node quiz-jagten/tools/check-project.mjs
 ```
 
 This checks ID/order parity and answer counts. Review factual names, dates and answer meanings before deploying the English bank. No translation API key is needed for this route.

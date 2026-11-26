@@ -67,7 +67,7 @@ Hvert spørgsmål har et id i formatet `abc-0001`, en kategori, niveau 1–4, `s
 
 ## Engelsk spørgsmålbank
 
-`questions.en.json` er valgfri og findes ikke i repoet endnu. Appen falder derfor tilbage til dansk. Den nuværende generator bruger DeepL og kræver `DEEPL_API_KEY`; en manuel oversættelse uden DeepL kan laves i kontrollerede partier, hvor spørgsmål-id’er og metadata bevares.
+`questions.en.json` indeholder den komplette engelske oversættelse af alle 1.702 spørgsmål. Appen viser en Dansk / English-vælger, når filen er tilgængelig. Den engelske bank bevarer danske ID'er og metadata, så statistik og gemte resultater fortsat passer sammen. Se `TRANSLATION.md` for vedligeholdelse og validering.
 
 ## Kreditering af eksterne spørgsmål
 
