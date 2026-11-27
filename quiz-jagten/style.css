@@ -62,7 +62,7 @@ button, input, select { font: inherit; color: inherit; }
 .progress { height: 6px; background: var(--tavle); border-radius: 3px; overflow: hidden; margin-top: 6px; }
 .progress i { display: block; height: 100%; background: var(--guld); }
 
-/* SpÃ¸rgsmÃ¥l */
+/* Spørgsmål */
 .qmeta { display: flex; justify-content: space-between; align-items: center; color: var(--daemp); font-size: .92rem; }
 .niv { display: inline-flex; gap: 4px; align-items: center; }
 .niv b { width: 8px; height: 8px; border-radius: 50%; background: var(--tavle2); }
@@ -90,10 +90,10 @@ button, input, select { font: inherit; color: inherit; }
 .tile[disabled] { cursor: default; }
 .tile.dim { opacity: .3; }
 .tile.right { box-shadow: 0 0 0 4px var(--guld); }
-.tile.right::after { content: "âœ“"; margin-left: auto; font-size: 1.3em; }
+.tile.right::after { content: "\2713"; margin-left: auto; font-size: 1.3em; }
 .tile.right:has(.cnt)::after { margin-left: 12px; }
 .tile.wrong { opacity: .55; }
-.tile.wrong::after { content: "âœ—"; margin-left: auto; font-size: 1.3em; }
+.tile.wrong::after { content: "\2717"; margin-left: auto; font-size: 1.3em; }
 .tiles.big .tile { min-height: 96px; font-size: 1.3rem; }
 
 .verdict { font-size: 1.6rem; font-weight: 800; margin: 22px 0 4px; }
@@ -256,7 +256,7 @@ p.lead { color: var(--daemp); margin: 0; }
 [hidden] { display: none !important; }
 #toast:not(.show) { opacity: 0; pointer-events: none; }
 
-/* SpÃ¸rg lÃ¸s */
+/* Spørg løs */
 .team.turn { outline: 2px solid var(--guld); }
 .turnlbl { color: var(--daemp); margin: 4px 0 0; }
 .turnname { font-size: clamp(2rem, 9vw, 2.8rem); font-weight: 800; letter-spacing: -.025em; line-height: 1; margin: 2px 0 18px; }
