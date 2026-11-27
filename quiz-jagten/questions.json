@@ -626,7 +626,7 @@
     "kategori": "natur",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvor mange ben har en edderkop?",
+    "spoergsmaal": "Hvor mange ben har en edderkopå",
     "korrekt": "8",
     "forkerte": [
       "6",
@@ -1007,7 +1007,7 @@
     "kategori": "mad_drikke",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvad laves rom af?",
+    "spoergsmaal": "Hvad laves rom afå",
     "korrekt": "Sukkerrør",
     "forkerte": [
       "Kartofler",
@@ -1909,7 +1909,7 @@
     "kategori": "mad_drikke",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvilken frugt laves cider af?",
+    "spoergsmaal": "Hvilken frugt laves cider afå",
     "korrekt": "Æbler",
     "forkerte": [
       "Appelsiner",
@@ -1950,7 +1950,7 @@
     "kategori": "mad_drikke",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvilket korn brygges de fleste øl primært af?",
+    "spoergsmaal": "Hvilket korn brygges de fleste øl primært afå",
     "korrekt": "Byg",
     "forkerte": [
       "Hvede",
@@ -2066,7 +2066,7 @@
     "kategori": "mad_drikke",
     "niveau": 3,
     "type": "mc",
-    "spoergsmaal": "Hvad laves calvados primært af?",
+    "spoergsmaal": "Hvad laves calvados primært afå",
     "korrekt": "Æbler",
     "forkerte": [
       "Vindruer",
@@ -2362,7 +2362,7 @@
     "kategori": "natur",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvad spiser en kæmpepanda mest af?",
+    "spoergsmaal": "Hvad spiser en kæmpepanda mest afå",
     "korrekt": "Bambus",
     "forkerte": [
       "Fisk",
@@ -2972,7 +2972,7 @@
     "kategori": "sport",
     "niveau": 3,
     "type": "mc",
-    "spoergsmaal": "I hvilken sport spiller man om Stanley Cup?",
+    "spoergsmaal": "I hvilken sport spiller man om Stanley Cupå",
     "korrekt": "Ishockey",
     "forkerte": [
       "Basketball",
@@ -3900,7 +3900,7 @@
     "kategori": "underholdning",
     "niveau": 4,
     "type": "mc",
-    "spoergsmaal": "Hvem skabte tegneseriefiguren Rasmus Klump?",
+    "spoergsmaal": "Hvem skabte tegneseriefiguren Rasmus Klumpå",
     "korrekt": "Carla og Vilhelm Hansen",
     "forkerte": [
       "Storm P.",
@@ -4912,7 +4912,7 @@
     "kategori": "mad_drikke",
     "niveau": 1,
     "type": "fri",
-    "spoergsmaal": "Hvilken frugt laves vin af?",
+    "spoergsmaal": "Hvilken frugt laves vin afå",
     "korrekt": "Druer",
     "forkerte": [],
     "forklaring": "Farven på rødvin kommer fra skallerne på de blå druer.",
@@ -5066,7 +5066,7 @@
     "kategori": "mad_drikke",
     "niveau": 3,
     "type": "fri",
-    "spoergsmaal": "Hvilke bønner laves tofu af?",
+    "spoergsmaal": "Hvilke bønner laves tofu afå",
     "korrekt": "Sojabønner",
     "forkerte": [],
     "forklaring": "Tofu laves lidt som ost – sojamælk koaguleres og presses.",
@@ -5363,7 +5363,7 @@
     "kategori": "sport",
     "niveau": 1,
     "type": "fri",
-    "spoergsmaal": "Hvad kaldes det, når en spiller scorer tre mål i samme kamp?",
+    "spoergsmaal": "Hvad kaldes det, når en spiller scorer tre mål i samme kampå",
     "korrekt": "Hattrick",
     "forkerte": [],
     "forklaring": "Udtrykket kommer fra cricket, hvor en spiller fik en hat for at tage tre wickets i træk.",
@@ -6240,7 +6240,7 @@
     "kategori": "geografi",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvad hedder den halvø, som Danmark er en del af?",
+    "spoergsmaal": "Hvad hedder den halvø, som Danmark er en del afå",
     "korrekt": "Jylland",
     "forkerte": [
       "Skandinavien",
@@ -7231,7 +7231,7 @@
     "kategori": "sport",
     "niveau": 1,
     "type": "fri",
-    "spoergsmaal": "Hvad hedder det, hvis en fodboldspiller modtager to gule kort i samme kamp?",
+    "spoergsmaal": "Hvad hedder det, hvis en fodboldspiller modtager to gule kort i samme kampå",
     "korrekt": "Rødt kort",
     "forkerte": [],
     "forklaring": "To gule kort giver automatisk rødt, og spilleren bliver udvist.",
@@ -7532,7 +7532,7 @@
     "kategori": "mad_drikke",
     "niveau": 3,
     "type": "fri",
-    "spoergsmaal": "Hvad hedder den traditionelle japanske alkoholdrik lavet af fermenteret ris og koji-svamp?",
+    "spoergsmaal": "Hvad hedder den traditionelle japanske alkoholdrik lavet af fermenteret ris og koji-svampå",
     "korrekt": "Sake",
     "forkerte": [],
     "forklaring": "Sake har en alkoholprocent på typisk 15-20 % og kan drikkes koldt eller varmt.",
@@ -9153,7 +9153,7 @@
     "kategori": "sport",
     "niveau": 3,
     "type": "mc",
-    "spoergsmaal": "Hvad hedder det, i ishockey, når en spiller scorer tre mål i én kamp?",
+    "spoergsmaal": "Hvad hedder det, i ishockey, når en spiller scorer tre mål i én kampå",
     "korrekt": "Hat-trick",
     "forkerte": [
       "Perfect game",
@@ -11145,7 +11145,7 @@
     "kategori": "underholdning",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvad hedder den musikgenre, der kombinerer jamaicansk reggae med hip-hop?",
+    "spoergsmaal": "Hvad hedder den musikgenre, der kombinerer jamaicansk reggae med hip-hopå",
     "korrekt": "Dancehall",
     "forkerte": [
       "Ska",
@@ -12629,7 +12629,7 @@
     "kategori": "mad_drikke",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvad hedder den danske pølseret, der serveres med bløde løg og sennep?",
+    "spoergsmaal": "Hvad hedder den danske pølseret, der serveres med bløde løg og sennepå",
     "korrekt": "Pølse med brød",
     "forkerte": [
       "Hotdog",
@@ -13139,7 +13139,7 @@
     "kategori": "underholdning",
     "niveau": 1,
     "type": "fri",
-    "spoergsmaal": "Hvad hedder den berømte roman om en dreng, der ikke vil vokse op?",
+    "spoergsmaal": "Hvad hedder den berømte roman om en dreng, der ikke vil vokse opå",
     "korrekt": "Peter Pan",
     "forkerte": [],
     "forklaring": "Peter Pan er skabt af J.M. Barrie og udkom som teaterstykke i 1904 og bog i 1911.",
@@ -14222,14 +14222,14 @@
     "kategori": "geografi",
     "niveau": 3,
     "type": "mc",
-    "spoergsmaal": "Ved hvilket hav findes Jordens lavest beliggende landomr?de?",
-    "korrekt": "Det D?de Hav",
+    "spoergsmaal": "Ved hvilket hav findes Jordens lavest beliggende landområde?",
+    "korrekt": "Det Døde Hav",
     "forkerte": [
       "Det Kaspiske Hav",
-      "Arals?en",
-      "Victorias?en"
+      "Aralsøen",
+      "Victoriasøen"
     ],
-    "forklaring": "Det D?de Havs bred ligger mere end 400 meter under havets overflade.",
+    "forklaring": "Det Døde Havs bred ligger mere end 400 meter under havets overflade.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -14249,11 +14249,11 @@
     "kategori": "historie",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvad k?mpede abolitionisterne for at afskaffe i 1800-tallet?",
+    "spoergsmaal": "Hvad kæmpede abolitionisterne for at afskaffe i 1800-tallet?",
     "korrekt": "Slaveri",
     "forkerte": [
       "Kolonialisme",
-      "B?rnearbejde",
+      "Børnearbejde",
       "Monarki"
     ],
     "forklaring": "Abolitionister arbejdede for at afskaffe slavehandel og slaveri.",
@@ -14283,7 +14283,7 @@
       "Martin Luther King Jr.",
       "Malala Yousafzai"
     ],
-    "forklaring": "Moder Teresa grundlagde velg?renhedsorganisationen Missionaries of Charity.",
+    "forklaring": "Moder Teresa grundlagde velgørenhedsorganisationen Missionaries of Charity.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -14303,7 +14303,7 @@
     "kategori": "historie",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvad var navnet p? atombomben, der blev kastet over Hiroshima?",
+    "spoergsmaal": "Hvad var navnet på atombomben, der blev kastet over Hiroshima?",
     "korrekt": "Little Boy",
     "forkerte": [
       "Fat Man",
@@ -14330,7 +14330,7 @@
     "kategori": "historie",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "I hvilket ?r blev NASA oprettet?",
+    "spoergsmaal": "I hvilket år blev NASA oprettet?",
     "korrekt": "1958",
     "forkerte": [
       "1957",
@@ -14358,7 +14358,7 @@
     "kategori": "historie",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvilken romersk by blev begravet under aske fra Vesuv i ?r 79?",
+    "spoergsmaal": "Hvilken romersk by blev begravet under aske fra Vesuv i år 79?",
     "korrekt": "Pompeji",
     "forkerte": [
       "Herculaneum",
@@ -14385,14 +14385,14 @@
     "kategori": "natur",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvad kaldes arter, der er i fare for at udd??",
+    "spoergsmaal": "Hvad kaldes arter, der er i fare for at uddø?",
     "korrekt": "Truede arter",
     "forkerte": [
       "Invasive arter",
       "Husdyr",
-      "Udd?de arter"
+      "Uddøde arter"
     ],
-    "forklaring": "En truet art har en betydelig risiko for at udd?.",
+    "forklaring": "En truet art har en betydelig risiko for at uddø.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -14410,12 +14410,12 @@
     "kategori": "natur",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvilken dyrefamilie tilh?rer b?de leoparder og pumaer?",
+    "spoergsmaal": "Hvilken dyrefamilie tilhører både leoparder og pumaer?",
     "korrekt": "Kattefamilien",
     "forkerte": [
       "Hundefamilien",
-      "Bj?rnefamilien",
-      "M?rfamilien"
+      "Bjørnefamilien",
+      "Mårfamilien"
     ],
     "forklaring": "Leoparder og pumaer er begge kattedyr.",
     "status": "godkendt",
@@ -14437,14 +14437,14 @@
     "kategori": "natur",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvilken familie tilh?rer ulven?",
+    "spoergsmaal": "Hvilken familie tilhører ulven?",
     "korrekt": "Hundefamilien",
     "forkerte": [
       "Kattefamilien",
-      "Bj?rnefamilien",
-      "M?rfamilien"
+      "Bjørnefamilien",
+      "Mårfamilien"
     ],
-    "forklaring": "Ulve tilh?rer hundefamilien, Canidae.",
+    "forklaring": "Ulve tilhører hundefamilien, Canidae.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -14464,14 +14464,14 @@
     "kategori": "natur",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvilken hunderace bruges ofte som sl?dehund i arktiske egne?",
+    "spoergsmaal": "Hvilken hunderace bruges ofte som slædehund i arktiske egne?",
     "korrekt": "Siberian husky",
     "forkerte": [
-      "Sch?ferhund",
+      "Schæferhund",
       "Dalmatiner",
       "Puddel"
     ],
-    "forklaring": "Siberian husky er avlet til at tr?kke sl?der over lange afstande.",
+    "forklaring": "Siberian husky er avlet til at trække slæder over lange afstande.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -14495,7 +14495,7 @@
     "korrekt": "Emu",
     "forkerte": [
       "Albatros",
-      "?rn",
+      "ørn",
       "Due"
     ],
     "forklaring": "Emuen er en stor, flyveudygtig fugl, der lever i Australien.",
@@ -14518,14 +14518,14 @@
     "kategori": "natur",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvad kaldes planter, der fanger og ford?jer insekter?",
-    "korrekt": "K?d?dende planter",
+    "spoergsmaal": "Hvad kaldes planter, der fanger og fordøjer insekter?",
+    "korrekt": "Kødædende planter",
     "forkerte": [
       "Snylteplanter",
       "Sporeplanter",
       "Vandplanter"
     ],
-    "forklaring": "K?d?dende planter f?r en del af deres n?ring ved at fange sm?dyr.",
+    "forklaring": "Kødædende planter får en del af deres næring ved at fange smådyr.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -14545,14 +14545,14 @@
     "kategori": "videnskab",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvilken teori beskriver, hvordan universet begyndte at udvide sig fra en meget varm og t?t tilstand?",
+    "spoergsmaal": "Hvilken teori beskriver, hvordan universet begyndte at udvide sig fra en meget varm og tæt tilstand?",
     "korrekt": "Big Bang-teorien",
     "forkerte": [
       "Steady state-teorien",
       "Kaosteorien",
       "Relativitetsteorien"
     ],
-    "forklaring": "Big Bang-teorien beskriver universets udvikling fra en tidlig, ekstremt varm og t?t tilstand.",
+    "forklaring": "Big Bang-teorien beskriver universets udvikling fra en tidlig, ekstremt varm og tæt tilstand.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -14576,10 +14576,10 @@
     "korrekt": "CFC-gasser",
     "forkerte": [
       "Drivhusgasser",
-      "?delgasser",
+      "ædelgasser",
       "Kulbrinter"
     ],
-    "forklaring": "Montrealprotokollen indf?rte udfasning af blandt andet CFC-gasser, der nedbryder ozonlaget.",
+    "forklaring": "Montrealprotokollen indførte udfasning af blandt andet CFC-gasser, der nedbryder ozonlaget.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -14599,14 +14599,14 @@
     "kategori": "videnskab",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvilken planet er den n?stst?rste i solsystemet?",
+    "spoergsmaal": "Hvilken planet er den næststørste i solsystemet?",
     "korrekt": "Saturn",
     "forkerte": [
       "Jupiter",
       "Uranus",
       "Neptun"
     ],
-    "forklaring": "Jupiter er st?rst, mens Saturn er den n?stst?rste planet.",
+    "forklaring": "Jupiter er størst, mens Saturn er den næststørste planet.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -14630,8 +14630,8 @@
     "korrekt": "Kappen",
     "forkerte": [
       "Den ydre kerne",
-      "Lithosf?ren",
-      "Atmosf?ren"
+      "Lithosfæren",
+      "Atmosfæren"
     ],
     "forklaring": "Jordens kappe ligger mellem skorpen og den ydre kerne.",
     "status": "godkendt",
@@ -14661,7 +14661,7 @@
       "Antigravitation",
       "Vakuum"
     ],
-    "forklaring": "I mikrogravitation opleves n?sten v?gtl?shed, selv om tyngdekraften stadig virker.",
+    "forklaring": "I mikrogravitation opleves næsten vægtløshed, selv om tyngdekraften stadig virker.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -14681,7 +14681,7 @@
     "kategori": "videnskab",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvad m?ler Mach-tallet?",
+    "spoergsmaal": "Hvad måler Mach-tallet?",
     "korrekt": "Hastighed i forhold til lydens hastighed",
     "forkerte": [
       "Lufttryk i forhold til havniveau",
@@ -14708,14 +14708,14 @@
     "kategori": "videnskab",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvor mange centimeter g?r der p? en meter?",
+    "spoergsmaal": "Hvor mange centimeter går der på en meter?",
     "korrekt": "100",
     "forkerte": [
       "10",
       "1.000",
       "10.000"
     ],
-    "forklaring": "En meter best?r af 100 centimeter.",
+    "forklaring": "En meter består af 100 centimeter.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -14738,9 +14738,9 @@
     "spoergsmaal": "Hvad bruges isopropylalkohol ofte til?",
     "korrekt": "Som desinfektionsmiddel",
     "forkerte": [
-      "Som s?demiddel",
-      "Som g?dning",
-      "Som br?ndstof i madlavning"
+      "Som sødemiddel",
+      "Som gødning",
+      "Som brændstof i madlavning"
     ],
     "forklaring": "Isopropylalkohol bruges blandt andet i desinfektionsmidler og antiseptiske produkter.",
     "status": "godkendt",
@@ -14760,14 +14760,14 @@
     "kategori": "videnskab",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "I hvilket ?r blev Pluto klassificeret som en dv?rgplanet?",
+    "spoergsmaal": "I hvilket år blev Pluto klassificeret som en dværgplanet?",
     "korrekt": "2006",
     "forkerte": [
       "1999",
       "2012",
       "2018"
     ],
-    "forklaring": "Den Internationale Astronomiske Union ?ndrede Plutos klassifikation i 2006.",
+    "forklaring": "Den Internationale Astronomiske Union ændrede Plutos klassifikation i 2006.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -14787,14 +14787,14 @@
     "kategori": "videnskab",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvilket instrument m?ler lufttryk?",
+    "spoergsmaal": "Hvilket instrument måler lufttryk?",
     "korrekt": "Et barometer",
     "forkerte": [
       "Et termometer",
       "Et hygrometer",
       "Et anemometer"
     ],
-    "forklaring": "Et barometer m?ler atmosf?rens tryk.",
+    "forklaring": "Et barometer måler atmosfærens tryk.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -14814,14 +14814,14 @@
     "kategori": "videnskab",
     "niveau": 3,
     "type": "mc",
-    "spoergsmaal": "Hvad kaldes det, n?r en v?ske bev?ger sig op gennem et smalt r?r mod tyngdekraften?",
-    "korrekt": "Kapill?rvirkning",
+    "spoergsmaal": "Hvad kaldes det, når en væske bevæger sig op gennem et smalt rår mod tyngdekraften?",
+    "korrekt": "Kapillærvirkning",
     "forkerte": [
       "Fordampning",
       "Kondensation",
       "Diffusion"
     ],
-    "forklaring": "Kapill?rvirkning skyldes blandt andet v?skens overfladesp?nding og tiltr?kning til r?rets overflade.",
+    "forklaring": "Kapillærvirkning skyldes blandt andet væskens overfladespænding og tiltrækning til rørets overflade.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -14842,13 +14842,13 @@
     "niveau": 3,
     "type": "mc",
     "spoergsmaal": "Hvad hedder den mindste knogle i menneskekroppen?",
-    "korrekt": "Stigb?jlen",
+    "korrekt": "Stigbøjlen",
     "forkerte": [
       "Malleus",
-      "Kn?skallen",
+      "Knæskallen",
       "Hyoidbenet"
     ],
-    "forklaring": "Stigb?jlen sidder i mellem?ret og er kun f? millimeter lang.",
+    "forklaring": "Stigbøjlen sidder i mellemøret og er kun få millimeter lang.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -14869,13 +14869,13 @@
     "niveau": 2,
     "type": "mc",
     "spoergsmaal": "Hvad betyder det japanske ord judo omtrent?",
-    "korrekt": "Den bl?de vej",
+    "korrekt": "Den bløde vej",
     "forkerte": [
-      "Den hurtige h?nd",
+      "Den hurtige hånd",
       "Kampens kunst",
-      "Den st?rke vej"
+      "Den stærke vej"
     ],
-    "forklaring": "Navnet judo overs?ttes ofte til ?den bl?de vej?.",
+    "forklaring": "Navnet judo oversættes ofte til “den bløde vej”.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -14896,11 +14896,11 @@
     "spoergsmaal": "Hvilken sport udviklede William G. Morgan i 1895 som et mindre fysisk alternativ til basketball?",
     "korrekt": "Volleyball",
     "forkerte": [
-      "H?ndbold",
+      "Håndbold",
       "Badminton",
       "Basketball"
     ],
-    "forklaring": "William G. Morgan udviklede spillet, der f?rst blev kaldt mintonette.",
+    "forklaring": "William G. Morgan udviklede spillet, der først blev kaldt mintonette.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -14918,14 +14918,14 @@
     "kategori": "sport",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvad beskriver udtrykket ?southpaw? typisk i boksning?",
-    "korrekt": "En venstreh?ndet bokser",
+    "spoergsmaal": "Hvad beskriver udtrykket “southpaw” typisk i boksning?",
+    "korrekt": "En venstrehåndet bokser",
     "forkerte": [
       "En bokser, der kun angriber",
-      "En bokser i tungv?gtsklassen",
-      "En bokser, der k?mper med ryggen til modstanderen"
+      "En bokser i tungvægtsklassen",
+      "En bokser, der kæmper med ryggen til modstanderen"
     ],
-    "forklaring": "En southpaw-bokser st?r typisk med h?jre fod forrest og f?rer med venstre h?nd.",
+    "forklaring": "En southpaw-bokser står typisk med højre fod forrest og fører med venstre hånd.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -14945,7 +14945,7 @@
     "kategori": "sport",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "I hvilken sport bruges udtrykkene birdie, eagle og bogey om resultatet p? et hul?",
+    "spoergsmaal": "I hvilken sport bruges udtrykkene birdie, eagle og bogey om resultatet på et hul?",
     "korrekt": "Golf",
     "forkerte": [
       "Tennis",
@@ -14972,7 +14972,7 @@
     "kategori": "sport",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvilken sport konkurrerer deltagerne i om Ryder Cup?",
+    "spoergsmaal": "Hvilken sport konkurrerer deltagerne i om Ryder Cupå",
     "korrekt": "Golf",
     "forkerte": [
       "Tennis",
@@ -15003,10 +15003,10 @@
     "korrekt": "Cykling",
     "forkerte": [
       "Motorsport",
-      "L?b",
+      "Løb",
       "Langrend"
     ],
-    "forklaring": "Tour de France er et etapel?b p? cykel.",
+    "forklaring": "Tour de France er et etapeløb på cykel.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15033,7 +15033,7 @@
       "En koggerbue",
       "En pilepung"
     ],
-    "forklaring": "Et pilekogger b?res typisk p? ryggen eller ved hoften.",
+    "forklaring": "Et pilekogger bæres typisk på ryggen eller ved hoften.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15054,13 +15054,13 @@
     "niveau": 2,
     "type": "mc",
     "spoergsmaal": "Hvilken af disse er ikke en disciplin ved vinter-OL?",
-    "korrekt": "Tovtr?kning",
+    "korrekt": "Tovtrækning",
     "forkerte": [
       "Curling",
       "Skiskydning",
-      "Kunstsk?jtel?b"
+      "Kunstskøjteløb"
     ],
-    "forklaring": "Tovtr?kning har ikke v?ret en disciplin ved vinter-OL.",
+    "forklaring": "Tovtrækning har ikke været en disciplin ved vinter-OL.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15078,14 +15078,14 @@
     "kategori": "mad_drikke",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvilken plante bruges som r?vare til rom?",
-    "korrekt": "Sukkerr?r",
+    "spoergsmaal": "Hvilken plante bruges som råvare til rom?",
+    "korrekt": "Sukkerrør",
     "forkerte": [
       "Byg",
       "Vindruer",
       "Agave"
     ],
-    "forklaring": "Rom fremstilles af produkter fra sukkerr?r, ofte melasse eller sukkerr?rssaft.",
+    "forklaring": "Rom fremstilles af produkter fra sukkerrør, ofte melasse eller sukkerrørssaft.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15112,7 +15112,7 @@
       "Vodka",
       "Whisky"
     ],
-    "forklaring": "Gin og tonic best?r traditionelt af gin, tonicvand og ofte lime.",
+    "forklaring": "Gin og tonic består traditionelt af gin, tonicvand og ofte lime.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15132,14 +15132,14 @@
     "kategori": "mad_drikke",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvad kaldes en krydret relish af frugt eller gr?ntsager, som ofte serveres til indisk mad?",
+    "spoergsmaal": "Hvad kaldes en krydret relish af frugt eller grøntsager, som ofte serveres til indisk mad?",
     "korrekt": "Chutney",
     "forkerte": [
       "Pesto",
       "Tapenade",
       "Salsa verde"
     ],
-    "forklaring": "Chutney kan v?re s?d, syrlig eller st?rk og serveres ofte som tilbeh?r.",
+    "forklaring": "Chutney kan være sød, syrlig eller stærk og serveres ofte som tilbehør.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15159,7 +15159,7 @@
     "kategori": "mad_drikke",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvilken cocktail best?r traditionelt af appelsinjuice og champagne?",
+    "spoergsmaal": "Hvilken cocktail består traditionelt af appelsinjuice og champagne?",
     "korrekt": "Mimosa",
     "forkerte": [
       "Bellini",
@@ -15186,14 +15186,14 @@
     "kategori": "mad_drikke",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvilken dessert har en cremet vaniljebudding med et spr?dt lag karamelliseret sukker?",
-    "korrekt": "Cr?me br?l?e",
+    "spoergsmaal": "Hvilken dessert har en cremet vaniljebudding med et sprødt lag karamelliseret sukker?",
+    "korrekt": "Crème brûlée",
     "forkerte": [
       "Panna cotta",
       "Tiramisu",
       "Souffl?"
     ],
-    "forklaring": "Cr?me br?l?e serveres med et tyndt, h?rdt lag karamelliseret sukker.",
+    "forklaring": "Crème brûlée serveres med et tyndt, hårdt lag karamelliseret sukker.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15213,14 +15213,14 @@
     "kategori": "mad_drikke",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvad hedder den japanske ret, hvor fisk, skaldyr eller gr?ntsager dyppes i dej og frituresteges?",
+    "spoergsmaal": "Hvad hedder den japanske ret, hvor fisk, skaldyr eller grøntsager dyppes i dej og frituresteges?",
     "korrekt": "Tempura",
     "forkerte": [
       "Sushi",
       "Ramen",
       "Yakitori"
     ],
-    "forklaring": "Tempura best?r af ingredienser, der er d?kket af en let dej og friturestegt.",
+    "forklaring": "Tempura består af ingredienser, der er dækket af en let dej og friturestegt.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15240,14 +15240,14 @@
     "kategori": "mad_drikke",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvilken krydderurt findes b?de som krusbladet og bredbladet variant og ofte bruges som pynt?",
+    "spoergsmaal": "Hvilken krydderurt findes både som krusbladet og bredbladet variant og ofte bruges som pynt?",
     "korrekt": "Persille",
     "forkerte": [
       "Basilikum",
       "Timian",
       "Rosmarin"
     ],
-    "forklaring": "Persille findes i b?de krusbladede og bredbladede sorter.",
+    "forklaring": "Persille findes i både krusbladede og bredbladede sorter.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15267,14 +15267,14 @@
     "kategori": "mad_drikke",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvilken af disse er et b?r, der ofte bruges i juice og sauce?",
-    "korrekt": "Traneb?r",
+    "spoergsmaal": "Hvilken af disse er et bær, der ofte bruges i juice og sauce?",
+    "korrekt": "Tranebær",
     "forkerte": [
-      "Kik?rt",
-      "Cashewn?d",
+      "Kikært",
+      "Cashewnød",
       "Artiskok"
     ],
-    "forklaring": "Traneb?r er et surt b?r, der ofte bruges i drikkevarer og madlavning.",
+    "forklaring": "Tranebår er et surt bær, der ofte bruges i drikkevarer og madlavning.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15301,7 +15301,7 @@
       "Brie",
       "Halloumi"
     ],
-    "forklaring": "Parmesan er en h?rd ost, der ofte rives over pasta og risotto.",
+    "forklaring": "Parmesan er en hård ost, der ofte rives over pasta og risotto.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15322,13 +15322,13 @@
     "niveau": 1,
     "type": "mc",
     "spoergsmaal": "Hvilken type mad er pita?",
-    "korrekt": "Fladbr?d",
+    "korrekt": "Fladbrød",
     "forkerte": [
       "Friskost",
       "Suppe",
-      "Syltet?j"
+      "Syltetøj"
     ],
-    "forklaring": "Pita er et rundt, bl?dt fladbr?d, som ofte kan fyldes.",
+    "forklaring": "Pita er et rundt, blødt fladbrød, som ofte kan fyldes.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15348,14 +15348,14 @@
     "kategori": "mad_drikke",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvilken f?devare dyrkes ofte p? tr?stammer?",
+    "spoergsmaal": "Hvilken fødevare dyrkes ofte på træstammer?",
     "korrekt": "Svampe",
     "forkerte": [
       "Kartofler",
-      "Kakaob?nner",
+      "Kakaobønner",
       "Hvede"
     ],
-    "forklaring": "Nogle spiselige svampe dyrkes p? tr?stammer eller tr?baserede v?kstmedier.",
+    "forklaring": "Nogle spiselige svampe dyrkes på træstammer eller træbaserede vækstmedier.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15375,14 +15375,14 @@
     "kategori": "sprog_kultur",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvad st?r forkortelsen CFO typisk for i en virksomhed?",
-    "korrekt": "Finansdirekt?r",
+    "spoergsmaal": "Hvad står forkortelsen CFO typisk for i en virksomhed?",
+    "korrekt": "Finansdirektør",
     "forkerte": [
-      "Driftsdirekt?r",
-      "Teknisk direkt?r",
-      "Marketingdirekt?r"
+      "Driftsdirektør",
+      "Teknisk direktør",
+      "Marketingdirektør"
     ],
-    "forklaring": "CFO st?r for Chief Financial Officer, som leder en virksomheds ?konomifunktion.",
+    "forklaring": "CFO står for Chief Financial Officer, som leder en virksomheds økonomifunktion.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15402,14 +15402,14 @@
     "kategori": "sprog_kultur",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvilken gr?sk gud blev if?lge myten Persefones ?gtef?lle og underverdenens hersker?",
+    "spoergsmaal": "Hvilken græsk gud blev ifølge myten Persefones ægtefælle og underverdenens hersker?",
     "korrekt": "Hades",
     "forkerte": [
       "Zeus",
       "Apollo",
       "Hermes"
     ],
-    "forklaring": "I gr?sk mytologi blev Persefone dronning i underverdenen sammen med Hades.",
+    "forklaring": "I græsk mytologi blev Persefone dronning i underverdenen sammen med Hades.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15429,11 +15429,11 @@
     "kategori": "sprog_kultur",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvad betyder det moderne slangord ?ghosting? i en relation?",
+    "spoergsmaal": "Hvad betyder det moderne slangord “ghosting” i en relation?",
     "korrekt": "At afbryde al kontakt uden forklaring",
     "forkerte": [
       "At sende mange beskeder",
-      "At m?des i hemmelighed",
+      "At mødes i hemmelighed",
       "At genoptage et gammelt venskab"
     ],
     "forklaring": "Ghosting betyder pludseligt at stoppe med at svare og afbryde kontakten.",
@@ -15456,14 +15456,14 @@
     "kategori": "sprog_kultur",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvad hedder det sjette bogstav i det gr?ske alfabet?",
+    "spoergsmaal": "Hvad hedder det sjette bogstav i det græske alfabet?",
     "korrekt": "Zeta",
     "forkerte": [
       "Epsilon",
       "Eta",
       "Theta"
     ],
-    "forklaring": "Bogstaverne f?r zeta er alfa, beta, gamma, delta og epsilon.",
+    "forklaring": "Bogstaverne får zeta er alfa, beta, gamma, delta og epsilon.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15483,14 +15483,14 @@
     "kategori": "sprog_kultur",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvad betyder den latinske frase ?Ad victoriam??",
+    "spoergsmaal": "Hvad betyder den latinske frase “Ad victoriam”?",
     "korrekt": "Til sejr",
     "forkerte": [
       "Fred for alle",
-      "Husk d?den",
+      "Husk døden",
       "Sandheden sejrer"
     ],
-    "forklaring": "?Ad victoriam? betyder omtrent ?til sejr? eller ?mod sejr?.",
+    "forklaring": "“Ad victoriam” betyder omtrent “til sejr” eller “mod sejr”.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15508,14 +15508,14 @@
     "kategori": "sprog_kultur",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvem var den gr?ske gud for vin og fest?",
+    "spoergsmaal": "Hvem var den græske gud for vin og fest?",
     "korrekt": "Dionysos",
     "forkerte": [
       "Ares",
       "Hermes",
       "Poseidon"
     ],
-    "forklaring": "Dionysos var i gr?sk mytologi forbundet med vin, frugtbarhed og teater.",
+    "forklaring": "Dionysos var i græsk mytologi forbundet med vin, frugtbarhed og teater.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15562,14 +15562,14 @@
     "kategori": "underholdning",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvilken film fra 1933 handler om en ekspedition, der fanger en k?mpeabe p? en afsides ??",
+    "spoergsmaal": "Hvilken film fra 1933 handler om en ekspedition, der fanger en kæmpeabe på en afsides ø?",
     "korrekt": "King Kong",
     "forkerte": [
       "Dracula",
       "Frankenstein",
       "The Mummy"
     ],
-    "forklaring": "King Kong blev f?rste gang vist i 1933 og er siden blevet genindspillet flere gange.",
+    "forklaring": "King Kong blev første gang vist i 1933 og er siden blevet genindspillet flere gange.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15616,7 +15616,7 @@
     "kategori": "underholdning",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvad st?r forkortelsen CGI for i film?",
+    "spoergsmaal": "Hvad står forkortelsen CGI for i film?",
     "korrekt": "Computer-genererede billeder",
     "forkerte": [
       "Kamera-gengivet billede",
@@ -15643,7 +15643,7 @@
     "kategori": "underholdning",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvilken Charlie Chaplin-film viser b?de en diktator og en j?disk barber?",
+    "spoergsmaal": "Hvilken Charlie Chaplin-film viser både en diktator og en jødisk barber?",
     "korrekt": "Diktatoren (The Great Dictator)",
     "forkerte": [
       "Moderne tider",
@@ -15670,14 +15670,14 @@
     "kategori": "underholdning",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvilken film f?lger Dorothy og hunden Toto til det magiske land Oz?",
+    "spoergsmaal": "Hvilken film følger Dorothy og hunden Toto til det magiske land Oz?",
     "korrekt": "Troldmanden fra Oz",
     "forkerte": [
       "Mary Poppins",
       "Peter Pan",
       "Alice i Eventyrland"
     ],
-    "forklaring": "Dorothy og Toto f?res til Oz efter en tornado rammer deres hjem.",
+    "forklaring": "Dorothy og Toto føres til Oz efter en tornado rammer deres hjem.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15724,14 +15724,14 @@
     "kategori": "underholdning",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvilken instrumentfamilie tilh?rer et glockenspiel?",
-    "korrekt": "Slagt?jsinstrumenter",
+    "spoergsmaal": "Hvilken instrumentfamilie tilhører et glockenspiel?",
+    "korrekt": "Slagtøjsinstrumenter",
     "forkerte": [
-      "Tr?bl?sere",
+      "Træblæsere",
       "Strygeinstrumenter",
       "Messinginstrumenter"
     ],
-    "forklaring": "Et glockenspiel frembringer toner, n?r man sl?r p? dets metalstave.",
+    "forklaring": "Et glockenspiel frembringer toner, når man slår på dets metalstave.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15751,14 +15751,14 @@
     "kategori": "underholdning",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvilken instrumentfamilie tilh?rer fagotten?",
-    "korrekt": "Tr?bl?sere",
+    "spoergsmaal": "Hvilken instrumentfamilie tilhører fagotten?",
+    "korrekt": "Træblæsere",
     "forkerte": [
       "Messinginstrumenter",
-      "Slagt?jsinstrumenter",
+      "Slagtøjsinstrumenter",
       "Strygeinstrumenter"
     ],
-    "forklaring": "Fagotten er et tr?bl?seinstrument med dobbelt r?rblad.",
+    "forklaring": "Fagotten er et træblæseinstrument med dobbelt rørblad.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15785,7 +15785,7 @@
       "Duke Ellington",
       "Louis Armstrong"
     ],
-    "forklaring": "Kind of Blue fra 1959 er et af Miles Davis? mest kendte jazzalbum.",
+    "forklaring": "Kind of Blue fra 1959 er et af Miles Davis' mest kendte jazzalbum.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15832,7 +15832,7 @@
     "kategori": "underholdning",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvilken musiker medvirkede sammen med Queen p? sangen Under Pressure?",
+    "spoergsmaal": "Hvilken musiker medvirkede sammen med Queen på sangen Under Pressure?",
     "korrekt": "David Bowie",
     "forkerte": [
       "Elton John",
@@ -15866,7 +15866,7 @@
       "Stevie Wonder",
       "Lionel Richie"
     ],
-    "forklaring": "Beat It blev udgivet p? Michael Jacksons album Thriller.",
+    "forklaring": "Beat It blev udgivet på Michael Jacksons album Thriller.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15886,7 +15886,7 @@
     "kategori": "sprog_kultur",
     "niveau": 3,
     "type": "mc",
-    "spoergsmaal": "Hvem skrev romanen Forbrydelse og straf?",
+    "spoergsmaal": "Hvem skrev romanen Forbrydelse og strafå",
     "korrekt": "Fjodor Dostojevskij",
     "forkerte": [
       "Leo Tolstoj",
@@ -15940,14 +15940,14 @@
     "kategori": "sprog_kultur",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvilken farve f?r man normalt ved at blande gul og bl? maling?",
-    "korrekt": "Gr?n",
+    "spoergsmaal": "Hvilken farve får man normalt ved at blande gul og blå maling?",
+    "korrekt": "Grøn",
     "forkerte": [
       "Lilla",
       "Orange",
       "Brun"
     ],
-    "forklaring": "Gul og bl? maling blandes normalt til gr?n, selv om resultatet afh?nger af pigmenterne.",
+    "forklaring": "Gul og blå maling blandes normalt til grøn, selv om resultatet afhænger af pigmenterne.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15967,14 +15967,14 @@
     "kategori": "sprog_kultur",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvad kaldes et kunstv?rk, der er sat sammen af udklippede og p?kl?bede materialer?",
+    "spoergsmaal": "Hvad kaldes et kunstværk, der er sat sammen af udklippede og påklæbede materialer?",
     "korrekt": "Collage",
     "forkerte": [
       "Fresko",
       "Mosaik",
       "Litografi"
     ],
-    "forklaring": "En collage sammens?ttes af forskellige materialer, der klippes ud og s?ttes sammen.",
+    "forklaring": "En collage sammensættes af forskellige materialer, der klippes ud og sættes sammen.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -15994,14 +15994,14 @@
     "kategori": "sprog_kultur",
     "niveau": 3,
     "type": "mc",
-    "spoergsmaal": "Hvilken kunstretning brugte absurditet og gjorde opr?r mod traditionelle kunstidealer?",
+    "spoergsmaal": "Hvilken kunstretning brugte absurditet og gjorde oprår mod traditionelle kunstidealer?",
     "korrekt": "Dadaisme",
     "forkerte": [
       "Impressionisme",
       "Klassicisme",
       "Romantik"
     ],
-    "forklaring": "Dadaismen opstod under F?rste Verdenskrig som et opr?r mod etablerede normer.",
+    "forklaring": "Dadaismen opstod under Første Verdenskrig som et oprår mod etablerede normer.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -16026,7 +16026,7 @@
       "Roald Dahl",
       "C.S. Lewis"
     ],
-    "forklaring": "Lewis Carroll udgav Alice?s Adventures in Wonderland i 1865.",
+    "forklaring": "Lewis Carroll udgav Alice's Adventures in Wonderland i 1865.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -16046,14 +16046,14 @@
     "kategori": "sprog_kultur",
     "niveau": 3,
     "type": "mc",
-    "spoergsmaal": "Hvad hedder en af de klassiske s?jleordener fra det antikke Gr?kenland?",
+    "spoergsmaal": "Hvad hedder en af de klassiske søjleordener fra det antikke Grækenland?",
     "korrekt": "Dorisk",
     "forkerte": [
       "Gotisk",
       "Barok",
       "Rokoko"
     ],
-    "forklaring": "Dorisk er en af de tre klassiske gr?ske s?jleordener sammen med jonisk og korinthisk.",
+    "forklaring": "Dorisk er en af de tre klassiske græske søjleordener sammen med jonisk og korinthisk.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -16100,14 +16100,14 @@
     "kategori": "geografi",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvad kaldes en konstruktion, der sp?rrer for rindende vand?",
-    "korrekt": "En d?mning",
+    "spoergsmaal": "Hvad kaldes en konstruktion, der spærrer for rindende vand?",
+    "korrekt": "En dæmning",
     "forkerte": [
       "En kanal",
       "En sluseport",
-      "En akv?dukt"
+      "En akvædukt"
     ],
-    "forklaring": "En d?mning holder vand tilbage eller regulerer vandets str?mning.",
+    "forklaring": "En dæmning holder vand tilbage eller regulerer vandets strømning.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -16134,7 +16134,7 @@
       "XLIX",
       "LXVII"
     ],
-    "forklaring": "LXIX er L (50) + X (10) + IX (9), alts? 69.",
+    "forklaring": "LXIX er L (50) + X (10) + IX (9), altså 69.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -16154,14 +16154,14 @@
     "kategori": "sprog_kultur",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvilket kodeord bruges for bogstavet V i NATO?s fonetiske alfabet?",
+    "spoergsmaal": "Hvilket kodeord bruges for bogstavet V i NATO's fonetiske alfabet?",
     "korrekt": "Victor",
     "forkerte": [
       "Whiskey",
       "Uniform",
       "Juliett"
     ],
-    "forklaring": "NATO?s fonetiske alfabet bruger ordet Victor for bogstavet V.",
+    "forklaring": "NATO's fonetiske alfabet bruger ordet Victor for bogstavet V.",
     "status": "godkendt",
     "kilde": {
       "navn": "The Trivia API",
@@ -16188,7 +16188,7 @@
       "Katy Perry",
       "Taylor Swift"
     ],
-    "forklaring": "Adele udgav ?Rolling in the Deep? p? albummet 21.",
+    "forklaring": "Adele udgav “Rolling in the Deep” på albummet 21.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16272,7 +16272,7 @@
       "Filippinerne",
       "Thailand"
     ],
-    "forklaring": "Bali er en ? i Indonesien.",
+    "forklaring": "Bali er en ø i Indonesien.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16307,14 +16307,14 @@
     "kategori": "mad_drikke",
     "niveau": 3,
     "type": "mc",
-    "spoergsmaal": "Hvilket krydderi omtales ofte som verdens dyreste m?lt p? v?gt?",
+    "spoergsmaal": "Hvilket krydderi omtales ofte som verdens dyreste målt på vægt?",
     "korrekt": "Safran",
     "forkerte": [
       "Kanel",
       "Vanilje",
       "Kardemomme"
     ],
-    "forklaring": "Safran h?stes fra krokusblomstens st?vfang, og h?sten kr?ver mange h?ndplukkede blomster.",
+    "forklaring": "Safran høstes fra krokusblomstens støvfang, og høsten kræver mange håndplukkede blomster.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16335,7 +16335,7 @@
       "Indonesien",
       "Filippinerne"
     ],
-    "forklaring": "Fuji er en vulkan og Japans h?jeste bjerg.",
+    "forklaring": "Fuji er en vulkan og Japans højeste bjerg.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16356,7 +16356,7 @@
       "Kakao",
       "Te"
     ],
-    "forklaring": "Kaffe brygges af ristede fr? fra kaffeplanten.",
+    "forklaring": "Kaffe brygges af ristede frø fra kaffeplanten.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16398,7 +16398,7 @@
       "Albert Einstein",
       "Nikola Tesla"
     ],
-    "forklaring": "Thomas Edison forbindes is?r med udviklingen af en praktisk, kommercielt anvendelig gl?dep?re.",
+    "forklaring": "Thomas Edison forbindes isår med udviklingen af en praktisk, kommercielt anvendelig glødepære.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16461,7 +16461,7 @@
       "Flexitar",
       "Pescatar"
     ],
-    "forklaring": "Vegetarer undg?r k?d, men mange spiser stadig ?g og mejeriprodukter.",
+    "forklaring": "Vegetarer undgår kød, men mange spiser stadig æg og mejeriprodukter.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16517,14 +16517,14 @@
     "kategori": "natur",
     "niveau": 3,
     "type": "mc",
-    "spoergsmaal": "Hvilket sejlivet insekt siges at kunne overleve i flere dage, efter at have fået hugget hovedet af?",
+    "spoergsmaal": "Hvilket sejlivet insekt siges at kunne overleve i flere dage, efter at have fået hugget hovedet afå",
     "korrekt": "Kakerlakken",
     "forkerte": [
       "Fluen",
       "Myren",
       "Bien"
     ],
-    "forklaring": "Kakerlakker kan overleve nogle dage uden hoved; de d?r senere af blandt andet v?skemangel.",
+    "forklaring": "Kakerlakker kan overleve nogle dage uden hoved; de dår senere af blandt andet væskemangel.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16545,7 +16545,7 @@
       "Figner",
       "Svesker"
     ],
-    "forklaring": "Rosiner er t?rrede vindruer.",
+    "forklaring": "Rosiner er tørrede vindruer.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16566,7 +16566,7 @@
       "Lungerne",
       "Leveren"
     ],
-    "forklaring": "Huden regnes som menneskekroppens st?rste organ m?lt p? overfladeareal.",
+    "forklaring": "Huden regnes som menneskekroppens største organ målt på overfladeareal.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16587,7 +16587,7 @@
       "Jon Bon Jovi",
       "Mick Jagger"
     ],
-    "forklaring": "Bruce Springsteen har i mange ?r haft tilnavnet ?The Boss?.",
+    "forklaring": "Bruce Springsteen har i mange år haft tilnavnet “The Boss”.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16629,7 +16629,7 @@
       "Frankrig",
       "Sverige"
     ],
-    "forklaring": "Bordtennis opstod i England i slutningen af 1800-tallet som et indend?rs selskabsspil.",
+    "forklaring": "Bordtennis opstod i England i slutningen af 1800-tallet som et indendørs selskabsspil.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16650,7 +16650,7 @@
       "The Crown",
       "The Witcher"
     ],
-    "forklaring": "I Game of Thrones k?mper adelssl?gter om magten over Westeros og Jerntronen.",
+    "forklaring": "I Game of Thrones kæmper adelsslægter om magten over Westeros og Jerntronen.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16671,7 +16671,7 @@
       "Freddie Mercury",
       "Elvis Presley"
     ],
-    "forklaring": "Michael Jackson blev kendt under tilnavnet ?The King of Pop?.",
+    "forklaring": "Michael Jackson blev kendt under tilnavnet “The King of Pop”.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16713,7 +16713,7 @@
       "300.000 km/s",
       "150 m/s"
     ],
-    "forklaring": "Ved stuetemperatur bev?ger lyd sig gennem luft med cirka 343 meter i sekundet.",
+    "forklaring": "Ved stuetemperatur bevæger lyd sig gennem luft med cirka 343 meter i sekundet.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16748,7 +16748,7 @@
     "kategori": "natur",
     "niveau": 1,
     "type": "mc",
-    "spoergsmaal": "Hvilken livsvigtig muskel pumper blod rundt i hele menneskets krop?",
+    "spoergsmaal": "Hvilken livsvigtig muskel pumper blod rundt i hele menneskets kropå",
     "korrekt": "Hjertet",
     "forkerte": [
       "Nyrerne",
@@ -16776,7 +16776,7 @@
       "Oplysningstiden",
       "Middelalderen"
     ],
-    "forklaring": "Ren?ssance betyder genf?dsel og betegner en europ?isk kulturperiode.",
+    "forklaring": "Renæssance betyder genfødsel og betegner en europæisk kulturperiode.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16797,7 +16797,7 @@
       "Helikopteren",
       "Luftballonen"
     ],
-    "forklaring": "Br?drene Wright gennemf?rte en af de f?rste vellykkede flyvninger med et motordrevet fly i 1903.",
+    "forklaring": "Brødrene Wright gennemførte en af de første vellykkede flyvninger med et motordrevet fly i 1903.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16839,7 +16839,7 @@
       "Justin Bieber",
       "Shawn Mendes"
     ],
-    "forklaring": "Ed Sheeran udgav verdenshittet ?Shape of You?.",
+    "forklaring": "Ed Sheeran udgav verdenshittet “Shape of You”.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16860,7 +16860,7 @@
       "Fusilli",
       "Macaroni"
     ],
-    "forklaring": "Penne er r?rformet pasta med skr?t afsk?rne ender.",
+    "forklaring": "Penne er rørformet pasta med skråt afskårne ender.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16881,7 +16881,7 @@
       "April",
       "September"
     ],
-    "forklaring": "Februar har f?rrest dage i et almindeligt ?r.",
+    "forklaring": "Februar har færrest dage i et almindeligt år.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16902,7 +16902,7 @@
       "365",
       "367"
     ],
-    "forklaring": "Et skud?r har 366 dage.",
+    "forklaring": "Et skudår har 366 dage.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -16944,7 +16944,7 @@
       "Two-Face",
       "Gækkeren"
     ],
-    "forklaring": "Jokeren er en af Batmans mest kendte ?rkefjender.",
+    "forklaring": "Jokeren er en af Batmans mest kendte ærkefjender.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17007,7 +17007,7 @@
       "Pakistan",
       "Tyrkiet"
     ],
-    "forklaring": "Indonesien har verdens st?rste muslimske befolkning.",
+    "forklaring": "Indonesien har verdens største muslimske befolkning.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17028,7 +17028,7 @@
       "51",
       "49"
     ],
-    "forklaring": "USA best?r af 50 delstater, og flagets stjerner repr?senterer dem.",
+    "forklaring": "USA består af 50 delstater, og flagets stjerner repræsenterer dem.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17049,7 +17049,7 @@
       "BMW",
       "Mercedes"
     ],
-    "forklaring": "Audi-logoets fire ringe henviser til bilm?rkets historiske forg?nger Auto Union.",
+    "forklaring": "Audi-logoets fire ringe henviser til bilmærkets historiske forgænger Auto Union.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17070,7 +17070,7 @@
       "Madonna",
       "Elton John"
     ],
-    "forklaring": "Michael Jackson udgav Thriller i 1982; albummet er blandt verdens bedst s?lgende.",
+    "forklaring": "Michael Jackson udgav Thriller i 1982; albummet er blandt verdens bedst sælgende.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17091,7 +17091,7 @@
       "Thomas Jefferson",
       "John Adams"
     ],
-    "forklaring": "George Washington blev USA?s f?rste pr?sident i 1789.",
+    "forklaring": "George Washington blev USA's første præsident i 1789.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17105,14 +17105,14 @@
     "kategori": "historie",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvilket af Columbus? tre skibe p? ekspeditionen i 1492 var det st?rste?",
+    "spoergsmaal": "Hvilket af Columbus' tre skibe på ekspeditionen i 1492 var det største?",
     "korrekt": "Santa Maria",
     "forkerte": [
       "Nina",
       "Pinta",
       "Mayflower"
     ],
-    "forklaring": "Santa Maria var det st?rste af de tre skibe p? Columbus? f?rste ekspedition i 1492.",
+    "forklaring": "Santa Maria var det største af de tre skibe på Columbus' første ekspedition i 1492.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17154,7 +17154,7 @@
       "Gouda",
       "Parmesan"
     ],
-    "forklaring": "Mozzarella er en mild, frisk ost, der traditionelt bruges p? pizza Margherita.",
+    "forklaring": "Mozzarella er en mild, frisk ost, der traditionelt bruges på pizza Margherita.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17196,7 +17196,7 @@
       "Peru",
       "Mexico"
     ],
-    "forklaring": "Pyramiderne i Giza ligger i Egypten n?r Cairo.",
+    "forklaring": "Pyramiderne i Giza ligger i Egypten når Cairo.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17259,7 +17259,7 @@
       "Cuba",
       "Grønland"
     ],
-    "forklaring": "Canada ligger nord for USA og deler landgr?nse med landet.",
+    "forklaring": "Canada ligger nord for USA og deler landgrænse med landet.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17280,7 +17280,7 @@
       "Tatooine",
       "Asgard"
     ],
-    "forklaring": "I Superman-fort?llingerne er Krypton Supermans hjemplanet.",
+    "forklaring": "I Superman-fortællingerne er Krypton Supermans hjemplanet.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17301,7 +17301,7 @@
       "Himalaya",
       "Alperne"
     ],
-    "forklaring": "Andesbjergene l?ber langs en stor del af Sydamerikas vestkyst.",
+    "forklaring": "Andesbjergene løber langs en stor del af Sydamerikas vestkyst.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17343,7 +17343,7 @@
       "Centrifugalkraft",
       "Magnetisme"
     ],
-    "forklaring": "Tyngdekraften holder os p? Jordens overflade og f?r genstande til at falde mod jorden.",
+    "forklaring": "Tyngdekraften holder os på Jordens overflade og får genstande til at falde mod jorden.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17364,7 +17364,7 @@
       "King's Watch",
       "Tower Clock"
     ],
-    "forklaring": "Big Ben er navnet p? den store klokke i Elizabeth Tower i London.",
+    "forklaring": "Big Ben er navnet på den store klokke i Elizabeth Tower i London.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17385,7 +17385,7 @@
       "Melanin",
       "Karoten"
     ],
-    "forklaring": "Klorofyl absorberer lys og giver mange planter deres gr?nne farve.",
+    "forklaring": "Klorofyl absorberer lys og giver mange planter deres grønne farve.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17406,7 +17406,7 @@
       "1600-tallet",
       "1500-tallet"
     ],
-    "forklaring": "Sortsk?g var en pirat, der var aktiv i Caribien i begyndelsen af 1700-tallet.",
+    "forklaring": "Sortskæg var en pirat, der var aktiv i Caribien i begyndelsen af 1700-tallet.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17448,7 +17448,7 @@
       "10",
       "9"
     ],
-    "forklaring": "Solsystemet har otte anerkendte planeter; Pluto regnes som en dv?rgplanet.",
+    "forklaring": "Solsystemet har otte anerkendte planeter; Pluto regnes som en dværgplanet.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17490,7 +17490,7 @@
       "K2",
       "Mount Kenya"
     ],
-    "forklaring": "Kilimanjaro er Afrikas h?jeste bjerg.",
+    "forklaring": "Kilimanjaro er Afrikas højeste bjerg.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17511,7 +17511,7 @@
       "Løven",
       "Leoparden"
     ],
-    "forklaring": "Geparden er det hurtigste landdyr og kan l?be over 100 kilometer i timen i korte spurter.",
+    "forklaring": "Geparden er det hurtigste landdyr og kan løbe over 100 kilometer i timen i korte spurter.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17532,7 +17532,7 @@
       "Apollo 11",
       "Explorer 1"
     ],
-    "forklaring": "Sputnik 1 blev i 1957 den f?rste kunstige satellit i kredsl?b om Jorden.",
+    "forklaring": "Sputnik 1 blev i 1957 den første kunstige satellit i kredsløb om Jorden.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17553,7 +17553,7 @@
       "Monaco",
       "Andorra"
     ],
-    "forklaring": "Vatikanstaten er verdens mindste selvst?ndige stat m?lt p? areal.",
+    "forklaring": "Vatikanstaten er verdens mindste selvstændige stat målt på areal.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17574,7 +17574,7 @@
       "50",
       "28"
     ],
-    "forklaring": "En voksen hund har normalt 42 blivende t?nder.",
+    "forklaring": "En voksen hund har normalt 42 blivende tænder.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17588,7 +17588,7 @@
     "kategori": "natur",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvor mange knogler er der ca. i en fuldvoksen menneskekrop?",
+    "spoergsmaal": "Hvor mange knogler er der ca. i en fuldvoksen menneskekropå",
     "korrekt": "206",
     "forkerte": [
       "105",
@@ -17616,7 +17616,7 @@
       "Hindi",
       "Spansk"
     ],
-    "forklaring": "Mandarin-kinesisk har flere modersm?lstalende end noget andet sprog.",
+    "forklaring": "Mandarin-kinesisk har flere modersmålstalende end noget andet sprog.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -17637,7 +17637,7 @@
       "Neil Armstrong",
       "Buzz Aldrin"
     ],
-    "forklaring": "Jurij Gagarin blev det f?rste menneske i rummet i 1961.",
+    "forklaring": "Jurij Gagarin blev det første menneske i rummet i 1961.",
     "status": "godkendt",
     "kilde": {
       "navn": "psch.dk - Trivia Quizdatabase",
@@ -23789,7 +23789,7 @@
     "kategori": "natur",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Hvad kaldes den røde, jernholdige væske, der transporterer ilt og næring rundt i vores krop?",
+    "spoergsmaal": "Hvad kaldes den røde, jernholdige væske, der transporterer ilt og næring rundt i vores kropå",
     "korrekt": "Blodet",
     "forkerte": [
       "Lymfen",
@@ -24251,7 +24251,7 @@
     "kategori": "sport",
     "niveau": 2,
     "type": "mc",
-    "spoergsmaal": "Den årlige finale i amerikansk fodbold kalder næsten hele USA til skærmen - hvad hedder denne kamp?",
+    "spoergsmaal": "Den årlige finale i amerikansk fodbold kalder næsten hele USA til skærmen - hvad hedder denne kampå",
     "korrekt": "Super Bowl",
     "forkerte": [
       "Stanley Cup",
@@ -24845,7 +24845,7 @@
     "kategori": "videnskab",
     "niveau": 3,
     "type": "mc",
-    "spoergsmaal": "I partikelfysikken, hvilken kvark-sammensætning består en proton af?",
+    "spoergsmaal": "I partikelfysikken, hvilken kvark-sammensætning består en proton afå",
     "korrekt": "To up-kvarker og en down-kvark",
     "forkerte": [
       "En up-, en down- og en strange-kvark",
@@ -26187,7 +26187,7 @@
     "kategori": "underholdning",
     "niveau": 3,
     "type": "mc",
-    "spoergsmaal": "Hvilken hollandsk post-impressionistisk maler huggede i et mentalt anfald det meste af sit eget venstre øre af?",
+    "spoergsmaal": "Hvilken hollandsk post-impressionistisk maler huggede i et mentalt anfald det meste af sit eget venstre øre afå",
     "korrekt": "Vincent van Gogh",
     "forkerte": [
       "Claude Monet",
