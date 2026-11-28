@@ -538,6 +538,7 @@ function home() {
         </div></section>
         <section class="group"><h2>Selskab</h2><div class="modes">
           ${mode('host', '&#9635;', 'a3', 'Live p&aring; storsk&aelig;rm', live ? 'Alle svarer p&aring; deres egen telefon' : 'Kr&aelig;ver Supabase-n&oslash;gler i config.js', !live)}
+          ${mode('scan', '&#9646;', 'a1', quizLanguage === 'en' ? 'Scan QR code' : 'Scan QR-kode', quizLanguage === 'en' ? 'Scan directly here' : 'Scan koden direkte her', !live)}
           ${mode('join', '#', 'a2', 'Deltag i live-spil', 'Har du f&aring;et en kode?', !live)}
           ${mode('qm', '&#9835;', 'a0', 'Quizmaster', '&Eacute;n l&aelig;ser op &ndash; ingen andre sk&aelig;rme')}
         </div></section>
@@ -561,7 +562,7 @@ function home() {
       </div>
     </footer>
   </div>`);
-  const routes = { dag: dagens, traen: traening, surv: survival, spoerg: spoergSetup, duel: duelSetup, udfordr: udfordrSetup, host: liveHostSetup, join: () => liveJoin(), qm: quizmasterSetup };
+  const routes = { dag: dagens, traen: traening, surv: survival, spoerg: spoergSetup, duel: duelSetup, udfordr: udfordrSetup, host: liveHostSetup, scan: scanLiveQr, join: () => liveJoin(), qm: quizmasterSetup };
   $('#quiz-language')?.addEventListener('change', event => {
     quizLanguage = event.target.value;
     document.documentElement.lang = quizLanguage;
@@ -1254,6 +1255,64 @@ function liveJoin(code = '') {
     ALL = quizLanguage === 'en' ? BANK_EN : BANK_DA;
     livePlayer(c, n, quizLanguage).catch(e => { toast(e.message); goHome(); });
   };
+}
+
+function scanLiveQr() {
+  if (!CFG.SUPABASE_URL) return liveMissing();
+  const en = quizLanguage === 'en';
+  render(`<div class="screen qr-scan-screen">${topbar()}<h1 class="title">${en ? 'Scan a game QR code' : 'Scan quiz-QR-kode'}</h1>
+    <p class="lead">${en ? 'Scan it here without opening your phone’s camera app, or choose a QR image.' : 'Scan direkte her uden at åbne telefonens kamera-app, eller vælg et billede af QR-koden.'}</p>
+    <video id="qr-video" class="qr-video" playsinline muted hidden></video>
+    <p id="qr-status" class="hint" role="status">${en ? 'Allow camera access to scan the code.' : 'Giv adgang til kameraet for at scanne koden.'}</p>
+    <div class="qr-actions"><button class="btn primary" id="start-scan">${en ? 'Open scanner' : 'Åbn scanner'}</button>
+    <button class="btn" id="choose-qr">${en ? 'Choose QR image' : 'Vælg QR-billede'}</button>
+    <input id="qr-image" type="file" accept="image/*" hidden></div>
+    <button class="btn" id="enter-code">${en ? 'Enter code instead' : 'Indtast kode i stedet'}</button></div>`);
+  const video = $('#qr-video'), status = $('#qr-status');
+  let stream = null, active = true, raf = 0, detector;
+  cleanup = () => { active = false; cancelAnimationFrame(raf); stream?.getTracks().forEach(track => track.stop()); stream = null; };
+  const fail = message => { status.textContent = message; };
+  const accept = raw => {
+    let code = '';
+    try { code = new URL(raw, location.href).searchParams.get('rum') || ''; } catch { }
+    if (!code) code = String(raw).trim().toUpperCase();
+    code = code.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4);
+    if (code.length !== 4) return false;
+    cleanup?.(); cleanup = null; liveJoin(code); return true;
+  };
+  const makeDetector = async () => {
+    if (!('BarcodeDetector' in window)) throw new Error(en ? 'QR scanning is not supported in this browser. Choose a QR image or enter the code.' : 'QR-scanning understøttes ikke i denne browser. Vælg et QR-billede eller indtast koden.');
+    detector = new BarcodeDetector({ formats: ['qr_code'] });
+  };
+  $('#start-scan').onclick = async () => {
+    try {
+      await makeDetector();
+      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+      video.srcObject = stream; video.hidden = false; await video.play();
+      $('#start-scan').hidden = true;
+      const scan = async () => {
+        if (!active) return;
+        try { for (const result of await detector.detect(video)) if (accept(result.rawValue)) return; }
+        catch { /* Wait for the camera to produce a readable frame. */ }
+        if (active) raf = requestAnimationFrame(scan);
+      };
+      status.textContent = en ? 'Point your camera at the QR code.' : 'Ret kameraet mod QR-koden.';
+      scan();
+    } catch (error) {
+      fail(error.name === 'NotAllowedError' ? (en ? 'Camera access was denied. Choose a QR image or enter the code.' : 'Kameraadgang blev afvist. Vælg et QR-billede eller indtast koden.') : (error.message || (en ? 'Could not start the scanner.' : 'Scanneren kunne ikke startes.')));
+    }
+  };
+  $('#choose-qr').onclick = () => $('#qr-image').click();
+  $('#qr-image').onchange = async event => {
+    const file = event.target.files?.[0]; if (!file) return;
+    try {
+      await makeDetector();
+      const bitmap = await createImageBitmap(file);
+      const results = await detector.detect(bitmap); bitmap.close?.();
+      if (!results.length || !accept(results[0].rawValue)) fail(en ? 'No valid quiz QR code found in that image.' : 'Billedet indeholder ikke en gyldig quiz-QR-kode.');
+    } catch (error) { fail(error.message || (en ? 'Could not read that image.' : 'Billedet kunne ikke aflæses.')); }
+  };
+  $('#enter-code').onclick = () => { cleanup?.(); cleanup = null; liveJoin(); };
 }
 
 async function livePlayer(code, name, language = quizLanguage) {
