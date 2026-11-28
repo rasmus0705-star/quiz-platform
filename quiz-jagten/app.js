@@ -88,6 +88,7 @@ let scoreboardSnapshot = [];
 
 /* ---------- Hjælpere ---------- */
 const app = document.getElementById('app');
+const reducedMotion = () => window.QJ.reducedMotion();
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -1137,7 +1138,17 @@ async function liveHost(s) {
     }
     if (st.phase === 'lobby') lobby(); else if (st.phase === 'q') updateCount();
   });
-  ch.on('broadcast', { event: 'hello' }, () => send(stripPrivate(publicState())));
+  ch.on('broadcast', { event: 'hello' }, ({ payload: hello } = {}) => {
+    const id = typeof hello?.playerId === 'string' ? hello.playerId.slice(0, 80) : '';
+    if (id && players[id]) {
+      players[id].online = true;
+      if (typeof hello.name === 'string' && hello.name.trim()) players[id].name = hello.name.trim().slice(0, 16);
+      if (st.phase === 'lobby') lobby(); else updateCount();
+    }
+    const snapshot = stripPrivate(publicState());
+    if (id && answers[id] && st.phase === 'q') snapshot.playerAnswered = id;
+    ch.send({ type: 'broadcast', event: 'snapshot', payload: { ...snapshot, playerId: id || undefined } });
+  });
   ch.on('broadcast', { event: 'answer' }, ({ payload: a }) => {
     if (!a || typeof a.id !== 'string' || !a.id || !Number.isInteger(a.qi) || !Number.isInteger(a.choice)) return;
     if (st.phase !== 'q' || a.qi !== st.qi) return;
@@ -1316,6 +1327,15 @@ function stripPrivate(o) { const { _correct, deadline, ...rest } = o; return res
 
 function liveJoin(code = '') {
   if (!CFG.SUPABASE_URL) return liveMissing();
+  if (code) {
+    try {
+      const saved = JSON.parse(localStorage.getItem(`qj-player-${code}`) || 'null');
+      if (saved?.playerId && saved?.name && saved?.roomCode === code) {
+        livePlayer(code, saved.name, quizLanguage).catch(e => { toast(e.message); goHome(); });
+        return;
+      }
+    } catch { }
+  }
   render(`<div class="screen">${topbar()}<h1 class="title">Deltag i live-spil</h1>
     <div class="field"><label for="code">Kode</label><input type="text" id="code" class="code" maxlength="4" autocomplete="off" value="${esc(code)}"></div>
     <div class="field"><label for="nm">Dit navn</label><input type="text" id="nm" maxlength="16" value="${esc(store.get('navn', ''))}"></div>
@@ -1394,16 +1414,35 @@ function scanLiveQr() {
 }
 
 async function livePlayer(code, name, language = quizLanguage) {
+  history.replaceState(null, '', `${location.pathname}?rum=${encodeURIComponent(code)}`);
   render(`<div class="screen"><p class="loading">Forbinder …</p></div>`);
   const sb = await sbClient();
-  let id = sessionStorage.getItem('pid-v2');
-  if (!id) { id = crypto.randomUUID ? crypto.randomUUID().replaceAll('-', '') : Math.random().toString(36).slice(2, 18); sessionStorage.setItem('pid-v2', id); }
+  const identityKey = `qj-player-${code}`;
+  let savedIdentity;
+  try { savedIdentity = JSON.parse(localStorage.getItem(identityKey) || 'null'); } catch { savedIdentity = null; }
+  let id = typeof savedIdentity?.playerId === 'string' ? savedIdentity.playerId : sessionStorage.getItem('pid-v2');
+  if (!id) id = crypto.randomUUID ? crypto.randomUUID().replaceAll('-', '') : Math.random().toString(36).slice(2, 18);
+  sessionStorage.setItem('pid-v2', id);
+  name = typeof savedIdentity?.name === 'string' && savedIdentity.name.trim() ? savedIdentity.name.trim().slice(0, 16) : name;
+  try { localStorage.setItem(identityKey, JSON.stringify({ playerId: id, name, roomCode: code })); } catch { }
+  const leaveRoom = () => {
+    try { localStorage.removeItem(identityKey); } catch { }
+    history.replaceState(null, '', location.pathname);
+    goHome();
+  };
   const ch = sb.channel('quiz-' + code, { config: { broadcast: { self: false }, presence: { key: id } } });
   let myChoice = {}, tick = null, gotState = false, pendingAnswer = null, answerRetryTimer = null, endTimer = null, currentState = null, answerDeadline = 0;
   keepAwake();
   cleanup = () => { clearInterval(tick); clearTimeout(answerRetryTimer); clearTimeout(endTimer); sb.removeChannel(ch); };
 
-  const wait = (h, p) => render(`<div class="screen">${topbar(esc(name), code)}<div class="wait"><h1>${h}</h1><p>${p}</p></div></div>`);
+  let connectionBanner = false;
+  const setConnectionBanner = visible => {
+    connectionBanner = visible;
+    const existing = $('.live-reconnect');
+    if (visible && !existing) $('.screen')?.insertAdjacentHTML('afterbegin', `<p class="live-reconnect" role="status">${language === 'en' ? 'Reconnecting…' : 'Forbinder igen …'}</p>`);
+    else if (!visible) existing?.remove();
+  };
+  const wait = (h, p) => render(`<div class="screen">${connectionBanner ? `<p class="live-reconnect" role="status">${language === 'en' ? 'Reconnecting…' : 'Forbinder igen …'}</p>` : ''}${topbar(esc(name), code)}<div class="wait"><h1>${h}</h1><p>${p}</p></div></div>`);
   function showAnswerRetry() {
     if (!pendingAnswer) return;
     if (currentState?.phase !== 'q' || currentState.qi !== pendingAnswer.qi || Date.now() >= answerDeadline) return wait('Tiden er gået', 'Venter på værtens resultat. Dit svar blev ikke bekræftet.');
@@ -1428,7 +1467,14 @@ async function livePlayer(code, name, language = quizLanguage) {
     if (currentState?.phase === 'q' && currentState.qi === ack.qi) wait('Svar modtaget', 'Værten har registreret dit svar. Venter på de andre…');
   });
 
-  ch.on('broadcast', { event: 'state' }, ({ payload: s }) => { gotState = true; show(s); });
+  ch.on('broadcast', { event: 'state' }, ({ payload: s }) => { gotState = true; setConnectionBanner(false); show(s); });
+  ch.on('broadcast', { event: 'snapshot' }, ({ payload: s }) => {
+    if (!s || (s.playerId && s.playerId !== id)) return;
+    gotState = true; setConnectionBanner(false);
+    if (s.playerAnswered === id && s.phase === 'q') myChoice[s.qi] = -1;
+    delete s.playerId; delete s.playerAnswered;
+    show(s);
+  });
   ch.on('presence', { event: 'sync' }, () => {
     if (!gotState || currentState?.phase === 'end') return;
     const hostOnline = Object.values(ch.presenceState()).some(metas => metas.some(meta => meta.role === 'host'));
@@ -1436,16 +1482,23 @@ async function livePlayer(code, name, language = quizLanguage) {
       clearInterval(tick); clearTimeout(answerRetryTimer);
       const message = quizLanguage === 'en' ? 'The host has left the quiz.' : 'Værten har forladt quizzen.';
       wait(quizLanguage === 'en' ? 'Quiz ended' : 'Quizzen er afsluttet', message);
-      endTimer = setTimeout(goHome, 10000);
+      endTimer = setTimeout(leaveRoom, 10000);
     }
   });
-  await new Promise((res, rej) => ch.subscribe(async status => {
-    if (status === 'SUBSCRIBED') {
-      await ch.track({ role: 'player', name, language });
-      ch.send({ type: 'broadcast', event: 'hello', payload: {} });
-      res();
-    } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') rej(new Error('Kunne ikke forbinde'));
-  }));
+  await new Promise((res, rej) => {
+    const connectionTimeout = setTimeout(() => rej(new Error(language === 'en' ? 'Could not connect' : 'Kunne ikke forbinde')), 20000);
+    ch.subscribe(async status => {
+      if (status === 'SUBSCRIBED') {
+        await ch.track({ role: 'player', name, language });
+        ch.send({ type: 'broadcast', event: 'hello', payload: { playerId: id, name, roomCode: code } });
+        setConnectionBanner(false);
+        clearTimeout(connectionTimeout);
+        res();
+      } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED') {
+        if (currentState?.phase !== 'end') setConnectionBanner(true);
+      }
+    });
+  });
   wait('Du er med', 'Venter på at værten starter quizzen.');
   setTimeout(() => { if (!gotState) wait('Ingen vært endnu', `Tjek at koden ${code} er rigtig. Du kommer automatisk med, når værten åbner rummet.`); }, 5000);
 
@@ -1470,7 +1523,7 @@ async function livePlayer(code, name, language = quizLanguage) {
     currentState = s;
     if (s.phase === 'q') {
       if (pendingAnswer?.qi === s.qi) return wait('Sender svar…', 'Venter på bekræftelse fra værten.');
-      if (myChoice[s.qi] !== undefined) return wait('Svar modtaget', 'Værten har registreret dit svar. Venter på de andre…');
+      if (myChoice[s.qi] !== undefined) return wait(language === 'en' ? 'Answer locked' : 'Svar låst', language === 'en' ? 'Your answer is recorded. Waiting for the others…' : 'Værten har registreret dit svar. Venter på de andre…');
       const deadline = Date.now() + (s.remaining ?? s.sek * 1000);
       answerDeadline = deadline;
       render(`<div class="screen">${topbar(`${s.qi + 1} af ${s.total}`, '<span class="timer" id="t"></span>')}
@@ -1501,7 +1554,7 @@ async function livePlayer(code, name, language = quizLanguage) {
       render(`<div class="screen">${topbar()}<h1 class="title">${pos === 1 ? 'Du vandt!' : pos ? `Du blev nummer ${pos}` : 'Spillet er slut'}</h1>
         <ol class="board">${s.ranking.map(r => `<li class="${r.id === id ? 'me' : ''}">${esc(r.name)}<span class="p">${r.score}</span></li>`).join('')}</ol><p class="hint">${quizLanguage === 'en' ? 'This quiz closes in 30 seconds if the host does not start a rematch.' : 'Quizzen lukker om 30 sekunder, hvis værten ikke starter et nyt spil.'}</p>
         <button class="btn" data-home>Til forsiden</button></div>`);
-      clearTimeout(endTimer); endTimer = setTimeout(goHome, 30000);
+      clearTimeout(endTimer); endTimer = setTimeout(leaveRoom, 30000);
     }
   }
 }

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quizjagten · Tidslinjen – prototype</title>
+<style>
+:root{--bg:#0d0f15;--panel:#151821;--panel2:#1b1f2b;--line:#262b38;--txt:#f2f3f7;--mut:#8b91a3;--y:#f2c94c;--ok:#2fb67c;--bad:#e5484d;--acc:#7c5cff}
+*{box-sizing:border-box;margin:0}
+body{background:#05060a;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 16px}
+header h1{font-size:16px;font-weight:800}
+header h1 span{color:var(--mut);font-weight:400}
+.b,select{background:var(--panel);border:1px solid var(--line);color:#c9cdd8;padding:7px 12px;border-radius:999px;font-size:13px;cursor:pointer}
+.b.primary{background:var(--y);border-color:var(--y);color:#1a1400;font-weight:800}
+.b.tg.on{border-color:#3ddc97;color:#3ddc97}
+.hint{color:var(--mut);font-size:12px}
+main{display:flex;gap:16px;padding:6px 16px 16px;align-items:flex-start}
+.tvwrap{flex:1;min-width:0}
+.frame{position:relative;width:100%;overflow:hidden;border-radius:14px;border:1px solid var(--line)}
+.lbl{font-size:12px;color:var(--mut);margin:0 0 6px 2px;letter-spacing:.08em;text-transform:uppercase}
+
+/* ---------- TV (1920x1080) ---------- */
+.tv{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden;background:radial-gradient(1300px 800px at 50% 30%,#171a26 0%,var(--bg) 70%)}
+.top{position:absolute;left:56px;right:56px;top:34px;height:64px;display:flex;align-items:center;gap:32px}
+.logo{font-weight:900;font-size:34px;color:var(--y);letter-spacing:-.5px}
+.mode{background:#1c2130;border:1px solid var(--line);padding:8px 18px;border-radius:999px;font-weight:800;font-size:22px}
+.prog{flex:1;display:flex;gap:8px}.prog i{flex:1;height:10px;border-radius:6px;background:#232838;transition:background .3s}.prog i.d{background:var(--y)}.prog i.c{background:#8a7430}
+.ring{position:relative;width:88px;height:88px}.ring svg{width:100%;height:100%;transform:rotate(-90deg)}.ring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:900;color:var(--y)}
+.newcard{position:absolute;left:50%;top:132px;width:1180px;margin-left:-590px;min-height:220px;background:linear-gradient(180deg,#1d2232,#151925);border:2px solid #343b50;border-radius:28px;padding:28px 44px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.45);transition:opacity .35s,transform .35s}
+.newcard .cat{display:inline-block;font-size:20px;font-weight:800;color:#0d0f15;background:var(--y);padding:6px 16px;border-radius:999px}
+.newcard .ev{font-size:54px;font-weight:900;line-height:1.12;margin-top:16px;letter-spacing:-.5px}
+.newcard .ask{font-size:24px;color:var(--mut);margin-top:12px;font-weight:700}
+.newcard .yr{font-size:96px;font-weight:900;color:var(--y);line-height:1;margin-top:10px;display:none;font-variant-numeric:tabular-nums}
+.newcard.reveal .ask{display:none}.newcard.reveal .yr{display:block}
+.newcard.gone{opacity:0;transform:translateY(-20px) scale(.96)}
+.tlbox{position:absolute;left:60px;right:60px;top:450px;height:330px}
+.axis{position:absolute;left:0;right:0;top:88px;height:4px;border-radius:2px;background:linear-gradient(90deg,#2a3142,#4a536b,#2a3142)}
+.tl{position:absolute;inset:0;display:flex;justify-content:center;align-items:flex-start}
+.gap{position:relative;flex:none;width:30px;height:180px}
+.gap::before{content:"";position:absolute;left:50%;top:22px;height:136px;border-left:3px dashed #2f3648;transform:translateX(-50%);transition:border-color .3s}
+.gap.correct::before{border-left:6px solid var(--ok);box-shadow:0 0 30px var(--ok)}
+.gap .votes{position:absolute;left:50%;top:196px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px}
+.vote{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:#0d0f15;border:3px solid var(--bg);animation:drop .45s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes drop{from{transform:translateY(-60px) scale(.4);opacity:0}}
+.tc{position:relative;flex:none;width:var(--cw,220px);height:180px;background:#171b27;border:2px solid #2c3346;border-radius:20px;padding:18px 14px;text-align:center;transition:width .5s,box-shadow .4s,border-color .4s}
+.tc .y{font-size:var(--yf,44px);font-weight:900;color:var(--y);line-height:1;font-variant-numeric:tabular-nums}
+.tc .t{font-size:var(--tf,19px);font-weight:700;line-height:1.25;margin-top:14px;color:#d9dce6;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
+.tc.anchor{background:#141824}
+.tc.newin{border-color:var(--y);box-shadow:0 0 0 4px rgba(242,201,76,.25),0 0 50px rgba(242,201,76,.35)}
+.players{position:absolute;left:56px;right:56px;bottom:40px;height:150px;display:flex;justify-content:center;gap:22px}
+.pl{position:relative;width:190px;background:#131620;border:1px solid var(--line);border-radius:22px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:6px;transition:transform .3s,border-color .3s}
+.pl .av{width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;color:#0d0f15;transition:all .3s}
+.pl.wait .av{background:transparent!important;border:3px dashed #3a4153;color:#3a4153}
+.pl.done .av{box-shadow:0 0 0 4px #fff}
+.pl .nm{font-size:20px;font-weight:800}
+.pl .sc{font-size:26px;font-weight:900;font-variant-numeric:tabular-nums}
+.pl .gain{position:absolute;top:-22px;right:-8px;background:var(--y);color:#1a1400;font-weight:900;font-size:22px;padding:4px 12px;border-radius:999px;opacity:0;transform:translateY(10px);transition:all .35s}
+.pl .gain.show{opacity:1;transform:none}
+.pl.lead{border-color:var(--y)}
+.pl.lead::before{content:"♛";position:absolute;top:-30px;left:50%;transform:translateX(-50%);font-size:34px;color:var(--y)}
+.banner{position:absolute;left:50%;top:430px;transform:translate(-50%,-50%) scale(.6);opacity:0;background:var(--y);color:#1a1400;font-weight:900;font-size:64px;padding:24px 60px;border-radius:30px;box-shadow:0 0 80px rgba(242,201,76,.6);transition:all .45s cubic-bezier(.2,1.4,.4,1);pointer-events:none;z-index:5;white-space:nowrap}
+.banner.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+
+/* ---------- Telefon (390x800) ---------- */
+.phonewrap{flex:none;width:340px}
+.phone{position:relative;width:340px;height:698px;border-radius:44px;background:#000;border:2px solid #2a2f3d;padding:10px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.scr{position:relative;width:390px;height:800px;transform:scale(.8205);transform-origin:0 0;border-radius:38px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column}
+.ph-top{padding:18px 20px 10px;display:flex;align-items:center;justify-content:space-between}
+.ph-top b{font-size:15px;font-weight:800}
+.ph-top span{font-size:13px;color:var(--mut);font-weight:700}
+.bar{height:6px;margin:0 20px;border-radius:4px;background:#232838;overflow:hidden}.bar i{display:block;height:100%;background:var(--y);width:100%}
+.ph-card{margin:14px 16px 6px;background:linear-gradient(180deg,#1d2232,#151925);border:1.5px solid #343b50;border-radius:18px;padding:14px 16px}
+.ph-card .cat{font-size:11px;font-weight:800;color:#0d0f15;background:var(--y);padding:3px 9px;border-radius:999px}
+.ph-card .ev{font-size:21px;font-weight:900;line-height:1.2;margin-top:8px}
+.ph-h{font-size:12px;color:var(--mut);font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:8px 20px 6px}
+.list{flex:1;overflow:auto;padding:0 16px 10px}
+.slot{width:100%;height:36px;border:2px dashed #343b50;border-radius:12px;background:transparent;color:#7c849a;font-size:13px;font-weight:800;cursor:pointer;margin:4px 0;transition:all .2s}
+.slot:hover{border-color:#5a6380;color:#c9cdd8}
+.slot.sel{height:52px;border:2px solid var(--y);background:rgba(242,201,76,.12);color:var(--y)}
+.slot.right{border-color:var(--ok);background:rgba(47,182,124,.15);color:var(--ok)}
+.slot.wrong{border-color:var(--bad);background:rgba(229,72,77,.12);color:var(--bad)}
+.pc{display:flex;align-items:center;gap:12px;background:#171b27;border:1.5px solid #2c3346;border-radius:12px;padding:10px 12px}
+.pc .y{font-weight:900;color:var(--y);font-size:18px;min-width:48px;font-variant-numeric:tabular-nums}
+.pc .t{font-size:13px;font-weight:600;color:#d9dce6;line-height:1.25}
+.ph-bot{border-top:1px solid var(--line);padding:12px 16px 18px;background:#11141c}
+.yg{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--mut);font-weight:700}
+.yg b{font-size:30px;color:var(--txt);font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;margin:10px 0 12px;accent-color:var(--y)}
+.lock{width:100%;height:52px;border:0;border-radius:14px;background:var(--y);color:#1a1400;font-size:18px;font-weight:900;cursor:pointer}
+.lock:disabled{background:#2a2f3d;color:#6b7285;cursor:not-allowed}
+.msg{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;background:rgba(13,15,21,.94);gap:10px}
+.msg.show{display:flex}
+.msg .big{font-size:30px;font-weight:900}
+.msg .sub{font-size:16px;color:var(--mut);line-height:1.4}
+.msg .pts{font-size:44px;font-weight:900;color:var(--y)}
+.msg.ok .big{color:var(--ok)}.msg.bad .big{color:var(--bad)}
+#desc{max-width:1200px;padding:0 16px 22px;color:var(--mut);font-size:13px;line-height:1.55}
+#desc b{color:var(--txt)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Quizjagten · Tidslinjen <span>· prototype (fælles tidslinje)</span></h1>
+  <button class="b primary" id="next">Næste kort ▸</button>
+  <button class="b tg" id="auto">Auto: fra</button>
+  <select id="np" aria-label="Antal spillere"></select>
+  <button class="b tg on" id="snd">Lyd: til</button>
+  <button class="b" id="reset">Nyt spil</button>
+  <span class="hint">Du spiller på telefonen til højre. De andre er simulerede.</span>
+</header>
+<main>
+  <div class="tvwrap">
+    <div class="lbl">Storskærm</div>
+    <div class="frame" id="frame"><div class="tv" id="tv">
+      <div class="top"><div class="logo">Quizjagten</div><div class="mode">Tidslinjen</div><div class="prog" id="prog"></div>
+        <div class="ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="#232838" stroke-width="10"/><circle id="tring" cx="50" cy="50" r="42" fill="none" stroke="#f2c94c" stroke-width="10" stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="0"/></svg><b id="tnum">–</b></div></div>
+      <div class="newcard" id="nc"><span class="cat" id="ncCat">Klar</span><div class="ev" id="ncEv">Tryk "Næste kort" for at starte</div><div class="ask">Hvornår skete det? Placér kortet på tidslinjen</div><div class="yr" id="ncYr">0</div></div>
+      <div class="tlbox"><div class="axis"></div><div class="tl" id="tl"></div></div>
+      <div class="banner" id="banner"></div>
+      <div class="players" id="players"></div>
+    </div></div>
+  </div>
+  <div class="phonewrap">
+    <div class="lbl">Din telefon</div>
+    <div class="phone"><div class="scr">
+      <div class="ph-top"><b>Tidslinjen</b><span id="phProg">Venter …</span></div>
+      <div class="bar"><i id="phBar"></i></div>
+      <div class="ph-card"><span class="cat" id="phCat">Klar</span><div class="ev" id="phEv">Venter på værten …</div></div>
+      <div class="ph-h">Tryk hvor kortet skal ligge</div>
+      <div class="list" id="list"></div>
+      <div class="ph-bot"><div class="yg"><span>Dit gæt på årstallet</span><b id="ygv">–</b></div><input type="range" id="yr" min="1600" max="2026" value="1950" disabled aria-label="Gæt på årstal"><button class="lock" id="lock" disabled>Vælg et hul først</button></div>
+      <div class="msg" id="msg"><div class="big" id="mBig"></div><div class="pts" id="mPts"></div><div class="sub" id="mSub"></div></div>
+    </div></div>
+  </div>
+</main>
+<div id="desc"><b>Sådan virker det:</b> alle ser samme nye begivenhed og placerer den i et hul på den fælles tidslinje fra deres egen telefon, plus et gæt på årstallet. Når alle har svaret eller tiden er gået, falder spillernes valg ned i hullerne, årstallet tæller op, og kortet flyver ind på sin plads. <b>Point:</b> rigtigt hul +500 · præcist årstal +500 · ±2 år +300 · ±5 år +100. Ligger kortet i samme år som et nabokort, tæller begge sider som rigtige. 10 kort pr. spil. <b>Taster:</b> mellemrum = næste kort / vis svar.</div>
+
+<script>
+/* ---------- data (eksempelkort – samme som i CSV-udkastet) ---------- */
+const ANCHORS=[
+ {t:'Danmark får sin første grundlov',y:1849,c:'Historie',x:'Underskrevet 5. juni 1849 af Frederik 7.'},
+ {t:'Danmark bliver befriet efter besættelsen',y:1945,c:'Historie',x:'Befrielsen trådte i kraft 5. maj 1945.'},
+ {t:'Berlinmuren falder',y:1989,c:'Historie',x:'Grænsen blev åbnet 9. november 1989.'}];
+const DECK=[
+ {t:'Rundetårn står færdigt',y:1642,c:'Kultur',x:'Bygget af Christian 4.'},
+ {t:'Slaget på Reden',y:1801,c:'Historie',x:'Søslag mellem Danmark og Storbritannien ud for København.'},
+ {t:'H.C. Andersen bliver født i Odense',y:1805,c:'Kultur',x:'Født 2. april 1805.'},
+ {t:'Englænderne bombarderer København',y:1807,c:'Historie',x:'Endte med at flåden blev udleveret.'},
+ {t:'Tivoli åbner i København',y:1843,c:'Kultur',x:'Grundlagt af Georg Carstensen.'},
+ {t:'Titanic synker',y:1912,c:'Historie',x:'Natten mellem 14. og 15. april 1912.'},
+ {t:'Den Lille Havfrue bliver afsløret på Langelinie',y:1913,c:'Kultur',x:'Skulptur af Edvard Eriksen.'},
+ {t:'Kvinder får stemmeret til Folketinget',y:1915,c:'Historie',x:'Med grundlovsændringen 5. juni 1915.'},
+ {t:'Dansk Vestindien overdrages til USA',y:1917,c:'Historie',x:'Øerne hedder i dag De Amerikanske Jomfruøer.'},
+ {t:'Sønderjylland genforenes med Danmark',y:1920,c:'Historie',x:'Efter folkeafstemninger i Slesvig.'},
+ {t:'Alexander Fleming opdager penicillin',y:1928,c:'Videnskab',x:'En tilfældig opdagelse i hans laboratorium i London.'},
+ {t:'LEGO-klodsen bliver patenteret',y:1958,c:'Kultur',x:'Patentet blev søgt 28. januar 1958.'},
+ {t:'Den første Olsen-banden-film har premiere',y:1968,c:'Film',x:'Starten på en af Danmarks mest elskede filmserier.'},
+ {t:'Det første menneske går på Månen',y:1969,c:'Videnskab',x:'Neil Armstrong med Apollo 11.'},
+ {t:'Den første Roskilde Festival',y:1971,c:'Musik',x:'Dengang hed den Sound Festival.'},
+ {t:'Margrethe 2. bliver dronning',y:1972,c:'Historie',x:'Udråbt 14. januar 1972.'},
+ {t:'Danmark bliver medlem af EF',y:1973,c:'Historie',x:'Medlemskabet trådte i kraft 1. januar 1973.'},
+ {t:'Atomulykken i Tjernobyl',y:1986,c:'Historie',x:'Skete 26. april 1986.'},
+ {t:'Den første hjemmeside går online',y:1991,c:'Videnskab',x:'Lavet af Tim Berners-Lee på CERN.'},
+ {t:'Danmark vinder EM i fodbold',y:1992,c:'Sport',x:'Finalesejr på 2–0 over Tyskland.'},
+ {t:'Bjarne Riis vinder Tour de France',y:1996,c:'Sport',x:'Den første danske samlede vinder.'},
+ {t:'Storebæltsbroen åbner for biler',y:1998,c:'Danmark',x:'Åbnede for biltrafik 14. juni 1998.'},
+ {t:'Øresundsbroen åbner',y:2000,c:'Danmark',x:'Indviet 1. juli 2000.'},
+ {t:'Olsen Brothers vinder Eurovision',y:2000,c:'Musik',x:'Med "Fly on the Wings of Love".'},
+ {t:'Euroen kommer i omløb som kontanter',y:2002,c:'Historie',x:'Danmark beholdt kronen.'},
+ {t:'Københavns Metro åbner',y:2002,c:'Danmark',x:'Åbnede 19. oktober 2002.'},
+ {t:'Facebook bliver lanceret',y:2004,c:'Teknologi',x:'Startede blandt studerende på Harvard.'},
+ {t:'Den første iPhone bliver præsenteret',y:2007,c:'Teknologi',x:'Præsenteret af Steve Jobs i januar 2007.'},
+ {t:'Danmark får sin første kvindelige statsminister',y:2011,c:'Historie',x:'Helle Thorning-Schmidt.'},
+ {t:'MobilePay bliver lanceret',y:2013,c:'Teknologi',x:'Udviklet af Danske Bank.'},
+ {t:'Cityringen åbner i København',y:2019,c:'Danmark',x:'Åbnede 29. september 2019.'},
+ {t:'Danmark lukker ned første gang under corona',y:2020,c:'Historie',x:'Statsministeren meddelte det 11. marts 2020.'},
+ {t:'Jonas Vingegaard vinder Tour de France første gang',y:2022,c:'Sport',x:'Han vandt igen året efter.'},
+ {t:'Frederik 10. bliver konge',y:2024,c:'Historie',x:'Udråbt 14. januar 2024.'}];
+const PAL=[['#ff6ec7','Dig'],['#ff4d6d','Ræven'],['#4dabff','Uglen'],['#ffd23f','Bjørnen'],['#3ddc97','Haren'],['#b388ff','Ulven'],['#ff8c42','Lossen'],['#00e5ff','Ørnen']];
+const ROUNDS=10,TIME=20000,YMIN=1600,YMAX=2026;
+
+/* ---------- state ---------- */
+let players=[],tl=[],deck=[],cur=null,round=0,phase='idle',t0=0,auto=false,muted=false,mySel=-1,myYear=null,myLocked=false,timers=[];
+const $=id=>document.getElementById(id);
+const rnd=(a,b)=>a+Math.random()*(b-a),ri=(a,b)=>Math.floor(rnd(a,b+1)),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const fmt=n=>n.toLocaleString('da-DK');
+function later(fn,ms){const id=setTimeout(fn,ms);timers.push(id);return id;}
+function clearTimers(){timers.forEach(clearTimeout);timers=[];}
+
+/* ---------- lyd ---------- */
+let AC=null,master=null;
+function audio(){if(AC)return;try{AC=new (window.AudioContext||window.webkitAudioContext)();master=AC.createGain();master.gain.value=.2;master.connect(AC.destination);}catch(e){}}
+function tone(f,d,type,v,w){if(!AC||muted)return;const t=AC.currentTime+(w||0),o=AC.createOscillator(),g=AC.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v||.15,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(master);o.start(t);o.stop(t+d+.05);}
+const sfx={card(){tone(392,.12,'triangle',.15);tone(587,.2,'triangle',.15,.1)},lock(i){tone(620+i*40,.08,'sine',.12)},roll(){tone(900,.03,'square',.03)},land(){tone(523,.12,'triangle',.2);tone(784,.25,'triangle',.2,.1)},win(){[523,659,784,1047,1319].forEach((f,i)=>tone(f,.3,'triangle',.2,i*.11))},count(){tone(880,.06,'square',.04)}};
+
+/* ---------- opsætning ---------- */
+function newGame(){
+  clearTimers();phase='idle';round=0;cur=null;
+  const n=+$('np').value;
+  players=PAL.slice(0,n).map(([c,name],i)=>({i,name,color:c,bot:i>0,score:0,gain:0,gap:-1,year:null,done:false,at:0}));
+  tl=ANCHORS.map(a=>({...a,anchor:true})).sort((a,b)=>a.y-b.y);
+  deck=[...DECK].sort(()=>Math.random()-.5).slice(0,ROUNDS);
+  $('nc').className='newcard';$('ncCat').textContent='Klar';$('ncEv').textContent='Tryk "Næste kort" for at starte';
+  $('banner').classList.remove('show');
+  renderProg();renderTL();renderPlayers();renderPhone();setTimer(1,'–');
+}
+function renderProg(){$('prog').innerHTML=Array.from({length:ROUNDS},(_,i)=>`<i class="${i<round-1||(i===round-1&&phase==='done')?'d':i===round-1?'c':''}"></i>`).join('');}
+
+/* ---------- tidslinje på tv ---------- */
+function sizeCards(){const n=tl.length,avail=1800-(n+1)*30,w=Math.min(230,avail/n);const el=$('tl');el.style.setProperty('--cw',w+'px');el.style.setProperty('--yf',Math.round(clamp(w*.2,24,44))+'px');el.style.setProperty('--tf',Math.round(clamp(w*.088,13,19))+'px');}
+function renderTL(highlightGap,newIdx){
+  sizeCards();
+  const el=$('tl');let h='';
+  for(let g=0;g<=tl.length;g++){
+    h+=`<div class="gap${g===highlightGap?' correct':''}" data-g="${g}"><div class="votes"></div></div>`;
+    if(g<tl.length){const c=tl[g];h+=`<div class="tc${c.anchor?' anchor':''}${g===newIdx?' newin':''}" data-k="${c.t}"><div class="y">${c.y}</div><div class="t">${c.t}</div></div>`;}
+  }
+  el.innerHTML=h;
+}
+function gapRange(g){const lo=g>0?tl[g-1].y:YMIN,hi=g<tl.length?tl[g].y:YMAX;return[lo,hi];}
+function correctGaps(y){const res=[];for(let g=0;g<=tl.length;g++){const[lo,hi]=gapRange(g);if(y>=lo&&y<=hi)res.push(g);}return res;}
+
+/* ---------- spillere på tv ---------- */
+function renderPlayers(){
+  const best=Math.max(...players.map(p=>p.score));
+  $('players').innerHTML=players.map(p=>`<div class="pl ${phase==='place'?(p.done?'done':'wait'):''} ${p.score>0&&p.score===best?'lead':''}" data-i="${p.i}"><div class="gain">+${fmt(p.gain)}</div><div class="av" style="background:${p.color}">${p.name.slice(0,2)}</div><div class="nm">${p.name}</div><div class="sc">${fmt(p.score)}</div></div>`).join('');
+}
+function updatePlayerStates(){[...$('players').children].forEach(el=>{const p=players[+el.dataset.i];el.classList.toggle('wait',phase==='place'&&!p.done);el.classList.toggle('done',phase==='place'&&p.done);});}
+
+/* ---------- telefon ---------- */
+function renderPhone(){
+  const me=players[0];
+  $('phProg').textContent=cur?`Kort ${round} af ${ROUNDS}`:'Venter …';
+  $('phCat').textContent=cur?cur.c:'Klar';$('phEv').textContent=cur?cur.t:'Venter på værten …';
+  let h='';
+  for(let g=0;g<=tl.length;g++){
+    const sel=g===mySel;
+    h+=`<button class="slot${sel?' sel':''}" data-g="${g}" ${phase!=='place'||myLocked?'disabled':''}>${sel?'Dit kort her':'Her?'}</button>`;
+    if(g<tl.length)h+=`<div class="pc"><span class="y">${tl[g].y}</span><span class="t">${tl[g].t}</span></div>`;
+  }
+  $('list').innerHTML=h;
+  [...$('list').querySelectorAll('.slot')].forEach(b=>b.onclick=()=>pickGap(+b.dataset.g));
+  const yr=$('yr'),lock=$('lock');
+  if(phase==='place'&&mySel>=0&&!myLocked){const[lo,hi]=gapRange(mySel);yr.disabled=false;yr.min=lo;yr.max=hi;if(myYear==null||myYear<lo||myYear>hi)myYear=Math.round((lo+hi)/2);yr.value=myYear;$('ygv').textContent=myYear;lock.disabled=false;lock.textContent='Lås svar';}
+  else{yr.disabled=true;$('ygv').textContent=myYear??'–';lock.disabled=true;lock.textContent=myLocked?'Svar låst':'Vælg et hul først';}
+}
+function pickGap(g){audio();if(phase!=='place'||myLocked)return;mySel=g;renderPhone();const sel=$('list').querySelector('.slot.sel');sel&&sel.scrollIntoView({block:'nearest',behavior:'smooth'});}
+$('yr').oninput=e=>{myYear=+e.target.value;$('ygv').textContent=myYear;};
+$('lock').onclick=()=>lockMine();
+function lockMine(){if(phase!=='place'||mySel<0||myLocked)return;const me=players[0];myLocked=true;me.gap=mySel;me.year=myYear;me.done=true;me.at=performance.now()-t0;sfx.lock(0);showMsg('','Svar låst','Kig op på storskærmen.','');renderPhone();updatePlayerStates();checkAll();}
+function showMsg(cls,big,sub,pts){const m=$('msg');m.className='msg show '+cls;$('mBig').textContent=big;$('mSub').textContent=sub;$('mPts').textContent=pts;}
+function hideMsg(){$('msg').className='msg';}
+
+/* ---------- rundeforløb ---------- */
+function nextCard(){
+  audio();if(AC&&AC.state==='suspended')AC.resume();
+  if(phase==='place'){endPlace();return;}
+  if(phase==='reveal')return;
+  if(round>=ROUNDS){newGame();}
+  round++;cur=deck[round-1];phase='place';t0=performance.now();mySel=-1;myYear=null;myLocked=false;hideMsg();
+  players.forEach(p=>{p.gap=-1;p.year=null;p.done=false;p.gain=0;});
+  $('nc').className='newcard';$('ncCat').textContent=cur.c;$('ncEv').textContent=cur.t;$('ncYr').textContent='';
+  renderProg();renderTL();renderPlayers();renderPhone();sfx.card();
+  // simulerede spillere
+  const good=correctGaps(cur.y);
+  players.forEach(p=>{if(!p.bot&&!auto)return;const at=rnd(2500,TIME-2500);later(()=>{if(phase!=='place'||p.done)return;
+    let g=good[Math.floor(Math.random()*good.length)];if(Math.random()>.55)g=clamp(g+(Math.random()<.5?-1:1),0,tl.length);
+    const[lo,hi]=gapRange(g),yy=good.includes(g)?clamp(cur.y+ri(-6,6),lo,hi):ri(lo,hi);
+    p.gap=g;p.year=yy;p.done=true;p.at=at;if(!p.bot){mySel=g;myYear=yy;myLocked=true;showMsg('','Svar låst','Kig op på storskærmen.','');renderPhone();}
+    sfx.lock(p.i);updatePlayerStates();checkAll();},at);});
+  tick();
+}
+function checkAll(){if(players.every(p=>p.done)&&phase==='place'){later(()=>{if(phase==='place')endPlace();},700);}}
+let lastS=99;
+function setTimer(frac,label){$('tring').setAttribute('stroke-dashoffset',(263.9*(1-frac)).toFixed(1));$('tnum').textContent=label;$('phBar').style.width=(frac*100)+'%';}
+function tick(){if(phase!=='place')return;const rem=Math.max(0,TIME-(performance.now()-t0)),s=Math.ceil(rem/1000);setTimer(rem/TIME,s);if(rem<=3000&&s<lastS&&s>0){lastS=s;sfx.count();}if(rem<=0){endPlace();return;}requestAnimationFrame(tick);}
+
+function endPlace(){
+  if(phase!=='place')return;phase='reveal';lastS=99;setTimer(0,0);
+  if(!myLocked&&players[0].done===false){showMsg('bad','Tiden løb ud','Du nåede ikke at svare denne gang.','');}
+  renderPhone();updatePlayerStates();
+  // 1) valgene falder ned i hullerne
+  players.forEach((p,k)=>{if(p.gap<0)return;later(()=>{const gEl=$('tl').querySelector(`.gap[data-g="${p.gap}"] .votes`);if(gEl)gEl.insertAdjacentHTML('beforeend',`<div class="vote" style="background:${p.color}">${p.name.slice(0,2)}</div>`);sfx.lock(p.i);},120*k);});
+  // 2) årstallet tæller op
+  later(()=>{$('nc').classList.add('reveal');const yEl=$('ncYr'),from=Math.max(YMIN,cur.y-60),dur=1100,ts=performance.now();
+    (function roll(){const p=Math.min(1,(performance.now()-ts)/dur),e=1-Math.pow(1-p,3),v=Math.round(from+(cur.y-from)*e);yEl.textContent=v;if(p<1){if(Math.random()<.5)sfx.roll();requestAnimationFrame(roll);}})();},120*players.length+300);
+  // 3) kortet flyver ind, point
+  later(land,120*players.length+1700);
+}
+function land(){
+  const good=correctGaps(cur.y);
+  players.forEach(p=>{let g=0;if(p.gap>=0&&good.includes(p.gap))g+=500;if(p.year!=null){const d=Math.abs(p.year-cur.y);g+=d===0?500:d<=2?300:d<=5?100:0;}p.gain=g;p.score+=g;});
+  // FLIP: husk positioner, indsæt kortet, animér
+  const tvEl=$('tv'),k=tvEl.getBoundingClientRect().width/1920;
+  const before=new Map([...$('tl').querySelectorAll('.tc')].map(e=>[e.dataset.k,e.getBoundingClientRect()]));
+  const ncRect=$('nc').getBoundingClientRect();
+  const idx=good[0];tl.splice(idx,0,{...cur});
+  renderTL(idx,idx);
+  [...$('tl').querySelectorAll('.tc')].forEach(e=>{const b=before.get(e.dataset.k),a=e.getBoundingClientRect();
+    if(b){e.style.transition='none';e.style.transform=`translate(${(b.left-a.left)/k}px,${(b.top-a.top)/k}px)`;}
+    else{const dx=(ncRect.left+ncRect.width/2-(a.left+a.width/2))/k,dy=(ncRect.top+ncRect.height/2-(a.top+a.height/2))/k;e.style.transition='none';e.style.transform=`translate(${dx}px,${dy}px) scale(1.6)`;e.style.zIndex=3;}
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{e.style.transition='transform .75s cubic-bezier(.2,.9,.25,1),width .5s,box-shadow .4s';e.style.transform='';}));});
+  $('nc').classList.add('gone');
+  // stemmerne bliver i hullerne: genskab dem efter render
+  players.forEach(p=>{if(p.gap<0)return;const target=p.gap>idx?p.gap+1:p.gap;const g=$('tl').querySelector(`.gap[data-g="${target}"] .votes`);g&&g.insertAdjacentHTML('beforeend',`<div class="vote" style="background:${p.color};animation:none;opacity:${good.includes(p.gap)?1:.35}">${p.name.slice(0,2)}</div>`);});
+  [idx,idx+1].forEach(gi=>{const g=$('tl').querySelector(`.gap[data-g="${gi}"]`);g&&g.classList.add('correct');});
+  sfx.land();
+  later(()=>{renderPlayers();[...$('players').children].forEach(el=>{const p=players[+el.dataset.i];if(p.gain>0)el.querySelector('.gain').classList.add('show');});},500);
+  // telefonens resultat
+  const me=players[0];
+  if(me.done){const okGap=good.includes(me.gap),d=me.year!=null?Math.abs(me.year-cur.y):null;
+    showMsg(okGap?'ok':'bad',okGap?'Rigtigt hul!':'Forkert hul',`${cur.t}: ${cur.y}. ${cur.x}${d!=null?` Dit gæt: ${me.year} (${d===0?'præcist!':d+' år fra'})`:''}`,me.gain?'+'+fmt(me.gain):'0 point');}
+  else showMsg('bad','Ingen point',`${cur.t}: ${cur.y}. ${cur.x}`,'');
+  later(()=>{phase='done';renderProg();renderPhone();
+    if(round>=ROUNDS){const w=[...players].sort((a,b)=>b.score-a.score)[0];const b=$('banner');b.textContent=`${w.name} vinder Tidslinjen!`;b.classList.add('show');sfx.win();setAuto(false);}
+    else if(auto)later(nextCard,2600);},1600);
+}
+
+/* ---------- UI ---------- */
+for(let n=2;n<=8;n++){const o=document.createElement('option');o.value=n;o.textContent=n+' spillere';if(n===5)o.selected=true;$('np').appendChild(o);}
+function setAuto(v){auto=v;$('auto').textContent='Auto: '+(v?'til':'fra');$('auto').classList.toggle('on',v);if(v&&(phase==='idle'||phase==='done'))nextCard();}
+$('next').onclick=nextCard;$('auto').onclick=()=>setAuto(!auto);$('reset').onclick=()=>{setAuto(false);newGame();};$('np').onchange=()=>{setAuto(false);newGame();};
+$('snd').onclick=e=>{muted=!muted;e.target.textContent='Lyd: '+(muted?'fra':'til');e.target.classList.toggle('on',!muted);};
+window.addEventListener('keydown',e=>{if(e.code==='Space'&&e.target.tagName!=='INPUT'){e.preventDefault();nextCard();}});
+function fit(){const f=$('frame'),k=f.clientWidth/1920;$('tv').style.transform=`scale(${k})`;f.style.height=(1080*k)+'px';}
+window.addEventListener('resize',fit);fit();newGame();
+</script>
+</body>
+</html>

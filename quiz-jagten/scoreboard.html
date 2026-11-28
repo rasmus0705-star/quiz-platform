@@ -63,6 +63,7 @@ body.graphic-fullscreen #fullscreen-exit{display:block}
   <div id="tips"><kbd>Mellemrum</kbd> næste runde · <kbd>1</kbd>–<kbd>5</kbd> skift visning · Opladning, pointanimationer, førerbanner, konfetti, stimebonus og lyd.</div>
 <button id="fullscreen-exit" type="button">Luk fuld skærm ✕</button>
 
+<script src="js/motion.js"></script>
 <script>
 const cv=document.getElementById('stage'),ctx=cv.getContext('2d');
 const EXTERNAL=new URLSearchParams(location.search).has('embed');
@@ -84,8 +85,9 @@ function resize(){const r=cv.getBoundingClientRect();if(r.width<80||r.height<80)
 new ResizeObserver(resize).observe(cv);window.addEventListener('resize',resize);
 function setViewMode(mode){if(!['question','split','graphic'].includes(mode))return;viewMode=mode;localStorage.setItem('quizjagten-board-view',mode);resize();}
 
-const PALETTE=[['#ff4d6d','Ræven'],['#4dabff','Uglen'],['#ffd23f','Bjørnen'],['#3ddc97','Haren'],['#b388ff','Ulven'],['#ff8c42','Lossen'],['#00e5ff','Ørnen'],['#ff6ec7','Grævlingen']];
-const GOAL=10000,SUSP=1600,REV=1300;
+const reducedMotion=window.QJ.reducedMotion;
+const PALETTE=window.QJ.playerPalette;
+const GOAL=10000,SUSP=window.QJ.motion.suspenseMs,REV=window.QJ.motion.revealMs;
 let teams=[],phase='idle',phaseT=0,round=0,leaderIdx=-1,winner=-1,gameOver=false,concept='bubbles',muted=EXTERNAL&&localStorage.getItem('quizjagten-board-muted')!=='false',auto=false,autoTimer=null;
 let particles=[],floaters=[],banner=null,flash=0,shake=0;
 
@@ -128,7 +130,7 @@ function nextRound(){
 }
 function anchor(t){return C[concept].anchor(t)}
 function addFloater(t){const a=anchor(t);floaters.push({x:a.x,y:a.y,text:'+'+fmt(t.gain),color:t.color,life:1,streak:t.streak})}
-function confetti(x,y,color,n){const cols=[color,'#ffffff','#ffd23f',color,PALETTE[Math.floor(Math.random()*8)][0]];for(let i=0;i<n;i++)particles.push({type:'conf',x,y,vx:rnd(-420,420),vy:rnd(-700,-180),rot:rnd(0,6),vr:rnd(-12,12),color:cols[i%cols.length],life:1,size:rnd(5,10)})}
+function confetti(x,y,color,n){if(reducedMotion())return;const cols=[color,'#ffffff','#ffd23f',color,PALETTE[Math.floor(Math.random()*8)][0]];for(let i=0;i<n;i++)particles.push({type:'conf',x,y,vx:rnd(-420,420),vy:rnd(-700,-180),rot:rnd(0,6),vr:rnd(-12,12),color:cols[i%cols.length],life:1,size:rnd(5,10)})}
 function sparks(x,y,color,n,dir,spd){for(let i=0;i<n;i++){const a=dir==null?rnd(0,Math.PI*2):dir+rnd(-.7,.7);const s=rnd(.3,1)*(spd||300);particles.push({type:'spark',x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,color,life:1})}}
 function checkLeader(){
   const l=leader();
@@ -379,9 +381,9 @@ if(EXTERNAL)window.addEventListener('message',event=>{
 /* ---------- loop ---------- */
 function update(dt){
   phaseT+=dt*1000;
-  if(phase==='suspense'){teams.forEach(t=>t.charge=t.gain>0?Math.min(1,phaseT/SUSP):0);
-    if(phaseT>=SUSP){phase='reveal';phaseT=0;teams.forEach(t=>{t.score=t.from+t.gain;t.charge=0;if(t.gain>0){t.streak++;t.pulse=1;t.boost=1;addFloater(t);}else t.streak=0;});sfx.whoosh();if(Math.max(...teams.map(t=>t.gain))>=1000)shake=Math.max(shake,7);if(C[concept].onReveal)C[concept].onReveal();}}
-  else if(phase==='reveal'){const p=Math.min(1,phaseT/REV);teams.forEach(t=>{t.disp=t.from+(t.score-t.from)*easeOutCubic(p);t.vis=t.from+(t.score-t.from)*easeOutBack(p);});
+  if(phase==='suspense'){const suspenseMs=window.QJ.motionDuration(SUSP);teams.forEach(t=>t.charge=t.gain>0?Math.min(1,phaseT/suspenseMs):0);
+    if(phaseT>=suspenseMs){phase='reveal';phaseT=0;teams.forEach(t=>{t.score=t.from+t.gain;t.charge=0;if(t.gain>0){t.streak++;t.pulse=1;t.boost=1;addFloater(t);}else t.streak=0;});sfx.whoosh();if(!reducedMotion()&&Math.max(...teams.map(t=>t.gain))>=1000)shake=Math.max(shake,7);if(C[concept].onReveal)C[concept].onReveal();}}
+  else if(phase==='reveal'){const p=Math.min(1,phaseT/window.QJ.motionDuration(REV));teams.forEach(t=>{t.disp=t.from+(t.score-t.from)*easeOutCubic(p);t.vis=t.from+(t.score-t.from)*easeOutBack(p);});
     if(p>=1){teams.forEach(t=>{t.disp=t.vis=t.score;});phase='idle';checkLeader();if(auto){clearTimeout(autoTimer);autoTimer=setTimeout(()=>{if(auto)nextRound()},banner?(banner.big?4200:2900):1500);}}}
   teams.forEach(t=>{t.pulse=Math.max(0,t.pulse-dt*1.3);t.boost=Math.max(0,t.boost-dt*.6);});
   C[concept].update&&C[concept].update(dt);
@@ -395,10 +397,10 @@ function update(dt){
   particles=particles.filter(p=>p.life>0);if(particles.length>1800)particles.splice(0,particles.length-1800);
   floaters.forEach(f=>{f.y-=38*dt;f.life-=dt*.6;});floaters=floaters.filter(f=>f.life>0);
   flash=Math.max(0,flash-dt*2.2);shake=Math.max(0,shake-dt*30);
-  if(banner){banner.t+=dt;if(banner.t>(banner.big?4:2.6))banner=null;}
+  if(banner){banner.t+=dt;if(banner.t>window.QJ.motionDuration(banner.big?4000:window.QJ.motion.bannerMs)/1000)banner=null;}
 }
 function render(time){
-  ctx.save();if(shake>0)ctx.translate(rnd(-shake,shake),rnd(-shake,shake));
+  ctx.save();if(shake>0&&!reducedMotion())ctx.translate(rnd(-shake,shake),rnd(-shake,shake));
   if(liveQuestion&&viewMode==='graphic')ctx.translate(0,graphicHeader());
   C[concept].draw(time);
   if(phase==='question'&&liveQuestion)drawAnswerMarkers(time);
@@ -416,9 +418,9 @@ function render(time){
     font(13,700);ctx.textAlign='left';ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillText(round?(boardLanguage==='en'?'Question ':'Spørgsmål ')+round:boardText('Klar'),16,22);
     if(phase==='suspense'){const dots='.'.repeat(1+Math.floor(phaseT/250)%3);font(clamp(H*.045,14,26),800);ctx.textAlign='center';ctx.fillStyle='#ffd23f';ctx.fillText(boardText('Svarene tælles op')+dots,W/2,26);}
     if(EXTERNAL&&teams.length===0){font(clamp(H*.04,16,26),800);ctx.textAlign='center';ctx.fillStyle='rgba(255,255,255,.72)';ctx.fillText(boardText('Venter på quizdeltagere')+' …',W/2,H/2);}
-    else if(round===0&&phase==='idle'){font(clamp(H*.035,13,20),700);ctx.textAlign='center';ctx.fillStyle=`rgba(255,255,255,${.5+.4*Math.sin(time*3)})`;ctx.fillText(boardLanguage==='en'?'Press space or “Next question”':'Tryk mellemrum eller "Næste spørgsmål"',W/2,H*.09);}
+    else if(round===0&&phase==='idle'){font(clamp(H*.035,13,20),700);ctx.textAlign='center';ctx.fillStyle=`rgba(255,255,255,${reducedMotion()?.75:.5+.4*Math.sin(time*3)})`;ctx.fillText(boardLanguage==='en'?'Press space or “Next question”':'Tryk mellemrum eller "Næste spørgsmål"',W/2,H*.09);}
   }
-  if(banner&&banner.t>0){const T=banner.t,end=banner.big?4:2.6,inP=clamp(T/.35,0,1),out=T>end-.4?clamp((T-(end-.4))/.4,0,1):0,sc=easeOutBack(inP)*(1-out*.2),fs=clamp(H*(banner.big?.1:.065),18,banner.big?64:40);
+  if(banner&&banner.t>0){const T=banner.t,end=window.QJ.motionDuration(banner.big?4000:window.QJ.motion.bannerMs)/1000,inDuration=window.QJ.motionDuration(350)/1000,outDuration=window.QJ.motionDuration(400)/1000,inP=clamp(T/inDuration,0,1),out=T>end-outDuration?clamp((T-(end-outDuration))/outDuration,0,1):0,sc=reducedMotion()?1:easeOutBack(inP)*(1-out*.2),fs=clamp(H*(banner.big?.1:.065),18,banner.big?64:40);
     ctx.save();ctx.globalAlpha=1-out;ctx.translate(W/2,banner.big?H*.45:H*.17);ctx.scale(sc,sc);font(fs,900);const tw=ctx.measureText(banner.text).width;ctx.shadowColor=banner.color;ctx.shadowBlur=40;rr(-tw/2-28,-fs*.8,tw+56,fs*1.6,fs*.5);ctx.fillStyle=banner.color;ctx.fill();ctx.shadowBlur=0;ctx.lineWidth=3;ctx.strokeStyle='#fff';ctx.stroke();ctx.fillStyle='#0b0d1a';ctx.textAlign='center';ctx.fillText(banner.text,0,fs*.05);ctx.restore();}
   if(flash>0){ctx.fillStyle=`rgba(255,255,255,${flash*.28})`;ctx.fillRect(0,0,W,H);}
 }

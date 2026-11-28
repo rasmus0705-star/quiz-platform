@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quizjagten – storskærm mockup</title>
+<style>
+:root{--bg:#0d0f15;--panel:#151821;--line:#262b38;--txt:#f2f3f7;--mut:#8b91a3;--y:#f2c94c;
+--red:#e5484d;--blue:#3e8ee8;--yel:#f2b632;--grn:#2fb67c}
+*{box-sizing:border-box;margin:0}
+body{background:#05060a;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.bar{display:flex;gap:8px;align-items:center;padding:12px 16px;flex-wrap:wrap}
+.bar button{background:#151821;border:1px solid #262b38;color:#c9cdd8;padding:8px 14px;border-radius:999px;font-size:14px;cursor:pointer}
+.bar button.on{background:var(--y);border-color:var(--y);color:#1a1400;font-weight:700}
+.bar span{color:#8b91a3;font-size:13px;margin-left:8px}
+.stage{padding:0 16px 16px}
+.frame{position:relative;width:100%;overflow:hidden;border-radius:14px;border:1px solid #262b38}
+.tv{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:radial-gradient(1200px 700px at 50% 35%,#171a26 0%,var(--bg) 70%);overflow:hidden}
+.scr{position:absolute;inset:0;display:none}
+.scr.on{display:block}
+
+/* topbar */
+.top{position:absolute;left:56px;right:56px;top:36px;height:56px;display:flex;align-items:center;gap:40px}
+.logo{font-weight:900;font-size:34px;letter-spacing:-.5px;color:var(--y);font-stretch:expanded}
+.prog{flex:1;display:flex;gap:8px}
+.prog i{flex:1;height:10px;border-radius:6px;background:#232838}
+.prog i.d{background:var(--y)}
+.prog i.c{background:linear-gradient(90deg,var(--y) 0 40%,#232838 40%)}
+.meta{display:flex;gap:12px;align-items:center;font-size:24px;color:var(--mut)}
+.chip{display:flex;align-items:center;gap:10px;background:#1c2130;border:1px solid var(--line);color:var(--txt);padding:8px 18px;border-radius:999px;font-weight:700}
+.chip b{width:14px;height:14px;border-radius:50%;background:#4dd0e1;display:inline-block}
+.dots{display:flex;gap:6px}.dots i{width:12px;height:12px;border-radius:50%;background:#2c3242}.dots i.f{background:var(--y)}
+
+/* question */
+.qnum{position:absolute;left:56px;top:150px;font-size:26px;color:var(--mut);font-weight:700;letter-spacing:2px;text-transform:uppercase}
+.q{position:absolute;left:56px;right:330px;top:196px;font-size:76px;line-height:1.1;font-weight:900;letter-spacing:-1px}
+.timer{position:absolute;right:80px;top:150px;width:220px;height:220px}
+.timer svg{width:100%;height:100%;transform:rotate(-90deg)}
+.timer .n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:96px;font-weight:900;color:var(--y)}
+.grid{position:absolute;left:56px;right:56px;top:450px;height:440px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:24px}
+.ans{position:relative;border-radius:24px;display:flex;align-items:center;gap:32px;padding:0 40px;font-size:60px;font-weight:900;color:#fff;transition:opacity .3s}
+.ans svg{width:70px;height:70px;flex:none}
+.a1{background:var(--red)}.a2{background:var(--blue)}.a3{background:var(--yel);color:#2a1d00}.a4{background:var(--grn)}
+.a3 svg path,.a3 svg rect,.a3 svg circle{fill:#2a1d00}
+.ans .cnt{margin-left:auto;display:flex;align-items:center;gap:16px;font-size:40px}
+.ans .cnt i{display:block;height:22px;border-radius:12px;background:rgba(255,255,255,.85)}
+.a3 .cnt i{background:rgba(42,29,0,.75)}
+.wrong{opacity:.22}
+.right{box-shadow:0 0 0 6px #fff,0 0 60px 10px rgba(47,182,124,.7)}
+.right .ok{position:absolute;right:-18px;top:-18px;width:64px;height:64px;border-radius:50%;background:#fff;color:var(--grn);display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:900}
+
+/* footer: who answered */
+.foot{position:absolute;left:56px;right:56px;bottom:44px;height:96px;display:flex;align-items:center;gap:28px}
+.foot .lbl{font-size:28px;color:var(--mut);font-weight:700;white-space:nowrap}
+.foot .lbl b{color:var(--txt);font-size:44px;margin-right:6px}
+.avs{display:flex;gap:14px;flex-wrap:nowrap}
+.av{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:28px;color:#0d0f15;position:relative}
+.av.wait{background:transparent!important;border:3px dashed #3a4153;color:#3a4153}
+.av .nm{position:absolute;top:80px;font-size:15px;color:var(--mut);font-weight:600;white-space:nowrap}
+.av.g::after,.av.x::after{position:absolute;right:-6px;bottom:-6px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;border:3px solid var(--bg)}
+.av.g::after{content:"✓";background:var(--grn);color:#fff}
+.av.x::after{content:"✕";background:var(--red);color:#fff}
+.hint{position:absolute;right:56px;bottom:20px;font-size:16px;color:#3f4558}
+.fast{margin-left:auto;display:flex;align-items:center;gap:16px;background:#1a1e2a;border:1px solid var(--line);border-radius:20px;padding:16px 26px;font-size:28px;color:var(--mut)}
+.fast b{color:var(--txt)}
+.fast .pts{color:var(--y);font-weight:900}
+
+/* scoreboard */
+.sbt{position:absolute;left:56px;top:130px;font-size:44px;font-weight:900}
+.sbt span{color:var(--mut);font-weight:700;font-size:30px;margin-left:14px}
+.bub{position:absolute;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-weight:900;text-shadow:0 2px 8px rgba(0,0,0,.35)}
+.bub .n{font-weight:800}
+.bub.lead{box-shadow:0 0 0 5px #fff,0 0 70px 10px rgba(62,142,232,.55)}
+.crown{position:absolute;width:90px;height:64px}
+.list{position:absolute;right:56px;top:130px;width:560px;bottom:110px;background:#131620;border:1px solid var(--line);border-radius:24px;padding:28px 28px}
+.list h3{font-size:22px;letter-spacing:2px;text-transform:uppercase;color:var(--mut);margin-bottom:14px}
+.hl{font-size:34px;font-weight:900;color:var(--y);margin-bottom:12px}
+.row{display:flex;align-items:center;gap:16px;height:78px;border-bottom:1px solid #1f2432;font-size:30px}
+.row:last-child{border-bottom:none}
+.row .r{width:44px;font-weight:900;color:var(--mut);font-size:30px}
+.row.top1 .r{color:var(--y)}
+.row .d{width:22px;height:22px;border-radius:50%}
+.row .nm{flex:1;font-weight:800}
+.row .p{font-weight:900;font-variant-numeric:tabular-nums}
+.row .mv{width:64px;text-align:right;font-size:22px;font-weight:800}
+.up{color:var(--grn)}.dn{color:var(--red)}.eq{color:#4a5165}
+.next{position:absolute;left:56px;right:56px;bottom:44px;height:10px;border-radius:6px;background:#1c2030;overflow:hidden}
+.next i{display:block;height:100%;width:62%;background:var(--y)}
+.nextl{position:absolute;right:56px;bottom:62px;font-size:22px;color:var(--mut)}
+.bar em{font-style:normal;color:#8b91a3;font-size:13px;margin:0 2px 0 10px}
+.bar em:first-child{margin-left:0}
+.bub.wait{opacity:.38;outline:3px dashed rgba(255,255,255,.7);outline-offset:6px}
+.bub.done{box-shadow:0 0 0 5px #fff}
+.mode{position:absolute;right:56px;top:36px}
+.legend{display:flex;gap:28px;align-items:center;font-size:22px;color:var(--mut)}
+.legend i{display:inline-block;width:22px;height:22px;border-radius:50%;margin-right:10px;vertical-align:-4px}
+.legend .l1{border:3px dashed rgba(255,255,255,.7)}
+.legend .l2{background:#fff}
+/* split */
+.sq{position:absolute;left:56px;right:260px;top:128px}
+.sq .qn{font-size:22px;color:var(--mut);font-weight:700;letter-spacing:2px;text-transform:uppercase}
+.sq h2{font-size:54px;line-height:1.1;font-weight:900;letter-spacing:-.5px;margin-top:10px}
+.stimer{position:absolute;right:70px;top:120px;width:160px;height:160px}
+.stimer svg{width:100%;height:100%;transform:rotate(-90deg)}
+.stimer .n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:66px;font-weight:900;color:var(--y)}
+.srow{position:absolute;left:56px;right:56px;top:310px;height:96px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.srow .ans{font-size:40px;padding:0 26px;gap:20px;border-radius:18px}
+.srow .ans svg{width:44px;height:44px}
+.garea{position:absolute;left:56px;right:56px;top:430px;bottom:30px;border-top:1px solid var(--line)}
+.ghead{position:absolute;left:56px;right:56px;top:446px;display:flex;justify-content:space-between;align-items:center;font-size:24px;color:var(--mut);font-weight:700}
+.ghead b{color:var(--txt);font-size:34px;margin-right:6px}
+/* graphic + band */
+.band{position:absolute;left:56px;right:56px;top:118px;height:96px;display:flex;align-items:center;gap:24px;background:#131620;border:1px solid var(--line);border-radius:22px;padding:0 24px}
+.band .bt{position:relative;width:70px;height:70px;flex:none}
+.band .bt svg{width:100%;height:100%;transform:rotate(-90deg)}
+.band .bt .n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;color:var(--y)}
+.band .bq{flex:1;font-size:36px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.band .bq span{color:var(--mut);font-size:22px;font-weight:700;margin-right:14px;letter-spacing:1px}
+.mini{display:flex;gap:10px}
+.mini b{display:flex;align-items:center;gap:10px;height:56px;padding:0 18px;border-radius:14px;font-size:26px;color:#fff}
+.mini svg{width:22px;height:22px}
+.cl{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+.list.l5{top:236px;bottom:60px}
+.mv.sv{color:#fff}
+.list.l5 .row{height:72px}
+</style>
+</head>
+<body>
+<div class="bar">
+  <em>Under spørgsmålet:</em>
+  <button data-s="1" class="on">Kun spørgsmål</button>
+  <button data-s="4">Delt</button>
+  <button data-s="5">Kun grafik</button>
+  <em>Bagefter:</em>
+  <button data-s="2">Afsløring</button>
+  <button data-s="3">Pointtavle</button>
+  <span>G skifter visning på tv'et · piletaster bladrer</span>
+</div>
+<div class="stage"><div class="frame" id="frame"><div class="tv" id="tv">
+
+<!-- 1. SPØRGSMÅL -->
+<section class="scr on" data-s="1">
+  <div class="top">
+    <div class="logo">Quizjagten</div>
+    <div class="prog"><i class="c"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="meta"><span class="chip"><b></b>Videnskab</span><span class="dots"><i class="f"></i><i></i><i></i><i></i></span>Let</div>
+  </div>
+  <div class="qnum">Spørgsmål 1 af 15</div>
+  <h1 class="q">Hvad er det kemiske symbol for ilt (oxygen)?</h1>
+  <div class="timer"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="none" stroke="#232838" stroke-width="8"/><circle cx="50" cy="50" r="44" fill="none" stroke="#f2c94c" stroke-width="8" stroke-linecap="round" stroke-dasharray="276.5" stroke-dashoffset="138"/></svg><div class="n">10</div></div>
+  <div class="grid">
+    <div class="ans a1"><svg viewBox="0 0 70 70"><path d="M35 6L66 62H4z" fill="#fff"/></svg>Ox</div>
+    <div class="ans a2"><svg viewBox="0 0 70 70"><path d="M35 4L66 35L35 66L4 35z" fill="#fff"/></svg>I</div>
+    <div class="ans a3"><svg viewBox="0 0 70 70"><circle cx="35" cy="35" r="30"/></svg>C</div>
+    <div class="ans a4"><svg viewBox="0 0 70 70"><rect x="7" y="7" width="56" height="56" rx="6" fill="#fff"/></svg>O</div>
+  </div>
+  <div class="foot">
+    <div class="lbl"><b>5</b>af 8 har svaret</div>
+    <div class="avs">
+      <div class="av" style="background:#3e8ee8">U<span class="nm">Uglen</span></div>
+      <div class="av" style="background:#e5484d">R<span class="nm">Ræven</span></div>
+      <div class="av" style="background:#f2b632">B<span class="nm">Bjørnen</span></div>
+      <div class="av" style="background:#ff6ec7">RA<span class="nm">Rasmus</span></div>
+      <div class="av" style="background:#b388ff">UL<span class="nm">Ulven</span></div>
+      <div class="av wait">H<span class="nm">Haren</span></div>
+      <div class="av wait">L<span class="nm">Lossen</span></div>
+      <div class="av wait">Ø<span class="nm">Ørnen</span></div>
+    </div>
+  </div>
+  <div class="hint">G: skift visning · Mellemrum: vis svar · V: skift visual · M: lyd</div>
+</section>
+
+<!-- 2. AFSLØRING -->
+<section class="scr" data-s="2">
+  <div class="top">
+    <div class="logo">Quizjagten</div>
+    <div class="prog"><i class="d"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="meta"><span class="chip"><b></b>Videnskab</span><span class="dots"><i class="f"></i><i></i><i></i><i></i></span>Let</div>
+  </div>
+  <div class="qnum">Spørgsmål 1 af 15 · svaret er</div>
+  <h1 class="q">Hvad er det kemiske symbol for ilt (oxygen)?</h1>
+  <div class="grid">
+    <div class="ans a1 wrong"><svg viewBox="0 0 70 70"><path d="M35 6L66 62H4z" fill="#fff"/></svg>Ox<span class="cnt"><i style="width:120px"></i>2</span></div>
+    <div class="ans a2 wrong"><svg viewBox="0 0 70 70"><path d="M35 4L66 35L35 66L4 35z" fill="#fff"/></svg>I<span class="cnt"><i style="width:60px"></i>1</span></div>
+    <div class="ans a3 wrong"><svg viewBox="0 0 70 70"><circle cx="35" cy="35" r="30"/></svg>C<span class="cnt"><i style="width:8px"></i>0</span></div>
+    <div class="ans a4 right"><svg viewBox="0 0 70 70"><rect x="7" y="7" width="56" height="56" rx="6" fill="#fff"/></svg>O<span class="cnt"><i style="width:300px"></i>5</span><span class="ok">✓</span></div>
+  </div>
+  <div class="foot">
+    <div class="avs">
+      <div class="av g" style="background:#3e8ee8">U<span class="nm">Uglen</span></div>
+      <div class="av x" style="background:#e5484d">R<span class="nm">Ræven</span></div>
+      <div class="av g" style="background:#f2b632">B<span class="nm">Bjørnen</span></div>
+      <div class="av g" style="background:#ff6ec7">RA<span class="nm">Rasmus</span></div>
+      <div class="av x" style="background:#b388ff">UL<span class="nm">Ulven</span></div>
+      <div class="av g" style="background:#3ddc97">H<span class="nm">Haren</span></div>
+      <div class="av x" style="background:#ff8c42">L<span class="nm">Lossen</span></div>
+      <div class="av g" style="background:#00e5ff">Ø<span class="nm">Ørnen</span></div>
+    </div>
+    <div class="fast">Hurtigst: <b>Uglen</b> · 1,8 sek. <span class="pts">+955</span></div>
+  </div>
+</section>
+
+<!-- 3. POINTTAVLE -->
+<section class="scr" data-s="3">
+  <div class="top">
+    <div class="logo">Quizjagten</div>
+    <div class="prog"><i class="d"></i><i class="d"></i><i class="d"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="meta"><span class="chip"><b style="background:var(--y)"></b>Pointtavle</span></div>
+  </div>
+
+  <div class="bub lead" style="left:450px;top:390px;width:380px;height:380px;background:radial-gradient(circle at 35% 30%,#7fb6f2,#3e8ee8 55%,#2a6cb8)"><span class="n" style="font-size:40px">Uglen</span><span style="font-size:64px">2.630</span></div>
+  <div class="bub" style="left:118px;top:198px;width:364px;height:364px;background:radial-gradient(circle at 35% 30%,#f08a8d,#e5484d 55%,#b8353a)"><span class="n" style="font-size:38px">Ræven</span><span style="font-size:58px">2.410</span></div>
+  <div class="bub" style="left:825px;top:215px;width:330px;height:330px;background:radial-gradient(circle at 35% 30%,#f7d27a,#f2b632 55%,#c48d1c);color:#2a1d00;text-shadow:none"><span class="n" style="font-size:36px">Bjørnen</span><span style="font-size:54px">1.980</span></div>
+  <div class="bub" style="left:176px;top:636px;width:308px;height:308px;background:radial-gradient(circle at 35% 30%,#7fe8bd,#3ddc97 55%,#25a874);color:#06291b;text-shadow:none"><span class="n" style="font-size:34px">Haren</span><span style="font-size:50px">1.720</span></div>
+  <div class="bub" style="left:819px;top:659px;width:282px;height:282px;background:radial-gradient(circle at 35% 30%,#cdb4ff,#b388ff 55%,#8a5fe0)"><span class="n" style="font-size:32px">Ulven</span><span style="font-size:46px">1.450</span></div>
+  <div class="bub" style="left:534px;top:776px;width:232px;height:232px;background:radial-gradient(circle at 35% 30%,#ffb07d,#ff8c42 55%,#d26a24)"><span class="n" style="font-size:28px">Lossen</span><span style="font-size:40px">980</span></div>
+  <div class="bub" style="left:500px;top:118px;width:216px;height:216px;background:radial-gradient(circle at 35% 30%,#7af0ff,#00e5ff 55%,#00a9bd);color:#002a30;text-shadow:none"><span class="n" style="font-size:26px">Ørnen</span><span style="font-size:38px">860</span></div>
+  <div class="bub" style="left:1088px;top:498px;width:184px;height:184px;background:radial-gradient(circle at 35% 30%,#ffa6dd,#ff6ec7 55%,#d64ba0)"><span class="n" style="font-size:24px">Rasmus</span><span style="font-size:34px">610</span></div>
+  <svg class="crown" style="left:595px;top:344px" viewBox="0 0 90 64"><path d="M6 58V18L26 38L45 6L64 38L84 18V58Z" fill="#f2c94c" stroke="#8a6500" stroke-width="3" stroke-linejoin="round"/><circle cx="45" cy="44" r="7" fill="#e5484d"/></svg>
+
+  <div class="list">
+    <h3>Stillingen efter 3 af 15</h3>
+    <div class="hl">Uglen overtog føringen</div>
+    <div class="row top1"><span class="r">1</span><span class="d" style="background:#3e8ee8"></span><span class="nm">Uglen</span><span class="p">2.630</span><span class="mv up">▲1</span></div>
+    <div class="row"><span class="r">2</span><span class="d" style="background:#e5484d"></span><span class="nm">Ræven</span><span class="p">2.410</span><span class="mv dn">▼1</span></div>
+    <div class="row"><span class="r">3</span><span class="d" style="background:#f2b632"></span><span class="nm">Bjørnen</span><span class="p">1.980</span><span class="mv eq">–</span></div>
+    <div class="row"><span class="r">4</span><span class="d" style="background:#3ddc97"></span><span class="nm">Haren</span><span class="p">1.720</span><span class="mv up">▲2</span></div>
+    <div class="row"><span class="r">5</span><span class="d" style="background:#b388ff"></span><span class="nm">Ulven</span><span class="p">1.450</span><span class="mv dn">▼1</span></div>
+    <div class="row"><span class="r">6</span><span class="d" style="background:#ff8c42"></span><span class="nm">Lossen</span><span class="p">980</span><span class="mv dn">▼1</span></div>
+    <div class="row"><span class="r">7</span><span class="d" style="background:#00e5ff"></span><span class="nm">Ørnen</span><span class="p">860</span><span class="mv eq">–</span></div>
+    <div class="row"><span class="r">8</span><span class="d" style="background:#ff6ec7"></span><span class="nm">Rasmus</span><span class="p">610</span><span class="mv eq">–</span></div>
+  </div>
+  <div class="nextl">Næste spørgsmål om 3 sek.</div>
+  <div class="next"><i></i></div>
+</section>
+
+<!-- 4. DELT -->
+<section class="scr" data-s="4">
+  <div class="top">
+    <div class="logo">Quizjagten</div>
+    <div class="prog"><i class="c"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="meta"><span class="chip"><b></b>Videnskab</span><span class="dots"><i class="f"></i><i></i><i></i><i></i></span>Let</div>
+  </div>
+  <div class="sq"><div class="qn">Spørgsmål 1 af 15</div><h2>Hvad er det kemiske symbol for ilt (oxygen)?</h2></div>
+  <div class="stimer"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="none" stroke="#232838" stroke-width="8"/><circle cx="50" cy="50" r="44" fill="none" stroke="#f2c94c" stroke-width="8" stroke-linecap="round" stroke-dasharray="276.5" stroke-dashoffset="138"/></svg><div class="n">10</div></div>
+  <div class="srow">
+    <div class="ans a1"><svg viewBox="0 0 70 70"><path d="M35 6L66 62H4z" fill="#fff"/></svg>Ox</div><div class="ans a2"><svg viewBox="0 0 70 70"><path d="M35 4L66 35L35 66L4 35z" fill="#fff"/></svg>I</div><div class="ans a3"><svg viewBox="0 0 70 70"><circle cx="35" cy="35" r="30"/></svg>C</div><div class="ans a4"><svg viewBox="0 0 70 70"><rect x="7" y="7" width="56" height="56" rx="6" fill="#fff"/></svg>O</div>
+  </div>
+  <div class="garea"></div>
+  <div class="ghead"><span><b>5</b>af 8 har svaret</span><span class="legend"><span><i class="l1"></i>tænker</span><span><i class="l2"></i>har svaret</span></span></div>
+  <div id="b4"></div>
+  <div class="hint">G: skift visning · Mellemrum: vis svar</div>
+</section>
+
+<!-- 5. KUN GRAFIK -->
+<section class="scr" data-s="5">
+  <div class="top">
+    <div class="logo">Quizjagten</div>
+    <div class="prog"><i class="c"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="meta"><span class="chip"><b></b>Videnskab</span><span class="dots"><i class="f"></i><i></i><i></i><i></i></span>Let</div>
+  </div>
+  <div class="band">
+    <div class="bt"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="#232838" stroke-width="10"/><circle cx="50" cy="50" r="42" fill="none" stroke="#f2c94c" stroke-width="10" stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="132"/></svg><div class="n">10</div></div>
+    <div class="bq"><span>1/15</span>Hvad er det kemiske symbol for ilt (oxygen)?</div>
+    <div class="mini"><b style="background:var(--red)"><svg viewBox="0 0 70 70"><path d="M35 6L66 62H4z" fill="#fff"/></svg>Ox</b><b style="background:var(--blue)"><svg viewBox="0 0 70 70"><path d="M35 4L66 35L35 66L4 35z" fill="#fff"/></svg>I</b><b style="background:var(--yel);color:#2a1d00"><svg viewBox="0 0 70 70"><circle fill="#2a1d00" cx="35" cy="35" r="30"/></svg>C</b><b style="background:var(--grn)"><svg viewBox="0 0 70 70"><rect x="7" y="7" width="56" height="56" rx="6" fill="#fff"/></svg>O</b></div>
+  </div>
+  <div class="cl" id="b5" style="transform:translate(40px,128px) scale(.9)"></div>
+  <div class="list l5">
+    <h3>Live-stilling</h3>
+    <div class="hl" style="font-size:28px">5 af 8 har svaret</div>
+    <div class="row top1"><span class="r">1</span><span class="d" style="background:#3e8ee8"></span><span class="nm">Uglen</span><span class="p">2.630</span><span class="mv sv">✓</span></div>
+    <div class="row"><span class="r">2</span><span class="d" style="background:#e5484d"></span><span class="nm">Ræven</span><span class="p">2.410</span><span class="mv sv">✓</span></div>
+    <div class="row"><span class="r">3</span><span class="d" style="background:#f2b632"></span><span class="nm">Bjørnen</span><span class="p">1.980</span><span class="mv sv">✓</span></div>
+    <div class="row"><span class="r">4</span><span class="d" style="background:#3ddc97"></span><span class="nm">Haren</span><span class="p">1.720</span><span class="mv eq">…</span></div>
+    <div class="row"><span class="r">5</span><span class="d" style="background:#b388ff"></span><span class="nm">Ulven</span><span class="p">1.450</span><span class="mv sv">✓</span></div>
+    <div class="row"><span class="r">6</span><span class="d" style="background:#ff8c42"></span><span class="nm">Lossen</span><span class="p">980</span><span class="mv eq">…</span></div>
+    <div class="row"><span class="r">7</span><span class="d" style="background:#00e5ff"></span><span class="nm">Ørnen</span><span class="p">860</span><span class="mv eq">…</span></div>
+    <div class="row"><span class="r">8</span><span class="d" style="background:#ff6ec7"></span><span class="nm">Rasmus</span><span class="p">610</span><span class="mv sv">✓</span></div>
+  </div>
+  <div class="hint">G: skift visning · Mellemrum: vis svar</div>
+</section>
+
+</div></div></div>
+<script>
+const tv=document.getElementById('tv'),frame=document.getElementById('frame');
+function fit(){const k=frame.clientWidth/1920;tv.style.transform=`scale(${k})`;frame.style.height=(1080*k)+'px';}
+window.addEventListener('resize',fit);fit();
+const P={Uglen:['#7fb6f2','#3e8ee8','#2a6cb8','#fff',2630],Ræven:['#f08a8d','#e5484d','#b8353a','#fff',2410],Bjørnen:['#f7d27a','#f2b632','#c48d1c','#2a1d00',1980],Haren:['#7fe8bd','#3ddc97','#25a874','#06291b',1720],Ulven:['#cdb4ff','#b388ff','#8a5fe0','#fff',1450],Lossen:['#ffb07d','#ff8c42','#d26a24','#fff',980],Ørnen:['#7af0ff','#00e5ff','#00a9bd','#002a30',860],Rasmus:['#ffa6dd','#ff6ec7','#d64ba0','#fff',610]};
+const answered=new Set(['Uglen','Ræven','Bjørnen','Ulven','Rasmus']);
+function bubbles(el,pos,live){let h='';for(const[n,cx,cy,r]of pos){const[c1,c2,c3,tc,sc]=P[n];const cls=['bub'];if(n==='Uglen')cls.push('lead');if(live)cls.push(answered.has(n)?'done':'wait');
+ h+=`<div class="${cls.join(' ')}" style="left:${cx-r}px;top:${cy-r}px;width:${2*r}px;height:${2*r}px;background:radial-gradient(circle at 35% 30%,${c1},${c2} 55%,${c3});color:${tc};${tc!=='#fff'?'text-shadow:none':''}"><span class="n" style="font-size:${Math.round(r*.21)}px">${n}</span><span style="font-size:${Math.round(r*.32)}px">${sc.toLocaleString('da-DK')}</span></div>`;}
+ const L=pos.find(p=>p[0]==='Uglen');h+=`<svg class="crown" style="left:${L[1]-45}px;top:${L[2]-L[3]-46}px" viewBox="0 0 90 64"><path d="M6 58V18L26 38L45 6L64 38L84 18V58Z" fill="#f2c94c" stroke="#8a6500" stroke-width="3" stroke-linejoin="round"/><circle cx="45" cy="44" r="7" fill="#e5484d"/></svg>`;el.innerHTML=h;}
+bubbles(document.getElementById('b4'),[['Haren',285,760,122],['Ræven',555,700,144],['Lossen',525,945,92],['Uglen',865,790,150],['Ørnen',1115,620,85],['Bjørnen',1195,860,130],['Ulven',1475,700,111],['Rasmus',1685,900,73]],true);
+bubbles(document.getElementById('b5'),[['Uglen',640,580,190],['Ræven',300,380,182],['Bjørnen',990,380,165],['Haren',330,790,154],['Ulven',960,800,141],['Lossen',650,892,116],['Ørnen',608,226,108],['Rasmus',1180,590,92]],true);
+const btns=[...document.querySelectorAll('.bar button')];const ORDER=[1,4,5,2,3];let cur=1;
+function show(s){cur=s;document.querySelectorAll('.scr').forEach(e=>e.classList.toggle('on',+e.dataset.s===s));btns.forEach(b=>b.classList.toggle('on',+b.dataset.s===s));}
+btns.forEach(b=>b.onclick=()=>show(+b.dataset.s));
+window.addEventListener('keydown',e=>{const i=ORDER.indexOf(cur);if(e.key==='ArrowRight')show(ORDER[(i+1)%5]);if(e.key==='ArrowLeft')show(ORDER[(i+4)%5]);if(e.key==='g'||e.key==='G'){const m=[1,4,5];show(m[(m.indexOf(cur)+1)%3]||1);}});
+</script>
+</body>
+</html>
