@@ -230,7 +230,7 @@ function pickMixed({ kat = null, levels = levelsFor(10), rnd = Math.random, excl
   }
   return out;
 }
-function pickSet({ kat, niv, n, rnd, alle = false }) { return niv ? pick({ kat, niv, n, rnd, alle }) : pickMixed({ kat, levels: levelsFor(n), rnd, alle }); }
+function pickSet({ kat, niv, n, rnd, exclude = new Set(), alle = false }) { return niv ? pick({ kat, niv, n, rnd, exclude, alle }) : pickMixed({ kat, levels: levelsFor(n), rnd, exclude, alle }); }
 function optionsFor(q, rnd = Math.random) {
   if (q.type === 'fri') return { opts: [], correct: -1 };
   if (q.type === 'sandt_falsk') return { opts: quizLanguage === 'en' ? ['True', 'False'] : ['Sandt', 'Falsk'], correct: q.korrekt === (quizLanguage === 'en' ? 'True' : 'Sandt') ? 0 : 1 };
@@ -1209,11 +1209,27 @@ async function liveHost(s) {
     const r = st.ranking;
     render(`<div class="screen wide">${topbar()}<h1 class="title">${r.length ? esc(r[0].name) + ' vinder' : 'Spillet er slut'}</h1>
       <ol class="board">${r.map(x => `<li>${esc(x.name)}<span class="p">${x.score}</span></li>`).join('')}</ol>
-      <div class="final-scoreboard-wrap" id="scoreboard-frame-slot"></div><button class="btn primary" id="again">Nyt spil</button><button class="btn" data-home>Til forsiden</button></div>`);
+      <div class="final-scoreboard-wrap" id="scoreboard-frame-slot"></div><button class="btn primary" id="again">${quizLanguage === 'en' ? 'Play again with the same players' : 'Spil igen med samme deltagere'}</button><button class="btn" id="new-room">${quizLanguage === 'en' ? 'Create a new room' : 'Opret nyt rum'}</button><button class="btn" data-home>Til forsiden</button></div>`);
     const frame=ensureScoreboardFrame();if(!liveScoreboardFullscreen)$('#scoreboard-frame-slot').append(frame);
     sendScoreboardMessage({type:'quizjagten-view-mode',mode:'graphic'});
     sendScoreboardMessage({type:'quizjagten-standings',round:s.qs.length,players:r.map(x=>({id:x.id,name:x.name,score:x.score,from:x.score,gain:0,streak:0}))});
-    $('#again').onclick = () => { goHome(); liveHostSetup(); };
+    $('#again').onclick = rematch;
+    $('#new-room').onclick = () => { goHome(); liveHostSetup(); };
+  }
+  function rematch() {
+    for (const [id, player] of Object.entries(players)) if (!player.online) delete players[id];
+    if (!online().length) return toast(quizLanguage === 'en' ? 'No players are connected.' : 'Der er ingen tilsluttede deltagere.');
+    const previous = new Set(s.qs.map(q => q.id));
+    let nextQuestions = pickSet({ ...s, exclude: previous });
+    if (nextQuestions.length < s.qs.length) nextQuestions = pickSet(s);
+    if (!nextQuestions.length) return toast(quizLanguage === 'en' ? 'No questions are available for this game.' : 'Der er ingen spørgsmål til dette spil.');
+    s.qs = nextQuestions;
+    Object.values(players).forEach(player => { player.score = 0; });
+    streaks = {}; answers = {}; cur = null;
+    clearTimeout(autoTimer); autoTimer = null;
+    st = { phase: 'lobby' };
+    send(st);
+    nextQ(0);
   }
   lobby();
 }
@@ -1298,6 +1314,7 @@ async function livePlayer(code, name, language = quizLanguage) {
 
   function show(incoming) {
     let s = incoming;
+    if (incoming?.phase !== 'end') { clearTimeout(endTimer); endTimer = null; }
     if (incoming?.qid && incoming.lang !== language) {
       const bank = language === 'en' ? BANK_EN : BANK_DA;
       const translated = bank?.find(q => q.id === incoming.qid);
@@ -1307,7 +1324,12 @@ async function livePlayer(code, name, language = quizLanguage) {
       }
     }
     clearInterval(tick);
-    if (s.phase === 'lobby') return wait('Du er med', 'Venter på at værten starter quizzen.');
+    if (s.phase === 'lobby') {
+      pendingAnswer = null; myChoice = {}; currentState = s;
+      clearTimeout(answerRetryTimer); answerRetryTimer = null;
+      return wait('Du er med', 'Venter på at værten starter quizzen.');
+    }
+    if (s.phase === 'q' && currentState?.phase === 'end') { pendingAnswer = null; myChoice = {}; }
     currentState = s;
     if (s.phase === 'q') {
       if (pendingAnswer?.qi === s.qi) return wait('Sender svar…', 'Venter på bekræftelse fra værten.');
@@ -1340,9 +1362,9 @@ async function livePlayer(code, name, language = quizLanguage) {
       releaseWake();
       const pos = s.ranking.findIndex(r => r.id === id) + 1;
       render(`<div class="screen">${topbar()}<h1 class="title">${pos === 1 ? 'Du vandt!' : pos ? `Du blev nummer ${pos}` : 'Spillet er slut'}</h1>
-        <ol class="board">${s.ranking.map(r => `<li class="${r.id === id ? 'me' : ''}">${esc(r.name)}<span class="p">${r.score}</span></li>`).join('')}</ol><p class="hint">${quizLanguage === 'en' ? 'This quiz will close in 10 seconds.' : 'Quizzen lukker automatisk om 10 sekunder.'}</p>
+        <ol class="board">${s.ranking.map(r => `<li class="${r.id === id ? 'me' : ''}">${esc(r.name)}<span class="p">${r.score}</span></li>`).join('')}</ol><p class="hint">${quizLanguage === 'en' ? 'This quiz closes in 30 seconds if the host does not start a rematch.' : 'Quizzen lukker om 30 sekunder, hvis værten ikke starter et nyt spil.'}</p>
         <button class="btn" data-home>Til forsiden</button></div>`);
-      clearTimeout(endTimer); endTimer = setTimeout(goHome, 10000);
+      clearTimeout(endTimer); endTimer = setTimeout(goHome, 30000);
     }
   }
 }
