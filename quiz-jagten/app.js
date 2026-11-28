@@ -214,23 +214,67 @@ function shuffle(arr, rnd = Math.random) {
 }
 
 /* ---------- Udvælgelse af spørgsmål ---------- */
-function pick({ kat = null, niv = null, n = 10, rnd = Math.random, exclude = new Set(), alle = false } = {}) {
-  const pool = (alle ? BANK : BANK_MC).filter(q => !exclude.has(q.id) && (!kat || kat.includes(q.kategori)) && (!niv || q.niveau === niv));
-  return shuffle(pool, rnd).slice(0, n);
+const QUESTION_HISTORY_KEY = 'quizjagten-question-history-v1';
+function questionHistory() {
+  const history = store.get(QUESTION_HISTORY_KEY, []);
+  const migratedKey = QUESTION_HISTORY_KEY + '-daily-migrated';
+  if (!store.get(migratedKey, false)) {
+    const ids = new Set(history);
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!/^dag-\d{4}-\d{2}-\d{2}$/.test(key || '')) continue;
+      try { for (const id of JSON.parse(localStorage.getItem(key))?.ids || []) ids.add(id); } catch { }
+    }
+    const migrated = [...ids].slice(-5000);
+    store.set(QUESTION_HISTORY_KEY, migrated);
+    store.set(migratedKey, true);
+    return migrated;
+  }
+  return history;
+}
+function questionTextKey(question) {
+  const text = String(typeof question === 'string' ? question : question?.spoergsmaal || '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('da');
+  return 'text:' + text.replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+}
+function rememberQuestions(questions) {
+  const history = questionHistory();
+  const recent = new Set(history);
+  for (const question of questions) {
+    const id = typeof question === 'string' ? question : question?.id;
+    if (!id) continue;
+    recent.delete(id);
+    recent.add(id);
+    const textKey = typeof question === 'string' ? '' : questionTextKey(question);
+    if (textKey && textKey !== 'text:') { recent.delete(textKey); recent.add(textKey); }
+  }
+  store.set(QUESTION_HISTORY_KEY, [...recent].slice(-5000));
+}
+function pick({ kat = null, niv = null, n = 10, rnd = Math.random, exclude = new Set(), alle = false, avoidHistory = true } = {}) {
+  const pool = (alle ? BANK : BANK_MC).filter(q => !exclude.has(q.id) && !exclude.has(questionTextKey(q)) && (!kat || kat.includes(q.kategori)) && (!niv || q.niveau === niv));
+  if (!avoidHistory) return uniqueQuestions(shuffle(pool, rnd), n);
+  const history = questionHistory();
+  const lastSeen = new Map(history.map((id, index) => [id, index]));
+  const ordered = shuffle(pool, rnd).sort((a, b) => (lastSeen.get(a.id) ?? lastSeen.get(questionTextKey(a)) ?? -1) - (lastSeen.get(b.id) ?? lastSeen.get(questionTextKey(b)) ?? -1));
+  return uniqueQuestions(ordered, n);
+}
+function uniqueQuestions(questions, n) {
+  const seen = new Set();
+  return questions.filter(q => { const key = questionTextKey(q); if (seen.has(key)) return false; seen.add(key); return true; }).slice(0, n);
 }
 function levelsFor(n) {
   const pattern = [1, 2, 1, 2, 3, 2, 3, 1, 4, 3];
   return Array.from({ length: n }, (_, i) => pattern[i % pattern.length]).sort((a, b) => a - b);
 }
-function pickMixed({ kat = null, levels = levelsFor(10), rnd = Math.random, exclude = new Set(), alle = false } = {}) {
+function pickMixed({ kat = null, levels = levelsFor(10), rnd = Math.random, exclude = new Set(), alle = false, avoidHistory = true } = {}) {
   const used = new Set(exclude), out = [];
   for (const lv of levels) {
-    const q = pick({ kat, niv: lv, n: 1, rnd, exclude: used, alle })[0] || pick({ kat, n: 1, rnd, exclude: used, alle })[0];
-    if (q) { used.add(q.id); out.push(q); }
+    const q = pick({ kat, niv: lv, n: 1, rnd, exclude: used, alle, avoidHistory })[0] || pick({ kat, n: 1, rnd, exclude: used, alle, avoidHistory })[0];
+    if (q) { used.add(q.id); used.add(questionTextKey(q)); out.push(q); }
   }
   return out;
 }
-function pickSet({ kat, niv, n, rnd, exclude = new Set(), alle = false }) { return niv ? pick({ kat, niv, n, rnd, exclude, alle }) : pickMixed({ kat, levels: levelsFor(n), rnd, exclude, alle }); }
+function pickSet({ kat, niv, n, rnd, exclude = new Set(), alle = false, avoidHistory = true }) { return niv ? pick({ kat, niv, n, rnd, exclude, alle, avoidHistory }) : pickMixed({ kat, levels: levelsFor(n), rnd, exclude, alle, avoidHistory }); }
 function optionsFor(q, rnd = Math.random) {
   if (q.type === 'fri') return { opts: [], correct: -1 };
   if (q.type === 'sandt_falsk') return { opts: quizLanguage === 'en' ? ['True', 'False'] : ['Sandt', 'Falsk'], correct: q.korrekt === (quizLanguage === 'en' ? 'True' : 'Sandt') ? 0 : 1 };
@@ -527,7 +571,7 @@ function home() {
       ${BANK.length ? '' : '<p class="explain">Der er ingen godkendte sp&oslash;rgsm&aring;l endnu. S&aelig;t status til "godkendt" i questions.json, eller sl&aring; VIS_KLADDER til i config.js.</p>'}
       <div class="home-groups">
         <section class="group"><h2>Alene</h2><div class="modes">
-          ${mode('dag', '&#9728;', 'a3', 'Dagens quiz', dag ? 'Klaret i dag: ' + dag.ok + ' af ' + dag.n + ' rigtige' : 'Samme 10 sp&oslash;rgsm&aring;l for alle i dag')}
+          ${mode('dag', '&#9728;', 'a3', 'Dagens quiz', dag ? 'Klaret i dag: ' + dag.ok + ' af ' + dag.n + ' rigtige' : (quizLanguage === 'en' ? 'A fresh daily challenge' : 'En ny udfordring hver dag'))}
           ${mode('traen', '&#9673;', 'a1', 'Tr&aelig;ning', 'V&aelig;lg selv emner og sv&aelig;rhedsgrad')}
           ${mode('surv', '&#9829;', 'a0', 'Survival', '&Eacute;t forkert svar, og det er slut. Rekord: ' + store.get('surv-best', 0))}
         </div></section>
@@ -592,6 +636,7 @@ function traening() {
     const s = readSetup();
     const qs = pickSet(s);
     if (!qs.length) return toast('Ingen spørgsmål passer – vælg flere emner');
+    rememberQuestions(qs);
     let score = 0; const res = [];
     for (let i = 0; i < qs.length; i++) {
       const r = await ask(qs[i], { head: topbar(`${i + 1} af ${qs.length}`, `${score} p`, i / qs.length * 100), next: i === qs.length - 1 ? 'Se resultat' : 'Næste' });
@@ -611,7 +656,8 @@ async function dagens() {
   const key = 'dag-' + today();
   const done = store.get(key);
   if (done) return dagResultat(done);
-  const qs = pickMixed({ rnd: rngFrom('dag-' + today()) });
+  const qs = dailyQuestions();
+  rememberQuestions(qs);
   const optRnd = rngFrom('svar-' + today());
   const res = [];
   for (let i = 0; i < qs.length; i++) {
@@ -621,6 +667,28 @@ async function dagens() {
   const r = { n: res.length, ok: res.filter(x => x.ok).length, bits: res.map(x => x.ok ? 1 : 0).join(''), ids: qs.map(q => q.id) };
   store.set(key, r);
   dagResultat(r);
+}
+function dailyQuestions(offset = 0) {
+  const date = today(offset).split('-').map(Number);
+  const dayIndex = Math.max(0, Math.floor((Date.UTC(date[0], date[1] - 1, date[2]) - Date.UTC(2025, 0, 1)) / 86400000));
+  const levels = levelsFor(10), byLevel = new Map();
+  const history = new Map(questionHistory().map((id, index) => [id, index]));
+  const used = new Set();
+  for (const level of new Set(levels)) {
+    const pool = shuffle(BANK_MC.filter(q => q.niveau === level), rngFrom(`daily-cycle-v1-${level}`));
+    const perDay = levels.filter(n => n === level).length;
+    const cycleLength = Math.floor(pool.length / perDay);
+    const start = (dayIndex % cycleLength) * perDay;
+    const ordered = [...pool.slice(start), ...pool.slice(0, start)];
+    const fresh = ordered.filter(q => !history.has(q.id) && !history.has(questionTextKey(q)) && !used.has(q.id) && !used.has(questionTextKey(q)));
+    const older = shuffle(ordered.filter(q => (history.has(q.id) || history.has(questionTextKey(q))) && !used.has(q.id) && !used.has(questionTextKey(q))), Math.random)
+      .sort((a, b) => (history.get(a.id) ?? history.get(questionTextKey(a)) ?? -1) - (history.get(b.id) ?? history.get(questionTextKey(b)) ?? -1));
+    const chosen = [...fresh.slice(0, perDay)];
+    if (chosen.length < perDay) chosen.push(...older.slice(0, perDay - chosen.length));
+    chosen.forEach(q => { used.add(q.id); used.add(questionTextKey(q)); });
+    byLevel.set(level, chosen);
+  }
+  return levels.map(level => byLevel.get(level).shift()).filter(Boolean);
 }
 function dagStreak() {
   let n = 0; while (store.get('dag-' + today(-n))) n++;
@@ -660,6 +728,8 @@ function survival() {
       const q = pick({ niv: lv, n: 1, exclude: used })[0] || pick({ n: 1, exclude: used })[0];
       if (!q) break;
       used.add(q.id);
+      used.add(questionTextKey(q));
+      rememberQuestions([q]);
       last = await ask(q, { head: topbar(`Survival · ${difficultyName(lv)}`, `${streak} ${quizLanguage === 'en' ? 'in a row' : 'i træk'}`), next: ok => ok ? 'Næste' : 'Se resultat' });
       if (!last.ok) break;
       streak++;
@@ -716,6 +786,8 @@ function spoergPlay(s, players) {
     const q = pick({ kat: s.kat, niv, n: 1, exclude: used, alle: true })[0];
     if (!q) { toast('Der er ikke flere spørgsmål med de valg'); return finish(); }
     used.add(q.id);
+    used.add(questionTextKey(q));
+    rememberQuestions([q]);
     const board = scored ? `<div class="teams">${players.map((x, i) =>
       `<span class="team ${i === turn ? 'turn' : ''}">${esc(x.name)}<b>${x.score}</b></span>`).join('')}</div>` : '';
     render(`<div class="screen">${topbar(scored ? '' : `Spørgsmål ${asked + 1}`)}${board}
@@ -810,6 +882,8 @@ async function duelPlay(cfg) {
       const q = pick({ niv, n: 1, exclude: used })[0] || pick({ n: 1, exclude: used })[0];
       if (!q) { toast('Ikke flere spørgsmål'); break; }
       used.add(q.id);
+      used.add(questionTextKey(q));
+      rememberQuestions([q]);
       const res = await ask(q, { head: topbar(`${esc(cfg.names[p])} · runde ${r + 1}`, `${score[0]}–${score[1]}`) });
       if (res.ok) score[p]++;
     }
@@ -835,6 +909,7 @@ function udfordrSetup() {
     const name = $('#nm').value.trim() || 'En ven'; store.set('navn', name);
     const niv = segVal('niv');
     const qs = pickSet({ kat: null, niv: niv === 'mix' ? null : +niv, n: 10 });
+    rememberQuestions(qs);
     const ids = qs.map(q => q.id);
     const bits = await playChallenge(qs, ids, `${esc(name)} udfordrer`);
     const link = challengeLink({ duel: ids.join(','), fra: name, r: bits });
@@ -907,6 +982,7 @@ function quizmasterSetup() {
     store.set('qm-hold', names);
     const qs = pickSet({ ...readSetup(), alle: true });
     if (!qs.length) return toast('Ingen spørgsmål passer – vælg flere emner');
+    rememberQuestions(qs);
     quizmasterPlay(names, qs);
   };
 }
@@ -976,6 +1052,7 @@ function liveHostSetup() {
     const s = readSetup(); s.sek = +segVal('sek'); s.autoNext = $('#auto-next').checked;
     s.qs = pickSet(s);
     if (!s.qs.length) return toast('Ingen spørgsmål passer – vælg flere emner');
+    rememberQuestions(s.qs);
     liveHost(s).catch(e => { toast(e.message); goHome(); });
   };
 }
@@ -1225,6 +1302,7 @@ async function liveHost(s) {
     if (nextQuestions.length < s.qs.length) nextQuestions = pickSet(s);
     if (!nextQuestions.length) return toast(quizLanguage === 'en' ? 'No questions are available for this game.' : 'Der er ingen spørgsmål til dette spil.');
     s.qs = nextQuestions;
+    rememberQuestions(nextQuestions);
     Object.values(players).forEach(player => { player.score = 0; });
     streaks = {}; answers = {}; cur = null;
     clearTimeout(autoTimer); autoTimer = null;
